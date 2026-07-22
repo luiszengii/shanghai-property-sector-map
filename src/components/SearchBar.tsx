@@ -1,0 +1,52 @@
+"use client";
+
+import { Navigation, Search, X } from "lucide-react";
+import { FormEvent, useState } from "react";
+import placesData from "@/src/data/places.json";
+import sectorsData from "@/src/data/sectors.json";
+import { useMapStore } from "@/src/store/map-store";
+import type { Place, SectorCollection } from "@/src/types/map";
+
+const places = placesData as Place[];
+const sectors = (sectorsData as SectorCollection).features;
+
+export function SearchBar() {
+  const [query, setQuery] = useState("");
+  const { selectSector, selectPlace, requestFocus, searchMessage, setSearchMessage } = useMapStore();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) {
+      setSearchMessage("请输入板块或点位名称");
+      return;
+    }
+    const sector = sectors.find((item) => item.properties.name.toLowerCase().includes(normalized));
+    if (sector) {
+      selectSector(sector.properties.id);
+      requestFocus("sector", sector.properties.id);
+      setSearchMessage(`已定位：${sector.properties.name}`);
+      return;
+    }
+    const place = places.find((item) => item.name.toLowerCase().includes(normalized));
+    if (place) {
+      selectPlace(place.id);
+      requestFocus("place", place.id);
+      setSearchMessage(`已定位：${place.name}`);
+      return;
+    }
+    setSearchMessage(`没有找到“${query.trim()}”`);
+  };
+
+  return (
+    <div className="search-wrap">
+      <form className="search-form" onSubmit={handleSubmit} role="search">
+        <Search size={18} aria-hidden="true" />
+        <input value={query} onChange={(event) => { setQuery(event.target.value); if (searchMessage) setSearchMessage(""); }} placeholder="搜索板块或设施点位" aria-label="搜索板块或设施点位" />
+        {query && <button type="button" className="icon-button compact" onClick={() => { setQuery(""); setSearchMessage(""); }} aria-label="清空搜索"><X size={16} /></button>}
+        <button type="submit" className="search-submit" aria-label="搜索定位"><Navigation size={14} /></button>
+      </form>
+      {searchMessage && <div className={`search-message ${searchMessage.startsWith("没有") ? "is-error" : ""}`} role="status">{searchMessage}</div>}
+    </div>
+  );
+}

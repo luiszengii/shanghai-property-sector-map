@@ -1,0 +1,83 @@
+# 上海楼市互动地图
+
+面向房产中介主播、房产研究机构和购房用户的全屏互动地图 MVP。项目不按行政区展示，而是按前滩、大宁、张江、徐泾等常见“楼市板块”组织地图信息。
+
+> 当前板块边界与设施点位均为明确标记的演示数据，不代表官方边界或真实设施清单，也不构成购房建议。
+
+## 技术栈
+
+- Next.js 16（App Router）+ React 19 + TypeScript
+- Tailwind CSS 4
+- 高德地图 JavaScript API 2.0
+- Zustand（筛选状态保存于当前页面会话）
+- 本地 JSON / GeoJSON
+- pnpm
+
+## 本地运行
+
+要求 Node.js 22.13+ 与 pnpm。
+
+```bash
+pnpm install
+cp .env.example .env.local
+pnpm dev
+```
+
+打开 `http://localhost:3000`。在 `.env.local` 中填入：
+
+```env
+NEXT_PUBLIC_AMAP_KEY=你的高德 Web 端 Key
+NEXT_PUBLIC_AMAP_SECURITY_JS_CODE=你的高德安全密钥
+```
+
+如果没有配置 Key，页面会显示清晰的配置提示，不会白屏。
+
+## 数据文件
+
+- `src/data/sectors.geojson`：12 个楼市板块的近似演示多边形（正式替换入口）
+- `src/data/sectors.json`：供 Next.js 直接打包使用的同内容镜像
+- `src/data/places.json`：10 类设施、每类少量演示点位
+- `src/data/categories.json`：分类名称、分组、颜色与图标配置
+
+替换正式数据时请保持现有字段结构；板块边界使用 WGS84/GCJ-02 前需核对坐标系并统一转换。当前演示坐标仅用于界面功能演示。
+
+## 功能
+
+- 随缩放级别平滑切换板块总览、主要设施和详细点位
+- 板块悬停高亮、点击定位与详情
+- 设施分类单独开关、全选、清空和会话内记忆
+- 搜索板块名称与点位名称并自动定位
+- 点位信息、来源、更新时间、演示标记及前端距离估算
+- 桌面悬浮筛选面板、移动端底部抽屉和底部详情卡
+- 数据说明弹窗、加载状态、地图错误与缺少环境变量提示
+
+## 质量检查
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm build
+```
+
+## 部署到 Vercel
+
+1. 将项目推送到 GitHub / GitLab / Bitbucket。
+2. 在 Vercel 新建项目并导入仓库；Framework Preset 选择 Next.js。
+3. Install Command 使用 `pnpm install`，Build Command 使用 `pnpm build`。
+4. 在 Vercel 项目的 Environment Variables 中配置：
+   - `NEXT_PUBLIC_AMAP_KEY`
+   - `NEXT_PUBLIC_AMAP_SECURITY_JS_CODE`
+5. 在高德开放平台把 Vercel 生产域名和需要使用的预览域名加入 Web 服务安全域名配置。
+6. 重新部署并检查地图初始化、缩放、搜索、筛选和移动端抽屉。
+
+项目没有数据库或服务端数据依赖，可直接作为标准 Next.js 应用部署。
+
+## 后续规划（首版不开发）
+
+- 正式板块 GeoJSON 的采集、审核和版本管理
+- 公开设施数据的来源核验、去重和定期更新
+- 数据库与管理后台
+- VR 全景图片与楼盘户型图
+- 实时房价、挂牌量和成交量
+- 学区对口关系
+- 用户登录、付费功能和 AI 聊天助手

@@ -1,0 +1,77 @@
+"use client";
+
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import categoriesData from "@/src/data/categories.json";
+import type { Category } from "@/src/types/map";
+
+const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
+
+interface FocusRequest {
+  type: "sector" | "place";
+  id: string;
+  nonce: number;
+}
+
+interface MapState {
+  enabledCategories: string[];
+  selectedSectorId: string | null;
+  selectedPlaceId: string | null;
+  zoom: number;
+  center: [number, number];
+  mobileFiltersOpen: boolean;
+  disclaimerOpen: boolean;
+  searchMessage: string;
+  focusRequest: FocusRequest | null;
+  toggleCategory: (id: string) => void;
+  showAllCategories: () => void;
+  clearCategories: () => void;
+  selectSector: (id: string | null) => void;
+  selectPlace: (id: string | null) => void;
+  setZoom: (zoom: number) => void;
+  setCenter: (center: [number, number]) => void;
+  setMobileFiltersOpen: (open: boolean) => void;
+  setDisclaimerOpen: (open: boolean) => void;
+  setSearchMessage: (message: string) => void;
+  requestFocus: (type: "sector" | "place", id: string) => void;
+  closeDetail: () => void;
+}
+
+export const useMapStore = create<MapState>()(
+  persist(
+    (set, get) => ({
+      enabledCategories: allCategoryIds,
+      selectedSectorId: null,
+      selectedPlaceId: null,
+      zoom: 10.6,
+      center: [121.4737, 31.2304],
+      mobileFiltersOpen: false,
+      disclaimerOpen: false,
+      searchMessage: "",
+      focusRequest: null,
+      toggleCategory: (id) =>
+        set((state) => ({
+          enabledCategories: state.enabledCategories.includes(id)
+            ? state.enabledCategories.filter((item) => item !== id)
+            : [...state.enabledCategories, id],
+        })),
+      showAllCategories: () => set({ enabledCategories: allCategoryIds }),
+      clearCategories: () => set({ enabledCategories: [] }),
+      selectSector: (id) => set({ selectedSectorId: id, selectedPlaceId: null }),
+      selectPlace: (id) => set({ selectedPlaceId: id }),
+      setZoom: (zoom) => set({ zoom }),
+      setCenter: (center) => set({ center }),
+      setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
+      setDisclaimerOpen: (open) => set({ disclaimerOpen: open }),
+      setSearchMessage: (message) => set({ searchMessage: message }),
+      requestFocus: (type, id) =>
+        set({ focusRequest: { type, id, nonce: (get().focusRequest?.nonce ?? 0) + 1 } }),
+      closeDetail: () => set({ selectedPlaceId: null, selectedSectorId: null }),
+    }),
+    {
+      name: "shanghai-sector-map-session",
+      storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({ enabledCategories: state.enabledCategories }),
+    },
+  ),
+);

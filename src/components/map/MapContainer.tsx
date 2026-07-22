@@ -1,0 +1,145 @@
+"use client";
+
+import { AlertTriangle, LoaderCircle, MapPinned } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import placesData from "@/src/data/places.json";
+import sectorsData from "@/src/data/sectors.json";
+import { useMapStore } from "@/src/store/map-store";
+import type { Place, SectorCollection, SectorFeature } from "@/src/types/map";
+import { PlaceLayer } from "./PlaceLayer";
+import { SectorLayer } from "./SectorLayer";
+
+const places = placesData as Place[];
+const sectors = (sectorsData as SectorCollection).features;
+
+type LoadStatus = "loading" | "ready" | "missing-key" | "error";
+
+export function MapContainer() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<AMap.Map | null>(null);
+  const [amapApi, setAmapApi] = useState<typeof AMap | null>(null);
+  const [mapInstance, setMapInstance] = useState<AMap.Map | null>(null);
+  const [status, setStatus] = useState<LoadStatus>(() => process.env.NEXT_PUBLIC_AMAP_KEY ? "loading" : "missing-key");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [viewportVersion, setViewportVersion] = useState(0);
+  const {
+    zoom,
+    enabledCategories,
+    selectedSectorId,
+    selectedPlaceId,
+    focusRequest,
+    setZoom,
+    setCenter,
+    selectSector,
+    selectPlace,
+    requestFocus,
+  } = useMapStore();
+
+  useEffect(() => {
+    const key = process.env.NEXT_PUBLIC_AMAP_KEY;
+    const securityJsCode = process.env.NEXT_PUBLIC_AMAP_SECURITY_JS_CODE;
+    if (!key) return;
+
+    let cancelled = false;
+    if (securityJsCode) {
+      (window as Window & { _AMapSecurityConfig?: { securityJsCode: string } })._AMapSecurityConfig = { securityJsCode };
+    }
+    import("@amap/amap-jsapi-loader")
+      .then(({ default: AMapLoader }) => AMapLoader.load({ key, version: "2.0" }))
+      .then((api: typeof AMap) => {
+        if (cancelled || !containerRef.current || mapRef.current) return;
+        const map = new api.Map(containerRef.current, {
+          zoom: 10.6,
+          center: [121.4737, 31.2304],
+          viewMode: "2D",
+          mapStyle: "amap://styles/normal",
+          showLabel: true,
+          animateEnable: true,
+        });
+        map.on("zoomchange", () => setZoom(map.getZoom()));
+        map.on("moveend", () => {
+          const center = map.getCenter();
+          setCenter([center.lng, center.lat]);
+          setViewportVersion((value) => value + 1);
+        });
+        mapRef.current = map;
+        setMapInstance(map);
+        setAmapApi(api);
+        setStatus("ready");
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        const message = error instanceof Error ? error.message : "高德地图脚本加载失败";
+        setErrorMessage(message);
+        setStatus("error");
+      });
+
+    return () => {
+      cancelled = true;
+      mapRef.current?.destroy();
+      mapRef.current = null;
+    };
+  }, [setCenter, setZoom]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !focusRequest) return;
+    if (focusRequest.type === "sector") {
+      const sector = sectors.find((item) => item.properties.id === focusRequest.id);
+      if (sector) map.setZoomAndCenter(12.4, sector.properties.center, false, 650);
+    } else {
+      const place = places.find((item) => item.id === focusRequest.id);
+      if (place) map.setZoomAndCenter(15.2, [place.longitude, place.latitude], false, 650);
+    }
+  }, [focusRequest]);
+
+  const handleSectorSelect = useCallback((sector: SectorFeature) => {
+    selectSector(sector.properties.id);
+    requestFocus("sector", sector.properties.id);
+  }, [requestFocus, selectSector]);
+
+  const handlePlaceSelect = useCallback((place: Place) => {
+    selectPlace(place.id);
+    requestFocus("place", place.id);
+  }, [requestFocus, selectPlace]);
+
+  return (
+    <div className="map-stage" aria-label="上海楼市互动地图">
+      <div ref={containerRef} className="amap-host" />
+      {status === "loading" && (
+        <div className="map-status" role="status">
+          <LoaderCircle className="spin" size={24} />
+          <strong>正在加载地图</strong>
+          <span>准备板块边界与设施图层…</span>
+        </div>
+      )}
+      {status === "missing-key" && (
+        <div className="map-fallback">
+          <div className="fallback-grid" />
+          <div className="map-status key-notice" role="alert">
+            <MapPinned size={28} />
+            <strong>配置高德地图 Key 后即可浏览</strong>
+            <span>页面功能与演示数据已就绪，请在环境变量中设置 NEXT_PUBLIC_AMAP_KEY。</span>
+            <code>cp .env.example .env.local</code>
+          </div>
+        </div>
+      )}
+      {status === "error" && (
+        <div className="map-fallback">
+          <div className="fallback-grid" />
+          <div className="map-status key-notice" role="alert">
+            <AlertTriangle size={28} />
+            <strong>地图暂时无法加载</strong>
+            <span>{errorMessage || "请检查网络与高德地图配置后刷新页面。"}</span>
+          </div>
+        </div>
+      )}
+      {status === "ready" && amapApi && mapInstance && (
+        <>
+          <SectorLayer amapApi={amapApi} map={mapInstance} zoom={zoom} selectedSectorId={selectedSectorId} onSelect={handleSectorSelect} />
+          <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
+        </>
+      )}
+    </div>
+  );
+}
