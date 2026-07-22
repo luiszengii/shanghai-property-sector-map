@@ -63,11 +63,13 @@ export function MapContainer() {
           touchZoomCenter: 0,
         });
 
-        const mapElement = containerRef.current;
         let wheelFrame: number | null = null;
         let wheelDelta = 0;
         const handlePinchWheel = (event: WheelEvent) => {
           if (!event.ctrlKey) return;
+          const eventTarget = event.target;
+          const appShell = document.querySelector(".app-shell");
+          if (!(eventTarget instanceof Node) || !appShell?.contains(eventTarget)) return;
           event.preventDefault();
           event.stopPropagation();
           wheelDelta += event.deltaY;
@@ -80,9 +82,9 @@ export function MapContainer() {
             wheelFrame = null;
           });
         };
-        mapElement.addEventListener("wheel", handlePinchWheel, { capture: true, passive: false });
+        window.addEventListener("wheel", handlePinchWheel, { capture: true, passive: false });
         removeGestureGuard = () => {
-          mapElement.removeEventListener("wheel", handlePinchWheel, true);
+          window.removeEventListener("wheel", handlePinchWheel, true);
           if (wheelFrame !== null) window.cancelAnimationFrame(wheelFrame);
         };
         map.on("zoomchange", () => setZoom(map.getZoom()));
