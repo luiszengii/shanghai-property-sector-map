@@ -44,6 +44,8 @@ const featureById = new Map(features.map((feature) => [feature.properties.id, fe
 const recordById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const referenceCheckById = new Map(referenceChecks.map((check) => [check.sectorId, check]));
+const marketDemoSources = [sourceById.get("internal-legacy-demo-v1")]
+  .filter((source): source is SectorSourceRecord => Boolean(source));
 const reviewedCandidateById = new Map(
   reviewedCandidates.map((feature) => [feature.properties.id, feature]),
 );
@@ -141,6 +143,7 @@ export const sectorCatalog = {
   researchGeometryRecords,
   officialScopeGeometryRecords,
   administrativeReferenceRecords,
+  marketDemoSources,
   sources,
   boundaryEvidence,
   referenceChecks,

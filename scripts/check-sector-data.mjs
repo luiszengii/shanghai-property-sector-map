@@ -640,7 +640,13 @@ function validateWgs84PolygonalGeometry(feature, label, labelPoint) {
 
 function validateAndGetHostname(url, label) {
   try {
-    return new URL(url).hostname.toLocaleLowerCase("en-US").replace(/\.+$/, "");
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname.toLocaleLowerCase("en-US").replace(/\.+$/, "");
+    if (!["http:", "https:"].includes(parsedUrl.protocol) || hostname.length === 0) {
+      error(`${label}: URL 必须是带域名的 HTTP(S) 地址 ${url}`);
+      return undefined;
+    }
+    return hostname;
   } catch {
     error(`${label}: URL 无效 ${url}`);
     return undefined;
@@ -1165,6 +1171,14 @@ for (const check of referenceChecks) {
         const message = comparisonError instanceof Error ? comparisonError.message : String(comparisonError);
         error(`${id}: 无法复算差异指标：${message}`);
       }
+    }
+  }
+
+  const candidate = candidateById.get(id);
+  if (candidate) {
+    if (!comparison) error(`${id}: 候选面缺少旧演示面差异指标`);
+    else if (comparison.reference !== "official-scope-candidate") {
+      error(`${id}: 候选面差异指标必须引用 official-scope-candidate`);
     }
   }
 

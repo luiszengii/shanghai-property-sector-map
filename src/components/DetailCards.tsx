@@ -131,6 +131,19 @@ export function DetailCard() {
     && ["draft", "reviewed", "published"].includes(geometryStatus)
     && !isRuntimeLoading
     && !isRuntimeFallback;
+  const geometrySourceRows: Array<{
+    label: string;
+    sources: typeof geometrySources;
+  }> = [];
+  if (geometryStatus === "demo" || usesAdministrativeReference || isRuntimeLoading || isRuntimeFallback) {
+    geometrySourceRows.push({ label: "楼市演示面来源", sources: sectorCatalog.marketDemoSources });
+  }
+  if (geometryStatus !== undefined && geometryStatus !== "demo") {
+    geometrySourceRows.push({
+      label: usesAdministrativeReference ? "行政参考层来源" : "候选面来源",
+      sources: geometrySources,
+    });
+  }
   const geometryLabel = isRuntimeLoading
     ? usesAdministrativeReference
       ? "行政参考层加载中 · 楼市演示面可见"
@@ -193,7 +206,7 @@ export function DetailCard() {
                 : "本次候选面坐标转换失败，地图已安全回退到虚线演示面；WGS84 研究数据仍保留，可稍后刷新重试。"
               : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd>
         </div>
-        {geometryStatus !== undefined && geometryStatus !== "demo" && (
+        {(isOfficialScopeCandidate || isAdministrativeReference) && (
           <div>
             <dt><MapPin size={15} /> 显示坐标</dt>
             <dd>地图显示采用本地 WGS84→GCJ-02 近似转换；WGS84 研究主几何保持不变。</dd>
@@ -221,12 +234,12 @@ export function DetailCard() {
             </dd>
           </div>
         )}
-        {geometrySources.length > 0 && (
-          <div>
-            <dt><MapPin size={15} /> 几何来源</dt>
-            <dd>{geometrySources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
+        {geometrySourceRows.map((row) => row.sources.length > 0 && (
+          <div key={row.label}>
+            <dt><MapPin size={15} /> {row.label}</dt>
+            <dd>{row.sources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
           </div>
-        )}
+        ))}
         {geometryVerificationSources.length > 0 && (
           <div>
             <dt><CalendarClock size={15} /> 复核来源</dt>
