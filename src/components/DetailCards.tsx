@@ -84,7 +84,12 @@ export function DetailCard() {
 
   if (place) {
     const category = categories.find((item) => item.id === place.category);
-    const activeGeometry = sector ? sectorCatalog.getActiveGeometry(sector.properties.id) : undefined;
+    const activeGeometry = sector
+      ? sectorCatalog.resolveActiveGeometry(
+        sector.properties.id,
+        Boolean(sectorGeometryFallbacks[sector.properties.id]),
+      )
+      : undefined;
     const origin = activeGeometry
       ? coordinateToDisplayPosition(activeGeometry.center, activeGeometry.coordinateSystem)
       : center;

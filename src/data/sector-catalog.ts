@@ -111,11 +111,11 @@ function getMatchedAlias(id: string, query: string) {
   return record.aliases.find((alias) => normalizeSearchTerm(alias).includes(needle));
 }
 
-function getActiveGeometry(id: string): SectorActiveGeometry | undefined {
+function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActiveGeometry | undefined {
   const feature = featureById.get(id);
   if (!feature) return undefined;
   const reviewedCandidate = reviewedCandidateById.get(id);
-  if (reviewedCandidate) {
+  if (reviewedCandidate && !fallbackToDemo) {
     return {
       kind: "official-scope-candidate",
       coordinateSystem: "WGS84",
@@ -146,7 +146,7 @@ export const sectorCatalog = {
   referenceChecks,
   getFeature: (id: string) => featureById.get(id),
   getRecord: (id: string) => recordById.get(id),
-  getActiveGeometry,
+  resolveActiveGeometry,
   getReviewedCandidate: (id: string) => reviewedCandidateById.get(id),
   getAdministrativeReference: (id: string) => administrativeReferenceById.get(id),
   hasResearchGeometry: (id: string) => {

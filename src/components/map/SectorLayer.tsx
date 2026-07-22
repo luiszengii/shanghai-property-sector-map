@@ -21,7 +21,7 @@ const adminReferences = sectorCatalog.administrativeReferences;
 const researchGeometries = [...reviewedCandidates, ...adminReferences];
 const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
   id: feature.properties.id,
-  center: sectorCatalog.getActiveGeometry(feature.properties.id)?.center
+  center: sectorCatalog.resolveActiveGeometry(feature.properties.id)?.center
     ?? feature.properties.labelPoint,
 }));
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
@@ -159,7 +159,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           path,
           cursor: "pointer",
         });
-        const activeGeometry = sectorCatalog.getActiveGeometry(sector.properties.id);
+        const activeGeometry = sectorCatalog.resolveActiveGeometry(sector.properties.id);
         const initialLabelPosition = activeGeometry?.kind === "market-demo"
           ? activeGeometry.center
           : sector.properties.center;

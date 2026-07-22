@@ -32,6 +32,7 @@ export function MapContainer() {
     selectedProjectId,
     showProjects,
     focusRequest,
+    sectorGeometryFallbacks,
     setZoom,
     setCenter,
     selectSector,
@@ -132,7 +133,10 @@ export function MapContainer() {
     const map = mapRef.current;
     if (!map || !focusRequest) return;
     if (focusRequest.type === "sector") {
-      const activeGeometry = sectorCatalog.getActiveGeometry(focusRequest.id);
+      const activeGeometry = sectorCatalog.resolveActiveGeometry(
+        focusRequest.id,
+        Boolean(sectorGeometryFallbacks[focusRequest.id]),
+      );
       if (activeGeometry) {
         const activeCenter = coordinateToDisplayPosition(
           activeGeometry.center,
@@ -147,7 +151,7 @@ export function MapContainer() {
       const project = projects.find((item) => item.id === focusRequest.id);
       if (project) map.setZoomAndCenter(13.8, project.position, false, 650);
     }
-  }, [focusRequest]);
+  }, [focusRequest, sectorGeometryFallbacks]);
 
   const handleSectorSelect = useCallback((sector: SectorFeature) => {
     selectSector(sector.properties.id);
