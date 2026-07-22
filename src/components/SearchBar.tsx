@@ -3,6 +3,7 @@
 import { Navigation, Search, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import placesData from "@/src/data/places.json";
+import { projects } from "@/src/data/projects";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, SectorCollection } from "@/src/types/map";
@@ -12,13 +13,22 @@ const sectors = (sectorsData as SectorCollection).features;
 
 export function SearchBar() {
   const [query, setQuery] = useState("");
-  const { selectSector, selectPlace, requestFocus, searchMessage, setSearchMessage } = useMapStore();
+  const { selectSector, selectPlace, selectProject, requestFocus, searchMessage, setSearchMessage } = useMapStore();
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalized = query.trim().toLowerCase();
     if (!normalized) {
       setSearchMessage("请输入板块或点位名称");
+      return;
+    }
+    const project = projects.find((item) =>
+      [item.name, item.sector, item.district].some((value) => value.toLowerCase().includes(normalized)),
+    );
+    if (project) {
+      selectProject(project.id);
+      requestFocus("project", project.id);
+      setSearchMessage("已定位新盘：" + project.name);
       return;
     }
     const sector = sectors.find((item) => item.properties.name.toLowerCase().includes(normalized));
@@ -42,7 +52,7 @@ export function SearchBar() {
     <div className="search-wrap">
       <form className="search-form" onSubmit={handleSubmit} role="search">
         <Search size={18} aria-hidden="true" />
-        <input value={query} onChange={(event) => { setQuery(event.target.value); if (searchMessage) setSearchMessage(""); }} placeholder="搜索板块或设施点位" aria-label="搜索板块或设施点位" />
+        <input value={query} onChange={(event) => { setQuery(event.target.value); if (searchMessage) setSearchMessage(""); }} placeholder="搜索板块、新盘或设施" aria-label="搜索板块、新盘或设施" />
         {query && <button type="button" className="icon-button compact" onClick={() => { setQuery(""); setSearchMessage(""); }} aria-label="清空搜索"><X size={16} /></button>}
         <button type="submit" className="search-submit" aria-label="搜索定位"><Navigation size={14} /></button>
       </form>

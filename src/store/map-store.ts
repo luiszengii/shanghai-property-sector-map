@@ -8,7 +8,7 @@ import type { Category } from "@/src/types/map";
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
 interface FocusRequest {
-  type: "sector" | "place";
+  type: "sector" | "place" | "project";
   id: string;
   nonce: number;
 }
@@ -17,6 +17,8 @@ interface MapState {
   enabledCategories: string[];
   selectedSectorId: string | null;
   selectedPlaceId: string | null;
+  selectedProjectId: string | null;
+  showProjects: boolean;
   zoom: number;
   center: [number, number];
   mobileFiltersOpen: boolean;
@@ -28,12 +30,14 @@ interface MapState {
   clearCategories: () => void;
   selectSector: (id: string | null) => void;
   selectPlace: (id: string | null) => void;
+  selectProject: (id: string | null) => void;
+  toggleProjects: () => void;
   setZoom: (zoom: number) => void;
   setCenter: (center: [number, number]) => void;
   setMobileFiltersOpen: (open: boolean) => void;
   setDisclaimerOpen: (open: boolean) => void;
   setSearchMessage: (message: string) => void;
-  requestFocus: (type: "sector" | "place", id: string) => void;
+  requestFocus: (type: "sector" | "place" | "project", id: string) => void;
   closeDetail: () => void;
 }
 
@@ -43,6 +47,8 @@ export const useMapStore = create<MapState>()(
       enabledCategories: allCategoryIds,
       selectedSectorId: null,
       selectedPlaceId: null,
+      selectedProjectId: null,
+      showProjects: true,
       zoom: 10.6,
       center: [121.4737, 31.2304],
       mobileFiltersOpen: false,
@@ -57,8 +63,10 @@ export const useMapStore = create<MapState>()(
         })),
       showAllCategories: () => set({ enabledCategories: allCategoryIds }),
       clearCategories: () => set({ enabledCategories: [] }),
-      selectSector: (id) => set({ selectedSectorId: id, selectedPlaceId: null }),
-      selectPlace: (id) => set({ selectedPlaceId: id }),
+      selectSector: (id) => set({ selectedSectorId: id, selectedPlaceId: null, selectedProjectId: null }),
+      selectPlace: (id) => set({ selectedPlaceId: id, selectedProjectId: null }),
+      selectProject: (id) => set({ selectedProjectId: id, selectedPlaceId: null }),
+      toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
       setZoom: (zoom) => set({ zoom }),
       setCenter: (center) => set({ center }),
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
@@ -66,12 +74,12 @@ export const useMapStore = create<MapState>()(
       setSearchMessage: (message) => set({ searchMessage: message }),
       requestFocus: (type, id) =>
         set({ focusRequest: { type, id, nonce: (get().focusRequest?.nonce ?? 0) + 1 } }),
-      closeDetail: () => set({ selectedPlaceId: null, selectedSectorId: null }),
+      closeDetail: () => set({ selectedPlaceId: null, selectedProjectId: null, selectedSectorId: null }),
     }),
     {
       name: "shanghai-sector-map-session",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ enabledCategories: state.enabledCategories }),
+      partialize: (state) => ({ enabledCategories: state.enabledCategories, showProjects: state.showProjects }),
     },
   ),
 );

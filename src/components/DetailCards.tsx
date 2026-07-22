@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Route, Ruler, X } from "lucide-react";
+import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
+import { projects } from "@/src/data/projects";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorCollection } from "@/src/types/map";
@@ -23,11 +24,38 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
-  const { selectedSectorId, selectedPlaceId, center, closeDetail, requestFocus, selectSector } = useMapStore();
+  const { selectedSectorId, selectedPlaceId, selectedProjectId, center, closeDetail, requestFocus, selectSector } = useMapStore();
   const place = places.find((item) => item.id === selectedPlaceId);
+  const project = projects.find((item) => item.id === selectedProjectId);
   const sector = sectors.find((item) => item.properties.id === selectedSectorId);
 
-  if (!place && !sector) return null;
+  if (!place && !project && !sector) return null;
+
+  if (project) {
+    return (
+      <article className="detail-card project-detail-card glass-panel" aria-label={project.name + "详情"}>
+        <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
+        <span className="eyebrow">{project.district} · {project.sector} · 500–800 万新盘</span>
+        <h2>{project.name}</h2>
+        <div className="project-summary">
+          <strong>{project.averagePrice} 万元/㎡</strong>
+          <span>{project.unitType}</span>
+          <span className="project-rating"><Star size={13} fill="currentColor" />{project.rating === null ? "暂无推荐指数" : project.rating + "/5"}</span>
+        </div>
+        <span className="unverified-badge">用户观点 · 待核验</span>
+        <div className="project-opinion-grid">
+          <section><h3><ThumbsUp size={14} /> 项目优势</h3><ul>{project.advantages.map((item) => <li key={item}>{item}</li>)}</ul></section>
+          <section className="is-caution"><h3><ThumbsDown size={14} /> 项目劣势</h3><ul>{project.disadvantages.map((item) => <li key={item}>{item}</li>)}</ul></section>
+        </div>
+        <dl className="detail-list project-meta">
+          <div><dt><GraduationCap size={15} /> 周边教育</dt><dd>{project.education.join("、")}</dd></div>
+          <div><dt><Building2 size={15} /> 信息来源</dt><dd>{project.sourceName}</dd></div>
+          <div><dt><CalendarClock size={15} /> 收录日期</dt><dd>{project.sourceDate}</dd></div>
+        </dl>
+        <p className="project-disclaimer">价格、交通、学校、规划及周边风险均未独立核验；点位由高德项目名称搜索，匹配失败时显示板块内近似位置。</p>
+      </article>
+    );
+  }
 
   if (place) {
     const category = categories.find((item) => item.id === place.category);

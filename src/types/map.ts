@@ -24,6 +24,24 @@ export interface Place {
   isMock: boolean;
 }
 
+export interface PropertyProject {
+  id: string;
+  district: string;
+  sector: string;
+  name: string;
+  unitType: string;
+  averagePrice: number;
+  advantages: string[];
+  disadvantages: string[];
+  education: string[];
+  rating: number | null;
+  searchKeyword: string;
+  fallbackCenter: [number, number];
+  sourceName: string;
+  sourceDate: string;
+  verificationStatus: "unverified";
+}
+
 export interface Category {
   id: PlaceCategory;
   name: string;

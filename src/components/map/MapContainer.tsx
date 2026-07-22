@@ -3,10 +3,12 @@
 import { AlertTriangle, LoaderCircle, MapPinned, Minus, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import placesData from "@/src/data/places.json";
+import { projects } from "@/src/data/projects";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
-import type { Place, SectorCollection, SectorFeature } from "@/src/types/map";
+import type { Place, PropertyProject, SectorCollection, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
+import { ProjectLayer } from "./ProjectLayer";
 import { SectorLayer } from "./SectorLayer";
 
 const places = placesData as Place[];
@@ -27,11 +29,14 @@ export function MapContainer() {
     enabledCategories,
     selectedSectorId,
     selectedPlaceId,
+    selectedProjectId,
+    showProjects,
     focusRequest,
     setZoom,
     setCenter,
     selectSector,
     selectPlace,
+    selectProject,
     requestFocus,
   } = useMapStore();
 
@@ -129,9 +134,12 @@ export function MapContainer() {
     if (focusRequest.type === "sector") {
       const sector = sectors.find((item) => item.properties.id === focusRequest.id);
       if (sector) map.setZoomAndCenter(12.4, sector.properties.center, false, 650);
-    } else {
+    } else if (focusRequest.type === "place") {
       const place = places.find((item) => item.id === focusRequest.id);
       if (place) map.setZoomAndCenter(15.2, [place.longitude, place.latitude], false, 650);
+    } else {
+      const project = projects.find((item) => item.id === focusRequest.id);
+      if (project) map.setZoomAndCenter(13.8, project.fallbackCenter, false, 650);
     }
   }, [focusRequest]);
 
@@ -144,6 +152,10 @@ export function MapContainer() {
     selectPlace(place.id);
     requestFocus("place", place.id);
   }, [requestFocus, selectPlace]);
+
+  const handleProjectSelect = useCallback((project: PropertyProject) => {
+    selectProject(project.id);
+  }, [selectProject]);
 
   return (
     <div className="map-stage" aria-label="上海楼市互动地图">
@@ -190,6 +202,7 @@ export function MapContainer() {
         <>
           <SectorLayer amapApi={amapApi} map={mapInstance} zoom={zoom} selectedSectorId={selectedSectorId} onSelect={handleSectorSelect} />
           <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
+          <ProjectLayer amapApi={amapApi} map={mapInstance} zoom={zoom} visible={showProjects} selectedProjectId={selectedProjectId} onSelect={handleProjectSelect} />
         </>
       )}
     </div>

@@ -11,7 +11,7 @@ export function MapLegend() {
   return (
     <div className={`map-legend glass-panel ${open ? "is-open" : ""}`}>
       <button onClick={() => setOpen((value) => !value)} aria-expanded={open}><span className="legend-dot" />{mode}<ChevronUp size={15} /></button>
-      {open && <div className="legend-body"><span><i className="sector-swatch" />演示板块边界</span><span><i className="place-swatch" />设施点位</span><small>缩放地图自动切换信息层级</small></div>}
+      {open && <div className="legend-body"><span><i className="sector-swatch" />演示板块边界</span><span><i className="project-swatch" />500–800 万新盘</span><span><i className="place-swatch" />设施点位</span><small>缩放地图自动切换信息层级</small></div>}
     </div>
   );
 }
