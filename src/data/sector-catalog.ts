@@ -1,4 +1,5 @@
 import boundaryEvidenceData from "@/src/data/sectors/boundary-evidence.json";
+import referenceChecksData from "@/src/data/sectors/reference-checks.json";
 import registryData from "@/src/data/sectors/registry.json";
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
@@ -6,6 +7,7 @@ import type {
   SectorBoundaryEvidence,
   SectorCollection,
   SectorFeature,
+  SectorReferenceCheck,
   SectorRegistryEntry,
   SectorSourceRecord,
 } from "@/src/types/map";
@@ -14,11 +16,21 @@ const features = (sectorsData as SectorCollection).features;
 const registry = registryData.sectors as SectorRegistryEntry[];
 const sources = sourcesData.sources as SectorSourceRecord[];
 const boundaryEvidence = boundaryEvidenceData.edges as SectorBoundaryEvidence[];
+const referenceChecks = referenceChecksData.checks as SectorReferenceCheck[];
 
 const featureById = new Map(features.map((feature) => [feature.properties.id, feature]));
 const recordById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
-const researchGeometryRecords = registry.filter((record) => record.geometry.status !== "demo");
+const referenceCheckById = new Map(referenceChecks.map((check) => [check.sectorId, check]));
+const researchGeometryRecords = registry.filter(
+  (record) => record.geometry.status !== "demo",
+);
+const officialScopeGeometryRecords = registry.filter(
+  (record) => record.geometry.status !== "demo" && record.geometry.status !== "admin-reference",
+);
+const administrativeReferenceRecords = registry.filter(
+  (record) => record.geometry.status === "admin-reference",
+);
 
 function normalizeSearchTerm(value: string) {
   return value.trim().toLocaleLowerCase("zh-CN").replaceAll(/\s+/g, "");
@@ -52,6 +64,14 @@ function getGeometrySourcesForSector(id: string) {
     .filter((source): source is SectorSourceRecord => Boolean(source));
 }
 
+function getGeometryVerificationSourcesForSector(id: string) {
+  const record = recordById.get(id);
+  if (!record) return [];
+  return (record.geometry.verificationSourceIds ?? [])
+    .map((sourceId) => sourceById.get(sourceId))
+    .filter((source): source is SectorSourceRecord => Boolean(source));
+}
+
 function getBoundaryEvidenceForSector(id: string) {
   return boundaryEvidence.filter((edge) => edge.sectorId === id);
 }
@@ -67,8 +87,11 @@ export const sectorCatalog = {
   features,
   registry,
   researchGeometryRecords,
+  officialScopeGeometryRecords,
+  administrativeReferenceRecords,
   sources,
   boundaryEvidence,
+  referenceChecks,
   getFeature: (id: string) => featureById.get(id),
   getRecord: (id: string) => recordById.get(id),
   hasResearchGeometry: (id: string) => {
@@ -77,7 +100,9 @@ export const sectorCatalog = {
   },
   getSources: getSourcesForSector,
   getGeometrySources: getGeometrySourcesForSector,
+  getGeometryVerificationSources: getGeometryVerificationSourcesForSector,
   getBoundaryEvidence: getBoundaryEvidenceForSector,
+  getReferenceCheck: (id: string) => referenceCheckById.get(id),
   getMatchedAlias,
   match,
 };

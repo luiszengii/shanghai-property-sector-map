@@ -98,18 +98,37 @@ export function DetailCard() {
   const sectorRecord = sectorCatalog.getRecord(sector.properties.id);
   const definitionSources = sectorCatalog.getSources(sector.properties.id);
   const geometrySources = sectorCatalog.getGeometrySources(sector.properties.id);
+  const geometryVerificationSources = sectorCatalog.getGeometryVerificationSources(sector.properties.id);
   const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
+  const referenceCheck = sectorCatalog.getReferenceCheck(sector.properties.id);
   const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
-  const isCandidateGeometry = sectorCatalog.hasResearchGeometry(sector.properties.id) && !isRuntimeFallback;
-  const geometryLabel = isRuntimeFallback ? "演示几何 · 候选转换失败" : isCandidateGeometry ? "候选几何" : "演示几何";
-  const reviewLabel = sectorRecord?.reviewStatus === "reviewed-high"
-    ? "边界规则已核验 · 候选面待人工复核"
-    : sectorRecord?.reviewStatus === "draft-medium"
-      ? "口径待选择"
-      : "定义草案 · 暂不发布";
-  const description = isCandidateGeometry
-    ? sector.properties.description.replace("演示范围", "研究候选范围")
-    : sector.properties.description;
+  const geometryStatus = sectorRecord?.geometry.status;
+  const isAdministrativeReference = geometryStatus === "admin-reference" && !isRuntimeFallback;
+  const isOfficialScopeCandidate = geometryStatus !== undefined
+    && ["draft", "reviewed", "published"].includes(geometryStatus)
+    && !isRuntimeFallback;
+  const geometryLabel = isRuntimeFallback
+    ? "演示几何 · 研究面转换失败"
+    : isOfficialScopeCandidate
+      ? "官方四至候选面"
+      : isAdministrativeReference
+        ? "行政参考面"
+        : "演示几何";
+  const reviewLabel = isAdministrativeReference
+    ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
+      ? "行政参考面已复核 · 浦东调整段以后续公告为准"
+      : "行政参考面已与标准图、官方面积和邻接关系复核"
+    : sectorRecord?.reviewStatus === "reviewed-high"
+      ? "边界规则已核验 · 候选面待人工复核"
+      : sectorRecord?.reviewStatus === "draft-medium"
+        ? "口径待选择"
+        : "定义草案 · 暂不发布";
+  const baseDescription = sector.properties.description.replace(/演示范围。?$/, "");
+  const description = isOfficialScopeCandidate
+    ? `${baseDescription}；当前显示按官方文字四至重建的研究候选面。`
+    : isAdministrativeReference
+      ? `${baseDescription}；当前显示${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考面。`
+      : sector.properties.description;
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
       <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
@@ -129,10 +148,38 @@ export function DetailCard() {
           </div>
         )}
         <div><dt><MapPin size={15} /> 当前几何</dt><dd>{isRuntimeFallback ? "本次高德坐标转换失败，地图已安全回退到虚线演示面；WGS84 候选数据仍保留，可稍后刷新重试。" : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd></div>
+        {referenceCheck && (
+          <div>
+            <dt><Route size={15} /> 天地图对照</dt>
+            <dd>{referenceCheck.summary}</dd>
+          </div>
+        )}
+        {referenceCheck && referenceCheck.standardMapDocuments.length > 0 && (
+          <div>
+            <dt><MapPin size={15} /> 标准地图</dt>
+            <dd>
+              {referenceCheck.standardMapDocuments.map((document, index) => (
+                <span key={document.url}>
+                  {index > 0 && "、"}
+                  <a href={document.url} target="_blank" rel="noreferrer">
+                    {document.title}（{document.mapDate} · {document.reviewNumber}）<ExternalLink size={13} />
+                  </a>
+                </span>
+              ))}
+              <span>；仅作形状和邻接关系视觉复核，不作为坐标或法定界址来源。</span>
+            </dd>
+          </div>
+        )}
         {geometrySources.length > 0 && (
           <div>
             <dt><MapPin size={15} /> 几何来源</dt>
             <dd>{geometrySources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
+          </div>
+        )}
+        {geometryVerificationSources.length > 0 && (
+          <div>
+            <dt><CalendarClock size={15} /> 复核来源</dt>
+            <dd>{geometryVerificationSources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
           </div>
         )}
         {definitionSources.length > 0 && (

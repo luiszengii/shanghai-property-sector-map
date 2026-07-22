@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedFrom": "data/geo/admin-reference-definitions.json",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "sourceSnapshotId": "osm-geofabrik-shanghai-260721",
+  "sourceGpkgSha256": "3a45dcc2173cc1e67471e0190564b7f6c19b3655697d0eff830bda48e2dcbba1",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sectors": [
+    {
+      "id": "sector_daning",
+      "scopeVersion": "admin-reference-2025",
+      "referenceAdminName": "大宁路街道",
+      "osmRelationId": "14186009",
+      "osmName": "大宁路街道",
+      "unsimplifiedAreaSquareKilometers": 6.355,
+      "displayAreaSquareKilometers": 6.3492,
+      "officialAreaSquareKilometers": 6.24,
+      "areaDeltaPercent": 1.84,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 64,
+      "verificationSourceIds": [
+        "official-daning-street-boundary-2023",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "静安区",
+        "title": "静安区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/4-静安区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）036号",
+        "manualShapeVerdict": "consistent"
+      }
+    },
+    {
+      "id": "sector_zhangjiang",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "referenceAdminName": "张江镇",
+      "osmRelationId": "14179188",
+      "osmName": "张江镇",
+      "unsimplifiedAreaSquareKilometers": 45.993,
+      "displayAreaSquareKilometers": 45.999,
+      "officialAreaSquareKilometers": 45.02,
+      "areaDeltaPercent": 2.16,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 224,
+      "verificationSourceIds": [
+        "official-zhangjiang-town-unit-plan",
+        "official-pudong-boundary-adjustment-2025",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      },
+      "officialAreaAsOf": "2022-pre-adjustment"
+    },
+    {
+      "id": "sector_jinqiao",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "referenceAdminName": "金桥镇",
+      "osmRelationId": "14179186",
+      "osmName": "金桥镇",
+      "unsimplifiedAreaSquareKilometers": 24.9513,
+      "displayAreaSquareKilometers": 24.952,
+      "officialAreaSquareKilometers": 25.28,
+      "areaDeltaPercent": 1.3,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 142,
+      "verificationSourceIds": [
+        "official-jinqiao-town-area-2025",
+        "official-pudong-boundary-adjustment-2025",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      }
+    },
+    {
+      "id": "sector_sanlin",
+      "scopeVersion": "admin-reference-2025",
+      "referenceAdminName": "三林镇",
+      "osmRelationId": "14179226",
+      "osmName": "三林镇",
+      "unsimplifiedAreaSquareKilometers": 33.9924,
+      "displayAreaSquareKilometers": 33.9955,
+      "officialAreaSquareKilometers": 34.19,
+      "areaDeltaPercent": 0.58,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 312,
+      "verificationSourceIds": [
+        "official-sanlin-profile-2023",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "consistent"
+      }
+    },
+    {
+      "id": "sector_beicai",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "referenceAdminName": "北蔡镇",
+      "osmRelationId": "14179101",
+      "osmName": "北蔡镇",
+      "unsimplifiedAreaSquareKilometers": 23.1165,
+      "displayAreaSquareKilometers": 23.116,
+      "officialAreaSquareKilometers": 23.71,
+      "areaDeltaPercent": 2.5,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 133,
+      "verificationSourceIds": [
+        "official-beicai-town-area-2023",
+        "official-pudong-boundary-adjustment-2025",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      },
+      "officialAreaAsOf": "2023-pre-adjustment"
+    },
+    {
+      "id": "sector_gumei",
+      "scopeVersion": "admin-reference-2025",
+      "referenceAdminName": "古美路街道",
+      "osmRelationId": "14187991",
+      "osmName": "古美街道",
+      "unsimplifiedAreaSquareKilometers": 5.933,
+      "displayAreaSquareKilometers": 5.945,
+      "officialAreaSquareKilometers": 6.2,
+      "areaDeltaPercent": 4.31,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 46,
+      "verificationSourceIds": [
+        "official-gumei-street-scope-2024",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "闵行区",
+        "title": "闵行区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/8-闵行区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）040号",
+        "manualShapeVerdict": "consistent"
+      }
+    },
+    {
+      "id": "sector_xinzhuang",
+      "scopeVersion": "admin-reference-2025",
+      "referenceAdminName": "莘庄镇",
+      "osmRelationId": "14187988",
+      "osmName": "莘庄镇",
+      "unsimplifiedAreaSquareKilometers": 19.3922,
+      "displayAreaSquareKilometers": 19.3908,
+      "officialAreaSquareKilometers": 19.14,
+      "areaDeltaPercent": 1.32,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 82,
+      "verificationSourceIds": [
+        "official-xinzhuang-transport-plan-2024",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "闵行区",
+        "title": "闵行区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/8-闵行区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）040号",
+        "manualShapeVerdict": "consistent"
+      }
+    },
+    {
+      "id": "sector_xujing",
+      "scopeVersion": "admin-reference-2025",
+      "referenceAdminName": "徐泾镇",
+      "osmRelationId": "12979866",
+      "osmName": "徐泾镇",
+      "unsimplifiedAreaSquareKilometers": 39.5402,
+      "displayAreaSquareKilometers": 39.5454,
+      "officialAreaSquareKilometers": 38.55,
+      "areaDeltaPercent": 2.57,
+      "simplificationToleranceMeters": 10,
+      "displayPointCount": 248,
+      "verificationSourceIds": [
+        "official-xujing-profile-2025",
+        "official-tianditu-shanghai-standard-maps-2025"
+      ],
+      "standardMap": {
+        "district": "青浦区",
+        "title": "青浦区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/14-青浦区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）046号",
+        "manualShapeVerdict": "consistent"
+      }
+    }
+  ]
+}

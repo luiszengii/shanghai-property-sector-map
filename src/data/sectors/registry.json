@@ -59,14 +59,15 @@
       "definitionSourceIds": ["official-daning-13th-plan-2017", "official-daning-plan-update-2023"],
       "boundaryEvidenceIds": ["daning-north", "daning-east", "daning-south", "daning-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "有历史完整四至，但当前有效版本和市场语义尚未冻结。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-daning-street-boundary-2023", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示大宁路街道行政参考面（6.3550 平方公里），已与官方 6.24 平方公里和天地图街道形状核对；它不替代 10.92 平方公里环大宁或市场大宁定义。"
       }
     },
     {
@@ -103,14 +104,15 @@
       "definitionSourceIds": ["official-zhangjiang-science-city-2017", "official-pudong-boundary-adjustment-2025", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["zhangjiang-north", "zhangjiang-east", "zhangjiang-south", "zhangjiang-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "先冻结语义选择，再按所选范围重建。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-zhangjiang-town-unit-plan", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示公告后更新的固定 OSM 张江镇行政参考面（45.9930 平方公里）；45.02 平方公里只作 2022 年调整前面积校验，2025 年调整段以 11 月公告为优先证据，不代表法定界址、市场张江或张江科学城范围。"
       }
     },
     {
@@ -125,14 +127,15 @@
       "definitionSourceIds": ["official-jinqiao-13th-plan", "official-jinqiao-eia-scope-2024", "official-pudong-boundary-adjustment-2025", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["jinqiao-north", "jinqiao-east", "jinqiao-south", "jinqiao-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "官方开发区四至清楚，但不代表市场金桥板块已经完成定义。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-jinqiao-town-area-2025", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示金桥镇行政参考面（24.9513 平方公里）；与官方 25.28 平方公里接近，金桥—张江调整段以 2025 年 11 月公告优先，不代表开发区或市场金桥。"
       }
     },
     {
@@ -147,14 +150,15 @@
       "definitionSourceIds": ["official-sanlin-profile-2023", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["sanlin-north", "sanlin-east", "sanlin-south", "sanlin-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "现有面与前滩、北蔡重叠，必须按共享边重新划分。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-sanlin-profile-2023", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示三林镇行政参考面（33.9924 平方公里），与官方 34.19 平方公里及天地图形状接近；前滩、东明路街道和市场三林仍需另行拆分。"
       }
     },
     {
@@ -169,14 +173,15 @@
       "definitionSourceIds": ["official-pudong-boundary-adjustment-2025", "official-beicai-industry-scope-2026", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["beicai-north", "beicai-east", "beicai-south", "beicai-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "现有面与张江、三林重叠，不能升级为 reviewed。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-beicai-town-area-2023", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示北蔡镇行政参考面（23.1165 平方公里）；标准图早于 2025 年北蔡—张江、北蔡—康桥调整，调整段以后续公告优先，不代表市场北蔡。"
       }
     },
     {
@@ -191,14 +196,15 @@
       "definitionSourceIds": ["official-shanghai-town-list-2025", "official-minhang-central-unit-plan"],
       "boundaryEvidenceIds": ["gumei-north", "gumei-east", "gumei-south", "gumei-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "现有面与莘庄重叠，缺少可复核共享边。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-gumei-street-scope-2024", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示古美路街道行政参考面（5.9330 平方公里），与官方 6.2 平方公里量级及天地图形状接近；不代表市场古美已经冻结。"
       }
     },
     {
@@ -213,14 +219,15 @@
       "definitionSourceIds": ["official-shanghai-town-list-2025", "official-xinzhuang-transport-plan-2024", "official-xinzhuang-subcenter-2021", "official-minhang-central-unit-plan"],
       "boundaryEvidenceIds": ["xinzhuang-north", "xinzhuang-east", "xinzhuang-south", "xinzhuang-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "现有面与古美重叠，不能视为街镇界或正式市场板块。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-xinzhuang-transport-plan-2024", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示莘庄镇行政参考面（19.3922 平方公里），与官方 19.14 平方公里及天地图形状接近；不代表 4.3 平方公里副中心或市场莘庄。"
       }
     },
     {
@@ -235,14 +242,15 @@
       "definitionSourceIds": ["official-shanghai-town-list-2025", "official-xujing-profile-2025"],
       "boundaryEvidenceIds": ["xujing-north", "xujing-east", "xujing-south", "xujing-west"],
       "geometry": {
-        "status": "demo",
-        "confidence": "low",
-        "coordinateSystem": "GCJ-02-assumed",
-        "coordinateSystemVerified": false,
-        "version": "legacy-demo-v1",
-        "sourceIds": ["internal-legacy-demo-v1"],
-        "publicationPolicy": "demo_only",
-        "note": "现有面与虹桥商务区重叠，需先确定是否采用包含、拆分或共享属性关系。"
+        "status": "admin-reference",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-admin-reference-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-xujing-profile-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "当前地图显示徐泾镇行政参考面（39.5402 平方公里），与官方 38.55 平方公里及天地图形状接近；西虹桥片区和市场徐泾仍需另行定义。"
       }
     },
     {

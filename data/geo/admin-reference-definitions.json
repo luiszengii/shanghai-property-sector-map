@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "1.0.0",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "notice": "街道、镇行政参考面，用于校准楼市板块位置；不是楼市板块定稿，也不是法定行政界址。天地图标准图只参与视觉核对，不提供本文件中的坐标。",
+  "sectors": [
+    {
+      "id": "sector_daning",
+      "canonicalName": "大宁",
+      "referenceAdminName": "大宁路街道",
+      "scopeVersion": "admin-reference-2025",
+      "osmAdminRelationId": "14186009",
+      "expectedOsmName": "大宁路街道",
+      "officialAreaSquareKilometers": 6.24,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-daning-street-boundary-2023", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "静安区",
+        "title": "静安区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/4-静安区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）036号",
+        "manualShapeVerdict": "consistent"
+      },
+      "geometryRule": "固定 OSM 快照中的大宁路街道 relation，经 10 米拓扑保持简化用于地图显示；与天地图静安区街道图、官方 6.24 平方公里面积和四至交叉核对。"
+    },
+    {
+      "id": "sector_zhangjiang",
+      "canonicalName": "张江",
+      "referenceAdminName": "张江镇",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "osmAdminRelationId": "14179188",
+      "expectedOsmName": "张江镇",
+      "officialAreaSquareKilometers": 45.02,
+      "officialAreaAsOf": "2022-pre-adjustment",
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-zhangjiang-town-unit-plan", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      },
+      "geometryRule": "固定 OSM 快照中的张江镇 relation 在 2025 年 11 月公告后更新，经 10 米拓扑保持简化；45.02 平方公里只作 2022 年调整前面积校验，北蔡—张江、金桥—张江段以调整公告为优先证据。"
+    },
+    {
+      "id": "sector_jinqiao",
+      "canonicalName": "金桥",
+      "referenceAdminName": "金桥镇",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "osmAdminRelationId": "14179186",
+      "expectedOsmName": "金桥镇",
+      "officialAreaSquareKilometers": 25.28,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-jinqiao-town-area-2025", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      },
+      "geometryRule": "固定 OSM 快照中的金桥镇 relation，经 10 米拓扑保持简化；面积与官方 25.28 平方公里交叉核对，金桥—张江段优先服从 2025 年 11 月调整公告。"
+    },
+    {
+      "id": "sector_sanlin",
+      "canonicalName": "三林",
+      "referenceAdminName": "三林镇",
+      "scopeVersion": "admin-reference-2025",
+      "osmAdminRelationId": "14179226",
+      "expectedOsmName": "三林镇",
+      "officialAreaSquareKilometers": 34.19,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-sanlin-profile-2023", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "consistent"
+      },
+      "geometryRule": "固定 OSM 快照中的三林镇 relation，经 10 米拓扑保持简化；与天地图浦东街镇图、官方 34.19 平方公里面积及黄浦江、川杨河邻接关系交叉核对。"
+    },
+    {
+      "id": "sector_beicai",
+      "canonicalName": "北蔡",
+      "referenceAdminName": "北蔡镇",
+      "scopeVersion": "admin-reference-post-2025-adjustment",
+      "osmAdminRelationId": "14179101",
+      "expectedOsmName": "北蔡镇",
+      "officialAreaSquareKilometers": 23.71,
+      "officialAreaAsOf": "2023-pre-adjustment",
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-beicai-town-area-2023", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "浦东新区",
+        "title": "浦东新区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）043号",
+        "manualShapeVerdict": "superseded_in_adjusted_segments"
+      },
+      "geometryRule": "固定 OSM 快照中的北蔡镇 relation，经 10 米拓扑保持简化；2023 年 23.71 平方公里仅作调整前面积校验，北蔡—张江、北蔡—康桥段优先服从 2025 年 11 月调整公告。"
+    },
+    {
+      "id": "sector_gumei",
+      "canonicalName": "古美",
+      "referenceAdminName": "古美路街道",
+      "scopeVersion": "admin-reference-2025",
+      "osmAdminRelationId": "14187991",
+      "expectedOsmName": "古美街道",
+      "officialAreaSquareKilometers": 6.2,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-gumei-street-scope-2024", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "闵行区",
+        "title": "闵行区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/8-闵行区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）040号",
+        "manualShapeVerdict": "consistent"
+      },
+      "geometryRule": "固定 OSM 快照中名为“古美街道”的 relation，经 10 米拓扑保持简化；按官方现名“古美路街道”展示，并与天地图闵行街道图及官方 6.2 平方公里规划范围交叉核对。"
+    },
+    {
+      "id": "sector_xinzhuang",
+      "canonicalName": "莘庄",
+      "referenceAdminName": "莘庄镇",
+      "scopeVersion": "admin-reference-2025",
+      "osmAdminRelationId": "14187988",
+      "expectedOsmName": "莘庄镇",
+      "officialAreaSquareKilometers": 19.14,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-xinzhuang-transport-plan-2024", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "闵行区",
+        "title": "闵行区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/8-闵行区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）040号",
+        "manualShapeVerdict": "consistent"
+      },
+      "geometryRule": "固定 OSM 快照中的莘庄镇 relation，经 10 米拓扑保持简化；与天地图闵行街镇图及官方 19.14 平方公里镇域交叉核对。"
+    },
+    {
+      "id": "sector_xujing",
+      "canonicalName": "徐泾",
+      "referenceAdminName": "徐泾镇",
+      "scopeVersion": "admin-reference-2025",
+      "osmAdminRelationId": "12979866",
+      "expectedOsmName": "徐泾镇",
+      "officialAreaSquareKilometers": 38.55,
+      "areaToleranceRatio": 0.05,
+      "simplifyToleranceMeters": 10,
+      "verificationSourceIds": ["official-xujing-profile-2025", "official-tianditu-shanghai-standard-maps-2025"],
+      "standardMap": {
+        "district": "青浦区",
+        "title": "青浦区行政区划示意图",
+        "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/14-青浦区行政区划示意图.pdf",
+        "mapDate": "2025-07",
+        "reviewNumber": "沪S（2025）046号",
+        "manualShapeVerdict": "consistent"
+      },
+      "geometryRule": "固定 OSM 快照中的徐泾镇 relation，经 10 米拓扑保持简化；与天地图青浦街镇图、官方 38.55 平方公里面积和四周相邻街镇交叉核对。"
+    }
+  ]
+}

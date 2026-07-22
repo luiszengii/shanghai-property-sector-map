@@ -10,7 +10,8 @@ const conversionRetryDelaysMs = [1_000, 2_000];
 
 let coordinateConversionQueue: Promise<void> = Promise.resolve();
 let nextCoordinateConversionAt = 0;
-const reviewedPathCacheByApi = new WeakMap<typeof AMap, Map<string, Promise<DisplayPath>>>();
+const wgs84PathCacheByApi = new WeakMap<typeof AMap, Map<string, Promise<DisplayPath>>>();
+const wgs84PointBatchCacheByApi = new WeakMap<typeof AMap, Map<string, Promise<AMap.LngLat[]>>>();
 
 function chunked<T>(values: T[], size: number) {
   return Array.from({ length: Math.ceil(values.length / size) }, (_, index) => values.slice(index * size, (index + 1) * size));
@@ -121,20 +122,48 @@ export function nativeGeometryToDisplayPath(amapApi: typeof AMap, geometry: Sect
   return geometryToDisplayPath(amapApi, geometry, false, new Map());
 }
 
-export function reviewedGeometryToDisplayPath(
+export function wgs84GeometryToDisplayPath(
   amapApi: typeof AMap,
   cacheKey: string,
   geometry: SectorGeometry,
 ) {
-  let apiCache = reviewedPathCacheByApi.get(amapApi);
+  let apiCache = wgs84PathCacheByApi.get(amapApi);
   if (!apiCache) {
     apiCache = new Map();
-    reviewedPathCacheByApi.set(amapApi, apiCache);
+    wgs84PathCacheByApi.set(amapApi, apiCache);
   }
   const cached = apiCache.get(cacheKey);
   if (cached) return cached;
   const conversionCache = new Map<string, AMap.LngLat>();
   const request = geometryToDisplayPath(amapApi, geometry, true, conversionCache)
+    .catch((error: unknown) => {
+      apiCache.delete(cacheKey);
+      throw error;
+    });
+  apiCache.set(cacheKey, request);
+  return request;
+}
+
+export function wgs84PointsToDisplayPositions(
+  amapApi: typeof AMap,
+  cacheKey: string,
+  coordinates: Array<[number, number]>,
+) {
+  let apiCache = wgs84PointBatchCacheByApi.get(amapApi);
+  if (!apiCache) {
+    apiCache = new Map();
+    wgs84PointBatchCacheByApi.set(amapApi, apiCache);
+  }
+  const cached = apiCache.get(cacheKey);
+  if (cached) return cached;
+  const request = (async () => {
+    const converted: AMap.LngLat[] = [];
+    for (const coordinateChunk of chunked(coordinates, conversionChunkSize)) {
+      const input = coordinateChunk.map(([lng, lat]) => new amapApi.LngLat(lng, lat));
+      converted.push(...await convertWgs84Chunk(amapApi, input));
+    }
+    return converted;
+  })()
     .catch((error: unknown) => {
       apiCache.delete(cacheKey);
       throw error;

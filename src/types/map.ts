@@ -79,7 +79,7 @@ export interface SectorProperties {
 }
 
 export type SectorReviewStatus = "reviewed-high" | "draft-medium" | "draft-low";
-export type SectorGeometryStatus = "demo" | "draft" | "reviewed" | "published";
+export type SectorGeometryStatus = "demo" | "admin-reference" | "draft" | "reviewed" | "published";
 export type SectorGeometryConfidence = "high" | "medium" | "low";
 export type SectorKind = "market_sector_with_official_scope_candidate" | "market_sector" | "ambiguous_market_sector" | "ambiguous_official_functional_scope";
 export type SectorDefinitionStatus = "official_scope_available" | "partial_official_scope" | "historical_official_scope_needs_version_check" | "official_scope_available_but_semantics_ambiguous" | "admin_proxy_candidate" | "multiple_official_versions_need_selection";
@@ -87,7 +87,7 @@ export type SectorBoundarySide = "north" | "east" | "south" | "west";
 export type SectorBoundaryStatus = "definition_confirmed" | "candidate_scope_confirmed" | "partial" | "geometry_missing" | "scope_ambiguous";
 export type SectorBoundaryBasis = "official_plan_text" | "planning_unit_scope" | "historical_official_scope" | "official_scope_text" | "scope_decision_required" | "official_regulation";
 export type SectorSourceLicenseStatus = "unverified" | "reference_only" | "ODbL-1.0";
-export type SectorSourceAllowedUse = "demo_only" | "boundary_definition_only" | "version_check_only" | "boundary_relationship_only" | "spatial_relationship_only" | "scope_comparison_only" | "name_verification_only" | "geometry_with_attribution_and_odbl_compliance";
+export type SectorSourceAllowedUse = "demo_only" | "boundary_definition_only" | "version_check_only" | "boundary_relationship_only" | "spatial_relationship_only" | "scope_comparison_only" | "name_verification_only" | "visual_comparison_only" | "geometry_with_attribution_and_odbl_compliance";
 
 export interface SectorGeometryRecord {
   status: SectorGeometryStatus;
@@ -96,6 +96,7 @@ export interface SectorGeometryRecord {
   coordinateSystemVerified: boolean;
   version: string;
   sourceIds: string[];
+  verificationSourceIds?: string[];
   publicationPolicy: "demo_only" | "internal_review" | "publishable";
   note: string;
 }
@@ -136,6 +137,53 @@ export interface SectorBoundaryEvidence {
   confidence: SectorGeometryConfidence;
   sourceId: string;
   note?: string;
+}
+
+export type SectorReferenceComparisonRole =
+  | "functional_scope_not_admin"
+  | "admin_proxy_and_functional_scope_conflict"
+  | "official_scope_matches_admin_proxy"
+  | "admin_proxy"
+  | "cross_district_functional_scope";
+
+export type SectorReferenceVerdict =
+  | "not_directly_comparable"
+  | "scope_choice_required"
+  | "consistent"
+  | "standard_map_superseded_in_segments";
+
+export type SectorGeometryDecision =
+  | "keep_official_scope_candidate"
+  | "keep_demo_until_scope_selected"
+  | "show_admin_reference_without_replacing_market_definition"
+  | "show_post_adjustment_admin_reference"
+  | "show_admin_reference";
+
+export interface SectorStandardMapDocument {
+  title: string;
+  url: string;
+  mapDate: string;
+  reviewNumber: string;
+}
+
+export interface SectorLegacyGeometryComparison {
+  reference: string;
+  intersectionOverUnion: number;
+  referenceCoveredPercent: number;
+  legacyAreaRatio: number;
+  centroidDistanceKilometers: number;
+}
+
+export interface SectorReferenceCheck {
+  sectorId: string;
+  comparisonRole: SectorReferenceComparisonRole;
+  verdict: SectorReferenceVerdict;
+  geometryDecision: SectorGeometryDecision;
+  comparableAdminName?: string;
+  standardMapSourceId: string;
+  standardMapDocuments: SectorStandardMapDocument[];
+  legacyGeometryComparison?: SectorLegacyGeometryComparison;
+  summary: string;
 }
 
 export interface SectorFeature {

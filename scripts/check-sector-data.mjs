@@ -15,6 +15,10 @@ const sourceData = readJson("src/data/sectors/sources.json");
 const evidenceData = readJson("src/data/sectors/boundary-evidence.json");
 const candidateData = readJson("src/data/sectors/reviewed-candidates.wgs84.json");
 const candidateManifest = readJson("src/data/sectors/reviewed-candidates.manifest.json");
+const adminReferenceData = readJson("src/data/sectors/admin-references.wgs84.json");
+const adminReferenceManifest = readJson("src/data/sectors/admin-references.manifest.json");
+const adminReferenceDefinitionsData = readJson("data/geo/admin-reference-definitions.json");
+const referenceChecksData = readJson("src/data/sectors/reference-checks.json");
 const osmSourceLock = readJson("data/geo/sources/osm-shanghai-260721.json");
 
 const errors = [];
@@ -23,7 +27,7 @@ const error = (message) => errors.push(message);
 const warn = (message) => warnings.push(message);
 
 function samePoint(a, b) {
-  return a[0] === b[0] && a[1] === b[1];
+  return Array.isArray(a) && Array.isArray(b) && a[0] === b[0] && a[1] === b[1];
 }
 
 function signedRingArea(ring) {
@@ -58,6 +62,29 @@ function segmentsProperlyIntersect(a, b, c, d) {
     && ((cdA > 0 && cdB < 0) || (cdA < 0 && cdB > 0));
 }
 
+function segmentsIntersect(a, b, c, d) {
+  return segmentsProperlyIntersect(a, b, c, d)
+    || pointOnSegment(a, c, d)
+    || pointOnSegment(b, c, d)
+    || pointOnSegment(c, a, b)
+    || pointOnSegment(d, a, b);
+}
+
+function compactRing(ring) {
+  const compacted = [];
+  for (const point of ring) {
+    if (!samePoint(compacted.at(-1), point)) compacted.push(point);
+  }
+  return compacted;
+}
+
+function pointOnRing(point, ring) {
+  for (let index = 0; index < ring.length - 1; index += 1) {
+    if (pointOnSegment(point, ring[index], ring[index + 1])) return true;
+  }
+  return false;
+}
+
 function pointInRingStrict(point, ring) {
   let inside = false;
   for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index, index += 1) {
@@ -73,15 +100,51 @@ function pointInRingStrict(point, ring) {
 }
 
 function hasSelfIntersection(ring) {
-  const segmentCount = ring.length - 1;
+  const compactedRing = compactRing(ring);
+  const segmentCount = compactedRing.length - 1;
   for (let first = 0; first < segmentCount; first += 1) {
     for (let second = first + 1; second < segmentCount; second += 1) {
       const adjacent = Math.abs(first - second) <= 1 || (first === 0 && second === segmentCount - 1);
       if (adjacent) continue;
-      if (segmentsProperlyIntersect(ring[first], ring[first + 1], ring[second], ring[second + 1])) return true;
+      if (segmentsIntersect(
+        compactedRing[first],
+        compactedRing[first + 1],
+        compactedRing[second],
+        compactedRing[second + 1],
+      )) return true;
     }
   }
   return false;
+}
+
+function ringsIntersectOrTouch(first, second) {
+  for (let firstIndex = 0; firstIndex < first.length - 1; firstIndex += 1) {
+    for (let secondIndex = 0; secondIndex < second.length - 1; secondIndex += 1) {
+      if (segmentsIntersect(
+        first[firstIndex],
+        first[firstIndex + 1],
+        second[secondIndex],
+        second[secondIndex + 1],
+      )) return true;
+    }
+  }
+  return false;
+}
+
+function ringsOverlapOrTouch(first, second) {
+  return ringsIntersectOrTouch(first, second)
+    || pointInRingStrict(first[0], second)
+    || pointInRingStrict(second[0], first);
+}
+
+function polygonsOverlapOrTouch(first, second) {
+  for (const firstRing of first) {
+    for (const secondRing of second) {
+      if (ringsIntersectOrTouch(firstRing, secondRing)) return true;
+    }
+  }
+  return pointInPolygonStrict(first[0][0], second)
+    || pointInPolygonStrict(second[0][0], first);
 }
 
 function ringsOverlap(first, second) {
@@ -103,6 +166,209 @@ function normalizedJson(value) {
   return JSON.stringify(value);
 }
 
+function normalizedStringSet(values) {
+  return normalizedJson([...values].sort());
+}
+
+function isFinitePositive(value) {
+  return Number.isFinite(value) && value > 0;
+}
+
+function nearlyEqual(first, second, tolerance = 1e-9) {
+  return Number.isFinite(first) && Number.isFinite(second) && Math.abs(first - second) <= tolerance;
+}
+
+function polygonGroupsForGeometry(geometry) {
+  if (geometry?.type === "Polygon" && Array.isArray(geometry.coordinates)) return [geometry.coordinates];
+  if (geometry?.type === "MultiPolygon" && Array.isArray(geometry.coordinates)) return geometry.coordinates;
+  return [];
+}
+
+function pointInPolygonStrict(point, polygon) {
+  const outerRing = polygon?.[0];
+  if (!outerRing || !pointInRingStrict(point, outerRing)) return false;
+  return !polygon.slice(1).some((hole) => pointOnRing(point, hole) || pointInRingStrict(point, hole));
+}
+
+function pointInGeometryStrict(point, geometry) {
+  return polygonGroupsForGeometry(geometry).some((polygon) => pointInPolygonStrict(point, polygon));
+}
+
+function geometryPointCount(geometry) {
+  return polygonGroupsForGeometry(geometry)
+    .filter(Array.isArray)
+    .flatMap((polygon) => polygon)
+    .reduce((total, ring) => total + (Array.isArray(ring) ? ring.length : 0), 0);
+}
+
+const meanEarthRadiusMeters = 6_371_008.8;
+
+function sphericalRingAreaSquareMeters(ring) {
+  let total = 0;
+  for (let index = 0; index < ring.length - 1; index += 1) {
+    const first = ring[index];
+    const second = ring[index + 1];
+    if (!Array.isArray(first) || !Array.isArray(second)
+      || first.length < 2 || second.length < 2
+      || !first.slice(0, 2).every(Number.isFinite)
+      || !second.slice(0, 2).every(Number.isFinite)) return Number.NaN;
+    const [longitude1, latitude1] = first;
+    const [longitude2, latitude2] = second;
+    const longitude1Radians = longitude1 * Math.PI / 180;
+    const longitude2Radians = longitude2 * Math.PI / 180;
+    const latitude1Radians = latitude1 * Math.PI / 180;
+    const latitude2Radians = latitude2 * Math.PI / 180;
+    total += (longitude2Radians - longitude1Radians)
+      * (2 + Math.sin(latitude1Radians) + Math.sin(latitude2Radians));
+  }
+  return Math.abs(total * meanEarthRadiusMeters * meanEarthRadiusMeters / 2);
+}
+
+function geometryAreaSquareKilometers(geometry) {
+  const areaSquareMeters = polygonGroupsForGeometry(geometry).filter(Array.isArray).reduce((total, polygon) => {
+    const outerArea = polygon[0] ? sphericalRingAreaSquareMeters(polygon[0]) : 0;
+    const holeArea = polygon.slice(1).filter(Array.isArray)
+      .reduce((sum, ring) => sum + sphericalRingAreaSquareMeters(ring), 0);
+    return total + Math.max(0, outerArea - holeArea);
+  }, 0);
+  return areaSquareMeters / 1_000_000;
+}
+
+function validateWgs84PolygonalGeometry(feature, label, labelPoint) {
+  if (feature?.type !== "Feature") error(`${label}: type 必须为 Feature`);
+  const polygonGroups = polygonGroupsForGeometry(feature?.geometry);
+  if (polygonGroups.length === 0) {
+    error(`${label}: 几何必须是 Polygon 或 MultiPolygon`);
+    return;
+  }
+
+  let geometryCoordinatesAreValid = true;
+  for (const [polygonIndex, polygon] of polygonGroups.entries()) {
+    if (!Array.isArray(polygon) || polygon.length === 0) {
+      error(`${label}: 第 ${polygonIndex + 1} 个 polygon 缺少外环`);
+      geometryCoordinatesAreValid = false;
+      continue;
+    }
+    for (const [ringIndex, ring] of polygon.entries()) {
+      const ringLabel = `${label}: polygon ${polygonIndex + 1} ${ringIndex === 0 ? "外环" : `内环 ${ringIndex}`}`;
+      if (!Array.isArray(ring) || ring.length < 4) {
+        error(`${ringLabel} 至少需要 4 个坐标点`);
+        geometryCoordinatesAreValid = false;
+        continue;
+      }
+      let coordinatesAreValid = true;
+      if (!samePoint(ring[0], ring.at(-1))) {
+        error(`${ringLabel} 未闭合`);
+        coordinatesAreValid = false;
+        geometryCoordinatesAreValid = false;
+      }
+      for (const coordinate of ring) {
+        if (!Array.isArray(coordinate) || coordinate.length < 2) {
+          error(`${ringLabel} 存在无效坐标`);
+          coordinatesAreValid = false;
+          geometryCoordinatesAreValid = false;
+          continue;
+        }
+        const [longitude, latitude] = coordinate;
+        if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
+          error(`${ringLabel} 存在非数字坐标`);
+          coordinatesAreValid = false;
+          geometryCoordinatesAreValid = false;
+        } else if (longitude < 120.8 || longitude > 122.2 || latitude < 30.6 || latitude > 31.9) {
+          error(`${ringLabel} 坐标超出上海合理范围 ${longitude},${latitude}`);
+        }
+      }
+      if (coordinatesAreValid) {
+        if (hasSelfIntersection(ring)) {
+          error(`${ringLabel} 自相交或自接触`);
+          geometryCoordinatesAreValid = false;
+        }
+        const ringDirection = signedRingArea(ring);
+        if (ringIndex === 0 && ringDirection <= 0) error(`${ringLabel} 必须按 RFC 7946 使用逆时针方向`);
+        if (ringIndex > 0 && ringDirection >= 0) error(`${ringLabel} 必须按 RFC 7946 使用顺时针方向`);
+      }
+    }
+  }
+
+  if (geometryCoordinatesAreValid) {
+    for (const [polygonIndex, polygon] of polygonGroups.entries()) {
+      const [outerRing, ...holes] = polygon;
+      for (const [holeIndex, hole] of holes.entries()) {
+        if (ringsIntersectOrTouch(outerRing, hole)
+          || !hole.slice(0, -1).every((point) => pointInRingStrict(point, outerRing))) {
+          error(`${label}: polygon ${polygonIndex + 1} 内环 ${holeIndex + 1} 不严格位于外环内`);
+        }
+      }
+      for (let firstHole = 0; firstHole < holes.length; firstHole += 1) {
+        for (let secondHole = firstHole + 1; secondHole < holes.length; secondHole += 1) {
+          if (ringsOverlapOrTouch(holes[firstHole], holes[secondHole])) {
+            error(`${label}: polygon ${polygonIndex + 1} 的内环互相重叠或接触`);
+          }
+        }
+      }
+    }
+    for (let firstPolygon = 0; firstPolygon < polygonGroups.length; firstPolygon += 1) {
+      for (let secondPolygon = firstPolygon + 1; secondPolygon < polygonGroups.length; secondPolygon += 1) {
+        if (polygonsOverlapOrTouch(polygonGroups[firstPolygon], polygonGroups[secondPolygon])) {
+          error(`${label}: MultiPolygon 的组成面互相重叠或接触`);
+        }
+      }
+    }
+  }
+
+  if (!Array.isArray(labelPoint) || labelPoint.length !== 2 || !labelPoint.every(Number.isFinite)) {
+    error(`${label}: labelPoint 必须是二元数值坐标`);
+  } else if (labelPoint[0] < 120.8 || labelPoint[0] > 122.2 || labelPoint[1] < 30.6 || labelPoint[1] > 31.9) {
+    error(`${label}: labelPoint 超出上海合理范围 ${labelPoint[0]},${labelPoint[1]}`);
+  } else if (geometryCoordinatesAreValid && !pointInGeometryStrict(labelPoint, feature.geometry)) {
+    error(`${label}: labelPoint 不在面内`);
+  }
+}
+
+function validateAndGetHostname(url, label) {
+  try {
+    return new URL(url).hostname.toLocaleLowerCase("en-US").replace(/\.+$/, "");
+  } catch {
+    error(`${label}: URL 无效 ${url}`);
+    return undefined;
+  }
+}
+
+function validateLockedOsmCollection(collection, manifest, label, expectedStatus) {
+  if (collection.type !== "FeatureCollection" || !Array.isArray(collection.features)) {
+    error(`${label}必须是 GeoJSON FeatureCollection`);
+  }
+  if (collection.status !== expectedStatus) error(`${label}status 必须是 ${expectedStatus}`);
+  if (collection.license !== "ODbL-1.0" || !collection.attribution?.includes("OpenStreetMap")) {
+    error(`${label}缺少 ODbL 许可或 OpenStreetMap 署名`);
+  }
+  if (collection.sourceSnapshotId !== osmSourceLock.id) error(`${label}sourceSnapshotId 与锁定来源不一致`);
+  if (manifest.sourceSnapshotId !== osmSourceLock.id) error(`${label}manifest 的 sourceSnapshotId 与来源锁不一致`);
+  if (manifest.sourceGpkgSha256 !== osmSourceLock.gpkgSha256) {
+    error(`${label}manifest 的 GeoPackage SHA-256 与来源锁不一致`);
+  }
+  if (manifest.sourceLock !== "data/geo/sources/osm-shanghai-260721.json") {
+    error(`${label}manifest 的 sourceLock 不正确`);
+  }
+  if (manifest.workingCrs !== "EPSG:32651" || manifest.outputCrs !== "OGC:CRS84") {
+    error(`${label}manifest 的工作或输出坐标系不正确`);
+  }
+}
+
+function validateStandardMapDocument(document, label) {
+  if (!document || typeof document !== "object") {
+    error(`${label}: 文档元数据无效`);
+    return;
+  }
+  if (typeof document.title !== "string" || document.title.length === 0) error(`${label}: 缺少标题`);
+  const hostname = validateAndGetHostname(document.url, label);
+  if (hostname && hostname !== "shanghai.tianditu.gov.cn") error(`${label}: 不是天地图上海来源`);
+  if (!/^\d{4}-\d{2}$/.test(document.mapDate ?? "")) error(`${label}: mapDate 格式无效`);
+  if (typeof document.reviewNumber !== "string" || document.reviewNumber.length === 0) {
+    error(`${label}: 缺少审图号`);
+  }
+}
+
 if (normalizedJson(sourceGeometry) !== normalizedJson(bundledGeometry)) {
   error("src/data/sectors.geojson 与 src/data/sectors.json 不同步");
 }
@@ -121,8 +387,29 @@ const sourceIds = sources.map((source) => source.id);
 const edgeIds = edges.map((edge) => edge.id);
 const candidates = candidateData.features ?? [];
 const candidateIds = candidates.map((feature) => feature.properties?.id);
+const candidateManifestEntries = candidateManifest.sectors ?? [];
+const candidateManifestIds = candidateManifestEntries.map((entry) => entry.id);
+const adminReferences = adminReferenceData.features ?? [];
+const adminReferenceIds = adminReferences.map((feature) => feature.properties?.id);
+const adminReferenceManifestEntries = adminReferenceManifest.sectors ?? [];
+const adminReferenceManifestIds = adminReferenceManifestEntries.map((entry) => entry.id);
+const adminReferenceDefinitions = adminReferenceDefinitionsData.sectors ?? [];
+const adminReferenceDefinitionIds = adminReferenceDefinitions.map((definition) => definition.id);
+const referenceChecks = referenceChecksData.checks ?? [];
+const referenceCheckIds = referenceChecks.map((check) => check.sectorId);
 
-for (const [label, ids] of [["板块 feature", featureIds], ["板块 registry", registryIds], ["来源", sourceIds], ["边界证据", edgeIds]]) {
+for (const [label, ids] of [
+  ["板块 feature", featureIds],
+  ["板块 registry", registryIds],
+  ["来源", sourceIds],
+  ["边界证据", edgeIds],
+  ["候选面", candidateIds],
+  ["候选面 manifest", candidateManifestIds],
+  ["行政参考面", adminReferenceIds],
+  ["行政参考面 manifest", adminReferenceManifestIds],
+  ["行政参考面 definition", adminReferenceDefinitionIds],
+  ["逐板块参考检查", referenceCheckIds],
+]) {
   if (new Set(ids).size !== ids.length) error(`${label} ID 存在重复`);
 }
 
@@ -136,6 +423,43 @@ const registryById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
+const candidateGeometryStatuses = new Set(["draft", "reviewed", "published"]);
+const knownGeometryStatuses = ["demo", "admin-reference", ...candidateGeometryStatuses];
+const geometryStatusCounts = new Map(knownGeometryStatuses.map((status) => [status, 0]));
+
+for (const record of registry) {
+  const status = record.geometry?.status;
+  if (!geometryStatusCounts.has(status)) error(`${record.id}: 未知 geometry.status ${status}`);
+  else geometryStatusCounts.set(status, geometryStatusCounts.get(status) + 1);
+}
+
+const candidateRegistryIds = registry
+  .filter((record) => candidateGeometryStatuses.has(record.geometry.status))
+  .map((record) => record.id)
+  .sort();
+const adminReferenceRegistryIds = registry
+  .filter((record) => record.geometry.status === "admin-reference")
+  .map((record) => record.id)
+  .sort();
+
+if (normalizedStringSet(candidateIds) !== normalizedJson(candidateRegistryIds)) {
+  error("候选面必须且只能对应 registry 中的 draft/reviewed/published 几何");
+}
+if (normalizedStringSet(adminReferenceIds) !== normalizedJson(adminReferenceRegistryIds)) {
+  error("行政参考面必须且只能对应 registry 中的 admin-reference 几何");
+}
+if (normalizedStringSet(candidateManifestIds) !== normalizedStringSet(candidateIds)) {
+  error("候选面 manifest 必须与候选几何一一对应");
+}
+if (normalizedStringSet(adminReferenceManifestIds) !== normalizedStringSet(adminReferenceIds)) {
+  error("行政参考面 manifest 必须与行政参考几何一一对应");
+}
+if (normalizedStringSet(adminReferenceDefinitionIds) !== normalizedStringSet(adminReferenceIds)) {
+  error("行政参考面 definition 必须与行政参考几何一一对应");
+}
+if (normalizedStringSet(referenceCheckIds) !== normalizedStringSet(registryIds)) {
+  error("reference-checks 必须与 registry 板块一一对应");
+}
 
 for (const feature of features) {
   const id = feature.properties?.id ?? "unknown";
@@ -150,7 +474,8 @@ for (const feature of features) {
   if (record.geometry.status !== "demo" && !record.geometry.coordinateSystemVerified) {
     error(`${id}: 非演示几何必须确认坐标系`);
   }
-  for (const sourceId of [...record.definitionSourceIds, ...record.geometry.sourceIds]) {
+  const verificationSourceIds = record.geometry.verificationSourceIds ?? [];
+  for (const sourceId of [...record.definitionSourceIds, ...record.geometry.sourceIds, ...verificationSourceIds]) {
     if (!sourceById.has(sourceId)) error(`${id}: 引用了不存在的 sourceId ${sourceId}`);
   }
   for (const boundaryEvidenceId of record.boundaryEvidenceIds) {
@@ -171,11 +496,19 @@ for (const feature of features) {
       .filter((edge) => edge?.status === "definition_confirmed");
     if (confirmedEdges.length < 4) error(`${id}: reviewed-high 至少需要 4 条已确认定义边`);
   }
-  if (record.geometry.status === "reviewed" || record.geometry.status === "published") {
+  if (record.geometry.status !== "demo") {
     const reusableGeometrySources = record.geometry.sourceIds
       .map((sourceId) => sourceById.get(sourceId))
-      .filter((source) => source?.allowedUse?.includes("geometry"));
-    if (reusableGeometrySources.length === 0) error(`${id}: reviewed/published 几何缺少允许几何使用的来源`);
+      .filter((source) => source?.licenseStatus !== "reference_only" && source?.allowedUse?.includes("geometry"));
+    if (reusableGeometrySources.length === 0) error(`${id}: 非演示几何缺少允许几何使用的来源`);
+  }
+  if (record.geometry.status === "admin-reference") {
+    if (!Array.isArray(record.geometry.verificationSourceIds) || record.geometry.verificationSourceIds.length === 0) {
+      error(`${id}: 行政参考面缺少 verificationSourceIds`);
+    }
+    if (record.geometry.publicationPolicy !== "internal_review") {
+      error(`${id}: 行政参考面必须限制为 internal_review`);
+    }
   }
 
   const rings = feature.geometry?.coordinates ?? [];
@@ -201,20 +534,16 @@ for (const edge of edges) {
   if (!sourceById.has(edge.sourceId)) error(`${edge.id}: sourceId 不存在`);
 }
 
-const nonDemoRegistryIds = registry
-  .filter((record) => record.geometry.status !== "demo")
-  .map((record) => record.id)
-  .sort();
-if (normalizedJson([...candidateIds].sort()) !== normalizedJson(nonDemoRegistryIds)) {
-  error("非演示 registry 记录必须与 reviewed candidate 几何一一对应");
+const osmGeometrySource = sourceById.get(osmSourceLock.id);
+if (!osmGeometrySource) error(`锁定 OSM 来源 ${osmSourceLock.id} 未登记到 sources.json`);
+else if (osmGeometrySource.licenseStatus !== "ODbL-1.0"
+  || osmGeometrySource.allowedUse !== "geometry_with_attribution_and_odbl_compliance") {
+  error(`锁定 OSM 来源 ${osmSourceLock.id} 的许可或允许用途不正确`);
 }
-if (candidateData.license !== "ODbL-1.0" || !candidateData.attribution?.includes("OpenStreetMap")) {
-  error("候选几何缺少 ODbL 许可或 OpenStreetMap 署名");
-}
-if (candidateData.sourceSnapshotId !== osmSourceLock.id) error("候选几何 sourceSnapshotId 与锁定来源不一致");
-if (candidateManifest.sourceGpkgSha256 !== osmSourceLock.gpkgSha256) error("候选 manifest 的 GeoPackage SHA-256 与来源锁不一致");
 
-const manifestById = new Map((candidateManifest.sectors ?? []).map((item) => [item.id, item]));
+validateLockedOsmCollection(candidateData, candidateManifest, "候选几何", "internal-review");
+
+const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
 for (const candidate of candidates) {
   const id = candidate.properties?.id ?? "unknown-candidate";
   const record = registryById.get(id);
@@ -225,26 +554,315 @@ for (const candidate of candidates) {
   if (candidate.properties.status !== "reviewed-candidate") error(`${id}: 候选 status 必须是 reviewed-candidate`);
   if (candidate.properties.coordinateSystem !== "WGS84") error(`${id}: 候选主几何必须保存为 WGS84`);
   if (candidate.properties.geometrySourceSnapshotId !== osmSourceLock.id) error(`${id}: 候选来源快照不匹配`);
+  if (!record.geometry.sourceIds.includes(osmSourceLock.id)) error(`${id}: 候选 registry 缺少锁定 OSM 几何来源`);
   if (!manifestById.has(id)) error(`${id}: 候选几何缺少 OSM 对象 manifest`);
-  if (!Number.isFinite(candidate.properties.areaSquareKilometers) || candidate.properties.areaSquareKilometers <= 0) {
-    error(`${id}: 候选面积无效`);
+  if (!isFinitePositive(candidate.properties.areaSquareKilometers)) error(`${id}: 候选面积无效`);
+  validateWgs84PolygonalGeometry(candidate, `${id}: 候选面`, candidate.properties.labelPoint);
+}
+
+validateLockedOsmCollection(
+  adminReferenceData,
+  adminReferenceManifest,
+  "行政参考几何",
+  "internal-reference",
+);
+if (adminReferenceDefinitionsData.sourceLock !== "data/geo/sources/osm-shanghai-260721.json") {
+  error("行政参考面 definition 的 sourceLock 不正确");
+}
+if (adminReferenceDefinitionsData.workingCrs !== "EPSG:32651"
+  || adminReferenceDefinitionsData.outputCrs !== "OGC:CRS84") {
+  error("行政参考面 definition 的工作或输出坐标系不正确");
+}
+if (adminReferenceManifest.generatedFrom !== "data/geo/admin-reference-definitions.json") {
+  error("行政参考面 manifest 的 generatedFrom 不正确");
+}
+
+const adminManifestById = new Map(adminReferenceManifestEntries.map((item) => [item.id, item]));
+const adminDefinitionById = new Map(adminReferenceDefinitions.map((item) => [item.id, item]));
+const adminReferenceById = new Map(adminReferences.map((feature) => [feature.properties?.id, feature]));
+const expectedOfficialAreaAsOfById = new Map([
+  ["sector_zhangjiang", "2022-pre-adjustment"],
+  ["sector_beicai", "2023-pre-adjustment"],
+]);
+const seenOsmRelationIds = new Set();
+for (const reference of adminReferences) {
+  const id = reference.properties?.id ?? "unknown-admin-reference";
+  const properties = reference.properties ?? {};
+  const record = registryById.get(id);
+  const manifest = adminManifestById.get(id);
+  const definition = adminDefinitionById.get(id);
+  if (!record) {
+    error(`${id}: 行政参考面没有 registry 记录`);
+    continue;
   }
-  const polygonGroups = candidate.geometry?.type === "Polygon"
-    ? [candidate.geometry.coordinates]
-    : candidate.geometry?.type === "MultiPolygon"
-      ? candidate.geometry.coordinates
+  if (!manifest) {
+    error(`${id}: 行政参考面缺少 manifest`);
+    continue;
+  }
+  if (!definition) {
+    error(`${id}: 行政参考面缺少 definition`);
+    continue;
+  }
+  if (record.geometry.status !== "admin-reference") error(`${id}: 行政参考面 registry 状态必须是 admin-reference`);
+  if (properties.status !== "administrative-reference") error(`${id}: 行政参考面 status 必须是 administrative-reference`);
+  if (properties.name !== record.canonicalName) error(`${id}: 行政参考面名称与 registry 不一致`);
+  if (definition.canonicalName !== record.canonicalName) error(`${id}: definition canonicalName 与 registry 不一致`);
+  if (properties.referenceAdminName !== manifest.referenceAdminName
+    || properties.referenceAdminName !== definition.referenceAdminName) {
+    error(`${id}: feature、manifest 与 definition 的 referenceAdminName 不一致`);
+  }
+  if (properties.scopeVersion !== manifest.scopeVersion || properties.scopeVersion !== definition.scopeVersion) {
+    error(`${id}: feature、manifest 与 definition 的 scopeVersion 不一致`);
+  }
+  if (properties.coordinateSystem !== "WGS84") error(`${id}: 行政参考主几何必须保存为 WGS84`);
+  if (properties.geometrySourceSnapshotId !== osmSourceLock.id) error(`${id}: 行政参考来源快照不匹配`);
+  if (!record.geometry.sourceIds.includes(osmSourceLock.id)) error(`${id}: 行政参考 registry 缺少锁定 OSM 几何来源`);
+  if (properties.method !== "osm_admin_relation_cross_checked_with_official_standard_map") {
+    error(`${id}: 行政参考构建方法不正确`);
+  }
+  if (properties.geometryRule !== definition.geometryRule) error(`${id}: geometryRule 与 definition 不一致`);
+
+  const relationId = manifest.osmRelationId;
+  if (typeof relationId !== "string" || !/^\d+$/.test(relationId)) error(`${id}: OSM relation ID 无效`);
+  else if (seenOsmRelationIds.has(relationId)) error(`${id}: OSM relation ID ${relationId} 重复`);
+  else seenOsmRelationIds.add(relationId);
+  if (typeof manifest.osmName !== "string" || manifest.osmName.length === 0) error(`${id}: manifest 缺少 OSM 名称`);
+  if (relationId !== definition.osmAdminRelationId) error(`${id}: OSM relation ID 与锁定 definition 不一致`);
+  if (manifest.osmName !== definition.expectedOsmName) error(`${id}: OSM 名称与锁定 definition 不一致`);
+
+  const officialAreaAsOfValues = [
+    definition.officialAreaAsOf ?? null,
+    manifest.officialAreaAsOf ?? null,
+    properties.officialAreaAsOf ?? null,
+  ];
+  if (new Set(officialAreaAsOfValues).size !== 1) {
+    error(`${id}: definition、manifest 与 feature 的 officialAreaAsOf 不一致`);
+  }
+  if (officialAreaAsOfValues[0] !== null
+    && (typeof officialAreaAsOfValues[0] !== "string" || officialAreaAsOfValues[0].length === 0)) {
+    error(`${id}: officialAreaAsOf 必须是非空字符串`);
+  }
+  const expectedOfficialAreaAsOf = expectedOfficialAreaAsOfById.get(id);
+  if (expectedOfficialAreaAsOf && officialAreaAsOfValues[0] !== expectedOfficialAreaAsOf) {
+    error(`${id}: officialAreaAsOf 必须为 ${expectedOfficialAreaAsOf}`);
+  }
+
+  if (!Array.isArray(properties.verificationSourceIds)) error(`${id}: feature verificationSourceIds 必须是数组`);
+  if (!Array.isArray(manifest.verificationSourceIds)) error(`${id}: manifest verificationSourceIds 必须是数组`);
+  if (!Array.isArray(record.geometry.verificationSourceIds)) error(`${id}: registry verificationSourceIds 必须是数组`);
+  if (!Array.isArray(definition.verificationSourceIds)) error(`${id}: definition verificationSourceIds 必须是数组`);
+  const featureVerificationSourceIds = Array.isArray(properties.verificationSourceIds)
+    ? properties.verificationSourceIds
+    : [];
+  const manifestVerificationSourceIds = Array.isArray(manifest.verificationSourceIds)
+    ? manifest.verificationSourceIds
+    : [];
+  const registryVerificationSourceIds = Array.isArray(record.geometry.verificationSourceIds)
+    ? record.geometry.verificationSourceIds
+    : [];
+  const definitionVerificationSourceIds = Array.isArray(definition.verificationSourceIds)
+    ? definition.verificationSourceIds
+    : [];
+  if (new Set(featureVerificationSourceIds).size !== featureVerificationSourceIds.length) {
+    error(`${id}: feature verificationSourceIds 存在重复`);
+  }
+  if (normalizedStringSet(featureVerificationSourceIds) !== normalizedStringSet(manifestVerificationSourceIds)
+    || normalizedStringSet(featureVerificationSourceIds) !== normalizedStringSet(registryVerificationSourceIds)
+    || normalizedStringSet(featureVerificationSourceIds)
+      !== normalizedStringSet(definitionVerificationSourceIds)) {
+    error(`${id}: feature、manifest、registry 与 definition 的 verificationSourceIds 不一致`);
+  }
+  if (featureVerificationSourceIds.length < 2) error(`${id}: 行政参考面至少需要两个验证来源`);
+  const verificationSources = featureVerificationSourceIds.map((sourceId) => sourceById.get(sourceId));
+  for (const [index, verificationSource] of verificationSources.entries()) {
+    if (!verificationSource) error(`${id}: verificationSourceId 不存在 ${featureVerificationSourceIds[index]}`);
+  }
+  if (!verificationSources.some((source) => source?.allowedUse === "visual_comparison_only")) {
+    error(`${id}: verificationSourceIds 缺少 visual_comparison_only 标准图来源`);
+  }
+  if (!verificationSources.some((source) => source?.sourceType?.startsWith("official_")
+    && source.sourceType !== "official_standard_map_collection"
+    && typeof source.publisher === "string" && source.publisher.length > 0
+    && source.allowedUse !== "visual_comparison_only")) {
+    error(`${id}: verificationSourceIds 缺少独立官方面积或边界验证来源`);
+  }
+
+  const areaFields = [
+    ["areaSquareKilometers", properties.areaSquareKilometers],
+    ["unsimplifiedAreaSquareKilometers", properties.unsimplifiedAreaSquareKilometers],
+    ["officialAreaSquareKilometers", properties.officialAreaSquareKilometers],
+    ["manifest.displayAreaSquareKilometers", manifest.displayAreaSquareKilometers],
+    ["manifest.unsimplifiedAreaSquareKilometers", manifest.unsimplifiedAreaSquareKilometers],
+    ["manifest.officialAreaSquareKilometers", manifest.officialAreaSquareKilometers],
+  ];
+  for (const [field, value] of areaFields) {
+    if (!isFinitePositive(value)) error(`${id}: ${field} 面积无效`);
+  }
+  if (!nearlyEqual(properties.areaSquareKilometers, manifest.displayAreaSquareKilometers, 0.0001)) {
+    error(`${id}: feature 与 manifest 的显示面积不一致`);
+  }
+  if (!nearlyEqual(properties.unsimplifiedAreaSquareKilometers, manifest.unsimplifiedAreaSquareKilometers, 0.0001)) {
+    error(`${id}: feature 与 manifest 的未简化面积不一致`);
+  }
+  if (!nearlyEqual(properties.officialAreaSquareKilometers, manifest.officialAreaSquareKilometers, 0.0001)) {
+    error(`${id}: feature 与 manifest 的官方参考面积不一致`);
+  }
+  if (!nearlyEqual(properties.officialAreaSquareKilometers, definition.officialAreaSquareKilometers, 0.0001)) {
+    error(`${id}: feature 与 definition 的官方参考面积不一致`);
+  }
+  if (definition.areaToleranceRatio !== 0.05) error(`${id}: definition 面积容差必须为 5%`);
+  const expectedAreaDeltaPercent = Math.abs(
+    properties.unsimplifiedAreaSquareKilometers - properties.officialAreaSquareKilometers,
+  ) / properties.officialAreaSquareKilometers * 100;
+  if (!nearlyEqual(properties.areaDeltaPercent, manifest.areaDeltaPercent, 0.01)
+    || !nearlyEqual(properties.areaDeltaPercent, expectedAreaDeltaPercent, 0.011)) {
+    error(`${id}: areaDeltaPercent 与面积字段不一致`);
+  }
+  if (properties.areaDeltaPercent > 5) error(`${id}: 行政参考面与官方面积差超过 5%`);
+  const simplificationAreaDeltaRatio = Math.abs(
+    properties.areaSquareKilometers - properties.unsimplifiedAreaSquareKilometers,
+  ) / properties.unsimplifiedAreaSquareKilometers;
+  if (simplificationAreaDeltaRatio > 0.005) error(`${id}: 10 米简化导致面积变化超过 0.5%`);
+  if (properties.simplificationToleranceMeters !== 10 || manifest.simplificationToleranceMeters !== 10
+    || definition.simplifyToleranceMeters !== 10) {
+    error(`${id}: 行政参考面必须使用 10 米拓扑保持简化`);
+  }
+
+  validateWgs84PolygonalGeometry(reference, `${id}: 行政参考面`, properties.labelPoint);
+  const measuredAreaSquareKilometers = geometryAreaSquareKilometers(reference.geometry);
+  if (!Number.isFinite(measuredAreaSquareKilometers)) error(`${id}: 无法从 GeoJSON 计算显示面积`);
+  else {
+    const measuredAreaDeltaRatio = Math.abs(measuredAreaSquareKilometers - properties.areaSquareKilometers)
+      / properties.areaSquareKilometers;
+    if (measuredAreaDeltaRatio > 0.005) error(`${id}: GeoJSON 实测面积与声明显示面积相差超过 0.5%`);
+  }
+  if (!Number.isInteger(manifest.displayPointCount) || manifest.displayPointCount < 4) {
+    error(`${id}: manifest displayPointCount 无效`);
+  } else if (manifest.displayPointCount !== geometryPointCount(reference.geometry)) {
+    error(`${id}: manifest displayPointCount 与实际坐标点数不一致`);
+  }
+
+  const standardMap = manifest.standardMap;
+  if (!standardMap || !["consistent", "superseded_in_adjusted_segments"].includes(standardMap.manualShapeVerdict)) {
+    error(`${id}: manifest 缺少有效的标准图人工核对结论`);
+  } else {
+    const standardMapFields = ["district", "title", "url", "mapDate", "reviewNumber", "manualShapeVerdict"];
+    if (!definition.standardMap || standardMapFields.some(
+      (field) => standardMap[field] !== definition.standardMap[field],
+    )) {
+      error(`${id}: manifest 标准图元数据与 definition 不一致`);
+    }
+    validateStandardMapDocument(standardMap, `${id}: manifest 标准图`);
+  }
+}
+
+const allowedComparisonRoles = new Set([
+  "functional_scope_not_admin",
+  "admin_proxy_and_functional_scope_conflict",
+  "official_scope_matches_admin_proxy",
+  "admin_proxy",
+  "cross_district_functional_scope",
+]);
+const allowedReferenceVerdicts = new Set([
+  "not_directly_comparable",
+  "scope_choice_required",
+  "consistent",
+  "standard_map_superseded_in_segments",
+]);
+const allowedGeometryDecisions = new Set([
+  "keep_official_scope_candidate",
+  "keep_demo_until_scope_selected",
+  "show_admin_reference_without_replacing_market_definition",
+  "show_post_adjustment_admin_reference",
+  "show_admin_reference",
+]);
+
+if (!/^\d{4}-\d{2}-\d{2}$/.test(referenceChecksData.checkedAt ?? "")) {
+  error("reference-checks checkedAt 必须使用 YYYY-MM-DD 格式");
+}
+for (const check of referenceChecks) {
+  const id = check.sectorId ?? "unknown-reference-check";
+  if (!registryById.has(id)) error(`${id}: reference-check 没有 registry 记录`);
+  if (!allowedComparisonRoles.has(check.comparisonRole)) error(`${id}: comparisonRole 无效`);
+  if (!allowedReferenceVerdicts.has(check.verdict)) error(`${id}: verdict 无效`);
+  if (!allowedGeometryDecisions.has(check.geometryDecision)) error(`${id}: geometryDecision 无效`);
+  if (typeof check.summary !== "string" || check.summary.trim().length === 0) error(`${id}: reference-check 缺少摘要`);
+
+  const standardMapSource = sourceById.get(check.standardMapSourceId);
+  if (!standardMapSource) error(`${id}: standardMapSourceId 不存在`);
+  else if (standardMapSource.licenseStatus !== "reference_only"
+    || standardMapSource.allowedUse !== "visual_comparison_only") {
+    error(`${id}: 标准图来源必须是 reference_only / visual_comparison_only`);
+  } else if (standardMapSource.url) {
+    const hostname = validateAndGetHostname(standardMapSource.url, `${id}: 标准图来源`);
+    if (hostname && hostname !== "shanghai.tianditu.gov.cn") error(`${id}: 标准图来源不是天地图上海`);
+  }
+  const standardMapDocuments = Array.isArray(check.standardMapDocuments) ? check.standardMapDocuments : [];
+  if (standardMapDocuments.length === 0) {
+    error(`${id}: reference-check 至少需要一份标准图文档`);
+  } else {
+    for (const [index, document] of standardMapDocuments.entries()) {
+      validateStandardMapDocument(document, `${id}: 标准图文档 ${index + 1}`);
+    }
+  }
+
+  const comparison = check.legacyGeometryComparison;
+  if (comparison) {
+    if (typeof comparison.reference !== "string" || comparison.reference.length === 0) {
+      error(`${id}: legacyGeometryComparison.reference 无效`);
+    }
+    if (!Number.isFinite(comparison.intersectionOverUnion)
+      || comparison.intersectionOverUnion < 0 || comparison.intersectionOverUnion > 1) {
+      error(`${id}: intersectionOverUnion 必须位于 0 到 1`);
+    }
+    if (!Number.isFinite(comparison.referenceCoveredPercent)
+      || comparison.referenceCoveredPercent < 0 || comparison.referenceCoveredPercent > 100) {
+      error(`${id}: referenceCoveredPercent 必须位于 0 到 100`);
+    }
+    if (!isFinitePositive(comparison.legacyAreaRatio)) error(`${id}: legacyAreaRatio 必须大于 0`);
+    if (!Number.isFinite(comparison.centroidDistanceKilometers)
+      || comparison.centroidDistanceKilometers < 0) {
+      error(`${id}: centroidDistanceKilometers 必须大于或等于 0`);
+    }
+  }
+
+  const adminReference = adminReferenceById.get(id);
+  const adminManifest = adminManifestById.get(id);
+  if (adminReference && adminManifest) {
+    if (check.comparableAdminName !== adminReference.properties.referenceAdminName) {
+      error(`${id}: reference-check comparableAdminName 与行政参考面不一致`);
+    }
+    if (!comparison) error(`${id}: 行政参考面缺少旧演示面差异指标`);
+    else if (comparison.reference !== `osm-admin-relation-${adminManifest.osmRelationId}`) {
+      error(`${id}: 差异指标引用的 OSM relation 与行政参考 manifest 不一致`);
+    }
+    const adminVerificationSourceIds = Array.isArray(adminReference.properties.verificationSourceIds)
+      ? adminReference.properties.verificationSourceIds
       : [];
-  if (polygonGroups.length === 0) error(`${id}: 候选几何必须是 Polygon 或 MultiPolygon`);
-  for (const polygon of polygonGroups) {
-    const outerRing = polygon[0] ?? [];
-    if (outerRing.length < 4 || !samePoint(outerRing[0], outerRing.at(-1))) error(`${id}: 候选外环未闭合`);
-    if (hasSelfIntersection(outerRing)) error(`${id}: 候选外环自相交`);
-    if (signedRingArea(outerRing) <= 0) error(`${id}: 候选外环必须按 RFC 7946 使用逆时针方向`);
-    for (const [longitude, latitude] of outerRing) {
-      if (longitude < 120.8 || longitude > 122.2 || latitude < 30.6 || latitude > 31.9) {
-        error(`${id}: 候选坐标超出上海合理范围 ${longitude},${latitude}`);
+    if (!adminVerificationSourceIds.includes(check.standardMapSourceId)) {
+      error(`${id}: standardMapSourceId 未列入行政参考面的 verificationSourceIds`);
+    }
+    const adminStandardMap = adminManifest.standardMap;
+    if (!adminStandardMap || typeof adminStandardMap !== "object") {
+      error(`${id}: 行政参考 manifest 缺少标准图元数据`);
+    } else {
+      const matchingManifestDocument = standardMapDocuments.some((document) => (
+        document?.url === adminStandardMap.url
+        && document?.mapDate === adminStandardMap.mapDate
+        && document?.reviewNumber === adminStandardMap.reviewNumber
+      ));
+      if (!matchingManifestDocument) error(`${id}: reference-check 标准图文档与行政参考 manifest 不一致`);
+      if (adminStandardMap.manualShapeVerdict === "superseded_in_adjusted_segments"
+        && check.verdict !== "standard_map_superseded_in_segments") {
+        error(`${id}: 标准图已被后续调整段替代，reference-check verdict 不一致`);
       }
     }
+  } else if ([
+    "show_admin_reference_without_replacing_market_definition",
+    "show_post_adjustment_admin_reference",
+    "show_admin_reference",
+  ].includes(check.geometryDecision)) {
+    error(`${id}: geometryDecision 要求显示行政参考面，但不存在对应几何`);
   }
 }
 
@@ -258,19 +876,36 @@ for (let first = 0; first < features.length; first += 1) {
   }
 }
 
-const restrictedGeometryHosts = ["map.hfwgsj.com", "lianjia.com", "ke.com", "amap.com", "baidu.com", "qq.com"];
+const restrictedGeometryHosts = [
+  "map.hfwgsj.com",
+  "lianjia.com",
+  "ke.com",
+  "amap.com",
+  "baidu.com",
+  "qq.com",
+  "tianditu.gov.cn",
+];
 for (const record of registry) {
   for (const sourceId of record.geometry.sourceIds) {
     const source = sourceById.get(sourceId);
-    if (!source?.url) continue;
-    const hostname = new URL(source.url).hostname;
+    if (!source) continue;
+    if (source.licenseStatus === "reference_only" || source.allowedUse === "visual_comparison_only") {
+      error(`${record.id}: reference-only / visual-only 来源 ${sourceId} 不得作为 geometry.sourceIds`);
+    }
+    if (!source.url) continue;
+    const hostname = validateAndGetHostname(source.url, `${record.id}: 几何来源 ${sourceId}`);
+    if (!hostname) continue;
     if (restrictedGeometryHosts.some((host) => hostname === host || hostname.endsWith(`.${host}`))) {
       error(`${record.id}: 几何来源 ${hostname} 属于禁止直接复制入库的平台`);
     }
   }
 }
 
-console.log(`板块数据检查：${features.length} 个入口面底稿，${candidates.length} 个候选面，${registry.length} 条注册记录，${edges.length} 条边界证据，${sources.length} 个来源。`);
+const geometryCategorySummary = knownGeometryStatuses
+  .map((status) => `${status}=${geometryStatusCounts.get(status)}`)
+  .join("，");
+console.log(`板块数据检查：${features.length} 个入口面底稿，${candidates.length} 个候选面，${adminReferences.length} 个行政参考面，${referenceChecks.length} 条逐板块参考检查，${registry.length} 条注册记录，${edges.length} 条边界证据，${sources.length} 个来源。`);
+console.log(`几何分类：${geometryCategorySummary}。`);
 for (const message of warnings) console.warn(`WARN ${message}`);
 if (errors.length > 0) {
   for (const message of errors) console.error(`ERROR ${message}`);

@@ -89,7 +89,7 @@
     },
     {
       "id": "official-pudong-boundary-adjustment-2025",
-      "title": "浦东新区部分街镇行政区域界线调整公告",
+      "title": "浦东新区人民政府关于调整部分镇、街道行政区域界线的公告",
       "publisher": "上海市浦东新区人民政府",
       "url": "https://www.pudong.gov.cn/zwgk/qt-qzf/2025/325/348121.html",
       "sourceType": "official_admin_boundary_notice",
@@ -213,6 +213,70 @@
       "licenseStatus": "reference_only",
       "allowedUse": "boundary_definition_only",
       "note": "给出虹桥商务区及主功能区四至；试点候选采用与现有演示范围更接近的主功能区。"
+    },
+    {
+      "id": "official-daning-street-boundary-2023",
+      "title": "关于印发2023年大宁路街道防汛防台工作预案的通知",
+      "publisher": "上海市静安区大宁路街道办事处",
+      "url": "https://www.jingan.gov.cn/govxxgk/JF6/2023-06-08/09a79fd2-96a3-4331-aad0-465eca39fef1.html",
+      "sourceType": "official_subdistrict_scope",
+      "publishedAt": "2023-06-08",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出大宁路街道 6.24 平方公里面积及东南西北四至；该行政街道明显小于 10.92 平方公里环大宁功能区。"
+    },
+    {
+      "id": "official-zhangjiang-town-unit-plan",
+      "title": "上海市浦东新区张江单元规划（含重点公共基础设施专项规划）",
+      "publisher": "上海市规划和自然资源局、上海市浦东新区人民政府",
+      "url": "https://ghzyj.sh.gov.cn/cmsres/45/45607a368bd94978af098c743a1a3a31/a1933753939abf0c7abfbe924a7868ad.pdf",
+      "sourceType": "official_unit_plan_pdf",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "2022 年规划批准时的范围与当时张江镇行政边界一致，给出约 45.02 平方公里调整前面积；2025 年 11 月部分镇界已调整，PDF 不作为可复制矢量来源。"
+    },
+    {
+      "id": "official-jinqiao-town-area-2025",
+      "title": "金桥镇关于2025年度贯彻落实河湖长制工作情况的报告",
+      "publisher": "上海市浦东新区金桥镇人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14471.gkml_ywl_cxjsgl/2025/358/348893.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2025-12-03",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "给出金桥镇行政面积 25.28 平方公里，用于行政参考面的面积交叉核验。"
+    },
+    {
+      "id": "official-beicai-town-area-2023",
+      "title": "北蔡镇2023年中小河道疏浚工程",
+      "publisher": "上海市浦东新区北蔡镇人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14489.gkml_ywl_cxjsgl/2023/143/310576/b3684f7a232440d8ad4020b04828a2c9.pdf",
+      "sourceType": "official_town_scope_pdf",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "给出调整前北蔡镇 23.71 平方公里面积；2025 年 11 月调整段必须以后续公告为准。"
+    },
+    {
+      "id": "official-gumei-street-scope-2024",
+      "title": "上海市水务局关于闵行区古美街道雨水排水及污水处理系统规划（2023-2035年）行业意见的通知",
+      "publisher": "上海市水务局",
+      "url": "https://swj.sh.gov.cn/swyw/20241203/655b8d423c5e4308bc246b6f316b5cf2.html",
+      "sourceType": "official_subdistrict_scope",
+      "publishedAt": "2024-12-03",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "明确规划范围为古美街道范围，总面积 6.2 平方公里，用于行政参考面的面积交叉核验。"
+    },
+    {
+      "id": "official-tianditu-shanghai-standard-maps-2025",
+      "title": "天地图·上海标准地图（2025年7月版）",
+      "publisher": "上海市规划和自然资源局、上海市测绘院",
+      "url": "https://shanghai.tianditu.gov.cn/map/views/standardMap.html",
+      "sourceType": "official_standard_map_collection",
+      "publishedAt": "2025-07",
+      "licenseStatus": "reference_only",
+      "allowedUse": "visual_comparison_only",
+      "note": "区级图显示街镇界，但 PDF 无 CRS 或地理配准且图面注明行政界线仅供参考；只做名称、形状和邻接关系的人工核对，不从图中提取坐标。"
     },
     {
       "id": "official-shanghai-town-list-2025",
