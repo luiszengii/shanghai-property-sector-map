@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
-    openGraph: { title, description, type: "website", locale: "zh_CN", images: [{ url: "/og.png", width: 1732, height: 909, alt: "上海楼市互动地图" }] },
+    openGraph: { title, description, type: "website", locale: "zh_CN", images: [{ url: "/og.png", width: 1730, height: 909, alt: "上海楼市互动地图" }] },
     twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
   };
 }
