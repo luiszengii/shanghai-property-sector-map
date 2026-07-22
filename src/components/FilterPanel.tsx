@@ -2,7 +2,7 @@
 
 import { Building2, Check, Layers3, RotateCcw, X } from "lucide-react";
 import categoriesData from "@/src/data/categories.json";
-import { projects } from "@/src/data/projects";
+import { projects } from "@/src/content/project-leads";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category } from "@/src/types/map";
 

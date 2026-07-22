@@ -3,7 +3,7 @@
 import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
-import { projects } from "@/src/data/projects";
+import { projects } from "@/src/content/project-leads";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorCollection } from "@/src/types/map";

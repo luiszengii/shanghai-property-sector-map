@@ -142,6 +142,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-label b { color: #431407; font-size: 11px; }
 .project-label small { color: #c2410c; font-size: 9px; }
 .project-marker:hover .project-pin, .project-marker.is-selected .project-pin { transform: rotate(-45deg) scale(1.18); box-shadow: 0 0 0 4px rgba(249,115,22,.18); }
+.project-marker.is-approximate .project-pin { background: linear-gradient(145deg, #94a3b8, #64748b); }
 .amap-logo, .amap-copyright { opacity: .72; }
 
 .dialog-backdrop { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(15,23,42,.42); backdrop-filter: blur(7px); animation: fade-in .2s ease both; }

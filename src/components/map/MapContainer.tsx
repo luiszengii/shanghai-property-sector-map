@@ -3,7 +3,7 @@
 import { AlertTriangle, LoaderCircle, MapPinned, Minus, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import placesData from "@/src/data/places.json";
-import { projects } from "@/src/data/projects";
+import { projects } from "@/src/content/project-leads";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorCollection, SectorFeature } from "@/src/types/map";

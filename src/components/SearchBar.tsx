@@ -3,7 +3,7 @@
 import { Navigation, Search, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import placesData from "@/src/data/places.json";
-import { projects } from "@/src/data/projects";
+import { projects } from "@/src/content/project-leads";
 import sectorsData from "@/src/data/sectors.json";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, SectorCollection } from "@/src/types/map";
@@ -22,20 +22,18 @@ export function SearchBar() {
       setSearchMessage("请输入板块或点位名称");
       return;
     }
-    const project = projects.find((item) =>
-      [item.name, item.sector, item.district].some((value) => value.toLowerCase().includes(normalized)),
-    );
-    if (project) {
-      selectProject(project.id);
-      requestFocus("project", project.id);
-      setSearchMessage("已定位新盘：" + project.name);
-      return;
-    }
     const sector = sectors.find((item) => item.properties.name.toLowerCase().includes(normalized));
     if (sector) {
       selectSector(sector.properties.id);
       requestFocus("sector", sector.properties.id);
       setSearchMessage(`已定位：${sector.properties.name}`);
+      return;
+    }
+    const project = projects.find((item) => item.name.toLowerCase().includes(normalized));
+    if (project) {
+      selectProject(project.id);
+      requestFocus("project", project.id);
+      setSearchMessage("已定位新盘：" + project.name);
       return;
     }
     const place = places.find((item) => item.name.toLowerCase().includes(normalized));
