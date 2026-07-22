@@ -34,9 +34,9 @@ export function DataDisclaimerDialog() {
           <li>46 个新盘点位已于 2026-07-22 按项目 POI、公开地址逐项核对并固定，不再使用板块近似点。</li>
           <li>多期或多组团项目采用主地块/整体代表点，详情卡会单独标注；中等置信点位建议看房前再次确认具体入口。</li>
           <li>{officialScopeSectorNames}共 {officialScopeSectors.length} 个板块，已按官方文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线候选面。</li>
-          <li>{administrativeReferenceSectorNames}共 {administrativeReferenceSectors.length} 个板块，现展示蓝色虚线街镇行政参考面；它们用于替换粗略演示图形，但不会自动等同于同名楼市板块。</li>
+          <li>{administrativeReferenceSectorNames}共 {administrativeReferenceSectors.length} 个板块，保留灰色楼市演示面，并独立叠加蓝色虚线街镇行政参考层；两种范围不会自动等同。</li>
           <li>上海天地图 2025 年 7 月标准地图只用于逐块视觉核对形状、面积量级和邻接关系，不从图件复制坐标；浦东 2025 年 11 月已调整的边界段以后续公告为准。</li>
-          <li>其余 {demoSectorCount} 个板块仍为灰色虚线演示面，须先确定功能区或市场口径后再绘制。</li>
+          <li>另有 {demoSectorCount} 个板块只有灰色虚线演示面，须先确定功能区或市场口径后再绘制。</li>
           <li>所有房产板块均为研究口径，不代表行政区划、法定规划界址或行业统一边界；候选面和行政参考面也不等于测绘成果。</li>
           <li>设施信息为功能演示数据，后续需要根据公开资料持续核验与更新。</li>
           <li>“环境监管重点单位”属于监管分类，不代表周边必然受到污染。</li>

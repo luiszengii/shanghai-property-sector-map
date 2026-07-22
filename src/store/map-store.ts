@@ -25,6 +25,7 @@ interface MapState {
   disclaimerOpen: boolean;
   searchMessage: string;
   focusRequest: FocusRequest | null;
+  sectorGeometryLoading: Record<string, boolean>;
   sectorGeometryFallbacks: Record<string, boolean>;
   toggleCategory: (id: string) => void;
   showAllCategories: () => void;
@@ -38,6 +39,7 @@ interface MapState {
   setMobileFiltersOpen: (open: boolean) => void;
   setDisclaimerOpen: (open: boolean) => void;
   setSearchMessage: (message: string) => void;
+  setSectorGeometryLoading: (id: string, loading: boolean) => void;
   setSectorGeometryFallback: (id: string, fallback: boolean) => void;
   requestFocus: (type: "sector" | "place" | "project", id: string) => void;
   closeDetail: () => void;
@@ -57,6 +59,7 @@ export const useMapStore = create<MapState>()(
       disclaimerOpen: false,
       searchMessage: "",
       focusRequest: null,
+      sectorGeometryLoading: {},
       sectorGeometryFallbacks: {},
       toggleCategory: (id) =>
         set((state) => ({
@@ -75,6 +78,14 @@ export const useMapStore = create<MapState>()(
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
       setDisclaimerOpen: (open) => set({ disclaimerOpen: open }),
       setSearchMessage: (message) => set({ searchMessage: message }),
+      setSectorGeometryLoading: (id, loading) =>
+        set((state) => {
+          if (Boolean(state.sectorGeometryLoading[id]) === loading) return state;
+          const next = { ...state.sectorGeometryLoading };
+          if (loading) next[id] = true;
+          else delete next[id];
+          return { sectorGeometryLoading: next };
+        }),
       setSectorGeometryFallback: (id, fallback) =>
         set((state) => {
           if (Boolean(state.sectorGeometryFallbacks[id]) === fallback) return state;

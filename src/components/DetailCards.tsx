@@ -5,6 +5,7 @@ import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
+import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
@@ -32,7 +33,17 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
-  const { selectedSectorId, selectedPlaceId, selectedProjectId, center, closeDetail, requestFocus, selectSector, sectorGeometryFallbacks } = useMapStore();
+  const {
+    selectedSectorId,
+    selectedPlaceId,
+    selectedProjectId,
+    center,
+    closeDetail,
+    requestFocus,
+    selectSector,
+    sectorGeometryLoading,
+    sectorGeometryFallbacks,
+  } = useMapStore();
   const place = places.find((item) => item.id === selectedPlaceId);
   const project = projects.find((item) => item.id === selectedProjectId);
   const sector = sectors.find((item) => item.properties.id === selectedSectorId);
@@ -73,7 +84,10 @@ export function DetailCard() {
 
   if (place) {
     const category = categories.find((item) => item.id === place.category);
-    const origin = sector?.properties.center ?? center;
+    const activeGeometry = sector ? sectorCatalog.getActiveGeometry(sector.properties.id) : undefined;
+    const origin = activeGeometry
+      ? coordinateToDisplayPosition(activeGeometry.center, activeGeometry.coordinateSystem)
+      : center;
     const distance = distanceKm(origin, [place.longitude, place.latitude]);
     return (
       <article className="detail-card glass-panel" aria-label={`${place.name}详情`}>
@@ -101,20 +115,35 @@ export function DetailCard() {
   const geometryVerificationSources = sectorCatalog.getGeometryVerificationSources(sector.properties.id);
   const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
   const referenceCheck = sectorCatalog.getReferenceCheck(sector.properties.id);
+  const isRuntimeLoading = Boolean(sectorGeometryLoading[sector.properties.id]);
   const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
   const geometryStatus = sectorRecord?.geometry.status;
-  const isAdministrativeReference = geometryStatus === "admin-reference" && !isRuntimeFallback;
+  const usesAdministrativeReference = geometryStatus === "admin-reference";
+  const isAdministrativeReference = usesAdministrativeReference
+    && !isRuntimeLoading
+    && !isRuntimeFallback;
   const isOfficialScopeCandidate = geometryStatus !== undefined
     && ["draft", "reviewed", "published"].includes(geometryStatus)
+    && !isRuntimeLoading
     && !isRuntimeFallback;
-  const geometryLabel = isRuntimeFallback
-    ? "演示几何 · 研究面转换失败"
-    : isOfficialScopeCandidate
-      ? "官方四至候选面"
-      : isAdministrativeReference
-        ? "行政参考面"
-        : "演示几何";
-  const reviewLabel = isAdministrativeReference
+  const geometryLabel = isRuntimeLoading
+    ? usesAdministrativeReference
+      ? "行政参考层加载中 · 楼市演示面可见"
+      : "候选边界加载中 · 暂显演示面"
+    : isRuntimeFallback
+      ? usesAdministrativeReference
+        ? "行政参考层转换失败 · 楼市演示面可见"
+        : "演示几何 · 候选面转换失败"
+      : isOfficialScopeCandidate
+        ? "官方四至候选面"
+        : isAdministrativeReference
+          ? "楼市演示面 + 行政参考层"
+          : "演示几何";
+  const reviewLabel = isRuntimeLoading
+    ? usesAdministrativeReference
+      ? "WGS84 行政参考层正在转换为地图显示坐标"
+      : "WGS84 候选面正在转换为地图显示坐标"
+    : isAdministrativeReference
     ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
@@ -127,7 +156,7 @@ export function DetailCard() {
   const description = isOfficialScopeCandidate
     ? `${baseDescription}；当前显示按官方文字四至重建的研究候选面。`
     : isAdministrativeReference
-      ? `${baseDescription}；当前显示${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考面。`
+      ? `${baseDescription}；灰色面仍是待定楼市演示口径，蓝色虚线另行叠加${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层。`
       : sector.properties.description;
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
@@ -147,7 +176,24 @@ export function DetailCard() {
             <dd>{boundaryEvidence.map((edge, index) => <span key={edge.id}>{index > 0 && "；"}{boundarySideLabels[edge.side]}：{edge.featureName}（{evidenceStatusLabels[edge.status]}）</span>)}</dd>
           </div>
         )}
-        <div><dt><MapPin size={15} /> 当前几何</dt><dd>{isRuntimeFallback ? "本次高德坐标转换失败，地图已安全回退到虚线演示面；WGS84 候选数据仍保留，可稍后刷新重试。" : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd></div>
+        <div>
+          <dt><MapPin size={15} /> 当前几何</dt>
+          <dd>{isRuntimeLoading
+            ? usesAdministrativeReference
+              ? "行政参考层正在转换为高德显示坐标；灰色楼市演示面仍保持可见，完成后会另行叠加蓝色虚线。"
+              : "候选面正在转换为高德显示坐标，地图暂时显示灰色虚线演示面；转换完成后会自动替换。"
+            : isRuntimeFallback
+              ? usesAdministrativeReference
+                ? "本次行政参考层坐标转换失败，灰色楼市演示面仍保留；WGS84 参考数据可稍后刷新重试。"
+                : "本次候选面坐标转换失败，地图已安全回退到虚线演示面；WGS84 研究数据仍保留，可稍后刷新重试。"
+              : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd>
+        </div>
+        {geometryStatus !== undefined && geometryStatus !== "demo" && (
+          <div>
+            <dt><MapPin size={15} /> 显示坐标</dt>
+            <dd>地图显示采用本地 WGS84→GCJ-02 近似转换；WGS84 研究主几何保持不变。</dd>
+          </div>
+        )}
         {referenceCheck && (
           <div>
             <dt><Route size={15} /> 天地图对照</dt>

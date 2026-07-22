@@ -234,6 +234,319 @@ function geometryAreaSquareKilometers(geometry) {
   return areaSquareMeters / 1_000_000;
 }
 
+const comparisonMetricMethod = {
+  version: "legacy-gcj02-assumed-to-wgs84-local-plane-v1",
+  legacyCoordinateSystem: "GCJ-02-assumed",
+  referenceCoordinateSystem: "WGS84",
+  normalization: {
+    type: "iterative_inverse_gcj02_to_wgs84",
+    maxIterations: 12,
+    toleranceDegrees: 1e-12,
+  },
+  projection: {
+    type: "local_equirectangular",
+    center: [121.4737, 31.2304],
+    earthRadiusMeters: meanEarthRadiusMeters,
+  },
+  rounding: {
+    intersectionOverUnion: 3,
+    referenceCoveredPercent: 1,
+    legacyAreaRatio: 2,
+    centroidDistanceKilometers: 2,
+  },
+};
+
+const gcjSemiMajorAxis = 6_378_245;
+const gcjEccentricitySquared = 0.006693421622965943;
+
+function isOutsideGcj02Coverage(longitude, latitude) {
+  return longitude < 72.004 || longitude > 137.8347 || latitude < 0.8293 || latitude > 55.8271;
+}
+
+function gcjLatitudeTransform(x, y) {
+  let value = -100 + 2 * x + 3 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+  value += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3;
+  value += (20 * Math.sin(y * Math.PI) + 40 * Math.sin(y / 3 * Math.PI)) * 2 / 3;
+  value += (160 * Math.sin(y / 12 * Math.PI) + 320 * Math.sin(y * Math.PI / 30)) * 2 / 3;
+  return value;
+}
+
+function gcjLongitudeTransform(x, y) {
+  let value = 300 + x + 2 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+  value += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3;
+  value += (20 * Math.sin(x * Math.PI) + 40 * Math.sin(x / 3 * Math.PI)) * 2 / 3;
+  value += (150 * Math.sin(x / 12 * Math.PI) + 300 * Math.sin(x / 30 * Math.PI)) * 2 / 3;
+  return value;
+}
+
+function wgs84ToGcj02([longitude, latitude]) {
+  if (isOutsideGcj02Coverage(longitude, latitude)) return [longitude, latitude];
+  let latitudeDelta = gcjLatitudeTransform(longitude - 105, latitude - 35);
+  let longitudeDelta = gcjLongitudeTransform(longitude - 105, latitude - 35);
+  const latitudeRadians = latitude * Math.PI / 180;
+  let magic = Math.sin(latitudeRadians);
+  magic = 1 - gcjEccentricitySquared * magic * magic;
+  const squareRootMagic = Math.sqrt(magic);
+  latitudeDelta = latitudeDelta * 180
+    / ((gcjSemiMajorAxis * (1 - gcjEccentricitySquared)) / (magic * squareRootMagic) * Math.PI);
+  longitudeDelta = longitudeDelta * 180
+    / (gcjSemiMajorAxis / squareRootMagic * Math.cos(latitudeRadians) * Math.PI);
+  return [longitude + longitudeDelta, latitude + latitudeDelta];
+}
+
+function gcj02ToWgs84([longitude, latitude]) {
+  if (isOutsideGcj02Coverage(longitude, latitude)) return [longitude, latitude];
+  let estimatedLongitude = longitude;
+  let estimatedLatitude = latitude;
+  for (let iteration = 0; iteration < comparisonMetricMethod.normalization.maxIterations; iteration += 1) {
+    const [convertedLongitude, convertedLatitude] = wgs84ToGcj02([
+      estimatedLongitude,
+      estimatedLatitude,
+    ]);
+    const longitudeDelta = convertedLongitude - longitude;
+    const latitudeDelta = convertedLatitude - latitude;
+    estimatedLongitude -= longitudeDelta;
+    estimatedLatitude -= latitudeDelta;
+    if (Math.max(Math.abs(longitudeDelta), Math.abs(latitudeDelta))
+      < comparisonMetricMethod.normalization.toleranceDegrees) break;
+  }
+  return [estimatedLongitude, estimatedLatitude];
+}
+
+function projectWgs84ToComparisonPlane([longitude, latitude]) {
+  const [centerLongitude, centerLatitude] = comparisonMetricMethod.projection.center;
+  const longitudeScale = Math.cos(centerLatitude * Math.PI / 180);
+  return [
+    comparisonMetricMethod.projection.earthRadiusMeters
+      * (longitude - centerLongitude) * Math.PI / 180 * longitudeScale,
+    comparisonMetricMethod.projection.earthRadiusMeters
+      * (latitude - centerLatitude) * Math.PI / 180,
+  ];
+}
+
+function openCompactedRing(ring) {
+  const points = compactRing(ring);
+  if (samePoint(points[0], points.at(-1))) points.pop();
+  let changed = true;
+  while (changed && points.length > 3) {
+    changed = false;
+    for (let index = 0; index < points.length; index += 1) {
+      const previous = points[(index - 1 + points.length) % points.length];
+      const current = points[index];
+      const next = points[(index + 1) % points.length];
+      if (Math.abs(cross(previous, current, next)) <= 1e-7) {
+        points.splice(index, 1);
+        changed = true;
+        break;
+      }
+    }
+  }
+  return points;
+}
+
+function signedOpenRingArea(ring) {
+  let total = 0;
+  for (let index = 0; index < ring.length; index += 1) {
+    const [x1, y1] = ring[index];
+    const [x2, y2] = ring[(index + 1) % ring.length];
+    total += x1 * y2 - x2 * y1;
+  }
+  return total / 2;
+}
+
+function pointInTriangleInclusive(point, first, second, third) {
+  const epsilon = 1e-7;
+  return cross(first, second, point) >= -epsilon
+    && cross(second, third, point) >= -epsilon
+    && cross(third, first, point) >= -epsilon;
+}
+
+function triangulateSimpleRing(ring, label) {
+  const points = openCompactedRing(ring);
+  if (points.length < 3) throw new Error(`${label} 缺少可三角化的顶点`);
+  if (signedOpenRingArea(points) < 0) points.reverse();
+  const indices = points.map((_, index) => index);
+  const triangles = [];
+  while (indices.length > 3) {
+    let clipped = false;
+    for (let cursor = 0; cursor < indices.length; cursor += 1) {
+      const previousIndex = indices[(cursor - 1 + indices.length) % indices.length];
+      const currentIndex = indices[cursor];
+      const nextIndex = indices[(cursor + 1) % indices.length];
+      const triangle = [points[previousIndex], points[currentIndex], points[nextIndex]];
+      if (cross(...triangle) <= 1e-7) continue;
+      const containsOtherPoint = indices.some((candidateIndex) => (
+        candidateIndex !== previousIndex
+        && candidateIndex !== currentIndex
+        && candidateIndex !== nextIndex
+        && pointInTriangleInclusive(points[candidateIndex], ...triangle)
+      ));
+      if (containsOtherPoint) continue;
+      triangles.push(triangle);
+      indices.splice(cursor, 1);
+      clipped = true;
+      break;
+    }
+    if (!clipped) throw new Error(`${label} 三角化失败`);
+  }
+  triangles.push(indices.map((index) => points[index]));
+  return triangles;
+}
+
+function lineIntersection(firstStart, firstEnd, secondStart, secondEnd) {
+  const firstDirection = [firstEnd[0] - firstStart[0], firstEnd[1] - firstStart[1]];
+  const secondDirection = [secondEnd[0] - secondStart[0], secondEnd[1] - secondStart[1]];
+  const denominator = firstDirection[0] * secondDirection[1]
+    - firstDirection[1] * secondDirection[0];
+  if (Math.abs(denominator) <= 1e-12) return firstEnd;
+  const offset = [secondStart[0] - firstStart[0], secondStart[1] - firstStart[1]];
+  const scale = (offset[0] * secondDirection[1] - offset[1] * secondDirection[0]) / denominator;
+  return [
+    firstStart[0] + scale * firstDirection[0],
+    firstStart[1] + scale * firstDirection[1],
+  ];
+}
+
+function clipConvexPolygon(subject, clipPolygon) {
+  let output = subject;
+  const epsilon = 1e-7;
+  for (let edgeIndex = 0; edgeIndex < clipPolygon.length; edgeIndex += 1) {
+    const clipStart = clipPolygon[edgeIndex];
+    const clipEnd = clipPolygon[(edgeIndex + 1) % clipPolygon.length];
+    const input = output;
+    output = [];
+    if (input.length === 0) break;
+    let previous = input.at(-1);
+    let previousInside = cross(clipStart, clipEnd, previous) >= -epsilon;
+    for (const current of input) {
+      const currentInside = cross(clipStart, clipEnd, current) >= -epsilon;
+      if (currentInside !== previousInside) {
+        output.push(lineIntersection(previous, current, clipStart, clipEnd));
+      }
+      if (currentInside) output.push(current);
+      previous = current;
+      previousInside = currentInside;
+    }
+  }
+  return output;
+}
+
+function simplePolygonIntersectionArea(firstRing, secondRing, label) {
+  const firstTriangles = triangulateSimpleRing(firstRing, `${label} 旧演示面`);
+  const secondTriangles = triangulateSimpleRing(secondRing, `${label} 参考面`);
+  let area = 0;
+  for (const firstTriangle of firstTriangles) {
+    for (const secondTriangle of secondTriangles) {
+      const intersection = clipConvexPolygon(firstTriangle, secondTriangle);
+      if (intersection.length >= 3) area += Math.abs(signedOpenRingArea(intersection));
+    }
+  }
+  return area;
+}
+
+function simplePolygonCentroid(ring, label) {
+  const points = openCompactedRing(ring);
+  const signedArea = signedOpenRingArea(points);
+  if (Math.abs(signedArea) <= 1e-7) throw new Error(`${label} 面积为零`);
+  let x = 0;
+  let y = 0;
+  for (let index = 0; index < points.length; index += 1) {
+    const current = points[index];
+    const next = points[(index + 1) % points.length];
+    const factor = current[0] * next[1] - next[0] * current[1];
+    x += (current[0] + next[0]) * factor;
+    y += (current[1] + next[1]) * factor;
+  }
+  return [x / (6 * signedArea), y / (6 * signedArea)];
+}
+
+function comparisonRings(geometry, coordinateTransform, label) {
+  const polygons = polygonGroupsForGeometry(geometry);
+  if (polygons.length === 0) throw new Error(`${label} 缺少 Polygon 或 MultiPolygon 几何`);
+  return polygons.flatMap((polygon, polygonIndex) => polygon.map((ring, ringIndex) => ({
+    label: `${label} polygon ${polygonIndex + 1} ${ringIndex === 0 ? "外环" : `内环 ${ringIndex}`}`,
+    sign: ringIndex === 0 ? 1 : -1,
+    ring: ring.map(coordinateTransform).map(projectWgs84ToComparisonPlane),
+  })));
+}
+
+function signedRingsArea(rings) {
+  return rings.reduce(
+    (total, item) => total + item.sign * Math.abs(signedOpenRingArea(openCompactedRing(item.ring))),
+    0,
+  );
+}
+
+function signedRingsCentroid(rings, label) {
+  let weightedX = 0;
+  let weightedY = 0;
+  let totalArea = 0;
+  for (const item of rings) {
+    const area = Math.abs(signedOpenRingArea(openCompactedRing(item.ring)));
+    const centroid = simplePolygonCentroid(item.ring, item.label);
+    const signedArea = item.sign * area;
+    totalArea += signedArea;
+    weightedX += centroid[0] * signedArea;
+    weightedY += centroid[1] * signedArea;
+  }
+  if (totalArea <= 1e-7) throw new Error(`${label} 面积为零或内环无效`);
+  return [weightedX / totalArea, weightedY / totalArea];
+}
+
+function signedRingsIntersectionArea(firstRings, secondRings, label) {
+  // Ring signs apply inclusion-exclusion, so holes and disjoint MultiPolygon parts
+  // use the same triangle-intersection primitive as simple Polygon geometry.
+  let area = 0;
+  for (const first of firstRings) {
+    for (const second of secondRings) {
+      area += first.sign * second.sign
+        * simplePolygonIntersectionArea(first.ring, second.ring, `${label} ${first.label} × ${second.label}`);
+    }
+  }
+  return area;
+}
+
+function roundedMetric(value, digits) {
+  return Number(value.toFixed(digits));
+}
+
+function computeLegacyGeometryComparison(legacyFeature, referenceFeature, label) {
+  const legacyRings = comparisonRings(legacyFeature.geometry, gcj02ToWgs84, `${label} 旧演示面`);
+  const referenceRings = comparisonRings(
+    referenceFeature.geometry,
+    (coordinate) => coordinate,
+    `${label} 参考面`,
+  );
+  const legacyArea = signedRingsArea(legacyRings);
+  const referenceArea = signedRingsArea(referenceRings);
+  const intersectionArea = signedRingsIntersectionArea(legacyRings, referenceRings, label);
+  const unionArea = legacyArea + referenceArea - intersectionArea;
+  if (![legacyArea, referenceArea, intersectionArea, unionArea].every(Number.isFinite)
+    || legacyArea <= 0 || referenceArea <= 0 || intersectionArea < 0 || unionArea <= 0
+    || intersectionArea > Math.min(legacyArea, referenceArea) + 0.01) {
+    throw new Error(`${label} 差异指标面积关系无效`);
+  }
+  const legacyCentroid = signedRingsCentroid(legacyRings, `${label} 旧演示面`);
+  const referenceCentroid = signedRingsCentroid(referenceRings, `${label} 参考面`);
+  const centroidDistanceMeters = Math.hypot(
+    legacyCentroid[0] - referenceCentroid[0],
+    legacyCentroid[1] - referenceCentroid[1],
+  );
+  const rounding = comparisonMetricMethod.rounding;
+  return {
+    intersectionOverUnion: roundedMetric(intersectionArea / unionArea, rounding.intersectionOverUnion),
+    referenceCoveredPercent: roundedMetric(
+      intersectionArea / referenceArea * 100,
+      rounding.referenceCoveredPercent,
+    ),
+    legacyAreaRatio: roundedMetric(legacyArea / referenceArea, rounding.legacyAreaRatio),
+    centroidDistanceKilometers: roundedMetric(
+      centroidDistanceMeters / 1_000,
+      rounding.centroidDistanceKilometers,
+    ),
+  };
+}
+
 function validateWgs84PolygonalGeometry(feature, label, labelPoint) {
   if (feature?.type !== "Feature") error(`${label}: type 必须为 Feature`);
   const polygonGroups = polygonGroupsForGeometry(feature?.geometry);
@@ -419,6 +732,7 @@ if (normalizedJson(sortedFeatureIds) !== normalizedJson(sortedRegistryIds)) {
   error("registry 与 GeoJSON 的板块 ID 必须一一对应");
 }
 
+const legacyFeatureById = new Map(features.map((feature) => [feature.properties?.id, feature]));
 const registryById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
@@ -544,6 +858,7 @@ else if (osmGeometrySource.licenseStatus !== "ODbL-1.0"
 validateLockedOsmCollection(candidateData, candidateManifest, "候选几何", "internal-review");
 
 const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
+const candidateById = new Map(candidates.map((feature) => [feature.properties?.id, feature]));
 for (const candidate of candidates) {
   const id = candidate.properties?.id ?? "unknown-candidate";
   const record = registryById.get(id);
@@ -777,6 +1092,9 @@ const allowedGeometryDecisions = new Set([
   "show_admin_reference",
 ]);
 
+if (normalizedJson(referenceChecksData.comparisonMetricMethod) !== normalizedJson(comparisonMetricMethod)) {
+  error("reference-checks comparisonMetricMethod 与校验器实现不一致");
+}
 if (!/^\d{4}-\d{2}-\d{2}$/.test(referenceChecksData.checkedAt ?? "")) {
   error("reference-checks checkedAt 必须使用 YYYY-MM-DD 格式");
 }
@@ -823,6 +1141,30 @@ for (const check of referenceChecks) {
     if (!Number.isFinite(comparison.centroidDistanceKilometers)
       || comparison.centroidDistanceKilometers < 0) {
       error(`${id}: centroidDistanceKilometers 必须大于或等于 0`);
+    }
+    const legacyFeature = legacyFeatureById.get(id);
+    const referenceFeature = comparison.reference === "official-scope-candidate"
+      ? candidateById.get(id)
+      : adminReferenceById.get(id);
+    if (!legacyFeature) error(`${id}: 差异指标缺少旧演示面`);
+    if (!referenceFeature) error(`${id}: 差异指标引用的参考面不存在`);
+    if (legacyFeature && referenceFeature) {
+      try {
+        const recomputed = computeLegacyGeometryComparison(legacyFeature, referenceFeature, id);
+        for (const field of [
+          "intersectionOverUnion",
+          "referenceCoveredPercent",
+          "legacyAreaRatio",
+          "centroidDistanceKilometers",
+        ]) {
+          if (!nearlyEqual(comparison[field], recomputed[field], 1e-9)) {
+            error(`${id}: ${field} 应为 ${recomputed[field]}，实际为 ${comparison[field]}`);
+          }
+        }
+      } catch (comparisonError) {
+        const message = comparisonError instanceof Error ? comparisonError.message : String(comparisonError);
+        error(`${id}: 无法复算差异指标：${message}`);
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-22",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩、北外滩为内部复核候选面，其余仍是首版演示面；正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩、北外滩为内部复核候选面；大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -67,7 +67,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-daning-street-boundary-2023", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示大宁路街道行政参考面（6.3550 平方公里），已与官方 6.24 平方公里和天地图街道形状核对；它不替代 10.92 平方公里环大宁或市场大宁定义。"
+        "note": "地图以蓝色虚线独立叠加大宁路街道行政参考面（6.3550 平方公里），灰色楼市演示面仍保留；参考面已与官方 6.24 平方公里和天地图街道形状核对，不替代 10.92 平方公里环大宁或市场大宁定义。"
       }
     },
     {
@@ -112,7 +112,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-zhangjiang-town-unit-plan", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示公告后更新的固定 OSM 张江镇行政参考面（45.9930 平方公里）；45.02 平方公里只作 2022 年调整前面积校验，2025 年调整段以 11 月公告为优先证据，不代表法定界址、市场张江或张江科学城范围。"
+        "note": "地图以蓝色虚线独立叠加公告后更新的固定 OSM 张江镇行政参考面（45.9930 平方公里），灰色楼市演示面仍保留；45.02 平方公里只作 2022 年调整前面积校验，2025 年调整段以 11 月公告为优先证据，不代表法定界址、市场张江或张江科学城范围。"
       }
     },
     {
@@ -135,7 +135,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-jinqiao-town-area-2025", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示金桥镇行政参考面（24.9513 平方公里）；与官方 25.28 平方公里接近，金桥—张江调整段以 2025 年 11 月公告优先，不代表开发区或市场金桥。"
+        "note": "地图以蓝色虚线独立叠加金桥镇行政参考面（24.9513 平方公里），灰色楼市演示面仍保留；与官方 25.28 平方公里接近，金桥—张江调整段以 2025 年 11 月公告优先，不代表开发区或市场金桥。"
       }
     },
     {
@@ -158,7 +158,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-sanlin-profile-2023", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示三林镇行政参考面（33.9924 平方公里），与官方 34.19 平方公里及天地图形状接近；前滩、东明路街道和市场三林仍需另行拆分。"
+        "note": "地图以蓝色虚线独立叠加三林镇行政参考面（33.9924 平方公里），灰色楼市演示面仍保留；参考面与官方 34.19 平方公里及天地图形状接近，前滩、东明路街道和市场三林仍需另行拆分。"
       }
     },
     {
@@ -181,7 +181,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-beicai-town-area-2023", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示北蔡镇行政参考面（23.1165 平方公里）；标准图早于 2025 年北蔡—张江、北蔡—康桥调整，调整段以后续公告优先，不代表市场北蔡。"
+        "note": "地图以蓝色虚线独立叠加北蔡镇行政参考面（23.1165 平方公里），灰色楼市演示面仍保留；标准图早于 2025 年北蔡—张江、北蔡—康桥调整，调整段以后续公告优先，不代表市场北蔡。"
       }
     },
     {
@@ -204,7 +204,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-gumei-street-scope-2024", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示古美路街道行政参考面（5.9330 平方公里），与官方 6.2 平方公里量级及天地图形状接近；不代表市场古美已经冻结。"
+        "note": "地图以蓝色虚线独立叠加古美路街道行政参考面（5.9330 平方公里），灰色楼市演示面仍保留；参考面与官方 6.2 平方公里量级及天地图形状接近，不代表市场古美已经冻结。"
       }
     },
     {
@@ -227,7 +227,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-xinzhuang-transport-plan-2024", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示莘庄镇行政参考面（19.3922 平方公里），与官方 19.14 平方公里及天地图形状接近；不代表 4.3 平方公里副中心或市场莘庄。"
+        "note": "地图以蓝色虚线独立叠加莘庄镇行政参考面（19.3922 平方公里），灰色楼市演示面仍保留；参考面与官方 19.14 平方公里及天地图形状接近，不代表 4.3 平方公里副中心或市场莘庄。"
       }
     },
     {
@@ -250,7 +250,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-xujing-profile-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "当前地图显示徐泾镇行政参考面（39.5402 平方公里），与官方 38.55 平方公里及天地图形状接近；西虹桥片区和市场徐泾仍需另行定义。"
+        "note": "地图以蓝色虚线独立叠加徐泾镇行政参考面（39.5402 平方公里），灰色楼市演示面仍保留；参考面与官方 38.55 平方公里及天地图形状接近，西虹桥片区和市场徐泾仍需另行定义。"
       }
     },
     {

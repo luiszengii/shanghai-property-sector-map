@@ -1,7 +1,28 @@
 {
   "schemaVersion": "1.0.0",
   "checkedAt": "2026-07-22",
-  "notice": "天地图标准图只做人工视觉核对，不产生本文件中的坐标或米级指标。数值差异均由固定 OSM 快照与仓库旧演示面计算。",
+  "notice": "天地图标准图只做人工视觉核对，不产生本文件中的坐标或米级指标。数值差异把仓库旧演示面按登记口径由 GCJ-02 反解至 WGS84，再与固定 OSM 快照或规划四至候选面在同一上海本地平面中计算。",
+  "comparisonMetricMethod": {
+    "version": "legacy-gcj02-assumed-to-wgs84-local-plane-v1",
+    "legacyCoordinateSystem": "GCJ-02-assumed",
+    "referenceCoordinateSystem": "WGS84",
+    "normalization": {
+      "type": "iterative_inverse_gcj02_to_wgs84",
+      "maxIterations": 12,
+      "toleranceDegrees": 1e-12
+    },
+    "projection": {
+      "type": "local_equirectangular",
+      "center": [121.4737, 31.2304],
+      "earthRadiusMeters": 6371008.8
+    },
+    "rounding": {
+      "intersectionOverUnion": 3,
+      "referenceCoveredPercent": 1,
+      "legacyAreaRatio": 2,
+      "centroidDistanceKilometers": 2
+    }
+  },
   "checks": [
     {
       "sectorId": "sector_qiantan",
@@ -19,12 +40,12 @@
       ],
       "legacyGeometryComparison": {
         "reference": "official-scope-candidate",
-        "intersectionOverUnion": 0.125,
-        "referenceCoveredPercent": 84.6,
-        "legacyAreaRatio": 6.64,
-        "centroidDistanceKilometers": 1.23
+        "intersectionOverUnion": 0.139,
+        "referenceCoveredPercent": 93.7,
+        "legacyAreaRatio": 6.66,
+        "centroidDistanceKilometers": 0.85
       },
-      "summary": "前滩不是独立街镇，不能套用浦东街镇界；旧演示面约为官方四至候选面的 6.64 倍，现继续采用前滩控规四至候选面。"
+      "summary": "前滩不是独立街镇，不能套用浦东街镇界；统一坐标后，旧演示面约为官方四至候选面的 6.66 倍，现继续采用前滩控规四至候选面。"
     },
     {
       "sectorId": "sector_xuhuibinjiang",
@@ -59,12 +80,12 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14186009",
-        "intersectionOverUnion": 0.269,
+        "intersectionOverUnion": 0.268,
         "referenceCoveredPercent": 100,
-        "legacyAreaRatio": 3.72,
-        "centroidDistanceKilometers": 0.63
+        "legacyAreaRatio": 3.73,
+        "centroidDistanceKilometers": 1.02
       },
-      "summary": "天地图中的大宁路街道约 6.24 平方公里，2017 环大宁功能区为 10.92 平方公里，两者不是同一对象；旧演示面又约为街道面的 3.72 倍。"
+      "summary": "大宁路街道官方材料给出 6.24 平方公里，天地图只用于核对街道形状和邻接；2017 环大宁功能区为 10.92 平方公里，两者不是同一对象，统一坐标后的旧演示面又约为街道参考面的 3.73 倍。"
     },
     {
       "sectorId": "sector_beiwaitan",
@@ -83,10 +104,10 @@
       ],
       "legacyGeometryComparison": {
         "reference": "official-scope-candidate",
-        "intersectionOverUnion": 0.196,
-        "referenceCoveredPercent": 81.7,
-        "legacyAreaRatio": 3.98,
-        "centroidDistanceKilometers": 1.13
+        "intersectionOverUnion": 0.201,
+        "referenceCoveredPercent": 83.7,
+        "legacyAreaRatio": 3.99,
+        "centroidDistanceKilometers": 1.01
       },
       "summary": "北外滩控规四至、约 4 平方公里面积、北外滩街道关系和天地图街道形状相互一致；当前 3.9212 平方公里候选面保留。"
     },
@@ -107,12 +128,12 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14179188",
-        "intersectionOverUnion": 0.488,
-        "referenceCoveredPercent": 77.3,
+        "intersectionOverUnion": 0.433,
+        "referenceCoveredPercent": 71.2,
         "legacyAreaRatio": 1.36,
-        "centroidDistanceKilometers": 2.05
+        "centroidDistanceKilometers": 2.49
       },
-      "summary": "旧演示面比公告后更新的固定 OSM 张江镇行政参考面大 36%，且质心偏约 2.05 公里；45.02 平方公里是 2022 年调整前口径，调整段以 2025 年 11 月公告为优先证据。"
+      "summary": "统一坐标后，旧演示面比公告后更新的固定 OSM 张江镇行政参考面大 36%，且质心偏约 2.49 公里；45.02 平方公里是 2022 年调整前口径，调整段以 2025 年 11 月公告为优先证据。"
     },
     {
       "sectorId": "sector_jinqiao",
@@ -132,9 +153,9 @@
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14179186",
         "intersectionOverUnion": 0.435,
-        "referenceCoveredPercent": 86.1,
+        "referenceCoveredPercent": 86,
         "legacyAreaRatio": 1.84,
-        "centroidDistanceKilometers": 1.35
+        "centroidDistanceKilometers": 1.61
       },
       "summary": "旧演示面约为金桥镇行政参考面的 1.84 倍；2025 年 7 月标准图早于金桥—张江调整，调整段以后续公告为准。"
     },
@@ -155,12 +176,12 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14179226",
-        "intersectionOverUnion": 0.429,
-        "referenceCoveredPercent": 68.9,
+        "intersectionOverUnion": 0.47,
+        "referenceCoveredPercent": 73.5,
         "legacyAreaRatio": 1.3,
-        "centroidDistanceKilometers": 1.53
+        "centroidDistanceKilometers": 1.15
       },
-      "summary": "行政参考面与天地图形状、三林镇 34.19 平方公里面积和主要邻接关系一致；旧演示面仍大 30%，且质心偏约 1.53 公里。"
+      "summary": "行政参考面与天地图形状、三林镇 34.19 平方公里面积和主要邻接关系一致；统一坐标后，旧演示面仍大 30%，且质心偏约 1.15 公里。"
     },
     {
       "sectorId": "sector_beicai",
@@ -179,10 +200,10 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14179101",
-        "intersectionOverUnion": 0.448,
-        "referenceCoveredPercent": 78.5,
+        "intersectionOverUnion": 0.441,
+        "referenceCoveredPercent": 77.8,
         "legacyAreaRatio": 1.54,
-        "centroidDistanceKilometers": 1.47
+        "centroidDistanceKilometers": 1.52
       },
       "summary": "旧演示面约为北蔡镇行政参考面的 1.54 倍；2025 年 7 月标准图早于北蔡—张江、北蔡—康桥调整，调整段以后续公告为准。"
     },
@@ -203,12 +224,12 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14187991",
-        "intersectionOverUnion": 0.203,
-        "referenceCoveredPercent": 98.8,
-        "legacyAreaRatio": 4.86,
-        "centroidDistanceKilometers": 1.4
+        "intersectionOverUnion": 0.193,
+        "referenceCoveredPercent": 94.6,
+        "legacyAreaRatio": 4.85,
+        "centroidDistanceKilometers": 1.37
       },
-      "summary": "旧演示面几乎包住古美路街道，但面积达到行政参考面的 4.86 倍，是本批偏差最大的一块；现改用 6.2 平方公里量级的行政参考面。"
+      "summary": "统一坐标后，旧演示面覆盖古美路街道参考面的 94.6%，面积达到其 4.85 倍，仍是本批偏差最大的一块；现将 6.2 平方公里量级的街道参考面作为独立蓝色图层叠加，不替换楼市口径。"
     },
     {
       "sectorId": "sector_xinzhuang",
@@ -227,10 +248,10 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-14187988",
-        "intersectionOverUnion": 0.487,
+        "intersectionOverUnion": 0.488,
         "referenceCoveredPercent": 100,
         "legacyAreaRatio": 2.05,
-        "centroidDistanceKilometers": 0.35
+        "centroidDistanceKilometers": 0.25
       },
       "summary": "旧演示面完全覆盖莘庄镇但面积约为其 2.05 倍；行政参考面与天地图街镇形状和官方 19.14 平方公里面积一致。"
     },
@@ -251,10 +272,10 @@
       ],
       "legacyGeometryComparison": {
         "reference": "osm-admin-relation-12979866",
-        "intersectionOverUnion": 0.575,
-        "referenceCoveredPercent": 93.5,
+        "intersectionOverUnion": 0.556,
+        "referenceCoveredPercent": 91.4,
         "legacyAreaRatio": 1.56,
-        "centroidDistanceKilometers": 1.01
+        "centroidDistanceKilometers": 1.3
       },
       "summary": "旧演示面约为徐泾镇行政参考面的 1.56 倍；行政参考面与天地图形状、官方 38.55 平方公里面积和四周邻接关系一致。"
     },

@@ -2,10 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
-import adminReferencesData from "@/src/data/sectors/admin-references.wgs84.json";
-import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84.json";
 import { useMapStore } from "@/src/store/map-store";
-import type { SectorFeature, SectorGeometry } from "@/src/types/map";
+import type { SectorFeature } from "@/src/types/map";
 import {
   nativeGeometryToDisplayPath,
   wgs84GeometryToDisplayPath,
@@ -18,25 +16,14 @@ type SectorGeometryKind =
   | "official-scope-candidate"
   | "administrative-reference"
   | "demo";
-type ResearchGeometryFeature = {
-  properties: {
-    id: string;
-    coordinateSystem: "WGS84";
-    status: "reviewed-candidate" | "administrative-reference";
-    labelPoint: [number, number];
-  };
-  geometry: SectorGeometry;
-};
-
-const reviewedCandidates = reviewedCandidatesData.features as unknown as ResearchGeometryFeature[];
-const adminReferences = adminReferencesData.features as unknown as ResearchGeometryFeature[];
-const reviewedCandidateById = new Map(
-  reviewedCandidates.map((feature) => [feature.properties.id, feature]),
-);
-const adminReferenceById = new Map(
-  adminReferences.map((feature) => [feature.properties.id, feature]),
-);
+const reviewedCandidates = sectorCatalog.reviewedCandidates;
+const adminReferences = sectorCatalog.administrativeReferences;
 const researchGeometries = [...reviewedCandidates, ...adminReferences];
+const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
+  id: feature.properties.id,
+  center: sectorCatalog.getActiveGeometry(feature.properties.id)?.center
+    ?? feature.properties.labelPoint,
+}));
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
 
 function strokeColor(kind: SectorGeometryKind) {
@@ -91,7 +78,7 @@ interface SectorLayerProps {
 
 interface SectorOverlay {
   polygon: AMap.Polygon;
-  label: AMap.Text;
+  label: AMap.Text | null;
   baseColor: string;
   sector: SectorFeature;
   geometryKind: SectorGeometryKind;
@@ -119,6 +106,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
   const onSelectRef = useRef(onSelect);
   const zoomRef = useRef(zoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
+  const setSectorGeometryLoading = useMapStore((state) => state.setSectorGeometryLoading);
   const setSectorGeometryFallback = useMapStore((state) => state.setSectorGeometryFallback);
 
   useEffect(() => {
@@ -136,9 +124,33 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
   useEffect(() => {
     let cancelled = false;
     const overlays: SectorOverlay[] = [];
+    const settledResearchIds = new Set<string>();
+
+    const bindOverlayInteractions = (overlay: SectorOverlay) => {
+      const { polygon, label, sector } = overlay;
+      const highlight = () => polygon.setOptions({
+        fillOpacity: 0.48,
+        strokeWeight: 3,
+        strokeColor: strokeColor(overlay.geometryKind),
+      });
+      const restore = () => applyOverlayStyle(
+        overlay,
+        zoomRef.current,
+        selectedSectorIdRef.current === sector.properties.id,
+      );
+      polygon.on("mouseover", highlight);
+      polygon.on("mouseout", restore);
+      polygon.on("click", () => onSelectRef.current(sector));
+      label?.on("click", () => onSelectRef.current(sector));
+    };
 
     const createOverlays = async () => {
       for (const [index, sector] of sectors.entries()) {
+        const hasResearchGeometry = sectorCatalog.hasResearchGeometry(sector.properties.id);
+        if (hasResearchGeometry) {
+          setSectorGeometryFallback(sector.properties.id, false);
+          setSectorGeometryLoading(sector.properties.id, true);
+        }
         const path = await nativeGeometryToDisplayPath(amapApi, sector.geometry);
         if (cancelled) return;
         const baseColor = palette[index % palette.length];
@@ -147,9 +159,13 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           path,
           cursor: "pointer",
         });
+        const activeGeometry = sectorCatalog.getActiveGeometry(sector.properties.id);
+        const initialLabelPosition = activeGeometry?.kind === "market-demo"
+          ? activeGeometry.center
+          : sector.properties.center;
         const label = new amapApi.Text({
           text: sector.properties.name,
-          position: sector.properties.center,
+          position: initialLabelPosition,
           anchor: "center",
           zIndex: 25,
           style: labelStyle("demo"),
@@ -167,92 +183,116 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           zoomRef.current,
           selectedSectorIdRef.current === sector.properties.id,
         );
-        const highlight = () => polygon.setOptions({
-          fillOpacity: 0.48,
-          strokeWeight: 3,
-          strokeColor: strokeColor(overlay.geometryKind),
-        });
-        const restore = () => applyOverlayStyle(
-          overlay,
-          zoomRef.current,
-          selectedSectorIdRef.current === sector.properties.id,
-        );
-        polygon.on("mouseover", highlight);
-        polygon.on("mouseout", restore);
-        polygon.on("click", () => onSelectRef.current(sector));
-        label.on("click", () => onSelectRef.current(sector));
+        bindOverlayInteractions(overlay);
         map.add([polygon, label]);
         overlays.push(overlay);
       }
       overlaysRef.current = overlays;
 
+      const researchPathRequestById = new Map(researchGeometries.map((feature) => [
+        feature.properties.id,
+        wgs84GeometryToDisplayPath(amapApi, feature.geometry),
+      ]));
+
       const displayLabelById = new Map<string, AMap.LngLat>();
       try {
         const displayLabelPositions = await wgs84PointsToDisplayPositions(
           amapApi,
-          "sector-research-label-points-v1",
-          researchGeometries.map((feature) => feature.properties.labelPoint),
+          reviewedCandidateCenters.map((item) => item.center),
         );
-        researchGeometries.forEach((feature, index) => {
-          displayLabelById.set(feature.properties.id, displayLabelPositions[index]);
+        reviewedCandidateCenters.forEach((item, index) => {
+          displayLabelById.set(item.id, displayLabelPositions[index]);
         });
       } catch (error) {
         if (cancelled) return;
-        console.warn("研究面标签坐标转换失败，已回退到原板块中心", error);
+        console.warn("候选面标签坐标转换失败，已回退到原板块中心", error);
       }
 
-      for (const overlay of overlays) {
-        const id = overlay.sector.properties.id;
-        const reviewedCandidate = reviewedCandidateById.get(id);
-        const adminReference = adminReferenceById.get(id);
+      for (const marketOverlay of [...overlays]) {
+        const id = marketOverlay.sector.properties.id;
+        const reviewedCandidate = sectorCatalog.getReviewedCandidate(id);
+        const adminReference = sectorCatalog.getAdministrativeReference(id);
         const researchGeometry = reviewedCandidate ?? adminReference;
         if (!researchGeometry) continue;
         const geometryKind: SectorGeometryKind = reviewedCandidate
           ? "official-scope-candidate"
           : "administrative-reference";
         try {
-          const path: DisplayPath = await wgs84GeometryToDisplayPath(
-            amapApi,
-            `${researchGeometry.properties.status}:${researchGeometry.properties.id}`,
-            researchGeometry.geometry,
-          );
+          const pathRequest = researchPathRequestById.get(id);
+          if (!pathRequest) throw new Error(`${id} 缺少研究几何显示路径`);
+          const path: DisplayPath = await pathRequest;
           if (cancelled) return;
-          overlay.geometryKind = geometryKind;
-          overlay.polygon.setPath(path);
-          const displayLabel = displayLabelById.get(id);
-          if (displayLabel) overlay.label.setPosition(displayLabel.toArray());
-          overlay.label.setStyle(labelStyle(geometryKind));
-          applyOverlayStyle(
-            overlay,
-            zoomRef.current,
-            selectedSectorIdRef.current === id,
-          );
+          if (reviewedCandidate) {
+            marketOverlay.geometryKind = geometryKind;
+            marketOverlay.polygon.setPath(path);
+            const displayLabel = displayLabelById.get(id);
+            if (displayLabel) marketOverlay.label?.setPosition(displayLabel.toArray());
+            marketOverlay.label?.setStyle(labelStyle(geometryKind));
+            applyOverlayStyle(
+              marketOverlay,
+              zoomRef.current,
+              selectedSectorIdRef.current === id,
+            );
+          } else {
+            const polygon = new amapApi.Polygon();
+            polygon.setOptions({ path, cursor: "pointer" });
+            const administrativeOverlay: SectorOverlay = {
+              polygon,
+              label: null,
+              baseColor: "#60a5fa",
+              sector: marketOverlay.sector,
+              geometryKind,
+            };
+            applyOverlayStyle(
+              administrativeOverlay,
+              zoomRef.current,
+              selectedSectorIdRef.current === id,
+            );
+            bindOverlayInteractions(administrativeOverlay);
+            map.add(polygon);
+            overlays.push(administrativeOverlay);
+          }
+          settledResearchIds.add(id);
+          setSectorGeometryLoading(id, false);
           setSectorGeometryFallback(id, false);
         } catch (error) {
           if (cancelled) return;
+          settledResearchIds.add(id);
+          setSectorGeometryLoading(id, false);
           setSectorGeometryFallback(id, true);
-          console.warn(`${overlay.sector.properties.name}研究面坐标转换失败，已回退到灰色虚线演示面`, error);
+          const layerName = reviewedCandidate ? "候选面" : "行政参考层";
+          console.warn(`${marketOverlay.sector.properties.name}${layerName}坐标转换失败，已保留灰色虚线演示面`, error);
         }
       }
     };
 
     createOverlays().catch((error: unknown) => {
-      if (!cancelled) console.error("板块候选几何加载失败", error);
+      if (!cancelled) {
+        researchGeometries.forEach((feature) => {
+          const id = feature.properties.id;
+          setSectorGeometryLoading(id, false);
+          if (!settledResearchIds.has(id)) setSectorGeometryFallback(id, true);
+        });
+        console.error("板块研究几何加载失败", error);
+      }
     });
     return () => {
       cancelled = true;
-      overlays.forEach(({ polygon, label }) => map.remove([polygon, label]));
+      researchGeometries.forEach((feature) => {
+        setSectorGeometryLoading(feature.properties.id, false);
+      });
+      overlays.forEach(({ polygon, label }) => map.remove(label ? [polygon, label] : polygon));
       overlaysRef.current = [];
     };
-  }, [amapApi, map, setSectorGeometryFallback]);
+  }, [amapApi, map, setSectorGeometryFallback, setSectorGeometryLoading]);
 
   useEffect(() => {
     overlaysRef.current.forEach((overlay) => {
       const { label, sector } = overlay;
       const selected = sector.properties.id === selectedSectorId;
       applyOverlayStyle(overlay, zoom, selected);
-      if (zoom <= 13.2) label.show();
-      else label.hide();
+      if (zoom <= 13.2) label?.show();
+      else label?.hide();
     });
   }, [selectedSectorId, zoom]);
 

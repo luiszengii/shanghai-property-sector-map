@@ -4,15 +4,15 @@ import { AlertTriangle, LoaderCircle, MapPinned, Minus, Plus } from "lucide-reac
 import { useCallback, useEffect, useRef, useState } from "react";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
-import sectorsData from "@/src/data/sectors.json";
+import { sectorCatalog } from "@/src/data/sector-catalog";
+import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { useMapStore } from "@/src/store/map-store";
-import type { Place, PropertyProject, SectorCollection, SectorFeature } from "@/src/types/map";
+import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
 import { SectorLayer } from "./SectorLayer";
 
 const places = placesData as Place[];
-const sectors = (sectorsData as SectorCollection).features;
 
 type LoadStatus = "loading" | "ready" | "missing-key" | "error";
 
@@ -132,8 +132,14 @@ export function MapContainer() {
     const map = mapRef.current;
     if (!map || !focusRequest) return;
     if (focusRequest.type === "sector") {
-      const sector = sectors.find((item) => item.properties.id === focusRequest.id);
-      if (sector) map.setZoomAndCenter(12.4, sector.properties.center, false, 650);
+      const activeGeometry = sectorCatalog.getActiveGeometry(focusRequest.id);
+      if (activeGeometry) {
+        const activeCenter = coordinateToDisplayPosition(
+          activeGeometry.center,
+          activeGeometry.coordinateSystem,
+        );
+        map.setZoomAndCenter(12.4, activeCenter, false, 650);
+      }
     } else if (focusRequest.type === "place") {
       const place = places.find((item) => item.id === focusRequest.id);
       if (place) map.setZoomAndCenter(15.2, [place.longitude, place.latitude], false, 650);

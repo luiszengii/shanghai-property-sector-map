@@ -14,8 +14,8 @@ export function MapLegend() {
       {open && (
         <div className="legend-body">
           <span><i aria-hidden="true" style={{ borderTop: "3px solid #0f766e", width: 24 }} />青绿实线：官方四至候选面</span>
-          <span><i aria-hidden="true" style={{ borderTop: "2px dashed #2563eb", width: 24 }} />蓝色虚线：行政参考面</span>
-          <span><i aria-hidden="true" style={{ borderTop: "2px dashed #64748b", width: 24 }} />灰色虚线：口径待定演示面</span>
+          <span><i aria-hidden="true" style={{ borderTop: "2px dashed #2563eb", width: 24 }} />蓝色虚线：独立行政参考层</span>
+          <span><i aria-hidden="true" style={{ borderTop: "2px dashed #64748b", width: 24 }} />灰色虚线：楼市口径待定演示面</span>
           <span><i className="project-swatch" />500–800 万新盘</span>
           <span><i className="place-swatch" />设施点位</span>
           <small>
