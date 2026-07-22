@@ -1,0 +1,271 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-22",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩、北外滩为内部复核候选面，其余仍是首版演示面；正式定义证据与几何发布状态分开管理。",
+  "sectors": [
+    {
+      "id": "sector_qiantan",
+      "canonicalName": "前滩",
+      "aliases": ["前滩地区", "上海前滩"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector_with_official_scope_candidate",
+      "reviewStatus": "reviewed-high",
+      "definitionStatus": "official_scope_available",
+      "definitionCandidate": "黄浦江南延伸段前滩地区（Z000801 单元）：北起川杨河、南至中环线（华夏路）、东起济阳路、西至黄浦江。",
+      "definitionSourceIds": ["official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
+      "boundaryEvidenceIds": ["qiantan-north", "qiantan-east", "qiantan-south", "qiantan-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-candidate-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "publicationPolicy": "internal_review",
+        "note": "已按官方四至和固定日期 OSM 道路、水面独立重建候选面；面积 2.9314 平方公里，较官方 2.8317 平方公里高 3.52%，仍需人工逐边复核。"
+      }
+    },
+    {
+      "id": "sector_xuhuibinjiang",
+      "canonicalName": "徐汇滨江",
+      "aliases": ["上海西岸", "西岸", "徐汇滨江地区"],
+      "districtNames": ["徐汇区"],
+      "kind": "market_sector_with_official_scope_candidate",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "partial_official_scope",
+      "definitionCandidate": "存在两套官方口径：7.4 平方公里规划重点范围（北起日晖港、南至徐浦大桥）和 9.4 平方公里全域开发范围（南延至关港）；必须先选择版本。",
+      "definitionSourceIds": ["official-huangpu-riverside-13th-plan", "official-xuhui-riverside-yearbook-2018"],
+      "boundaryEvidenceIds": ["xuhuibinjiang-north", "xuhuibinjiang-south", "xuhuibinjiang-east", "xuhuibinjiang-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "南北边界明确；陆侧范围仍需从已批 B、C、D 单元取得可用矢量或逐段重建。"
+      }
+    },
+    {
+      "id": "sector_daning",
+      "canonicalName": "大宁",
+      "aliases": ["大宁路", "大宁路街道"],
+      "districtNames": ["静安区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "historical_official_scope_needs_version_check",
+      "definitionCandidate": "2017 年环大宁地区范围为北至汶水路、南至中山北路、东至俞泾浦、西至沪太路，总面积 10.92 平方公里；需确认当前仍沿用且产品接受该口径。",
+      "definitionSourceIds": ["official-daning-13th-plan-2017", "official-daning-plan-update-2023"],
+      "boundaryEvidenceIds": ["daning-north", "daning-east", "daning-south", "daning-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "有历史完整四至，但当前有效版本和市场语义尚未冻结。"
+      }
+    },
+    {
+      "id": "sector_beiwaitan",
+      "canonicalName": "北外滩",
+      "aliases": ["北外滩地区"],
+      "districtNames": ["虹口区"],
+      "kind": "market_sector_with_official_scope_candidate",
+      "reviewStatus": "reviewed-high",
+      "definitionStatus": "official_scope_available",
+      "definitionCandidate": "北外滩地区：东至大连路、南至黄浦江—苏州河、西至河南北路、北至海宁路—周家嘴路。",
+      "definitionSourceIds": ["official-beiwaitan-scope-2024"],
+      "boundaryEvidenceIds": ["beiwaitan-east", "beiwaitan-south", "beiwaitan-west", "beiwaitan-north"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-candidate-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "publicationPolicy": "internal_review",
+        "note": "候选面采用固定日期 OSM 北外滩街道 relation，并与官方四至和约 4 平方公里面积交叉核验；候选面积 3.9212 平方公里。"
+      }
+    },
+    {
+      "id": "sector_zhangjiang",
+      "canonicalName": "张江",
+      "aliases": ["张江科学城", "张江镇"],
+      "districtNames": ["浦东新区"],
+      "kind": "ambiguous_market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "official_scope_available_but_semantics_ambiguous",
+      "definitionCandidate": "候选包括张江镇、约 94 平方公里旧张江科学城、约 220 平方公里扩区科学城或另定义市场张江；2025 年局部镇界已调整。",
+      "definitionSourceIds": ["official-zhangjiang-science-city-2017", "official-pudong-boundary-adjustment-2025", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["zhangjiang-north", "zhangjiang-east", "zhangjiang-south", "zhangjiang-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "先冻结语义选择，再按所选范围重建。"
+      }
+    },
+    {
+      "id": "sector_jinqiao",
+      "canonicalName": "金桥",
+      "aliases": ["金桥开发区", "金桥经济技术开发区", "金桥镇"],
+      "districtNames": ["浦东新区"],
+      "kind": "ambiguous_market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "official_scope_available_but_semantics_ambiguous",
+      "definitionCandidate": "候选包括金桥镇、20.48 平方公里自贸试验区金桥片区、金桥经开区或金桥城市副中心；2025 年金桥—张江局部镇界已调整。",
+      "definitionSourceIds": ["official-jinqiao-13th-plan", "official-jinqiao-eia-scope-2024", "official-pudong-boundary-adjustment-2025", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["jinqiao-north", "jinqiao-east", "jinqiao-south", "jinqiao-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "官方开发区四至清楚，但不代表市场金桥板块已经完成定义。"
+      }
+    },
+    {
+      "id": "sector_sanlin",
+      "canonicalName": "三林",
+      "aliases": ["三林镇"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "待决定是否采用三林镇行政范围作为参考；前滩等功能片区与三林市场板块的拆分规则需要先确定。",
+      "definitionSourceIds": ["official-sanlin-profile-2023", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["sanlin-north", "sanlin-east", "sanlin-south", "sanlin-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有面与前滩、北蔡重叠，必须按共享边重新划分。"
+      }
+    },
+    {
+      "id": "sector_beicai",
+      "canonicalName": "北蔡",
+      "aliases": ["北蔡镇"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "待决定是否采用北蔡镇行政范围作为参考，并明确与张江、三林、花木等市场板块的拆分规则。",
+      "definitionSourceIds": ["official-pudong-boundary-adjustment-2025", "official-beicai-industry-scope-2026", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["beicai-north", "beicai-east", "beicai-south", "beicai-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有面与张江、三林重叠，不能升级为 reviewed。"
+      }
+    },
+    {
+      "id": "sector_gumei",
+      "canonicalName": "古美",
+      "aliases": ["古美路", "古美路街道"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "待决定是否采用古美路街道作为行政范围参考，并确认与莘庄、七宝、梅陇的共享边。",
+      "definitionSourceIds": ["official-shanghai-town-list-2025", "official-minhang-central-unit-plan"],
+      "boundaryEvidenceIds": ["gumei-north", "gumei-east", "gumei-south", "gumei-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有面与莘庄重叠，缺少可复核共享边。"
+      }
+    },
+    {
+      "id": "sector_xinzhuang",
+      "canonicalName": "莘庄",
+      "aliases": ["莘庄镇"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "待决定是否采用莘庄镇行政范围作为参考，并明确莘庄南北片、春申和古美等市场语义。",
+      "definitionSourceIds": ["official-shanghai-town-list-2025", "official-xinzhuang-transport-plan-2024", "official-xinzhuang-subcenter-2021", "official-minhang-central-unit-plan"],
+      "boundaryEvidenceIds": ["xinzhuang-north", "xinzhuang-east", "xinzhuang-south", "xinzhuang-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有面与古美重叠，不能视为街镇界或正式市场板块。"
+      }
+    },
+    {
+      "id": "sector_xujing",
+      "canonicalName": "徐泾",
+      "aliases": ["徐泾镇", "西虹桥"],
+      "districtNames": ["青浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "待决定采用徐泾镇、徐泾市场板块或西虹桥片区；三者范围不同。",
+      "definitionSourceIds": ["official-shanghai-town-list-2025", "official-xujing-profile-2025"],
+      "boundaryEvidenceIds": ["xujing-north", "xujing-east", "xujing-south", "xujing-west"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有面与虹桥商务区重叠，需先确定是否采用包含、拆分或共享属性关系。"
+      }
+    },
+    {
+      "id": "sector_hongqiao",
+      "canonicalName": "虹桥商务区",
+      "aliases": ["虹桥商务区主功能区", "虹桥国际中央商务区核心区"],
+      "districtNames": ["闵行区", "长宁区", "青浦区", "嘉定区"],
+      "kind": "ambiguous_official_functional_scope",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "multiple_official_versions_need_selection",
+      "definitionCandidate": "必须在历史核心区/主功能区、86.6 平方公里原范围和 151.4 平方公里现行范围之间选择；现行全域跨闵行、长宁、青浦、嘉定四区。",
+      "definitionSourceIds": ["official-hongqiao-main-zone-2010", "official-hongqiao-implementation-2019", "official-hongqiao-transport-plan-2035"],
+      "boundaryEvidenceIds": ["hongqiao-east", "hongqiao-west", "hongqiao-north", "hongqiao-south"],
+      "geometry": {
+        "status": "demo",
+        "confidence": "low",
+        "coordinateSystem": "GCJ-02-assumed",
+        "coordinateSystemVerified": false,
+        "version": "legacy-demo-v1",
+        "sourceIds": ["internal-legacy-demo-v1"],
+        "publicationPolicy": "demo_only",
+        "note": "现有小范围演示面未标明采用哪一官方版本，且行政区字段遗漏嘉定区。"
+      }
+    }
+  ]
+}

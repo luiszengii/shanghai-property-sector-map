@@ -4,12 +4,11 @@ import { Navigation, Search, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
-import sectorsData from "@/src/data/sectors.json";
+import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
-import type { Place, SectorCollection } from "@/src/types/map";
+import type { Place } from "@/src/types/map";
 
 const places = placesData as Place[];
-const sectors = (sectorsData as SectorCollection).features;
 
 export function SearchBar() {
   const [query, setQuery] = useState("");
@@ -22,11 +21,12 @@ export function SearchBar() {
       setSearchMessage("请输入板块或点位名称");
       return;
     }
-    const sector = sectors.find((item) => item.properties.name.toLowerCase().includes(normalized));
+    const sector = sectorCatalog.match(normalized);
     if (sector) {
       selectSector(sector.properties.id);
       requestFocus("sector", sector.properties.id);
-      setSearchMessage(`已定位：${sector.properties.name}`);
+      const matchedAlias = sectorCatalog.getMatchedAlias(sector.properties.id, normalized);
+      setSearchMessage(matchedAlias ? `已定位：${sector.properties.name}（匹配别名：${matchedAlias}）` : `已定位：${sector.properties.name}`);
       return;
     }
     const project = projects.find((item) =>

@@ -1,0 +1,250 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkedAt": "2026-07-22",
+  "sources": [
+    {
+      "id": "internal-legacy-demo-v1",
+      "title": "项目首版演示描边",
+      "publisher": "上海楼盘地图项目",
+      "url": null,
+      "sourceType": "internal_legacy",
+      "licenseStatus": "unverified",
+      "allowedUse": "demo_only",
+      "note": "现有坐标只用于界面演示；没有可复核的逐边来源、原始坐标系或外部再利用许可。"
+    },
+    {
+      "id": "official-qiantan-z000801-2012",
+      "title": "黄浦江南延伸段前滩地区（Z000801单元）控制性详细规划附加图则公示",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghgs/20200110/0032-560351.html",
+      "sourceType": "official_plan_text",
+      "publishedAt": "2012-04-27",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "用于引用正式规划四至；页面未授予规划图矢量复制或再分发权。"
+    },
+    {
+      "id": "official-huangpu-riverside-13th-plan",
+      "title": "黄浦江两岸地区发展“十三五”规划",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20200110/0032-723689.html",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "列出徐汇滨江的南北范围和规划单元，以及前滩的完整四至。"
+    },
+    {
+      "id": "official-xuhui-riverside-yearbook-2018",
+      "title": "徐汇滨江地区综合开发建设",
+      "publisher": "上海市徐汇区人民政府",
+      "url": "https://www.xuhui.gov.cn/xhda/xhda/xhbl/xhnj/2018/06/26/d_126207.html",
+      "sourceType": "official_yearbook",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出约 9.4 平方公里全域开发口径，与 7.4 平方公里重点规划口径并存。"
+    },
+    {
+      "id": "official-daning-13th-plan-2017",
+      "title": "环大宁地区发展“十三五”规划",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/govxxgk/JA0/2017-03-08/7b490437-205f-4f46-aa46-ea5b8cea0a73.html",
+      "sourceType": "official_plan_text",
+      "publishedAt": "2017-03-08",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出 10.92 平方公里环大宁地区完整四至；是否仍为当前有效口径需确认。"
+    },
+    {
+      "id": "official-daning-plan-update-2023",
+      "title": "大宁功能区最新发展规划发布",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/rmtzx/003008/003008004/20230518/fc946fc1-8f90-47b9-a54f-5e5a23d75dc7.html",
+      "sourceType": "official_plan_update",
+      "publishedAt": "2023-05-18",
+      "licenseStatus": "reference_only",
+      "allowedUse": "version_check_only",
+      "note": "证明存在较新的发展规划信息，但公开报道没有重新给出完整四至。"
+    },
+    {
+      "id": "official-beiwaitan-scope-2024",
+      "title": "上海市人民政府关于同意《北外滩地区控制性详细规划》的批复",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw12344/20200813/0001-12344_65260.html",
+      "sourceType": "official_scope_text",
+      "publishedAt": "2024-12-05",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "公开北外滩东、南、西、北四至和约 4 平方公里范围。"
+    },
+    {
+      "id": "official-zhangjiang-science-city-2017",
+      "title": "关于《张江科学城建设规划》（征求意见稿）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghgs/20200110/0032-719773.html",
+      "sourceType": "official_plan_text",
+      "publishedAt": "2017-05-08",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出约 94 平方公里张江科学城规划范围四至；不等同于所有市场平台的“张江板块”。"
+    },
+    {
+      "id": "official-pudong-boundary-adjustment-2025",
+      "title": "浦东新区部分街镇行政区域界线调整公告",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/qt-qzf/2025/325/348121.html",
+      "sourceType": "official_admin_boundary_notice",
+      "publishedAt": "2025-11-14",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "调整北蔡—张江、金桥—张江和北蔡—康桥部分界线；任何更早街镇面都必须先做版本核验。"
+    },
+    {
+      "id": "official-jinqiao-eia-scope-2024",
+      "title": "金桥经济技术开发区规划环评第一次公示",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14478.gkml_zhzw_ghjh/2024/138/326950.html",
+      "sourceType": "official_scope_text",
+      "publishedAt": "2024-04-22",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "分别给出金桥经济技术开发区北区、南区四至；市场“金桥板块”仍需另行确定采用哪一范围。"
+    },
+    {
+      "id": "official-jinqiao-13th-plan",
+      "title": "金桥经济技术开发区暨中国（上海）自由贸易试验区金桥片区发展“十三五”规划",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/006003002/2022/302/257742.html",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出 20.48 平方公里自贸试验区金桥片区完整四至，并说明经开区存在另一面积口径。"
+    },
+    {
+      "id": "official-sanlin-profile-2023",
+      "title": "三林镇关于申报“上海市园林街镇”的请示",
+      "publisher": "上海市浦东新区三林镇人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14475.gkml_ywl_czxx_czyjs_jdz_slz/2023/163/311236.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2023-08-10",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "给出三林镇面积、相邻主体和黄浦江、川杨河等主要边界关系，未提供完整逐段闭合线。"
+    },
+    {
+      "id": "official-beicai-industry-scope-2026",
+      "title": "北蔡镇关于上报北蔡产业社区绿化专项规划的请示",
+      "publisher": "上海市浦东新区北蔡镇人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/ghjh-bcz/2026/92/353915.html",
+      "sourceType": "official_plan_request",
+      "publishedAt": "2026-04-02",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "只描述约 1.97 平方公里北蔡产业社区，不可替代北蔡镇或市场北蔡。"
+    },
+    {
+      "id": "official-minhang-central-unit-plan",
+      "title": "闵行主城片区中部板块单元规划",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/cmsres/9b/9b26fb350c874366897f4dcd8535ebea/b118f9e036a68671dba7b6c6fe97ceb7.pdf",
+      "sourceType": "official_plan_pdf",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "确认古美、莘庄等位于同一规划板块；未授予从 PDF 描摹矢量并再发布的权利。"
+    },
+    {
+      "id": "official-xinzhuang-transport-plan-2024",
+      "title": "莘庄镇综合交通规划（2023—2035年）",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/UploadPath/uploadfile/2024-01-23/8e538285-f121-4463-98ea-7f29978f7704.pdf",
+      "sourceType": "official_plan_pdf",
+      "publishedAt": "2024-01-23",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "给出莘庄镇 19.14 平方公里镇域信息，但公开摘要没有完整闭合线表。"
+    },
+    {
+      "id": "official-xinzhuang-subcenter-2021",
+      "title": "莘庄城市副中心“十四五”规划说明",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/mh/20210518/431524a24e0f42078a1ee6a0a8e3fc52.html",
+      "sourceType": "official_plan_summary",
+      "publishedAt": "2021-05-18",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "说明约 4.3 平方公里莘庄主城副中心口径，与莘庄镇明显不同。"
+    },
+    {
+      "id": "official-xujing-profile-2025",
+      "title": "徐泾镇简介",
+      "publisher": "上海市青浦区人民政府",
+      "url": "https://www.shqp.gov.cn/xuj/xjjj/20191029/601217.html",
+      "sourceType": "official_town_profile",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "给出徐泾镇 38.55 平方公里面积及四周相邻街镇，不足以独立还原闭合面。"
+    },
+    {
+      "id": "official-hongqiao-implementation-2019",
+      "title": "关于加快虹桥商务区建设打造国际开放枢纽的实施方案",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw44142/20200824/0001-44142_62981.html",
+      "sourceType": "official_policy",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "说明 86.6 平方公里原范围加 64.8 平方公里拓展区形成 151.4 平方公里现行整体范围。"
+    },
+    {
+      "id": "official-hongqiao-transport-plan-2035",
+      "title": "虹桥国际中央商务区综合交通规划（2021—2035年）",
+      "publisher": "上海虹桥国际中央商务区管理委员会",
+      "url": "https://www.shhqcbd.gov.cn/zwgk/zcgk/zcwj/470804569088069.html",
+      "sourceType": "official_plan",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "列出 151.4 平方公里范围涉及的四区街镇；公开文字没有完整逐段线表。"
+    },
+    {
+      "id": "official-hongqiao-main-zone-2010",
+      "title": "上海虹桥商务区管理办法（上海市人民政府令第25号）",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw24493/20200820/0001-24493_21167.html",
+      "sourceType": "official_regulation",
+      "publishedAt": "2010-01-06",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出虹桥商务区及主功能区四至；试点候选采用与现有演示范围更接近的主功能区。"
+    },
+    {
+      "id": "official-shanghai-town-list-2025",
+      "title": "上海市街道、镇、乡名单",
+      "publisher": "上海市民政局",
+      "url": "https://mzj.sh.gov.cn/MZ_zhuzhan1539_0-2-8-1459/20250701/13c356554a0a4634b311b7aeb10d1918.html",
+      "sourceType": "official_admin_register",
+      "publishedAt": "2025-07-01",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "只核实现行街镇名称与隶属关系，不提供楼市板块定义或可再分发边界。"
+    },
+    {
+      "id": "osm-odbl-1",
+      "title": "OpenStreetMap copyright and license",
+      "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",
+      "url": "https://www.openstreetmap.org/copyright",
+      "sourceType": "open_data_license",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "后续若导入 OSM 道路、水系或行政关系，必须记录对象 ID、版本、提取日期并满足署名及 ODbL 要求。"
+    },
+    {
+      "id": "osm-geofabrik-shanghai-260721",
+      "title": "Geofabrik Shanghai OSM snapshot 2026-07-21",
+      "publisher": "Geofabrik GmbH / OpenStreetMap contributors",
+      "url": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+      "sourceType": "open_geometry_snapshot",
+      "publishedAt": "2026-07-21T20:21:50Z",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "归档 SHA-256 为 7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b；详细锁定信息见 data/geo/sources/osm-shanghai-260721.json。"
+    }
+  ]
+}

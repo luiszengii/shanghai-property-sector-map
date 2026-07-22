@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0.0",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "sectors": [
+    {
+      "id": "sector_qiantan",
+      "canonicalName": "前滩",
+      "scopeVersion": "Z000801-ES4",
+      "method": "official_four_sides_osm_land_component",
+      "bbox": [121.44, 31.12, 121.51, 31.18],
+      "insidePoint": [121.474, 31.155],
+      "roadNames": ["济阳路", "华夏西路", "中环路"],
+      "waterwayNames": ["黄浦江", "川杨河"],
+      "roadSnapBufferMeters": 3,
+      "waterSurfaceMaxDistanceMeters": 60,
+      "minimumWaterSurfaceSquareMeters": 100,
+      "fillHolesBelowSquareMeters": 10,
+      "officialAreaSquareKilometers": 2.8317,
+      "areaToleranceRatio": 0.05,
+      "definitionSourceIds": ["official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
+      "geometryRule": "道路取靠板块一侧的 OSM 车行线中心线；河流取 OSM 水面与陆地交界。3 米缓冲只用于闭合拓扑，生成后回扩至线位。"
+    },
+    {
+      "id": "sector_beiwaitan",
+      "canonicalName": "北外滩",
+      "scopeVersion": "approved-control-plan-2020",
+      "method": "official_four_sides_matching_osm_admin_relation",
+      "osmAdminRelationId": "13462842",
+      "expectedOsmName": "北外滩街道",
+      "officialAreaSquareKilometers": 4,
+      "areaToleranceRatio": 0.08,
+      "definitionSourceIds": ["official-beiwaitan-scope-2024"],
+      "geometryRule": "固定快照中的 OSM 北外滩街道 relation；其边界须与官方东大连路、南黄浦江—苏州河、西河南北路、北海宁路—周家嘴路四至逐边复核。"
+    }
+  ]
+}

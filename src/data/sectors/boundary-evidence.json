@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-07-22",
+  "notice": "这些记录确认的是文字定义依据，不等于已取得相应道路、河流或规划图的可复用矢量。",
+  "edges": [
+    { "id": "qiantan-north", "sectorId": "sector_qiantan", "side": "north", "basisType": "official_plan_text", "featureName": "川杨河", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-qiantan-z000801-2012" },
+    { "id": "qiantan-east", "sectorId": "sector_qiantan", "side": "east", "basisType": "official_plan_text", "featureName": "济阳路", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-qiantan-z000801-2012" },
+    { "id": "qiantan-south", "sectorId": "sector_qiantan", "side": "south", "basisType": "official_plan_text", "featureName": "中环线（华夏路）", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-qiantan-z000801-2012" },
+    { "id": "qiantan-west", "sectorId": "sector_qiantan", "side": "west", "basisType": "official_plan_text", "featureName": "黄浦江", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-qiantan-z000801-2012" },
+
+    { "id": "xuhuibinjiang-north", "sectorId": "sector_xuhuibinjiang", "side": "north", "basisType": "official_plan_text", "featureName": "日晖港", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-huangpu-riverside-13th-plan" },
+    { "id": "xuhuibinjiang-south", "sectorId": "sector_xuhuibinjiang", "side": "south", "basisType": "official_plan_text", "featureName": "徐浦大桥", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-huangpu-riverside-13th-plan" },
+    { "id": "xuhuibinjiang-east", "sectorId": "sector_xuhuibinjiang", "side": "east", "basisType": "planning_unit_scope", "featureName": "黄浦江及滨江规划控制范围", "status": "partial", "confidence": "medium", "sourceId": "official-huangpu-riverside-13th-plan", "note": "需要逐段核对 B、C、D 单元东侧岸线。" },
+    { "id": "xuhuibinjiang-west", "sectorId": "sector_xuhuibinjiang", "side": "west", "basisType": "planning_unit_scope", "featureName": "南延伸段 B、C、D 单元陆侧边界", "status": "geometry_missing", "confidence": "low", "sourceId": "official-huangpu-riverside-13th-plan", "note": "公开文字没有给出一条统一西侧道路。" },
+
+    { "id": "daning-north", "sectorId": "sector_daning", "side": "north", "basisType": "historical_official_scope", "featureName": "汶水路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-daning-13th-plan-2017", "note": "仅对应 2017 年环大宁 10.92 平方公里候选口径；当前有效版本仍待确认。" },
+    { "id": "daning-east", "sectorId": "sector_daning", "side": "east", "basisType": "historical_official_scope", "featureName": "俞泾浦", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-daning-13th-plan-2017" },
+    { "id": "daning-south", "sectorId": "sector_daning", "side": "south", "basisType": "historical_official_scope", "featureName": "中山北路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-daning-13th-plan-2017" },
+    { "id": "daning-west", "sectorId": "sector_daning", "side": "west", "basisType": "historical_official_scope", "featureName": "沪太路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-daning-13th-plan-2017" },
+
+    { "id": "beiwaitan-east", "sectorId": "sector_beiwaitan", "side": "east", "basisType": "official_scope_text", "featureName": "大连路", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-beiwaitan-scope-2024" },
+    { "id": "beiwaitan-south", "sectorId": "sector_beiwaitan", "side": "south", "basisType": "official_scope_text", "featureName": "黄浦江—苏州河", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-beiwaitan-scope-2024" },
+    { "id": "beiwaitan-west", "sectorId": "sector_beiwaitan", "side": "west", "basisType": "official_scope_text", "featureName": "河南北路", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-beiwaitan-scope-2024" },
+    { "id": "beiwaitan-north", "sectorId": "sector_beiwaitan", "side": "north", "basisType": "official_scope_text", "featureName": "海宁路—周家嘴路", "status": "definition_confirmed", "confidence": "high", "sourceId": "official-beiwaitan-scope-2024" },
+
+    { "id": "zhangjiang-north", "sectorId": "sector_zhangjiang", "side": "north", "basisType": "official_plan_text", "featureName": "龙东大道", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-zhangjiang-science-city-2017", "note": "仅对应约 94 平方公里旧张江科学城候选口径。" },
+    { "id": "zhangjiang-east", "sectorId": "sector_zhangjiang", "side": "east", "basisType": "official_plan_text", "featureName": "外环—沪芦高速", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-zhangjiang-science-city-2017" },
+    { "id": "zhangjiang-south", "sectorId": "sector_zhangjiang", "side": "south", "basisType": "official_plan_text", "featureName": "下盐公路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-zhangjiang-science-city-2017" },
+    { "id": "zhangjiang-west", "sectorId": "sector_zhangjiang", "side": "west", "basisType": "official_plan_text", "featureName": "罗山路—沪奉高速", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-zhangjiang-science-city-2017" },
+
+    { "id": "jinqiao-north", "sectorId": "sector_jinqiao", "side": "north", "basisType": "official_scope_text", "featureName": "巨峰路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-jinqiao-eia-scope-2024", "note": "仅对应金桥经济技术开发区北区候选范围。" },
+    { "id": "jinqiao-east", "sectorId": "sector_jinqiao", "side": "east", "basisType": "official_scope_text", "featureName": "外环绿带", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-jinqiao-eia-scope-2024" },
+    { "id": "jinqiao-south", "sectorId": "sector_jinqiao", "side": "south", "basisType": "official_scope_text", "featureName": "锦绣东路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-jinqiao-eia-scope-2024" },
+    { "id": "jinqiao-west", "sectorId": "sector_jinqiao", "side": "west", "basisType": "official_scope_text", "featureName": "罗山路、杨高中路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-jinqiao-eia-scope-2024" },
+
+    { "id": "sanlin-north", "sectorId": "sector_sanlin", "side": "north", "basisType": "scope_decision_required", "featureName": "待选择：三林镇界或市场三林北界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-sanlin-profile-2023" },
+    { "id": "sanlin-east", "sectorId": "sector_sanlin", "side": "east", "basisType": "scope_decision_required", "featureName": "待选择：三林镇界或市场三林东界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-sanlin-profile-2023" },
+    { "id": "sanlin-south", "sectorId": "sector_sanlin", "side": "south", "basisType": "scope_decision_required", "featureName": "待选择：三林镇界或市场三林南界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-sanlin-profile-2023" },
+    { "id": "sanlin-west", "sectorId": "sector_sanlin", "side": "west", "basisType": "scope_decision_required", "featureName": "待选择：三林镇界或市场三林西界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-sanlin-profile-2023" },
+
+    { "id": "beicai-north", "sectorId": "sector_beicai", "side": "north", "basisType": "scope_decision_required", "featureName": "待选择：北蔡镇界或市场北蔡北界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-pudong-boundary-adjustment-2025" },
+    { "id": "beicai-east", "sectorId": "sector_beicai", "side": "east", "basisType": "scope_decision_required", "featureName": "待选择：北蔡镇界或市场北蔡东界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-pudong-boundary-adjustment-2025" },
+    { "id": "beicai-south", "sectorId": "sector_beicai", "side": "south", "basisType": "scope_decision_required", "featureName": "待选择：北蔡镇界或市场北蔡南界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-pudong-boundary-adjustment-2025" },
+    { "id": "beicai-west", "sectorId": "sector_beicai", "side": "west", "basisType": "scope_decision_required", "featureName": "待选择：北蔡镇界或市场北蔡西界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-pudong-boundary-adjustment-2025" },
+
+    { "id": "gumei-north", "sectorId": "sector_gumei", "side": "north", "basisType": "scope_decision_required", "featureName": "待选择：古美路街道界或市场古美北界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-minhang-central-unit-plan" },
+    { "id": "gumei-east", "sectorId": "sector_gumei", "side": "east", "basisType": "scope_decision_required", "featureName": "待选择：古美路街道界或市场古美东界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-minhang-central-unit-plan" },
+    { "id": "gumei-south", "sectorId": "sector_gumei", "side": "south", "basisType": "scope_decision_required", "featureName": "待选择：古美路街道界或市场古美南界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-minhang-central-unit-plan" },
+    { "id": "gumei-west", "sectorId": "sector_gumei", "side": "west", "basisType": "scope_decision_required", "featureName": "待选择：古美路街道界或市场古美西界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-minhang-central-unit-plan" },
+
+    { "id": "xinzhuang-north", "sectorId": "sector_xinzhuang", "side": "north", "basisType": "scope_decision_required", "featureName": "待选择：莘庄镇界、副中心或市场莘庄北界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xinzhuang-transport-plan-2024" },
+    { "id": "xinzhuang-east", "sectorId": "sector_xinzhuang", "side": "east", "basisType": "scope_decision_required", "featureName": "待选择：莘庄镇界、副中心或市场莘庄东界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xinzhuang-transport-plan-2024" },
+    { "id": "xinzhuang-south", "sectorId": "sector_xinzhuang", "side": "south", "basisType": "scope_decision_required", "featureName": "待选择：莘庄镇界、副中心或市场莘庄南界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xinzhuang-transport-plan-2024" },
+    { "id": "xinzhuang-west", "sectorId": "sector_xinzhuang", "side": "west", "basisType": "scope_decision_required", "featureName": "待选择：莘庄镇界、副中心或市场莘庄西界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xinzhuang-transport-plan-2024" },
+
+    { "id": "xujing-north", "sectorId": "sector_xujing", "side": "north", "basisType": "scope_decision_required", "featureName": "待选择：徐泾镇界或市场徐泾北界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xujing-profile-2025" },
+    { "id": "xujing-east", "sectorId": "sector_xujing", "side": "east", "basisType": "scope_decision_required", "featureName": "待选择：徐泾镇界或市场徐泾东界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xujing-profile-2025" },
+    { "id": "xujing-south", "sectorId": "sector_xujing", "side": "south", "basisType": "scope_decision_required", "featureName": "待选择：徐泾镇界或市场徐泾南界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xujing-profile-2025" },
+    { "id": "xujing-west", "sectorId": "sector_xujing", "side": "west", "basisType": "scope_decision_required", "featureName": "待选择：徐泾镇界或市场徐泾西界", "status": "scope_ambiguous", "confidence": "low", "sourceId": "official-xujing-profile-2025" },
+
+    { "id": "hongqiao-east", "sectorId": "sector_hongqiao", "side": "east", "basisType": "official_regulation", "featureName": "外环高速 S20", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-hongqiao-main-zone-2010", "note": "仅对应历史主功能区候选口径。" },
+    { "id": "hongqiao-west", "sectorId": "sector_hongqiao", "side": "west", "basisType": "official_regulation", "featureName": "现状铁路外环线", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-hongqiao-main-zone-2010" },
+    { "id": "hongqiao-north", "sectorId": "sector_hongqiao", "side": "north", "basisType": "official_regulation", "featureName": "北翟路", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-hongqiao-main-zone-2010" },
+    { "id": "hongqiao-south", "sectorId": "sector_hongqiao", "side": "south", "basisType": "official_regulation", "featureName": "G50 沪渝高速", "status": "candidate_scope_confirmed", "confidence": "high", "sourceId": "official-hongqiao-main-zone-2010" }
+  ]
+}

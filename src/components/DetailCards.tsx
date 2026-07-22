@@ -4,13 +4,21 @@ import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapP
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
-import sectorsData from "@/src/data/sectors.json";
+import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
-import type { Category, Place, SectorCollection } from "@/src/types/map";
+import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
 const places = placesData as Place[];
-const sectors = (sectorsData as SectorCollection).features;
+const sectors = sectorCatalog.features;
 const categories = categoriesData as Category[];
+const boundarySideLabels: Record<SectorBoundarySide, string> = { north: "北", east: "东", south: "南", west: "西" };
+const evidenceStatusLabels: Record<SectorBoundaryStatus, string> = {
+  definition_confirmed: "已确认",
+  candidate_scope_confirmed: "候选口径已确认",
+  partial: "部分明确",
+  geometry_missing: "缺几何",
+  scope_ambiguous: "口径待定",
+};
 
 function distanceKm(a: [number, number], b: [number, number]) {
   const toRad = (value: number) => (value * Math.PI) / 180;
@@ -24,7 +32,7 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
-  const { selectedSectorId, selectedPlaceId, selectedProjectId, center, closeDetail, requestFocus, selectSector } = useMapStore();
+  const { selectedSectorId, selectedPlaceId, selectedProjectId, center, closeDetail, requestFocus, selectSector, sectorGeometryFallbacks } = useMapStore();
   const place = places.find((item) => item.id === selectedPlaceId);
   const project = projects.find((item) => item.id === selectedProjectId);
   const sector = sectors.find((item) => item.properties.id === selectedSectorId);
@@ -87,17 +95,52 @@ export function DetailCard() {
   }
 
   if (!sector) return null;
+  const sectorRecord = sectorCatalog.getRecord(sector.properties.id);
+  const definitionSources = sectorCatalog.getSources(sector.properties.id);
+  const geometrySources = sectorCatalog.getGeometrySources(sector.properties.id);
+  const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
+  const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
+  const isCandidateGeometry = sectorCatalog.hasResearchGeometry(sector.properties.id) && !isRuntimeFallback;
+  const geometryLabel = isRuntimeFallback ? "演示几何 · 候选转换失败" : isCandidateGeometry ? "候选几何" : "演示几何";
+  const reviewLabel = sectorRecord?.reviewStatus === "reviewed-high"
+    ? "边界规则已核验 · 候选面待人工复核"
+    : sectorRecord?.reviewStatus === "draft-medium"
+      ? "口径待选择"
+      : "定义草案 · 暂不发布";
+  const description = isCandidateGeometry
+    ? sector.properties.description.replace("演示范围", "研究候选范围")
+    : sector.properties.description;
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
       <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
-      <span className="eyebrow">楼市板块 · {sector.properties.district}</span>
+      <span className="eyebrow">楼市板块 · {(sectorRecord?.districtNames ?? [sector.properties.district]).join(" / ")}</span>
       <h2>{sector.properties.name}</h2>
-      <span className="mock-badge">演示边界</span>
-      <p className="detail-description">{sector.properties.description}</p>
+      <span className="mock-badge">{geometryLabel}</span>
+      <p className="detail-description">{description}</p>
       <dl className="detail-list">
-        <div><dt><Building2 size={15} /> 所属行政区</dt><dd>{sector.properties.district}</dd></div>
-        {sector.properties.boundaryBasis && <div><dt><Route size={15} /> 边界参考</dt><dd>{sector.properties.boundaryBasis}</dd></div>}
-        <div><dt><MapPin size={15} /> 数据来源</dt><dd>{sector.properties.sourceName}</dd></div>
+        <div><dt><Building2 size={15} /> 涉及行政区</dt><dd>{sectorRecord?.districtNames.join(" / ") ?? sector.properties.district}</dd></div>
+        {sectorRecord && sectorRecord.aliases.length > 0 && <div><dt><Building2 size={15} /> 常用别名</dt><dd>{sectorRecord.aliases.join("、")}</dd></div>}
+        <div><dt><CalendarClock size={15} /> 核验状态</dt><dd>{reviewLabel}</dd></div>
+        {sectorRecord?.definitionCandidate && <div><dt><Route size={15} /> 候选定义</dt><dd>{sectorRecord.definitionCandidate}</dd></div>}
+        {boundaryEvidence.length > 0 && (
+          <div>
+            <dt><Route size={15} /> 逐边证据</dt>
+            <dd>{boundaryEvidence.map((edge, index) => <span key={edge.id}>{index > 0 && "；"}{boundarySideLabels[edge.side]}：{edge.featureName}（{evidenceStatusLabels[edge.status]}）</span>)}</dd>
+          </div>
+        )}
+        <div><dt><MapPin size={15} /> 当前几何</dt><dd>{isRuntimeFallback ? "本次高德坐标转换失败，地图已安全回退到虚线演示面；WGS84 候选数据仍保留，可稍后刷新重试。" : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd></div>
+        {geometrySources.length > 0 && (
+          <div>
+            <dt><MapPin size={15} /> 几何来源</dt>
+            <dd>{geometrySources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
+          </div>
+        )}
+        {definitionSources.length > 0 && (
+          <div>
+            <dt><Building2 size={15} /> 定义来源</dt>
+            <dd>{definitionSources.map((source, index) => <span key={source.id}>{index > 0 && "、"}{source.url ? <a href={source.url} target="_blank" rel="noreferrer">{source.publisher}<ExternalLink size={13} /></a> : source.publisher}</span>)}</dd>
+          </div>
+        )}
       </dl>
       <button className="primary-action" onClick={() => { selectSector(sector.properties.id); requestFocus("sector", sector.properties.id); }}>
         查看板块设施 <ArrowRight size={16} />
