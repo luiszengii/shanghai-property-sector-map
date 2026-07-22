@@ -139,7 +139,7 @@ export function MapContainer() {
       if (place) map.setZoomAndCenter(15.2, [place.longitude, place.latitude], false, 650);
     } else {
       const project = projects.find((item) => item.id === focusRequest.id);
-      if (project) map.setZoomAndCenter(13.8, project.fallbackCenter, false, 650);
+      if (project) map.setZoomAndCenter(13.8, project.position, false, 650);
     }
   }, [focusRequest]);
 

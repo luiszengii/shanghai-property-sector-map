@@ -29,11 +29,15 @@ export function SearchBar() {
       setSearchMessage(`已定位：${sector.properties.name}`);
       return;
     }
-    const project = projects.find((item) => item.name.toLowerCase().includes(normalized));
+    const project = projects.find((item) =>
+      item.name.toLowerCase().includes(normalized)
+      || item.officialName?.toLowerCase().includes(normalized),
+    );
     if (project) {
+      const displayName = project.officialName ?? project.name;
       selectProject(project.id);
       requestFocus("project", project.id);
-      setSearchMessage("已定位新盘：" + project.name);
+      setSearchMessage("已定位新盘：" + displayName);
       return;
     }
     const place = places.find((item) => item.name.toLowerCase().includes(normalized));

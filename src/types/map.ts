@@ -35,11 +35,28 @@ export interface PropertyProject {
   disadvantages: string[];
   education: string[];
   rating: number | null;
-  searchKeyword: string;
-  fallbackCenter: [number, number];
+  officialName?: string;
+  locationAddress: string;
+  position: [number, number];
+  locationSourceName: string;
+  locationSourceUrl: string;
+  locationVerifiedAt: string;
+  locationConfidence: "high" | "medium";
+  locationNote?: string;
   sourceName: string;
   sourceDate: string;
   verificationStatus: "unverified";
+}
+
+export interface ProjectLocation {
+  officialName?: string;
+  address: string;
+  position: [number, number];
+  sourceName: string;
+  sourceUrl: string;
+  verifiedAt: string;
+  confidence: "high" | "medium";
+  note?: string;
 }
 
 export interface Category {

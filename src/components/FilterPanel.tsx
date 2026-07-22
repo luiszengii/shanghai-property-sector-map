@@ -53,7 +53,7 @@ export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
           </div>
         </div>
       ))}
-      <p className="panel-footnote">新盘点位会用高德项目名定位；优劣势、教育及价格为用户提供的待核验观点，不构成购房建议。</p>
+      <p className="panel-footnote">46 个新盘点位已逐项核对并固定；优劣势、教育及价格仍为用户提供的待核验观点，不构成购房建议。</p>
     </section>
   );
 }

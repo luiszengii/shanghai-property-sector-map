@@ -32,11 +32,13 @@ export function DetailCard() {
   if (!place && !project && !sector) return null;
 
   if (project) {
+    const displayName = project.officialName ?? project.name;
     return (
-      <article className="detail-card project-detail-card glass-panel" aria-label={project.name + "详情"}>
+      <article className="detail-card project-detail-card glass-panel" aria-label={displayName + "详情"}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
         <span className="eyebrow">{project.district} · {project.sector} · 500–800 万新盘</span>
-        <h2>{project.name}</h2>
+        <h2>{displayName}</h2>
+        {project.officialName && project.officialName !== project.name && <p className="project-original-name">清单原名：{project.name}</p>}
         <div className="project-summary">
           <strong>{project.averagePrice} 万元/㎡</strong>
           <span>{project.unitType}</span>
@@ -48,11 +50,15 @@ export function DetailCard() {
           <section className="is-caution"><h3><ThumbsDown size={14} /> 项目劣势</h3><ul>{project.disadvantages.map((item) => <li key={item}>{item}</li>)}</ul></section>
         </div>
         <dl className="detail-list project-meta">
+          <div><dt><MapPin size={15} /> 项目地址</dt><dd>{project.locationAddress}</dd></div>
+          <div><dt><Building2 size={15} /> 点位来源</dt><dd>{project.locationSourceName}<a href={project.locationSourceUrl} target="_blank" rel="noreferrer" aria-label="在高德地图查看项目"><ExternalLink size={13} /></a></dd></div>
+          <div><dt><CalendarClock size={15} /> 点位核对</dt><dd>{project.locationVerifiedAt} · {project.locationConfidence === "high" ? "高置信" : "中等置信"}</dd></div>
+          {project.locationNote && <div><dt><MapPin size={15} /> 点位说明</dt><dd>{project.locationNote}</dd></div>}
           <div><dt><GraduationCap size={15} /> 周边教育</dt><dd>{project.education.join("、")}</dd></div>
-          <div><dt><Building2 size={15} /> 信息来源</dt><dd>{project.sourceName}</dd></div>
+          <div><dt><Building2 size={15} /> 观点来源</dt><dd>{project.sourceName}</dd></div>
           <div><dt><CalendarClock size={15} /> 收录日期</dt><dd>{project.sourceDate}</dd></div>
         </dl>
-        <p className="project-disclaimer">价格、交通、学校、规划及周边风险均未独立核验；点位由高德项目名称搜索，匹配失败时显示板块内近似位置。</p>
+        <p className="project-disclaimer">项目点位已于 2026-07-22 逐项核对并固化；价格、交通、学校、规划及周边风险仍未独立核验。</p>
       </article>
     );
   }

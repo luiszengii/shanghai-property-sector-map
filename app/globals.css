@@ -97,6 +97,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-opinion-grid h3 { display: flex; align-items: center; gap: 5px; margin: 0 0 8px; font-size: 12px; }
 .project-opinion-grid ul { display: grid; gap: 5px; margin: 0; padding-left: 16px; color: #475569; font-size: 11px; line-height: 1.45; }
 .project-meta { padding-top: 12px; border-top: 1px solid var(--line); }
+.project-original-name { margin: -3px 0 8px; color: var(--muted); font-size: 10px; }
 .project-disclaimer { margin: 12px 0 0; padding: 9px 10px; color: #7c5b45; background: #fffaf5; border-radius: 9px; font-size: 9px; line-height: 1.55; }
 .detail-description { margin: 12px 0 14px; color: #475569; font-size: 13px; line-height: 1.65; }
 .detail-list { display: grid; gap: 10px; margin: 0; }
@@ -142,7 +143,6 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-label b { color: #431407; font-size: 11px; }
 .project-label small { color: #c2410c; font-size: 9px; }
 .project-marker:hover .project-pin, .project-marker.is-selected .project-pin { transform: rotate(-45deg) scale(1.18); box-shadow: 0 0 0 4px rgba(249,115,22,.18); }
-.project-marker.is-approximate .project-pin { background: linear-gradient(145deg, #94a3b8, #64748b); }
 .amap-logo, .amap-copyright { opacity: .72; }
 
 .dialog-backdrop { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(15,23,42,.42); backdrop-filter: blur(7px); animation: fade-in .2s ease both; }
