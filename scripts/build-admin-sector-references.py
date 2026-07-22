@@ -36,6 +36,20 @@ DEFAULT_OUTPUT = REPO_ROOT / "src/data/sectors/admin-references.wgs84.json"
 DEFAULT_MANIFEST = REPO_ROOT / "src/data/sectors/admin-references.manifest.json"
 
 
+def resolve_repo_path(path: Path) -> Path:
+    """Resolve CLI paths against the repository root, not the caller's cwd."""
+    return path.resolve() if path.is_absolute() else (REPO_ROOT / path).resolve()
+
+
+def display_path(path: Path) -> str:
+    """Prefer a stable repo-relative path, while allowing external paths."""
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
 def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -171,10 +185,15 @@ def main() -> None:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     args = parser.parse_args()
 
-    definitions = read_json(args.definitions)
-    source_lock_path = REPO_ROOT / definitions["sourceLock"]
+    gpkg_path = resolve_repo_path(args.gpkg)
+    definitions_path = resolve_repo_path(args.definitions)
+    output_path = resolve_repo_path(args.output)
+    manifest_path = resolve_repo_path(args.manifest)
+
+    definitions = read_json(definitions_path)
+    source_lock_path = resolve_repo_path(Path(definitions["sourceLock"]))
     source_lock = read_json(source_lock_path)
-    actual_hash = sha256(args.gpkg)
+    actual_hash = sha256(gpkg_path)
     if actual_hash != source_lock["gpkgSha256"]:
         raise ValueError(f"GeoPackage SHA-256 不匹配：{actual_hash}")
 
@@ -182,7 +201,7 @@ def main() -> None:
     manifest_sectors = []
     for definition in definitions["sectors"]:
         feature, manifest_entry = build_reference(
-            args.gpkg,
+            gpkg_path,
             definition,
             definitions["workingCrs"],
             definitions["outputCrs"],
@@ -204,18 +223,19 @@ def main() -> None:
     }
     manifest = {
         "schemaVersion": "1.0.0",
-        "generatedFrom": str(args.definitions.relative_to(REPO_ROOT)),
-        "sourceLock": str(source_lock_path.relative_to(REPO_ROOT)),
+        "generatedFrom": display_path(definitions_path),
+        "sourceLock": display_path(source_lock_path),
         "sourceSnapshotId": source_lock["id"],
         "sourceGpkgSha256": actual_hash,
         "workingCrs": definitions["workingCrs"],
         "outputCrs": definitions["outputCrs"],
         "sectors": manifest_sectors,
     }
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(collection, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    args.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"生成 {len(features)} 个行政参考面：{args.output.relative_to(REPO_ROOT)}")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(collection, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"生成 {len(features)} 个行政参考面：{display_path(output_path)}")
 
 
 if __name__ == "__main__":
