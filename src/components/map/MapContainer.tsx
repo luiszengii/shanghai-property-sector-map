@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, LoaderCircle, MapPinned } from "lucide-react";
+import { AlertTriangle, LoaderCircle, MapPinned, Minus, Plus } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import placesData from "@/src/data/places.json";
 import sectorsData from "@/src/data/sectors.json";
@@ -41,6 +41,7 @@ export function MapContainer() {
     if (!key) return;
 
     let cancelled = false;
+    let removeGestureGuard = () => {};
     if (securityJsCode) {
       (window as Window & { _AMapSecurityConfig?: { securityJsCode: string } })._AMapSecurityConfig = { securityJsCode };
     }
@@ -55,7 +56,35 @@ export function MapContainer() {
           mapStyle: "amap://styles/normal",
           showLabel: true,
           animateEnable: true,
+          scrollWheel: true,
+          doubleClickZoom: true,
+          keyboardEnable: true,
+          touchZoom: true,
+          touchZoomCenter: 0,
         });
+
+        const mapElement = containerRef.current;
+        let wheelFrame: number | null = null;
+        let wheelDelta = 0;
+        const handlePinchWheel = (event: WheelEvent) => {
+          if (!event.ctrlKey) return;
+          event.preventDefault();
+          event.stopPropagation();
+          wheelDelta += event.deltaY;
+          if (wheelFrame !== null) return;
+          wheelFrame = window.requestAnimationFrame(() => {
+            const delta = Math.max(-1.2, Math.min(1.2, wheelDelta * -0.018));
+            const nextZoom = Math.max(3, Math.min(20, map.getZoom() + delta));
+            map.setZoomAndCenter(nextZoom, map.getCenter(), true);
+            wheelDelta = 0;
+            wheelFrame = null;
+          });
+        };
+        mapElement.addEventListener("wheel", handlePinchWheel, { capture: true, passive: false });
+        removeGestureGuard = () => {
+          mapElement.removeEventListener("wheel", handlePinchWheel, true);
+          if (wheelFrame !== null) window.cancelAnimationFrame(wheelFrame);
+        };
         map.on("zoomchange", () => setZoom(map.getZoom()));
         map.on("moveend", () => {
           const center = map.getCenter();
@@ -76,10 +105,21 @@ export function MapContainer() {
 
     return () => {
       cancelled = true;
+      removeGestureGuard();
       mapRef.current?.destroy();
       mapRef.current = null;
     };
   }, [setCenter, setZoom]);
+
+  const changeZoom = useCallback((delta: number) => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.setZoomAndCenter(
+      Math.max(3, Math.min(20, map.getZoom() + delta)),
+      map.getCenter(),
+      true,
+    );
+  }, []);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -106,6 +146,16 @@ export function MapContainer() {
   return (
     <div className="map-stage" aria-label="上海楼市互动地图">
       <div ref={containerRef} className="amap-host" />
+      {status === "ready" && (
+        <div className="map-zoom-controls" role="group" aria-label="地图缩放控制">
+          <button type="button" onClick={() => changeZoom(1)} aria-label="放大地图" title="放大地图">
+            <Plus size={19} />
+          </button>
+          <button type="button" onClick={() => changeZoom(-1)} aria-label="缩小地图" title="缩小地图">
+            <Minus size={19} />
+          </button>
+        </div>
+      )}
       {status === "loading" && (
         <div className="map-status" role="status">
           <LoaderCircle className="spin" size={24} />

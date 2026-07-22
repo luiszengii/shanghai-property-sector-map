@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Ruler, X } from "lucide-react";
+import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Route, Ruler, X } from "lucide-react";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import sectorsData from "@/src/data/sectors.json";
@@ -62,6 +62,7 @@ export function DetailCard() {
       <p className="detail-description">{sector.properties.description}</p>
       <dl className="detail-list">
         <div><dt><Building2 size={15} /> 所属行政区</dt><dd>{sector.properties.district}</dd></div>
+        {sector.properties.boundaryBasis && <div><dt><Route size={15} /> 边界参考</dt><dd>{sector.properties.boundaryBasis}</dd></div>}
         <div><dt><MapPin size={15} /> 数据来源</dt><dd>{sector.properties.sourceName}</dd></div>
       </dl>
       <button className="primary-action" onClick={() => { selectSector(sector.properties.id); requestFocus("sector", sector.properties.id); }}>

@@ -38,6 +38,7 @@ export interface SectorProperties {
   district: string;
   description: string;
   sourceName: string;
+  boundaryBasis?: string;
   isMock: boolean;
   center: [number, number];
 }
