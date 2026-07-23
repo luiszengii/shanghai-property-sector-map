@@ -5,6 +5,10 @@ import {
   selectPreferredEditorGeometry,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./sector-editor-catalog.ts";
+import {
+  buildCandidateOnlySectorFeatures,
+// @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
+} from "./sector-catalog-features.ts";
 
 const registry = [
   {
@@ -73,4 +77,48 @@ test("the editor prefers the same high-precision reference shown on the main map
     }),
     administrativeReference,
   );
+});
+
+test("a reviewed candidate without a legacy demo becomes a main-map sector entry", () => {
+  const record = {
+    id: "sector-new",
+    canonicalName: "新候选",
+    aliases: [],
+    districtNames: ["黄浦区"],
+    kind: "market_sector" as const,
+    reviewStatus: "draft-medium" as const,
+    definitionStatus: "market_scope_candidate" as const,
+    definitionCandidate: "候选定义。",
+    definitionSourceIds: [],
+    boundaryEvidenceIds: [],
+    geometry: {
+      status: "draft" as const,
+      confidence: "medium" as const,
+      coordinateSystem: "WGS84" as const,
+      coordinateSystemVerified: true,
+      version: "test",
+      sourceIds: [],
+      publicationPolicy: "internal_review" as const,
+      note: "test",
+    },
+  };
+  const geometry = {
+    type: "Polygon" as const,
+    coordinates: [[[121.4, 31.2], [121.5, 31.2], [121.5, 31.3], [121.4, 31.2]]],
+  };
+
+  const features = buildCandidateOnlySectorFeatures(
+    [],
+    [record],
+    [{
+      properties: { id: "sector-new", labelPoint: [121.45, 31.25] },
+      geometry,
+    }],
+  );
+
+  assert.equal(features.length, 1);
+  assert.equal(features[0].properties.id, "sector-new");
+  assert.equal(features[0].properties.name, "新候选");
+  assert.equal(features[0].properties.isMock, false);
+  assert.deepEqual(features[0].geometry, geometry);
 });

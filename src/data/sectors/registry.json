@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-23",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩与杨思已拆成两个互斥一级板块；世博、上南、北蔡、御桥、徐泾、虹桥商务区、古美、莘庄、春申、北外滩等继续作为内部复核候选面。行政参考层独立叠加，不替代市场板块；正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩与杨思已拆成两个互斥一级板块；黄浦区瑞金二路、打浦桥、五里桥、半淞园路、老西门、小东门、豫园、外滩、南京东路采用同名街道开放关系作为可编辑保守骨架。所有候选继续限内部复核；行政参考层独立叠加，不替代市场板块，正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -396,6 +396,213 @@
         "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
         "publicationPolicy": "internal_review",
         "note": "已按用户选择的周家渡 Z000202 四至框架与固定日期 OSM 命名道路、水系独立重建约 2.52 平方公里候选面，并与杨思、世博候选面建立无重叠共享边。规划框架不等于楼市定稿；浦东南路、东明路、上南路均需按沿线完整小区归属继续修正。"
+      }
+    },
+    {
+      "id": "sector_ruijinerlu",
+      "canonicalName": "瑞金二路",
+      "aliases": ["瑞金二路街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场瑞金二路采用同名街道范围作为本轮保守骨架；与打浦桥、南京东路共用固定 OSM 行政关系边，后续仍可按完整小区归属人工修订。",
+      "definitionSourceIds": ["market-identity-huaner-shanghai-sectors-2022", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["ruijinerlu-north", "ruijinerlu-east", "ruijinerlu-south", "ruijinerlu-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "market-identity-huaner-shanghai-sectors-2022"],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.9418 平方公里内部候选；固定 OSM relation 12236004 提供高点数骨架，拓扑位移 0 米。行政同名是起画依据，不代表行业唯一边界。"
+      }
+    },
+    {
+      "id": "sector_dapuqiao",
+      "canonicalName": "打浦桥",
+      "aliases": ["打浦桥街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场打浦桥采用同名街道范围作为本轮保守骨架；与瑞金二路、五里桥、半淞园路、老西门采用同源共享边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["dapuqiao-north", "dapuqiao-east", "dapuqiao-south", "dapuqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.5739 平方公里内部候选；固定 OSM relation 12235958 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_wuliqiao",
+      "canonicalName": "五里桥",
+      "aliases": ["五里桥街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场五里桥采用同名街道范围作为本轮保守骨架；与打浦桥、半淞园路采用同源共享边，黄浦江侧保留开放快照岸线。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["wuliqiao-north", "wuliqiao-east", "wuliqiao-south", "wuliqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 3.0474 平方公里内部候选；固定 OSM relation 12235959 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_bansongyuanlu",
+      "canonicalName": "半淞园路",
+      "aliases": ["半淞园", "半淞园路街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场半淞园路采用同名街道范围作为本轮保守骨架；与打浦桥、五里桥、老西门、小东门采用同源共享边。黄浦滨江只保留为待核验市场标签，不参与搜索归并。",
+      "definitionSourceIds": ["market-identity-huaner-shanghai-sectors-2022", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["bansongyuanlu-north", "bansongyuanlu-east", "bansongyuanlu-south", "bansongyuanlu-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "market-identity-huaner-shanghai-sectors-2022"],
+        "publicationPolicy": "internal_review",
+        "note": "约 2.8585 平方公里内部候选；固定 OSM relation 12235902 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_laoximen",
+      "canonicalName": "老西门",
+      "aliases": ["老西门街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场老西门采用同名街道范围作为本轮保守骨架；与打浦桥、半淞园路、小东门、豫园采用同源共享边，淮海中路—新天地侧留待下一批复核。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["laoximen-north", "laoximen-east", "laoximen-south", "laoximen-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.2119 平方公里内部候选；固定 OSM relation 12235903 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_xiaodongmen",
+      "canonicalName": "小东门",
+      "aliases": ["小东门街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场小东门采用同名街道范围作为本轮保守骨架；与半淞园路、老西门、豫园、外滩采用同源共享边。董家渡只保留为待核验市场标签，不参与搜索归并。",
+      "definitionSourceIds": ["market-identity-huaner-shanghai-sectors-2022", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["xiaodongmen-north", "xiaodongmen-east", "xiaodongmen-south", "xiaodongmen-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "market-identity-huaner-shanghai-sectors-2022"],
+        "publicationPolicy": "internal_review",
+        "note": "约 2.6970 平方公里内部候选；固定 OSM relation 12235905 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_yuyuan",
+      "canonicalName": "豫园",
+      "aliases": ["豫园街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场豫园采用同名街道范围作为本轮保守骨架；与老西门、小东门、外滩采用同源共享边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["yuyuan-north", "yuyuan-east", "yuyuan-south", "yuyuan-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.1989 平方公里内部候选；固定 OSM relation 12235904 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_waitan",
+      "canonicalName": "外滩",
+      "aliases": ["外滩街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场外滩采用同名街道范围作为本轮保守骨架；与小东门、豫园、南京东路采用同源共享边，东侧黄浦江与北侧苏州河保持开放快照岸线。",
+      "definitionSourceIds": ["market-identity-huaner-shanghai-sectors-2022", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["waitan-north", "waitan-east", "waitan-south", "waitan-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "market-identity-huaner-shanghai-sectors-2022"],
+        "publicationPolicy": "internal_review",
+        "note": "约 2.2206 平方公里内部候选；固定 OSM relation 12235857 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_nanjingdonglu",
+      "canonicalName": "南京东路",
+      "aliases": ["南京东路街道"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场南京东路采用同名街道范围作为本轮保守骨架；与外滩、瑞金二路采用同源共享边，淮海中路—新天地侧留待独立语义批次。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["nanjingdonglu-north", "nanjingdonglu-east", "nanjingdonglu-south", "nanjingdonglu-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-huangpu-admin-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 2.3882 平方公里内部候选；固定 OSM relation 12236005 提供高点数骨架，拓扑位移 0 米。"
       }
     }
   ]

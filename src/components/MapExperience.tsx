@@ -2,9 +2,8 @@
 
 import { Database, Layers3, Map as MapIcon, MessageCircleMore, Navigation, Sparkles } from "lucide-react";
 import { useState } from "react";
-import sectorsData from "@/src/data/sectors.json";
+import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
-import type { SectorCollection } from "@/src/types/map";
 import { DataDisclaimerDialog } from "./DataDisclaimerDialog";
 import { DetailCard } from "./DetailCards";
 import { FilterPanel } from "./FilterPanel";
@@ -14,7 +13,7 @@ import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
 import { XhsInsightPanel } from "./XhsInsightPanel";
 
-const sectors = (sectorsData as SectorCollection).features;
+const sectors = sectorCatalog.features;
 
 export function MapExperience() {
   const { selectedSectorId, zoom, enabledCategories, setMobileFiltersOpen, setDisclaimerOpen } = useMapStore();

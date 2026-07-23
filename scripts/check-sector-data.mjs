@@ -979,6 +979,43 @@ validateLockedOsmCollection(subscopeData, candidateManifest, "板块子范围", 
 
 const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
 const candidateById = new Map(candidates.map((feature) => [feature.properties?.id, feature]));
+const huangpuBatchDefinitions = candidateDefinitions.filter(
+  (definition) => definition.scopeVersion
+    === "huangpu-admin-backbone-market-candidate-2026-07",
+);
+if (huangpuBatchDefinitions.length !== 9) {
+  error(`黄浦九板块批次应有 9 个定义，实际 ${huangpuBatchDefinitions.length} 个`);
+}
+const huangpuBatchRelationIds = new Map(huangpuBatchDefinitions.map(
+  (definition) => [definition.id, String(definition.osmAdminRelationId)],
+));
+for (const [sectorId, relationId] of huangpuBatchRelationIds) {
+  const definition = candidateDefinitionById.get(sectorId);
+  const candidate = candidateById.get(sectorId);
+  const manifest = manifestById.get(sectorId);
+  if (definition?.method !== "market_admin_candidate_with_shared_topology") {
+    error(`${sectorId}: 黄浦九板块必须使用同名行政关系市场候选构建方法`);
+  }
+  if (!candidate) {
+    error(`${sectorId}: 黄浦九板块批次缺少候选面`);
+    continue;
+  }
+  if (candidate.properties?.topologyMaxBoundaryDisplacementMeters > 0.1) {
+    error(`${sectorId}: 黄浦同源街道骨架的拓扑位移不得超过 0.1 米`);
+  }
+  if (normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+    !== normalizedStringSet([relationId])) {
+    error(`${sectorId}: 黄浦候选必须锁定 OSM relation ${relationId}`);
+  }
+  for (const neighborId of candidate.properties?.sharedEdgeSectorIds ?? []) {
+    if (!huangpuBatchRelationIds.has(neighborId)) continue;
+    const neighbor = candidateById.get(neighborId);
+    if (neighbor
+      && sharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry) < 250) {
+      error(`${sectorId} / ${neighborId}: 黄浦批次声明共享边不足 250 米`);
+    }
+  }
+}
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
 const yangsiPrimaryCandidate = candidateById.get("sector_yangsi");
 if (!qiantanPrimaryCandidate || qiantanPrimaryCandidate.properties?.name !== "前滩") {

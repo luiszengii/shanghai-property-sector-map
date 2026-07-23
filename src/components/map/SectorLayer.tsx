@@ -11,13 +11,16 @@ import {
   type DisplayPath,
 } from "./amap-coordinate-conversion";
 
-const sectors = sectorCatalog.features;
+const sectors = sectorCatalog.legacyFeatures;
 type SectorGeometryKind =
   | "reviewed-market-candidate"
   | "official-subscope-reference"
   | "administrative-reference"
   | "demo";
 const reviewedCandidates = sectorCatalog.reviewedCandidates;
+const candidateOnlyReviewedCandidates = reviewedCandidates.filter(
+  (feature) => !sectorCatalog.hasLegacyFeature(feature.properties.id),
+);
 const subscopes = sectorCatalog.subscopes;
 const adminReferences = sectorCatalog.administrativeReferences;
 const researchGeometries = [...reviewedCandidates, ...adminReferences];
@@ -155,6 +158,10 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
     };
 
     const createOverlays = async () => {
+      candidateOnlyReviewedCandidates.forEach((candidate) => {
+        setSectorGeometryFallback(candidate.properties.id, false);
+        setSectorGeometryLoading(candidate.properties.id, true);
+      });
       for (const [index, sector] of sectors.entries()) {
         const hasResearchGeometry = sectorCatalog.hasResearchGeometry(sector.properties.id);
         if (hasResearchGeometry) {
@@ -290,6 +297,60 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             );
           }
           console.warn(`${marketOverlay.sector.properties.name}${layerName}坐标转换失败，已保留灰色虚线演示面`, error);
+        }
+      }
+
+      for (const [index, reviewedCandidate] of candidateOnlyReviewedCandidates.entries()) {
+        const id = reviewedCandidate.properties.id;
+        const sector = sectorCatalog.getFeature(id);
+        if (!sector) {
+          settledResearchIds.add(id);
+          setSectorGeometryLoading(id, false);
+          console.warn(`候选面 ${id} 缺少可交互板块入口`);
+          continue;
+        }
+        try {
+          const pathRequest = researchPathRequestByKey.get(
+            `${reviewedCandidate.properties.status}:${id}`,
+          );
+          if (!pathRequest) throw new Error(`${id} 缺少候选面显示路径`);
+          const path: DisplayPath = await pathRequest;
+          if (cancelled) return;
+          const polygon = new amapApi.Polygon();
+          polygon.setOptions({ path, cursor: "pointer" });
+          const label = new amapApi.Text({
+            text: sector.properties.name,
+            position: displayLabelById.get(id)?.toArray()
+              ?? sector.properties.center,
+            anchor: "center",
+            zIndex: 25,
+            style: labelStyle("reviewed-market-candidate"),
+          });
+          const overlay: SectorOverlay = {
+            polygon,
+            label,
+            baseColor: palette[(sectors.length + index) % palette.length],
+            sector,
+            geometryKind: "reviewed-market-candidate",
+            hiddenLegacyDemo: false,
+          };
+          applyOverlayStyle(
+            overlay,
+            zoomRef.current,
+            selectedSectorIdRef.current === id,
+          );
+          bindOverlayInteractions(overlay);
+          map.add([polygon, label]);
+          overlays.push(overlay);
+          settledResearchIds.add(id);
+          setSectorGeometryLoading(id, false);
+          setSectorGeometryFallback(id, false);
+        } catch (error) {
+          if (cancelled) return;
+          settledResearchIds.add(id);
+          setSectorGeometryLoading(id, false);
+          setSectorGeometryFallback(id, false);
+          console.warn(`${sector.properties.name}候选面坐标转换失败，当前无法显示`, error);
         }
       }
 

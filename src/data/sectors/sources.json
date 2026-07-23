@@ -545,6 +545,17 @@
       "note": "只核实现行街镇名称与隶属关系，不提供楼市板块定义或可再分发边界。"
     },
     {
+      "id": "market-identity-huaner-shanghai-sectors-2022",
+      "title": "一句话讲清上海各个板块",
+      "publisher": "环二先生",
+      "url": "https://zhuanlan.zhihu.com/p/495825270",
+      "sourceType": "independent_market_sector_taxonomy",
+      "publishedAt": "2022-04-21",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "用于核对瑞金二路、半淞园路、小东门、外滩等市场身份及黄浦板块拆分口径；只引用名称关系，不复制文章表达、清单或任何边界。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",
