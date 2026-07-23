@@ -994,6 +994,72 @@
       "note": "现行官方页面确认甘泉路街道面积2.36平方千米、20个居委及典型老式居住型社区属性；用于身份和面积量级复核，不替代市场边界。"
     },
     {
+      "id": "official-jiading-admin-divisions-2026",
+      "title": "嘉定区建置区划（2026年5月现行口径）",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/jiading/index.html",
+      "sourceType": "official_current_admin_divisions",
+      "publishedAt": "2026-05",
+      "licenseStatus": "reference_only",
+      "allowedUse": "version_check_only",
+      "note": "确认嘉定区现行8镇4街道建制，以及菊园街道、娄塘镇等2026年调整后名称；不提供可直接导入的法定边界坐标。"
+    },
+    {
+      "id": "official-jiading-admin-adjustment-2026",
+      "title": "嘉定区行政区划调整组织实施及范围说明",
+      "publisher": "上海市人民政府转载嘉定区人民政府",
+      "url": "https://www.shanghai.gov.cn/nw15343/20260509/b4c418b03d314faf992f805918af6ec6.html",
+      "sourceType": "official_admin_adjustment",
+      "publishedAt": "2026-05-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "确认菊园新区改设菊园街道、徐行析出娄塘、嘉定工业区南区划入马陆，并给出调整后四至与邻接文字；仅用于版本和拓扑核对。"
+    },
+    {
+      "id": "official-jiading-admin-divisions-2024-historical",
+      "title": "Administrative divisions of Jiading（2024历史口径）",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://english.jiading.gov.cn/2024-07/11/c_709148.htm",
+      "sourceType": "official_historical_admin_profile",
+      "publishedAt": "2024-07-11",
+      "licenseStatus": "reference_only",
+      "allowedUse": "version_check_only",
+      "note": "记录2026年调整前7镇3街道及两个管委会的历史面积和身份；马陆、徐行、菊园数值不得作为2026年当前官方面积。"
+    },
+    {
+      "id": "official-jiading-malu-rural-unit-2018",
+      "title": "嘉定新城（马陆镇）郊野单元规划范围说明",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://www.jiading.gov.cn/zwpd/zwdt/content_490856",
+      "sourceType": "official_rural_unit_scope",
+      "publishedAt": "2018",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于证明旧马陆完整镇域包含大面积城市开发边界外郊野单元，行政面明显不能直接等同住宅市场；2026扩界后只作历史风险证据。"
+    },
+    {
+      "id": "official-jiading-waigang-14th-plan",
+      "title": "外冈镇国民经济和社会发展第十四个五年规划",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://www.jiading.gov.cn/publicity/jcgk/ghjh/zxgh/146072",
+      "sourceType": "official_town_five_year_plan",
+      "publishedAt": "2021",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "确认外冈完整镇域同时包含产业园、农业和住宅功能；用于过宽行政代理风险核对，不作为楼市边界坐标来源。"
+    },
+    {
+      "id": "official-jiading-huating-flood-plan-2025",
+      "title": "华亭镇防汛防台专项应急预案（2025）",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://www.jiading.gov.cn/publicity/jcgk/zdgkwj/gjzwj__publicity/fdzdgknr/zfwj/gjzwj/186824",
+      "sourceType": "official_town_scope",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "给出华亭镇四向邻接和39.54平方千米面积，用于现行身份、邻接和面积量级复核；不提供可直接导入的法定GIS坐标。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",

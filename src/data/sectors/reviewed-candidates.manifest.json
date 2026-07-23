@@ -3469,6 +3469,134 @@
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
+    },
+    {
+      "id": "sector_jiangqiao",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000636"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_nanxiang",
+          "sector_anting"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_nanxiang",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000640"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jiangqiao",
+          "sector_malu",
+          "sector_anting"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_malu",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000641"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_nanxiang",
+          "sector_xuhang",
+          "sector_anting",
+          "sector_juyuanxinqu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_xuhang",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000637"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_malu",
+          "sector_huating",
+          "sector_juyuanxinqu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_waigang",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000639"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_anting",
+          "sector_juyuanxinqu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_anting",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000634"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jiangqiao",
+          "sector_nanxiang",
+          "sector_malu",
+          "sector_waigang",
+          "sector_juyuanxinqu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_huating",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000638"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xuhang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_juyuanxinqu",
+      "scopeVersion": "jiading-eight-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17000643"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_malu",
+          "sector_xuhang",
+          "sector_waigang",
+          "sector_anting"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
     }
   ],
   "subscopes": []

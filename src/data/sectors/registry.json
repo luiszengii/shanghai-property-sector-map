@@ -4152,5 +4152,489 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
+    },
+    {
+      "id": "sector_jiangqiao",
+      "canonicalName": "江桥",
+      "aliases": [
+        "江桥镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场江桥暂以 2026 年现行江桥镇固定 OSM relation 作为低置信、可编辑行政起画代理。旧版约 42.4 平方公里面积只作历史量级参考；完整镇域包含村庄、产业及北虹桥协同空间，丰庄、华漕、真新和新泾接口必须另行按完整项目核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-divisions-2024-historical"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_huaxin",
+        "sector_taopu",
+        "unresolved_fengzhuang",
+        "unresolved_huacao",
+        "unresolved_zhenxin",
+        "unresolved_xinjing"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_nanxiang",
+        "sector_anting"
+      ],
+      "boundaryEvidenceIds": [
+        "jiangqiao-north",
+        "jiangqiao-east",
+        "jiangqiao-south",
+        "jiangqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_nanxiang",
+      "canonicalName": "南翔",
+      "aliases": [
+        "南翔镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "mixed_rural_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场南翔暂以 2026 年现行南翔镇固定 OSM relation 作为低置信、可编辑行政起画代理。完整镇域明显大于站点周边连续住宅市场，旧版面积只作历史参考；保留现有真实小红书南翔样本，但不把观点样本当边界证据。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-divisions-2024-historical"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_taopu",
+        "sector_gucun",
+        "unresolved_dahua",
+        "unresolved_fengzhuang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_jiangqiao",
+        "sector_malu",
+        "sector_anting"
+      ],
+      "boundaryEvidenceIds": [
+        "nanxiang-north",
+        "nanxiang-east",
+        "nanxiang-south",
+        "nanxiang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_malu",
+      "canonicalName": "马陆",
+      "aliases": [
+        "马陆镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "post_2026_admin_expansion",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场马陆暂以 2026 年嘉定工业区南区整体划入后的现行马陆镇固定 OSM relation 起画。旧版约 57.09 平方公里面积已经失效，当前约 70 平方公里行政面只可作低置信代理；卖方嘉定新城保持独立，禁止被马陆静默吸收。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-adjustment-2026",
+        "official-jiading-malu-rural-unit-2018"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_gucun",
+        "sector_luodian",
+        "unresolved_jiadingxincheng",
+        "unresolved_jiadinglaocheng",
+        "unresolved_xinchenglu"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_nanxiang",
+        "sector_xuhang",
+        "sector_anting",
+        "sector_juyuanxinqu"
+      ],
+      "boundaryEvidenceIds": [
+        "malu-north",
+        "malu-east",
+        "malu-south",
+        "malu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xuhang",
+      "canonicalName": "徐行",
+      "aliases": [
+        "徐行镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "seller_taxonomy_grouping_anomaly",
+        "mixed_rural_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场徐行虽被卖方 sitemap 错排到上海周边，但第一方小区页仍确认嘉定徐行身份。候选只以 2026 年调整后的徐行镇 relation 起画；娄塘镇已独立，不能为了覆盖完整而重新并回徐行。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-adjustment-2026",
+        "official-jiading-admin-divisions-2024-historical"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_luodian",
+        "sector_luojing",
+        "unresolved_loutang",
+        "unresolved_xinchenglu"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_malu",
+        "sector_huating",
+        "sector_juyuanxinqu"
+      ],
+      "boundaryEvidenceIds": [
+        "xuhang-north",
+        "xuhang-east",
+        "xuhang-south",
+        "xuhang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_waigang",
+      "canonicalName": "外冈",
+      "aliases": [
+        "外冈镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "mixed_rural_agricultural_industrial",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场外冈暂以 2026 年现行外冈镇 relation 作为低置信、可编辑行政起画代理。约 51 平方公里完整镇域混合产业园、万亩良田、农业和住宅空间；娄塘接口保持未解决。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-divisions-2024-historical",
+        "official-jiading-waigang-14th-plan"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_loutang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_anting",
+        "sector_juyuanxinqu"
+      ],
+      "boundaryEvidenceIds": [
+        "waigang-north",
+        "waigang-east",
+        "waigang-south",
+        "waigang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_anting",
+      "canonicalName": "安亭",
+      "aliases": [
+        "安亭镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "mixed_auto_industry_rural_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场安亭暂以 2026 年现行安亭镇 relation 作为低置信、可编辑行政起画代理。完整镇域约 89 平方公里，包含上海国际汽车城、村庄、产业和多类非住宅空间，远大于约 4.9 平方公里安亭新镇居住核心，不得称为精确住宅市场边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-divisions-2024-historical"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_huaxin",
+        "sector_baihe"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_jiangqiao",
+        "sector_nanxiang",
+        "sector_malu",
+        "sector_waigang",
+        "sector_juyuanxinqu"
+      ],
+      "boundaryEvidenceIds": [
+        "anting-north",
+        "anting-east",
+        "anting-south",
+        "anting-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_huating",
+      "canonicalName": "华亭",
+      "aliases": [
+        "华亭镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "admin_area_version_mismatch",
+        "mixed_rural_agricultural_ecological",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场华亭暂以 2026 年现行华亭镇 relation 作为低置信、可编辑行政起画代理。完整镇域混合农业、生态、乡村和住宅空间；娄塘与罗泾接口必须成组复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-divisions-2024-historical",
+        "official-jiading-huating-flood-plan-2025"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_luojing",
+        "unresolved_loutang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_xuhang"
+      ],
+      "boundaryEvidenceIds": [
+        "huating-north",
+        "huating-east",
+        "huating-south",
+        "huating-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_juyuanxinqu",
+      "canonicalName": "菊园新区",
+      "aliases": [
+        "菊园街道"
+      ],
+      "riskFlags": [
+        "admin_name_version_mismatch",
+        "admin_area_version_mismatch",
+        "mixed_urban_rural_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "嘉定区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "卖方市场名继续使用“菊园新区”，但 2026 年当前行政名已经变更为“菊园街道”。候选只借当前固定 OSM 菊园街道 relation 作为异名、低置信起画代理；旧新区面积只作历史参考，嘉定新城、嘉定老城、新成路和娄塘接口全部保持未解决。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jiading-admin-divisions-2026",
+        "official-jiading-admin-adjustment-2026",
+        "official-jiading-admin-divisions-2024-historical"
+      ],
+      "adminProxyName": "菊园街道",
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_loutang",
+        "unresolved_jiadingxincheng",
+        "unresolved_jiadinglaocheng",
+        "unresolved_xinchenglu"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_malu",
+        "sector_xuhang",
+        "sector_waigang",
+        "sector_anting"
+      ],
+      "boundaryEvidenceIds": [
+        "juyuanxinqu-north",
+        "juyuanxinqu-east",
+        "juyuanxinqu-south",
+        "juyuanxinqu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jiading-eight-current-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-jiading-admin-adjustment-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }

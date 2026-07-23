@@ -202,6 +202,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "linked-admin-batch",
   }],
+  ["jiading-eight-direct-admin-proxies-2026-07", {
+    expectedSectorCount: 8,
+    districtCounts: {
+      嘉定区: 8,
+    },
+    catalogMode: "linked-admin-batch",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -236,6 +243,14 @@ const aliasesBySectorId = new Map([
   ["sector_luodian", ["罗店镇"]],
   ["sector_yuepu", ["月浦镇"]],
   ["sector_luojing", ["罗泾镇"]],
+  ["sector_jiangqiao", ["江桥镇"]],
+  ["sector_nanxiang", ["南翔镇"]],
+  ["sector_malu", ["马陆镇"]],
+  ["sector_xuhang", ["徐行镇"]],
+  ["sector_waigang", ["外冈镇"]],
+  ["sector_anting", ["安亭镇"]],
+  ["sector_huating", ["华亭镇"]],
+  ["sector_juyuanxinqu", ["菊园街道"]],
 ]);
 const sides = [
   ["north", "北"],

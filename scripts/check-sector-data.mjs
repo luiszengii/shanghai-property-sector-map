@@ -2072,6 +2072,169 @@ for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) 
   }
 }
 
+const expectedJiadingEight = new Map([
+  ["sector_jiangqiao", { relation: "17000636", osmName: "江桥镇", historicalArea: 42.4 }],
+  ["sector_nanxiang", { relation: "17000640", osmName: "南翔镇", historicalArea: 33.8 }],
+  ["sector_malu", { relation: "17000641", osmName: "马陆镇", historicalArea: 57.09 }],
+  ["sector_xuhang", { relation: "17000637", osmName: "徐行镇", historicalArea: 39.95 }],
+  ["sector_waigang", { relation: "17000639", osmName: "外冈镇", historicalArea: 50.92 }],
+  ["sector_anting", { relation: "17000634", osmName: "安亭镇", historicalArea: 89.02 }],
+  ["sector_huating", { relation: "17000638", osmName: "华亭镇", historicalArea: 39.55 }],
+  ["sector_juyuanxinqu", { relation: "17000643", osmName: "菊园街道", historicalArea: 18.61 }],
+]);
+const jiadingEightDefinitions = candidateDefinitions.filter(
+  (definition) => expectedJiadingEight.has(definition.id),
+);
+if (normalizedStringSet(jiadingEightDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedJiadingEight.keys())) {
+  error("嘉定现行行政代理批次必须恰好包含研究确认的 8 个市场候选");
+}
+for (const definition of jiadingEightDefinitions) {
+  const expected = expectedJiadingEight.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expected.relation
+    || definition.expectedOsmName !== expected.osmName
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expected.relation])) {
+    error(`${definition.id}: 嘉定批次没有锁定研究确认的 2026 现行行政关系与名称`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || candidate?.properties?.marketAdminAlignmentUnverified !== true
+    || registryRecord?.marketAdminAlignmentUnverified !== true
+    || definition.adminAreaVersionMismatch !== true
+    || candidate?.properties?.adminAreaVersionMismatch !== true
+    || registryRecord?.adminAreaVersionMismatch !== true
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review"
+    || !definition.riskFlags?.includes("market_boundary_not_official")
+    || normalizedStringSet(registryRecord?.requiredAdjacencyReviewIds ?? [])
+      !== normalizedStringSet(definition.requiredAdjacencyReviewIds ?? [])
+    || normalizedStringSet(registryRecord?.linkedTopologySectorIds ?? [])
+      !== normalizedStringSet(definition.sharedEdgeSectorIds ?? [])) {
+    error(`${definition.id}: 嘉定行政代理必须保持 low / draft-low / internal_review 及版本风险`);
+  }
+  if (definition.historicalReferenceAreaSquareKilometers !== expected.historicalArea
+    || candidate?.properties?.historicalReferenceAreaSquareKilometers
+      !== expected.historicalArea
+    || candidate?.properties?.historicalReferenceAreaAsOf
+      !== definition.historicalReferenceAreaAsOf
+    || "officialAreaSquareKilometers" in definition
+    || "officialAreaSquareKilometers" in (candidate?.properties ?? {})) {
+    error(`${definition.id}: 2024 面积只能保存为历史参考，不得冒充 2026 当前官方面积`);
+  }
+}
+const juyuanDefinition = candidateDefinitionById.get("sector_juyuanxinqu");
+const juyuanCandidate = candidateById.get("sector_juyuanxinqu");
+const juyuanRegistry = registryById.get("sector_juyuanxinqu");
+if (juyuanDefinition?.canonicalName !== "菊园新区"
+  || juyuanDefinition?.adminProxyName !== "菊园街道"
+  || juyuanDefinition?.expectedOsmName !== "菊园街道"
+  || juyuanCandidate?.properties?.name !== "菊园新区"
+  || juyuanCandidate?.properties?.adminProxyName !== "菊园街道"
+  || juyuanRegistry?.canonicalName !== "菊园新区"
+  || juyuanRegistry?.adminProxyName !== "菊园街道"
+  || !juyuanDefinition?.riskFlags?.includes("admin_name_version_mismatch")) {
+  error("sector_juyuanxinqu: 必须分字段保存市场菊园新区与现行政代理菊园街道");
+}
+if (!candidateDefinitionById.get("sector_xuhang")?.riskFlags?.includes(
+  "seller_taxonomy_grouping_anomaly",
+)) {
+  error("sector_xuhang: 必须保留卖方 sitemap 分组异常，不能错误改挂上海周边");
+}
+const jiadingDeclaredSharedPairs = new Set(
+  jiadingEightDefinitions.flatMap((definition) => (
+    (definition.sharedEdgeSectorIds ?? [])
+      .filter((sectorId) => expectedJiadingEight.has(sectorId))
+      .map((sectorId) => [definition.id, sectorId].sort().join("/"))
+  )),
+);
+const expectedJiadingSharedPairs = new Map([
+  ["sector_jiangqiao/sector_nanxiang", 11884.88],
+  ["sector_anting/sector_jiangqiao", 11619.78],
+  ["sector_malu/sector_nanxiang", 13672.69],
+  ["sector_anting/sector_nanxiang", 4239.20],
+  ["sector_malu/sector_xuhang", 4047.25],
+  ["sector_anting/sector_malu", 9618.88],
+  ["sector_juyuanxinqu/sector_malu", 5628.30],
+  ["sector_huating/sector_xuhang", 17385.19],
+  ["sector_juyuanxinqu/sector_xuhang", 4065.36],
+  ["sector_anting/sector_waigang", 11010.23],
+  ["sector_juyuanxinqu/sector_waigang", 7882.25],
+  ["sector_anting/sector_juyuanxinqu", 6021.31],
+]);
+if (normalizedStringSet(jiadingDeclaredSharedPairs)
+  !== normalizedStringSet(expectedJiadingSharedPairs.keys())) {
+  error("嘉定批次必须完整声明研究确认的 12 对共享边，不能从两侧同时删除后绕过校验");
+}
+for (const [pair, expectedSharedMeters] of expectedJiadingSharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < 4000
+    || exactSharedLength < 4000
+    || Math.abs(exactSharedLength - sharedLength) > 0.01
+    || Math.abs(exactSharedLength - expectedSharedMeters) / expectedSharedMeters > 0.005) {
+    error(
+      `${firstId} / ${secondId}: 嘉定批次共享边必须使用完全相同的坐标序列`
+      + `（实际 ${exactSharedLength.toFixed(2)} m，研究基线 ${expectedSharedMeters.toFixed(2)} m）`,
+    );
+  }
+}
+for (const [firstId, secondId, expectedSharedMeters] of [
+  ["sector_jiangqiao", "sector_huaxin", 375.34],
+  ["sector_jiangqiao", "sector_taopu", 5707.06],
+  ["sector_nanxiang", "sector_taopu", 4139.98],
+  ["sector_nanxiang", "sector_gucun", 2707.22],
+  ["sector_anting", "sector_huaxin", 10524.02],
+  ["sector_anting", "sector_baihe", 6728.03],
+  ["sector_malu", "sector_gucun", 6523.89],
+  ["sector_malu", "sector_luodian", 7019.04],
+  ["sector_huating", "sector_luojing", 6595.31],
+  ["sector_xuhang", "sector_luodian", 6594.03],
+  ["sector_xuhang", "sector_luojing", 4609.47],
+]) {
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const tolerantSharedLength = first && second
+    ? sharedBoundaryLengthMetersIncludingHoles(
+      first.geometry,
+      second.geometry,
+      { distanceToleranceMeters: 0.1 },
+    )
+    : 0;
+  if (Math.abs(tolerantSharedLength - expectedSharedMeters) / expectedSharedMeters > 0.01) {
+    error(
+      `${firstId} / ${secondId}: 嘉定跨批接口未在 0.1 米容差内复现`
+      + `（实际 ${tolerantSharedLength.toFixed(2)} m，研究基线 ${expectedSharedMeters.toFixed(2)} m）`,
+    );
+  }
+}
+for (const definition of jiadingEightDefinitions) {
+  if ((definition.requiredAdjacencyReviewIds ?? []).some(
+    (neighborId) => ["sector_xujing", "sector_hongqiao"].includes(neighborId),
+  )) {
+    error(`${definition.id}: 嘉定批次不得虚构与徐泾或虹桥商务区的直接共享边`);
+  }
+}
+for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === forbiddenName,
+  )) {
+    error(`嘉定直接代理批次不得在独立范围研究完成前自动注册 ${forbiddenName}`);
+  }
+}
+
 const expectedHongkouYangpuSevenRelations = new Map([
   ["sector_sichuanbeilu", "13462869"],
   ["sector_quyang", "13466001"],

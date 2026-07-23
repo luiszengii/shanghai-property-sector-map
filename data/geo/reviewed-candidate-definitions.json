@@ -13,7 +13,8 @@
     "data/geo/reviewed-candidate-batches/changning-gubei-hongqiao-mutually-exclusive-2026-07.json",
     "data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json",
     "data/geo/reviewed-candidate-batches/putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07.json",
-    "data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json"
+    "data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json",
+    "data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {

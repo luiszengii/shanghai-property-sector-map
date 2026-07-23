@@ -600,6 +600,84 @@ test("the Baoshan direct batch exposes eight editable low-confidence backbones w
   }
 });
 
+test("the Jiading current-admin batch exposes eight editable proxies while preserving three complex market identities", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry: { type: "Polygon"; coordinates: number[][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+
+  assert.equal(records.length, 8);
+  assert.equal(templates.length, 8);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate" && template.ring.length >= 3
+  )));
+  assert.ok(records.every((record: {
+    reviewStatus: string;
+    marketAdminAlignmentUnverified: boolean;
+    adminAreaVersionMismatch: boolean;
+    geometry: { confidence: string; publicationPolicy: string };
+    riskFlags: string[];
+  }) => (
+    record.reviewStatus === "draft-low"
+      && record.marketAdminAlignmentUnverified === true
+      && record.adminAreaVersionMismatch === true
+      && record.geometry.confidence === "low"
+      && record.geometry.publicationPolicy === "internal_review"
+      && record.riskFlags.includes("market_boundary_not_official")
+  )));
+  const juyuan = records.find(
+    (record: { id: string }) => record.id === "sector_juyuanxinqu",
+  );
+  assert.equal(juyuan?.adminProxyName, "菊园街道");
+  assert.ok(juyuan?.aliases.includes("菊园街道"));
+  assert.ok(juyuan?.riskFlags.includes("admin_name_version_mismatch"));
+  assert.deepEqual(
+    records.find((record: { id: string }) => record.id === "sector_malu")
+      ?.linkedTopologySectorIds,
+    ["sector_nanxiang", "sector_xuhang", "sector_anting", "sector_juyuanxinqu"],
+  );
+  for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
+    assert.ok(!registryData.sectors.some(
+      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
+    ));
+  }
+});
+
 test("the Hongkou Yangpu direct batch exposes seven editable low-confidence backbones without inventing adjacent markets", () => {
   const batch = JSON.parse(readFileSync(
     new URL(
