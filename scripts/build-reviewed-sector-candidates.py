@@ -42,6 +42,22 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_definitions(path: Path) -> dict[str, Any]:
+    definitions = read_json(path)
+    definitions.setdefault("topologyGroups", [])
+    definitions.setdefault("sectors", [])
+    definitions.setdefault("subscopes", [])
+    for batch_file in definitions.get("batchFiles", []):
+        batch_path = (REPO_ROOT / batch_file).resolve()
+        if not batch_path.is_relative_to(REPO_ROOT) or not batch_path.is_file():
+            raise ValueError(f"候选批次文件无效：{batch_file}")
+        batch = read_json(batch_path)
+        definitions["topologyGroups"].extend(batch.get("topologyGroups", []))
+        definitions["sectors"].extend(batch.get("sectors", []))
+        definitions["subscopes"].extend(batch.get("subscopes", []))
+    return definitions
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -427,12 +443,43 @@ def build_market_admin_candidate_with_shared_topology(
     gpkg: Path,
     definition: dict[str, Any],
     working_crs: str,
+    output_crs: str,
+    sector_geometry_by_id: dict[str, Any],
 ):
     geometry, area, osm_refs = build_osm_admin_candidate(
         gpkg,
         definition,
         working_crs,
     )
+    subtract_ids = definition.get("subtractSectorIds", [])
+    missing_ids = [
+        sector_id
+        for sector_id in subtract_ids
+        if sector_id not in sector_geometry_by_id
+    ]
+    if missing_ids:
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到需要扣除的既有市场候选："
+            f"{', '.join(missing_ids)}"
+        )
+    if subtract_ids:
+        projected_geometry = project_geometry(geometry, output_crs, working_crs)
+        projected_protected = unary_union([
+            project_geometry(
+                sector_geometry_by_id[sector_id],
+                output_crs,
+                working_crs,
+            )
+            for sector_id in subtract_ids
+        ])
+        projected_geometry = normalize_polygonal(
+            projected_geometry.difference(projected_protected)
+        )
+        geometry = normalize_polygonal(
+            project_geometry(projected_geometry, working_crs, output_crs)
+        )
+        area = float(projected_geometry.area)
+        osm_refs["subtractedSectorIds"] = subtract_ids
     osm_refs["sharedEdgeSectorIds"] = definition["sharedEdgeSectorIds"]
     osm_refs["sharedEdgeSnapDistanceMeters"] = float(
         definition["sharedEdgeSnapDistanceMeters"]
@@ -562,8 +609,10 @@ def finalize_topology_group(
     source_projected_by_id = {}
     occupied = None
     snap_distance = float(group.get("snapDistanceMeters", 30))
-    preserve_all_parts_sector_ids = set(
-        group.get("preserveAllPartsSectorIds", [])
+    preserve_all_parts_sector_ids = (
+        set(sector_ids)
+        if group.get("preserveAllPrioritySectorParts")
+        else set(group.get("preserveAllPartsSectorIds", []))
     )
     for sector_id in sector_ids:
         projected = project_geometry(
@@ -781,17 +830,72 @@ def insert_ring_vertices(
 def insert_polygon_boundary_vertices(
     geometry,
     topology_vertices: list[tuple[float, float]],
+    tolerance: float = 1e-6,
 ):
     rebuilt = []
     for part in polygons(geometry):
-        shell = insert_ring_vertices(part.exterior.coords, topology_vertices)
+        shell = insert_ring_vertices(
+            part.exterior.coords,
+            topology_vertices,
+            tolerance,
+        )
         holes = [
-            insert_ring_vertices(interior.coords, topology_vertices)
+            insert_ring_vertices(
+                interior.coords,
+                topology_vertices,
+                tolerance,
+            )
             for interior in part.interiors
         ]
         rebuilt.append(orient(Polygon(shell, holes), sign=1))
     return normalize_polygonal(
         rebuilt[0] if len(rebuilt) == 1 else MultiPolygon(rebuilt)
+    )
+
+
+def canonicalize_topology_group_output_vertices(
+    feature_by_id: dict[str, dict[str, Any]],
+    geometry_by_id: dict[str, Any],
+    group: dict[str, Any],
+):
+    """Give both sides of every output-CRS shared edge the same split vertices."""
+    sector_ids = group["prioritySectorIds"]
+    linework = unary_union([
+        geometry_by_id[sector_id].boundary
+        for sector_id in sector_ids
+    ])
+    topology_vertices = collect_line_vertices(linework)
+    finalized = {}
+    for sector_id in sector_ids:
+        geometry = insert_polygon_boundary_vertices(
+            geometry_by_id[sector_id],
+            topology_vertices,
+            tolerance=1e-11,
+        )
+        feature = feature_by_id[sector_id]
+        representative = geometry.representative_point()
+        feature["geometry"] = mapping(geometry)
+        feature["properties"]["labelPoint"] = [
+            round(representative.x, 7),
+            round(representative.y, 7),
+        ]
+        finalized[sector_id] = geometry
+    return finalized
+
+
+def inherit_protected_output_boundary(
+    candidate,
+    protected,
+    snap_distance_meters: float,
+):
+    """Close sub-metre round-trip gaps, then cut with the protected WGS84 edge."""
+    snap_distance_degrees = snap_distance_meters / 111_320
+    protected_edge_zone = protected.boundary.buffer(snap_distance_degrees)
+    bridge = candidate.buffer(snap_distance_degrees).intersection(
+        protected_edge_zone
+    )
+    return normalize_polygonal(
+        candidate.union(bridge).difference(protected)
     )
 
 
@@ -1054,7 +1158,7 @@ def main() -> None:
     parser.add_argument("--subscopes-output", type=Path, default=DEFAULT_SUBSCOPES_OUTPUT)
     args = parser.parse_args()
 
-    definitions = read_json(args.definitions)
+    definitions = load_definitions(args.definitions)
     source_lock_path = REPO_ROOT / definitions["sourceLock"]
     source_lock = read_json(source_lock_path)
     actual_hash = sha256(args.gpkg)
@@ -1118,6 +1222,8 @@ def main() -> None:
                 args.gpkg,
                 definition,
                 definitions["workingCrs"],
+                definitions["outputCrs"],
+                topology_geometry_by_id,
             )
         elif definition["method"] == "selected_workpack_candidate_with_shared_topology":
             geometry, area, osm_refs = build_selected_workpack_candidate(
@@ -1171,6 +1277,61 @@ def main() -> None:
         entry["id"]: entry
         for entry in manifest_sectors
     }
+    for definition in definitions["sectors"]:
+        subtract_ids = definition.get("subtractSectorIds", [])
+        if (
+            definition["method"]
+            != "market_admin_candidate_with_shared_topology"
+            or not subtract_ids
+        ):
+            continue
+        protected = unary_union([
+            topology_geometry_by_id[sector_id]
+            for sector_id in subtract_ids
+        ])
+        corrected = inherit_protected_output_boundary(
+            topology_geometry_by_id[definition["id"]],
+            protected,
+            float(definition["sharedEdgeSnapDistanceMeters"]),
+        )
+        projected = project_geometry(
+            corrected,
+            definitions["outputCrs"],
+            definitions["workingCrs"],
+        )
+        inside_point = Point(*definition["insidePoint"])
+        if not corrected.contains(inside_point):
+            raise ValueError(
+                f"{definition['canonicalName']} 拓扑总装后二次扣除不包含裁定点"
+            )
+        feature = feature_by_id[definition["id"]]
+        representative = corrected.representative_point()
+        feature["geometry"] = mapping(corrected)
+        feature["properties"]["areaSquareKilometers"] = round(
+            projected.area / 1_000_000,
+            4,
+        )
+        feature["properties"]["labelPoint"] = [
+            round(representative.x, 7),
+            round(representative.y, 7),
+        ]
+        topology_geometry_by_id[definition["id"]] = corrected
+        sector_geometry_by_id[definition["id"]] = corrected
+        manifest_by_id[definition["id"]]["osmRefs"][
+            "protectedSubtractionStage"
+        ] = "post-topology-output-crs"
+
+    for group in definitions.get("topologyGroups", []):
+        if not group.get("canonicalizeAfterProtectedSubtraction"):
+            continue
+        finalized_group = canonicalize_topology_group_output_vertices(
+            feature_by_id,
+            topology_geometry_by_id,
+            group,
+        )
+        topology_geometry_by_id.update(finalized_group)
+        sector_geometry_by_id.update(finalized_group)
+
     for definition in definitions["sectors"]:
         recompute_final_anchor_coverage(
             args.gpkg,

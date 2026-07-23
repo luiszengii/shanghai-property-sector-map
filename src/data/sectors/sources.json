@@ -655,6 +655,50 @@
       "note": "只核实现行街镇名称与隶属关系，不提供楼市板块定义或可再分发边界。"
     },
     {
+      "id": "official-qingpu-master-plan-2035",
+      "title": "上海市青浦区总体规划暨土地利用总体规划（2017-2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/kjztgh/20230925/f2ff52b219ee4abdbbd2b7b12f1eb8cd.html",
+      "sourceType": "official_district_master_plan",
+      "publishedAt": "2019-07-24",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于青浦街镇名称、空间结构、邻接与面积量级人工复核；不从规划 PDF 提取或再分发坐标。"
+    },
+    {
+      "id": "official-songjiang-master-plan-2035",
+      "title": "上海市松江区总体规划暨土地利用总体规划（2017-2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/kjztgh/20230925/cf5c064e08774044b4e94fb006c2050d.html",
+      "sourceType": "official_district_master_plan",
+      "publishedAt": "2019-05-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于松江街镇名称、空间结构、邻接与面积量级人工复核；不从规划 PDF 提取或再分发坐标。"
+    },
+    {
+      "id": "official-jinshan-master-plan-2035",
+      "title": "上海市金山区总体规划暨土地利用总体规划（2017-2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/kjztgh/20230925/9bd7f124742b401ea047b7045fa7c67f.html",
+      "sourceType": "official_district_master_plan",
+      "publishedAt": "2019-07-24",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于金山街镇名称、空间结构、邻接与面积量级人工复核；金山新城跨街镇语义只作风险提示，不从规划 PDF 提取或再分发坐标。"
+    },
+    {
+      "id": "official-tinglin-town-industrial-zone-plan-2035",
+      "title": "金山区亭林镇（含金山工业区）国土空间总体规划（2021-2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230425/0071dab9f27946f0a354a5f4c623315e.html",
+      "sourceType": "official_town_and_industrial_zone_plan",
+      "publishedAt": "2023-04-25",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方文本明确规划总范围 121.43 平方公里，其中亭林镇 78.21 平方公里、金山工业区 43.22 平方公里；用于揭示当前 OSM/天地图合并行政展示代理不能冒充已排除工业区的市场亭林，不从 PDF 提取或再分发坐标。"
+    },
+    {
       "id": "market-identity-huaner-shanghai-sectors-2022",
       "title": "一句话讲清上海各个板块",
       "publisher": "环二先生",

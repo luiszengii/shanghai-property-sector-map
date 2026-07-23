@@ -1,4 +1,10 @@
-import type { DraftPosition, ExistingSectorDraftTemplate } from "./sector-editor-drafts";
+import {
+  fingerprintDraftParts,
+  fingerprintDraftRing,
+  type DraftPosition,
+  type ExistingSectorDraftTemplate,
+// @ts-expect-error Node 22 executes the catalog tests directly and requires the source extension.
+} from "./sector-editor-drafts.ts";
 
 interface EditorSectorRecord {
   id: string;
@@ -30,28 +36,27 @@ export function buildSectorEditorTemplates(
 ): ExistingSectorDraftTemplate[] {
   return registry.map((record) => {
     const activeGeometry = resolveActiveGeometry(record.id);
-    const firstRing = activeGeometry?.geometry.type === "Polygon"
-      ? activeGeometry.geometry.coordinates[0]
-      : activeGeometry?.geometry.coordinates[0]?.[0];
-    const ring = activeGeometry && firstRing?.length
-      ? normalizeRing(firstRing.map(([longitude, latitude]) => (
-        convertPosition([longitude, latitude], activeGeometry.coordinateSystem)
-      )))
+    const rings = activeGeometry
+      ? geometryExteriorRings(activeGeometry.geometry).map((sourceRing) => (
+        normalizeRing(sourceRing.map(([longitude, latitude]) => (
+          convertPosition([longitude, latitude], activeGeometry.coordinateSystem)
+        )))
+      )).filter((sourceRing) => sourceRing.length >= 3)
       : [];
+    const [ring = [], ...additionalRings] = rings;
     const geometryStatus = !activeGeometry
       ? "missing"
       : activeGeometry.kind === "market-demo" ? "demo" : "candidate";
     const legacyGeometry = resolveLegacyGeometry?.(record.id);
-    const legacyFirstRing = legacyGeometry?.geometry.type === "Polygon"
-      ? legacyGeometry.geometry.coordinates[0]
-      : legacyGeometry?.geometry.coordinates[0]?.[0];
-    const legacyRing = legacyGeometry && legacyFirstRing?.length
-      ? normalizeRing(legacyFirstRing.map(([longitude, latitude]) => (
-        convertPosition([longitude, latitude], legacyGeometry.coordinateSystem)
-      )))
+    const legacyRings = legacyGeometry
+      ? geometryExteriorRings(legacyGeometry.geometry).map((sourceRing) => (
+        normalizeRing(sourceRing.map(([longitude, latitude]) => (
+          convertPosition([longitude, latitude], legacyGeometry.coordinateSystem)
+        )))
+      )).filter((sourceRing) => sourceRing.length >= 3)
       : [];
-    const geometryFingerprint = fingerprintDraftRing(ring);
-    const legacyGeometryFingerprint = fingerprintDraftRing(legacyRing);
+    const geometryFingerprint = fingerprintDraftParts(rings);
+    const legacyGeometryFingerprint = fingerprintDraftParts(legacyRings);
 
     return {
       id: record.id,
@@ -67,12 +72,20 @@ export function buildSectorEditorTemplates(
           : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
       geometryStatus,
       geometryFingerprint,
-      previousGeometryFingerprints: legacyRing.length && legacyGeometryFingerprint !== geometryFingerprint
+      previousGeometryFingerprints: legacyRings.length
+        && legacyGeometryFingerprint !== geometryFingerprint
         ? [legacyGeometryFingerprint]
         : [],
       ring,
+      additionalRings,
     };
   });
+}
+
+function geometryExteriorRings(geometry: EditorActiveGeometry["geometry"]) {
+  return geometry.type === "Polygon"
+    ? geometry.coordinates[0] ? [geometry.coordinates[0]] : []
+    : geometry.coordinates.flatMap((polygon) => polygon[0] ? [polygon[0]] : []);
 }
 
 export function selectPreferredEditorGeometry<Candidate, Reference, Demo>({
@@ -132,15 +145,4 @@ function normalizeRing(ring: DraftPosition[]) {
     if (first[0] === last[0] && first[1] === last[1]) return ring.slice(0, -1);
   }
   return ring;
-}
-
-function fingerprintDraftRing(ring: DraftPosition[]) {
-  let hash = 2166136261;
-  const normalized = normalizeRing(ring);
-  const serialized = JSON.stringify(normalized);
-  for (let index = 0; index < serialized.length; index += 1) {
-    hash ^= serialized.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return `ring-${normalized.length}-${(hash >>> 0).toString(16)}`;
 }

@@ -3,6 +3,9 @@
   "workingCrs": "EPSG:32651",
   "outputCrs": "OGC:CRS84",
   "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "batchFiles": [
+    "data/geo/reviewed-candidate-batches/qingpu-songjiang-jinshan-thirty-2026-07.json"
+  ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {
       "expectedWorkpackId": "beicai-yuqiao",
@@ -352,7 +355,7 @@
         "scenarioId": "selected_market_core_corridor_2026_07"
       },
       "insidePoint": [121.27, 31.176],
-      "sharedEdgeSectorIds": ["sector_hongqiao"],
+      "sharedEdgeSectorIds": ["sector_hongqiao", "sector_huaxin", "sector_zhaoxiang"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [33.5, 35.5],
       "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-xujing-profile-2025", "seller-anjuke-xujing-list-2026", "seller-fang-panlong-tiandi-xujing", "seller-fang-panlong-east-25-07"],
@@ -414,7 +417,7 @@
         "publishableAsReviewedMarketSector": false
       },
       "insidePoint": [121.3682958, 31.1171342],
-      "sharedEdgeSectorIds": ["sector_gumei", "sector_chunshen"],
+      "sharedEdgeSectorIds": ["sector_gumei", "sector_chunshen", "sector_xinqiao"],
       "snapDependencySectorIds": ["sector_gumei"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [16.8, 17.4],

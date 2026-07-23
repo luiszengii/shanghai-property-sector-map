@@ -8,6 +8,27 @@ function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), "utf8"));
 }
 
+function readCandidateDefinitions(relativePath) {
+  const definitions = readJson(relativePath);
+  const merged = {
+    ...definitions,
+    topologyGroups: [...(definitions.topologyGroups ?? [])],
+    sectors: [...(definitions.sectors ?? [])],
+    subscopes: [...(definitions.subscopes ?? [])],
+  };
+  for (const batchFile of definitions.batchFiles ?? []) {
+    const batchPath = path.resolve(repoRoot, batchFile);
+    if (!batchPath.startsWith(`${repoRoot}${path.sep}`) || !fs.existsSync(batchPath)) {
+      throw new Error(`候选批次文件无效：${batchFile}`);
+    }
+    const batch = JSON.parse(fs.readFileSync(batchPath, "utf8"));
+    merged.topologyGroups.push(...(batch.topologyGroups ?? []));
+    merged.sectors.push(...(batch.sectors ?? []));
+    merged.subscopes.push(...(batch.subscopes ?? []));
+  }
+  return merged;
+}
+
 const bundledGeometry = readJson("src/data/sectors.json");
 const sourceGeometry = readJson("src/data/sectors.geojson");
 const registryData = readJson("src/data/sectors/registry.json");
@@ -19,7 +40,9 @@ const subscopeData = readJson("src/data/sectors/subscopes.wgs84.json");
 const adminReferenceData = readJson("src/data/sectors/admin-references.wgs84.json");
 const adminReferenceManifest = readJson("src/data/sectors/admin-references.manifest.json");
 const adminReferenceDefinitionsData = readJson("data/geo/admin-reference-definitions.json");
-const candidateDefinitionsData = readJson("data/geo/reviewed-candidate-definitions.json");
+const candidateDefinitionsData = readCandidateDefinitions(
+  "data/geo/reviewed-candidate-definitions.json",
+);
 const referenceChecksData = readJson("src/data/sectors/reference-checks.json");
 const osmSourceLock = readJson("data/geo/sources/osm-shanghai-260721.json");
 
@@ -237,7 +260,16 @@ function geometryAreaSquareKilometers(geometry) {
   return areaSquareMeters / 1_000_000;
 }
 
-function segmentSharedLengthMeters(firstStart, firstEnd, secondStart, secondEnd) {
+function segmentSharedLengthMeters(
+  firstStart,
+  firstEnd,
+  secondStart,
+  secondEnd,
+  {
+    directionTolerance = 1e-8,
+    distanceToleranceMeters = 0.05,
+  } = {},
+) {
   const firstVector = [
     firstEnd[0] - firstStart[0],
     firstEnd[1] - firstStart[1],
@@ -253,13 +285,13 @@ function segmentSharedLengthMeters(firstStart, firstEnd, secondStart, secondEnd)
   const directionCross = Math.abs(
     firstVector[0] * secondVector[1] - firstVector[1] * secondVector[0],
   );
-  if (directionCross / (firstLength * secondLength) > 1e-8) return 0;
+  if (directionCross / (firstLength * secondLength) > directionTolerance) return 0;
   const distanceToFirstLine = (point) => Math.abs(
     firstVector[0] * (point[1] - firstStart[1])
     - firstVector[1] * (point[0] - firstStart[0]),
   ) / firstLength;
-  if (distanceToFirstLine(secondStart) > 0.05
-    || distanceToFirstLine(secondEnd) > 0.05) return 0;
+  if (distanceToFirstLine(secondStart) > distanceToleranceMeters
+    || distanceToFirstLine(secondEnd) > distanceToleranceMeters) return 0;
 
   const project = (point) => (
     (point[0] - firstStart[0]) * firstVector[0]
@@ -272,7 +304,7 @@ function segmentSharedLengthMeters(firstStart, firstEnd, secondStart, secondEnd)
   return Math.max(0, overlapEnd - overlapStart);
 }
 
-function sharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
+function sharedBoundaryLengthMeters(firstGeometry, secondGeometry, options = {}) {
   const firstRings = polygonGroupsForGeometry(firstGeometry)
     .map((polygon) => polygon[0]?.map(projectWgs84ToComparisonPlane))
     .filter(Boolean);
@@ -289,10 +321,43 @@ function sharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
             firstRing[first + 1],
             secondRing[second],
             secondRing[second + 1],
+            options,
           );
         }
       }
     }
+  }
+  return total;
+}
+
+function exactSharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
+  const segmentMap = (geometry) => {
+    const segments = new Map();
+    for (const polygon of polygonGroupsForGeometry(geometry)) {
+      const ring = polygon[0] ?? [];
+      for (let index = 0; index < ring.length - 1; index += 1) {
+        const start = ring[index];
+        const end = ring[index + 1];
+        const startKey = JSON.stringify(start);
+        const endKey = JSON.stringify(end);
+        const key = startKey < endKey
+          ? `${startKey}/${endKey}`
+          : `${endKey}/${startKey}`;
+        const projectedStart = projectWgs84ToComparisonPlane(start);
+        const projectedEnd = projectWgs84ToComparisonPlane(end);
+        segments.set(key, Math.hypot(
+          projectedEnd[0] - projectedStart[0],
+          projectedEnd[1] - projectedStart[1],
+        ));
+      }
+    }
+    return segments;
+  };
+  const firstSegments = segmentMap(firstGeometry);
+  const secondSegments = segmentMap(secondGeometry);
+  let total = 0;
+  for (const [key, length] of firstSegments) {
+    if (secondSegments.has(key)) total += length;
   }
   return total;
 }
@@ -1207,6 +1272,155 @@ for (const definition of pudongTownBackboneDefinitions) {
     }
   }
 }
+
+const expectedOuterThirtyRelations = new Map([
+  ["sector_huaxin", ["12979864"]],
+  ["sector_chonggu", ["12979862"]],
+  ["sector_baihe", ["12979863"]],
+  ["sector_zhaoxiang", ["12979867"]],
+  ["sector_xianghuaqiao", ["12979865"]],
+  ["sector_xiayang", ["12979861"]],
+  ["sector_yingpu", ["12979868"]],
+  ["sector_zhujiajiao", ["12979869"]],
+  ["sector_jinze", ["12979871"]],
+  ["sector_liantang", ["12979870"]],
+  ["sector_sijing", ["17016138"]],
+  ["sector_dongjing", ["17191451"]],
+  ["sector_xinqiao", ["17191452"]],
+  ["sector_sheshan", ["17685018"]],
+  ["sector_xiaokunshan", ["17685019"]],
+  ["sector_chedun", ["17191450"]],
+  ["sector_xinbang", ["17715762"]],
+  ["sector_shihudang", ["16490107"]],
+  ["sector_maogang", ["17885626"]],
+  ["sector_yexie", ["17885642"]],
+  ["sector_jinshanxincheng", ["18058389"]],
+  ["sector_jinshanwei", ["18058384"]],
+  ["sector_shanyang", ["18058383"]],
+  ["sector_zhujing", ["18058385"]],
+  ["sector_fengjing", ["18058390"]],
+  ["sector_tinglin", ["16230588"]],
+  ["sector_zhangyan", ["18058388"]],
+  ["sector_langxia", ["18052560"]],
+  ["sector_luxiang", ["18058386"]],
+  ["sector_caojing", ["18058387"]],
+]);
+const outerThirtyDefinitions = candidateDefinitions.filter(
+  (definition) => expectedOuterThirtyRelations.has(definition.id),
+);
+if (normalizedStringSet(outerThirtyDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedOuterThirtyRelations.keys())) {
+  error("青浦—松江—金山连续批次必须恰好包含研究裁定的 30 个新增板块");
+}
+const outerThirtyIds = new Set(expectedOuterThirtyRelations.keys());
+const outerThirtySharedPairs = new Set(outerThirtyDefinitions.flatMap(
+  (definition) => (definition.sharedEdgeSectorIds ?? [])
+    .filter((neighborId) => outerThirtyIds.has(neighborId))
+    .map((neighborId) => [definition.id, neighborId].sort().join("/")),
+));
+if (outerThirtySharedPairs.size !== 64) {
+  error(`青浦—松江—金山批次应有 64 组内部共享边，实际 ${outerThirtySharedPairs.size} 组`);
+}
+const outerThirtyAdjacency = new Map(
+  [...outerThirtyIds].map((sectorId) => [sectorId, new Set()]),
+);
+for (const pair of outerThirtySharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  outerThirtyAdjacency.get(firstId)?.add(secondId);
+  outerThirtyAdjacency.get(secondId)?.add(firstId);
+}
+const outerThirtyVisited = new Set();
+const outerThirtyQueue = [[...outerThirtyIds][0]];
+while (outerThirtyQueue.length > 0) {
+  const sectorId = outerThirtyQueue.shift();
+  if (outerThirtyVisited.has(sectorId)) continue;
+  outerThirtyVisited.add(sectorId);
+  outerThirtyQueue.push(...(outerThirtyAdjacency.get(sectorId) ?? []));
+}
+if (outerThirtyVisited.size !== 30) {
+  error(`青浦—松江—金山批次共享边图必须全连通，实际连通 ${outerThirtyVisited.size}/30`);
+}
+for (const definition of outerThirtyDefinitions) {
+  const candidate = candidateById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const expectedRelations = expectedOuterThirtyRelations.get(definition.id);
+  const declaredRelations = [String(definition.osmAdminRelationId)];
+  if (definition.method !== "market_admin_candidate_with_shared_topology") {
+    error(`${definition.id}: 青浦—松江—金山批次必须使用行政关系市场候选构建方法`);
+  }
+  if (normalizedStringSet(declaredRelations) !== normalizedStringSet(expectedRelations)
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet(expectedRelations)) {
+    error(`${definition.id}: definition / manifest 没有锁定研究确认的 OSM relation`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low") {
+    error(`${definition.id}: 行政骨架市场候选必须保持 low / draft-low`);
+  }
+  if (!["青浦区", "松江区", "金山区"].includes(definition.districtName)
+    || normalizedStringSet(registryRecord?.districtNames ?? [])
+      !== normalizedStringSet([definition.districtName])) {
+    error(`${definition.id}: definition / registry 行政区必须一致且显式声明`);
+  }
+  if (!candidate) {
+    error(`${definition.id}: 青浦—松江—金山批次缺少候选面`);
+    continue;
+  }
+  for (const neighborId of candidate.properties?.sharedEdgeSectorIds ?? []) {
+    if (!outerThirtyIds.has(neighborId)) continue;
+    const neighbor = candidateById.get(neighborId);
+    const sharedLength = neighbor
+      ? sharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry)
+      : 0;
+    const exactSharedLength = neighbor
+      ? exactSharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry)
+      : 0;
+    if (sharedLength < 100) {
+      error(`${definition.id} / ${neighborId}: 青浦—松江—金山批次声明共享边不足 100 米`);
+    }
+    if (exactSharedLength < 100
+      || Math.abs(exactSharedLength - sharedLength) > 0.01) {
+      error(`${definition.id} / ${neighborId}: 共享边两侧必须使用完全相同的坐标序列`);
+    }
+  }
+}
+for (const [sectorId, protectedSectorId, minimumSharedLengthMeters] of [
+  ["sector_huaxin", "sector_xujing", 4_000],
+  ["sector_zhaoxiang", "sector_xujing", 2_500],
+  ["sector_xinqiao", "sector_xinzhuang", 500],
+]) {
+  const definition = candidateDefinitionById.get(sectorId);
+  const candidate = candidateById.get(sectorId);
+  const protectedCandidate = candidateById.get(protectedSectorId);
+  const manifest = manifestById.get(sectorId);
+  const approximateSharedLength = candidate && protectedCandidate
+    ? sharedBoundaryLengthMeters(candidate.geometry, protectedCandidate.geometry)
+    : 0;
+  const coordinateEquivalentSharedLength = candidate && protectedCandidate
+    ? sharedBoundaryLengthMeters(
+      candidate.geometry,
+      protectedCandidate.geometry,
+      {
+        directionTolerance: 1e-8,
+        distanceToleranceMeters: 0.000001,
+      },
+    )
+    : 0;
+  if (!(definition?.subtractSectorIds ?? []).includes(protectedSectorId)
+    || !(manifest?.osmRefs?.subtractedSectorIds ?? []).includes(protectedSectorId)) {
+    error(`${sectorId}: 必须显式扣除既有市场候选 ${protectedSectorId}`);
+  }
+  if (approximateSharedLength < minimumSharedLengthMeters) {
+    error(`${sectorId} / ${protectedSectorId}: 扣除后共享边不足验收长度`);
+  }
+  if (coordinateEquivalentSharedLength < minimumSharedLengthMeters) {
+    error(`${sectorId} / ${protectedSectorId}: 保护边必须在 1 微米内保持坐标等价`);
+  }
+}
+
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
 const yangsiPrimaryCandidate = candidateById.get("sector_yangsi");
 if (!qiantanPrimaryCandidate || qiantanPrimaryCandidate.properties?.name !== "前滩") {

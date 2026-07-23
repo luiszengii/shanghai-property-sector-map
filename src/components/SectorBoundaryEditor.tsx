@@ -27,9 +27,10 @@ import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
   createSectorDraft,
+  draftParts,
   formatSectorDraftFilename,
   isCompleteSectorDraft,
-  normalizeAmapPolygonRing,
+  normalizeAmapPolygonParts,
   parseSectorDraftFeatureCollection,
   parseSectorEditorState,
   SECTOR_EDITOR_STORAGE_KEY,
@@ -87,8 +88,16 @@ function createDraftId() {
   return `sector-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function polygonToRing(polygon: AMap.Polygon): DraftPosition[] {
-  return normalizeAmapPolygonRing(polygon.getPath());
+function polygonToParts(polygon: AMap.Polygon): DraftPosition[][] {
+  return normalizeAmapPolygonParts(polygon.getPath());
+}
+
+function polygonPath(parts: DraftPosition[][]) {
+  return parts.length > 1 ? parts.map((ring) => [ring]) : (parts[0] ?? []);
+}
+
+function draftPointCount(draft: Pick<SectorBoundaryDraft, "ring" | "additionalRings">) {
+  return draftParts(draft).reduce((total, ring) => total + ring.length, 0);
 }
 
 function formatArea(area: number) {
@@ -176,7 +185,7 @@ export function SectorBoundaryEditor() {
   const inactiveGeometrySignature = useMemo(
     () => drafts
       .filter((draft) => draft.id !== activeId)
-      .map((draft) => `${draft.id}:${JSON.stringify(draft.ring)}`)
+      .map((draft) => `${draft.id}:${JSON.stringify(draftParts(draft))}`)
       .join("|"),
     [activeId, drafts],
   );
@@ -194,9 +203,9 @@ export function SectorBoundaryEditor() {
   const syncPolygonToDraft = useCallback((polygon: AMap.Polygon) => {
     const id = activeIdRef.current;
     if (!id) return;
-    const ring = polygonToRing(polygon);
-    if (ring.length < 3) return;
-    updateDraft(id, { ring });
+    const [ring, ...additionalRings] = polygonToParts(polygon);
+    if (!ring || ring.length < 3) return;
+    updateDraft(id, { ring, additionalRings });
     setArea(polygon.getArea());
   }, [updateDraft]);
 
@@ -352,11 +361,11 @@ export function SectorBoundaryEditor() {
     queueMicrotask(() => setArea(0));
 
     const draft = draftsRef.current.find((item) => item.id === activeIdRef.current);
-    if (!draft || draft.ring.length < 3) return;
+    if (!draft || draftParts(draft).length === 0) return;
 
     const polygon = new api.Polygon();
     polygon.setOptions({
-      path: draft.ring,
+      path: polygonPath(draftParts(draft)),
       strokeColor: "#e46f32",
       strokeWeight: 3,
       strokeOpacity: 1,
@@ -409,11 +418,11 @@ export function SectorBoundaryEditor() {
     }
 
     const editableReferences = draftsRef.current
-      .filter((draft) => draft.id !== activeId && draft.ring.length >= 3)
+      .filter((draft) => draft.id !== activeId && draftParts(draft).length > 0)
       .map((draft) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
-          path: draft.ring,
+          path: polygonPath(draftParts(draft)),
           strokeColor: "#0f766e",
           strokeWeight: 1.4,
           strokeOpacity: 0.74,
@@ -439,7 +448,10 @@ export function SectorBoundaryEditor() {
       .map((template) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
-          path: template.ring,
+          path: polygonPath([
+            template.ring,
+            ...(template.additionalRings ?? []),
+          ]),
           strokeColor: "#64748b",
           strokeWeight: 1.4,
           strokeOpacity: 0.72,
@@ -501,7 +513,7 @@ export function SectorBoundaryEditor() {
     setNotice({ tone: "neutral", message: "在地图上逐点点击，双击最后一个点完成；随后可拖动圆点精修。" });
 
     const handleDraw = (event: MouseToolDrawEvent) => {
-      const ring = polygonToRing(event.obj);
+      const [ring] = polygonToParts(event.obj);
       mouseTool.close(false);
       mouseTool.off("draw", handleDraw);
       map.remove(event.obj);
@@ -512,7 +524,7 @@ export function SectorBoundaryEditor() {
       }
       const id = activeIdRef.current;
       if (!id) return;
-      updateDraft(id, { ring });
+      updateDraft(id, { ring, additionalRings: [] });
       setGeometryRevision((value) => value + 1);
       setNotice({ tone: "success", message: "边界已自动保存。拖动橙色圆点可继续精修。" });
     };
@@ -697,9 +709,9 @@ export function SectorBoundaryEditor() {
                         ? outdatedSourceIds.has(template?.id ?? "")
                           ? " · 源边界有更新"
                           : template?.geometryStatus === "missing"
-                          ? ` · ${draft?.ring.length ? `${draft.ring.length} 个边界点` : "待绘制"}`
+                          ? ` · ${draft && draftPointCount(draft) ? `${draftPointCount(draft)} 个边界点` : "待绘制"}`
                           : ` · ${draft ? "编辑副本" : "点击编辑"}`
-                        : isComplete ? ` · ${draft?.ring.length ?? 0} 个边界点` : " · 待完善"}
+                        : isComplete && draft ? ` · ${draftPointCount(draft)} 个边界点` : " · 待完善"}
                     </small>
                   </div>
                   <i className={isExistingSector && !draft
@@ -720,7 +732,11 @@ export function SectorBoundaryEditor() {
               <div className={styles.formHeading}>
                 <div>
                   <span>{activeDraft.sourceSectorId ? "已有板块副本" : "自建板块"}</span>
-                  <strong>{activeDraft.ring.length} 个点 · {formatArea(area)}</strong>
+                  <strong>
+                    {draftPointCount(activeDraft)} 个点
+                    {draftParts(activeDraft).length > 1 ? ` · ${draftParts(activeDraft).length} 个分片` : ""}
+                    {" · "}{formatArea(area)}
+                  </strong>
                 </div>
                 <button
                   type="button"
@@ -794,14 +810,14 @@ export function SectorBoundaryEditor() {
                   ) : (
                     <button type="button" className={styles.drawButton} onClick={startDrawing}>
                       <PencilLine size={17} />
-                      {activeDraft.ring.length >= 3 ? "重画边界" : "开始画边界"}
+                      {draftParts(activeDraft).length ? "重画边界" : "开始画边界"}
                     </button>
                   )}
                   <button
                     type="button"
                     className={styles.iconButton}
                     onClick={focusActiveDraft}
-                    disabled={activeDraft.ring.length < 3}
+                    disabled={draftParts(activeDraft).length === 0}
                     aria-label="定位当前板块"
                     title="定位当前板块"
                   >

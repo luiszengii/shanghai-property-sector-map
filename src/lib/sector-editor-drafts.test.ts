@@ -4,9 +4,11 @@ import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
   createSectorDraft,
+  draftParts,
   fingerprintDraftRing,
   isCompleteSectorDraft,
   normalizeAmapPolygonRing,
+  normalizeAmapPolygonParts,
   parseSectorEditorState,
   parseSectorDraftFeatureCollection,
   serializeSectorEditorState,
@@ -58,6 +60,26 @@ test("an editor export can be imported without keeping the closing coordinate tw
   assert.deepEqual(imported[0].ring[0], [121.1, 31.1]);
 });
 
+test("multi-part drafts export and import without dropping detached polygons", () => {
+  const draft = {
+    ...createSectorDraft("sector-multipart", "2026-07-23T08:00:00.000Z"),
+    name: "多分片板块",
+    ring: [[121.1, 31.1], [121.2, 31.1], [121.2, 31.2]] as [number, number][],
+    additionalRings: [
+      [[121.3, 31.3], [121.4, 31.3], [121.4, 31.4]],
+      [[121.5, 31.5], [121.6, 31.5], [121.6, 31.6]],
+    ] as [number, number][][],
+  };
+
+  const collection = buildSectorDraftFeatureCollection([draft]);
+  assert.equal(collection.features[0].geometry.type, "MultiPolygon");
+  assert.equal(collection.features[0].geometry.coordinates.length, 3);
+
+  const [restored] = parseSectorDraftFeatureCollection(collection);
+  assert.equal(draftParts(restored).length, 3);
+  assert.deepEqual(draftParts(restored), draftParts(draft));
+});
+
 test("import rejects files without an explicit GCJ-02 coordinate system", () => {
   assert.throws(
     () => parseSectorDraftFeatureCollection({
@@ -88,6 +110,15 @@ test("AMap polygon paths work whether the outer ring is direct or nested", () =>
 
   assert.deepEqual(normalizeAmapPolygonRing(direct), direct);
   assert.deepEqual(normalizeAmapPolygonRing(nested), direct);
+});
+
+test("AMap multi-polygon paths preserve every exterior part", () => {
+  const parts = normalizeAmapPolygonParts([
+    [[[121.1, 31.1], [121.2, 31.1], [121.2, 31.2]]],
+    [[[121.3, 31.3], [121.4, 31.3], [121.4, 31.4]]],
+  ]);
+  assert.equal(parts.length, 2);
+  assert.deepEqual(parts[1][0], [121.3, 31.3]);
 });
 
 test("a drawn polygon still needs a real sector name before export", () => {

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   buildSectorEditorTemplates,
@@ -121,4 +122,79 @@ test("a reviewed candidate without a legacy demo becomes a main-map sector entry
   assert.equal(features[0].properties.name, "新候选");
   assert.equal(features[0].properties.isMock, false);
   assert.deepEqual(features[0].geometry, geometry);
+});
+
+test("the Qingpu Songjiang Jinshan batch exposes all 30 candidates to the editor", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL("../../data/geo/reviewed-candidate-batches/qingpu-songjiang-jinshan-thirty-2026-07.json", import.meta.url),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.equal(batchIds.length, 30);
+  assert.equal(batchIdSet.size, 30);
+  assert.equal(records.length, 30);
+  assert.ok(batchIds.every((id: string) => candidateById.has(id)));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+
+  assert.equal(templates.length, 30);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate" && template.ring.length >= 3
+  )));
+  for (const template of templates) {
+    const candidate = candidateById.get(template.id) as {
+      geometry:
+        | { type: "Polygon"; coordinates: number[][][] }
+        | { type: "MultiPolygon"; coordinates: number[][][][] };
+    };
+    const expectedPartCount = candidate.geometry.type === "MultiPolygon"
+      ? candidate.geometry.coordinates.length
+      : 1;
+    assert.equal(
+      1 + (template.additionalRings?.length ?? 0),
+      expectedPartCount,
+      `${template.id} 编辑器必须保留全部候选分片`,
+    );
+  }
+  assert.equal(
+    1 + (templates.find((template) => template.id === "sector_shanyang")?.additionalRings?.length ?? 0),
+    4,
+  );
+  assert.match(
+    templates.find((template) => template.id === "sector_jinshanxincheng")?.boundaryBasis ?? "",
+    /石化街道.*代理/,
+  );
 });

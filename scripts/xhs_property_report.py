@@ -53,6 +53,15 @@ KEYWORD_TO_SECTOR = {
     "上海松江新城买房优缺点": "松江新城",
 }
 
+# These map identities now have editable geometry, but no authorized XHS crawl
+# batch yet. Keeping the gap explicit prevents empty entries from being
+# mistaken for researched conclusions or fabricated representative sources.
+PENDING_MAP_SECTORS_WITHOUT_XHS_SAMPLE = {
+    "青浦区": ("华新", "重固", "白鹤", "赵巷", "香花桥", "夏阳", "盈浦", "朱家角", "金泽", "练塘"),
+    "松江区": ("泗泾", "洞泾", "新桥", "佘山", "小昆山", "车墩", "新浜", "石湖荡", "泖港", "叶榭"),
+    "金山区": ("金山新城", "金山卫", "山阳", "朱泾", "枫泾", "亭林", "张堰", "廊下", "吕巷", "漕泾"),
+}
+
 # These are deliberately phrased as summaries of recurring platform views, not
 # as property facts. Representative note IDs are resolved only to local output
 # links and are never used as proof of a claim.
@@ -302,6 +311,7 @@ def build_dataset() -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[st
         "query_returns": dict(sorted(query_returns.items())),
         "relevant_notes_by_sector": dict(sorted(Counter(sector for note in relevant_notes for sector in note["sectors"].split("；")).items())),
         "comments_by_sector": dict(sorted(Counter(sector for comment in comments_by_id.values() for sector in comment["sectors"].split("；")).items())),
+        "map_sectors_without_xhs_sample": PENDING_MAP_SECTORS_WITHOUT_XHS_SAMPLE,
     }
     return relevant_notes, list(comments_by_id.values()), metadata
 
@@ -347,6 +357,16 @@ def write_report(notes: list[dict[str, Any]], metadata: dict[str, Any]) -> None:
     ]
     for keyword, sector in KEYWORD_TO_SECTOR.items():
         lines.append(f"| {sector} | `{keyword}` | {metadata['query_returns'].get(keyword, 0)} | {metadata['relevant_notes_by_sector'].get(sector, 0)} | {metadata['comments_by_sector'].get(sector, 0)} |")
+
+    lines.extend([
+        "",
+        "## 地图已登记但本快照未采集的板块",
+        "",
+        "以下板块只有可编辑地图候选，尚未建立小红书采集批次，因此不生成样本定位、利好、利空或代表来源：",
+        "",
+    ])
+    for district_name, sectors in PENDING_MAP_SECTORS_WITHOUT_XHS_SAMPLE.items():
+        lines.append(f"- {district_name}：{'、'.join(sectors)}。")
 
     for sector, analysis in SECTOR_ANALYSIS.items():
         lines.extend(["", f"## {sector}", "", f"**样本定位**：{analysis['positioning']}", "", "**样本中常见的有利因素**："])

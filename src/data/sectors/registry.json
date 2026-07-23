@@ -834,6 +834,1179 @@
         "publicationPolicy": "internal_review",
         "note": "约 161.1326 平方公里内部候选；relation 14179522 最大拓扑位移 0.5 米，范围很大且含机场相关功能，只作起画面。"
       }
+    },
+    {
+      "id": "sector_huaxin",
+      "canonicalName": "华新",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场华新以华新镇固定行政关系为低置信骨架，并严格扣除既有市场徐泾候选，避免把用户裁定的徐泾核心回退成行政镇；物流、产业和乡村范围仍待项目归属收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "huaxin-north",
+        "huaxin-east",
+        "huaxin-south",
+        "huaxin-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_chonggu",
+      "canonicalName": "重固",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场重固暂以同名重固镇固定行政关系作为低置信、可编辑骨架；市场核心可能明显小于镇域。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "chonggu-north",
+        "chonggu-east",
+        "chonggu-south",
+        "chonggu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_baihe",
+      "canonicalName": "白鹤",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场白鹤暂以同名白鹤镇固定行政关系的全部组成面作为低置信骨架；白鹤、赵屯等次级口径尚未拆分。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "baihe-north",
+        "baihe-east",
+        "baihe-south",
+        "baihe-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhaoxiang",
+      "canonicalName": "赵巷",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场赵巷以赵巷镇固定行政关系为低置信骨架，并严格扣除既有市场徐泾候选；赵巷镇区、别墅区等次级口径尚待人工收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "zhaoxiang-north",
+        "zhaoxiang-east",
+        "zhaoxiang-south",
+        "zhaoxiang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xianghuaqiao",
+      "canonicalName": "香花桥",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场香花桥暂以同名街道固定行政关系作为低置信骨架；工业园与新城北片不能被误读为统一住宅市场。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xianghuaqiao-north",
+        "xianghuaqiao-east",
+        "xianghuaqiao-south",
+        "xianghuaqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xiayang",
+      "canonicalName": "夏阳",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "夏阳是青浦新城内部独立身份，本轮只采用同名街道固定行政关系作为低置信骨架，不重复绘制整个青浦新城。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xiayang-north",
+        "xiayang-east",
+        "xiayang-south",
+        "xiayang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_yingpu",
+      "canonicalName": "盈浦",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "盈浦是青浦新城内部独立身份，本轮只采用同名街道固定行政关系作为低置信骨架。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "yingpu-north",
+        "yingpu-east",
+        "yingpu-south",
+        "yingpu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhujiajiao",
+      "canonicalName": "朱家角",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场朱家角暂以同名镇全域固定行政关系作为低置信骨架；古镇、轨交住宅带、乡村和水域仍需拆审。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "zhujiajiao-north",
+        "zhujiajiao-east",
+        "zhujiajiao-south",
+        "zhujiajiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jinze",
+      "canonicalName": "金泽",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场金泽暂以同名镇固定行政关系作为低置信骨架；湖荡、村庄和示范区规划不等于住宅板块定稿。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "jinze-north",
+        "jinze-east",
+        "jinze-south",
+        "jinze-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_liantang",
+      "canonicalName": "练塘",
+      "aliases": [],
+      "districtNames": [
+        "青浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场练塘暂以同名镇固定行政关系作为低置信骨架；练塘、蒸淀、小蒸等社区尚未拆分。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-qingpu-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "liantang-north",
+        "liantang-east",
+        "liantang-south",
+        "liantang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_sijing",
+      "canonicalName": "泗泾",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场泗泾暂以同名镇固定行政关系作为低置信骨架；轨交大居、古镇及南北片仍需项目归属精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "sijing-north",
+        "sijing-east",
+        "sijing-south",
+        "sijing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_dongjing",
+      "canonicalName": "洞泾",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场洞泾暂以同名镇固定行政关系作为低置信骨架；项目名称造成的泗泾跨界感知不能替代逐项目核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "dongjing-north",
+        "dongjing-east",
+        "dongjing-south",
+        "dongjing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xinqiao",
+      "canonicalName": "新桥",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场新桥以同名镇固定行政关系作为低置信骨架，并严格扣除与既有莘庄候选的约 0.003 平方公里重叠；莘闵别墅是另一个跨界市场身份，本轮不静默并入。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xinqiao-north",
+        "xinqiao-east",
+        "xinqiao-south",
+        "xinqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_sheshan",
+      "canonicalName": "佘山",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场佘山暂以同名镇固定行政关系作为低置信骨架；佘山别墅、天马山及低密区域需后续拆审。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "sheshan-north",
+        "sheshan-east",
+        "sheshan-south",
+        "sheshan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xiaokunshan",
+      "canonicalName": "小昆山",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场小昆山暂以同名镇固定行政关系作为低置信骨架；产城融合与住宅核心不自动覆盖整个镇域。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xiaokunshan-north",
+        "xiaokunshan-east",
+        "xiaokunshan-south",
+        "xiaokunshan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_chedun",
+      "canonicalName": "车墩",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场车墩暂以同名镇固定行政关系作为低置信骨架；影视基地、工业区、镇区和乡村市场语义不同。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "chedun-north",
+        "chedun-east",
+        "chedun-south",
+        "chedun-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xinbang",
+      "canonicalName": "新浜",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场新浜暂以同名镇固定行政关系作为低置信骨架；远郊低密市场身份稳定性仍需后验验证。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xinbang-north",
+        "xinbang-east",
+        "xinbang-south",
+        "xinbang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_shihudang",
+      "canonicalName": "石湖荡",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场石湖荡暂以同名镇固定行政关系作为低置信骨架；浦南乡村范围可能显著大于市场成交核心。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "shihudang-north",
+        "shihudang-east",
+        "shihudang-south",
+        "shihudang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_maogang",
+      "canonicalName": "泖港",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场泖港暂以同名镇固定行政关系作为低置信骨架；农业生态空间占比高，不是成交密集板块定稿。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "maogang-north",
+        "maogang-east",
+        "maogang-south",
+        "maogang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_yexie",
+      "canonicalName": "叶榭",
+      "aliases": [],
+      "districtNames": [
+        "松江区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场叶榭暂以同名镇固定行政关系作为低置信骨架；市场通常聚焦镇区，完整镇域只作保守起画面。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-songjiang-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "yexie-north",
+        "yexie-east",
+        "yexie-south",
+        "yexie-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jinshanxincheng",
+      "canonicalName": "金山新城",
+      "aliases": [
+        "石化"
+      ],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "ambiguous_market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "金山新城暂借石化街道固定行政关系作为本批最高风险的低置信代理骨架；金山新城可能跨石化、山阳、金山卫，绝不宣称两者同义。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "jinshanxincheng-north",
+        "jinshanxincheng-east",
+        "jinshanxincheng-south",
+        "jinshanxincheng-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "当前只显示石化街道行政骨架，不代表完整金山新城市场边界；必须在编辑器中按石化、山阳、金山卫项目归属继续修订。"
+      }
+    },
+    {
+      "id": "sector_jinshanwei",
+      "canonicalName": "金山卫",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场金山卫暂以同名镇固定行政关系作为低置信骨架；滨海居住与金山新城认知可能重叠，行政互斥不证明市场互斥。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "jinshanwei-north",
+        "jinshanwei-east",
+        "jinshanwei-south",
+        "jinshanwei-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_shanyang",
+      "canonicalName": "山阳",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场山阳暂以同名镇固定行政关系的全部组成面作为低置信骨架；金山新城可能覆盖其局部，待用户裁定。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "shanyang-north",
+        "shanyang-east",
+        "shanyang-south",
+        "shanyang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhujing",
+      "canonicalName": "朱泾",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场朱泾暂以同名镇固定行政关系作为低置信骨架；市场成交核心可能只覆盖镇区。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "zhujing-north",
+        "zhujing-east",
+        "zhujing-south",
+        "zhujing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_fengjing",
+      "canonicalName": "枫泾",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场枫泾暂以同名镇固定行政关系作为低置信骨架；古镇、产业和乡村市场口径需要进一步收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "fengjing-north",
+        "fengjing-east",
+        "fengjing-south",
+        "fengjing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_tinglin",
+      "canonicalName": "亭林",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场亭林当前使用固定 OSM 亭林镇 relation 16230588 作为低置信可编辑代理。视觉复核表明，该 relation 约 122.725 平方公里的轮廓与天地图“亭林镇”行政示意一致，也与官方“亭林镇（含金山工业区）”121.43 平方公里总范围接近；官方文本明确其中亭林镇 78.21 平方公里、金山工业区 43.22 平方公里。因此本候选是合并行政展示代理，不是已经排除金山工业区的市场亭林，必须后续人工收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-tinglin-town-industrial-zone-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "tinglin-north",
+        "tinglin-east",
+        "tinglin-south",
+        "tinglin-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "tinglin-town-industrial-combined-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "当前 OSM 亭林镇 relation 与天地图行政示意均覆盖官方规划所称亭林镇与金山工业区合并范围；它只是约 122.725 平方公里的可编辑代理，不代表已排除工业区的市场亭林。"
+      }
+    },
+    {
+      "id": "sector_zhangyan",
+      "canonicalName": "张堰",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场张堰暂以同名镇固定行政关系作为低置信骨架；成交认知可能集中于镇区。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "zhangyan-north",
+        "zhangyan-east",
+        "zhangyan-south",
+        "zhangyan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_langxia",
+      "canonicalName": "廊下",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场廊下暂以同名镇固定行政关系作为低置信骨架；农业空间占比高，一级楼市身份稳定性需后验验证。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "langxia-north",
+        "langxia-east",
+        "langxia-south",
+        "langxia-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_luxiang",
+      "canonicalName": "吕巷",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场吕巷暂以同名镇固定行政关系作为低置信骨架；镇区和特色片区不自然等于完整行政面。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "luxiang-north",
+        "luxiang-east",
+        "luxiang-south",
+        "luxiang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_caojing",
+      "canonicalName": "漕泾",
+      "aliases": [],
+      "districtNames": [
+        "金山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场漕泾暂以同名镇固定行政关系作为低置信骨架；工业、化工边缘与居住镇区认知差异很大。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jinshan-master-plan-2035",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "caojing-north",
+        "caojing-east",
+        "caojing-south",
+        "caojing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }
   ]
 }
