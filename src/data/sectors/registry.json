@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-23",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、世博、上南、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -279,23 +279,24 @@
     {
       "id": "sector_shibo",
       "canonicalName": "世博",
-      "aliases": ["世博滨江"],
+      "aliases": ["世博滨江", "浦东世博", "世博板块"],
       "districtNames": ["浦东新区"],
       "kind": "market_sector",
-      "reviewStatus": "draft-low",
+      "reviewStatus": "draft-medium",
       "definitionStatus": "user_decided_market_scope",
-      "definitionCandidate": "与上南拆分为两个互斥一级楼市板块；两者以上南路中心线为共享边骨架，南起川杨河，北止浦东南路—白莲泾。其余边界待人工绘制和逐边核验。",
-      "definitionSourceIds": [],
-      "boundaryEvidenceIds": [],
+      "definitionCandidate": "与上南拆分为两个互斥一级楼市板块；以上钢新村街道框架起画，西、北临黄浦江，南至川杨河，东侧与上南共享边南起川杨河、北止浦东南路—白莲泾，北端后沿2025年世博场馆红线调整段接黄浦江。",
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "official-shanggang-scope-2023", "official-pudong-boundary-adjustment-2025"],
+      "boundaryEvidenceIds": ["shibo-north", "shibo-east", "shibo-south", "shibo-west"],
       "geometry": {
-        "status": "missing",
-        "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "unassigned",
-        "sourceIds": [],
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-shanggang-market-baseline-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "official-shanggang-scope-2023", "official-pudong-boundary-adjustment-2025"],
         "publicationPolicy": "internal_review",
-        "note": "板块身份已由用户裁定并记录于 ADR 0017；尚无候选几何，不得在主地图渲染。"
+        "note": "已按用户选择的上钢新村框架与固定日期 OSM relation 独立重建约 7.52 平方公里候选面，并接入杨思前滩、上南候选共享边以消除缝隙和重叠。2023 年 7.54 平方公里是 2025 年界线调整前的历史量级参考，不作为调整后面积硬校验；该面是楼市候选而非行政界，东侧分隔式道路和场馆红线段仍待完整项目归属核验。"
       }
     },
     {
@@ -304,20 +305,21 @@
       "aliases": ["上南新村"],
       "districtNames": ["浦东新区"],
       "kind": "market_sector",
-      "reviewStatus": "draft-low",
+      "reviewStatus": "draft-medium",
       "definitionStatus": "user_decided_market_scope",
       "definitionCandidate": "候选骨架采用周家渡社区 Z000202 编制单元四至：北至浦东南路—白莲泾、东至东明路、南至川杨河、西至上南路；规划框架不等同于楼市板块，仍需按项目归属逐边修正。",
-      "definitionSourceIds": [],
-      "boundaryEvidenceIds": [],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
+      "boundaryEvidenceIds": ["shangnan-north", "shangnan-east", "shangnan-south", "shangnan-west"],
       "geometry": {
-        "status": "missing",
-        "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "unassigned",
-        "sourceIds": [],
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-zhoujiadu-market-baseline-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
         "publicationPolicy": "internal_review",
-        "note": "板块身份和起画骨架已记录于 ADR 0017、0018；尚无候选几何，不得在主地图渲染。"
+        "note": "已按用户选择的周家渡 Z000202 四至框架与固定日期 OSM 命名道路、水系独立重建约 2.52 平方公里候选面，并与杨思前滩、世博候选面建立无重叠共享边。规划框架不等于楼市定稿；浦东南路、东明路、上南路均需按沿线完整小区归属继续修正。"
       }
     }
   ]

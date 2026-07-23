@@ -19,6 +19,7 @@ const subscopeData = readJson("src/data/sectors/subscopes.wgs84.json");
 const adminReferenceData = readJson("src/data/sectors/admin-references.wgs84.json");
 const adminReferenceManifest = readJson("src/data/sectors/admin-references.manifest.json");
 const adminReferenceDefinitionsData = readJson("data/geo/admin-reference-definitions.json");
+const candidateDefinitionsData = readJson("data/geo/reviewed-candidate-definitions.json");
 const referenceChecksData = readJson("src/data/sectors/reference-checks.json");
 const osmSourceLock = readJson("data/geo/sources/osm-shanghai-260721.json");
 
@@ -46,7 +47,7 @@ function cross(a, b, c) {
 }
 
 function pointOnSegment(point, start, end) {
-  const epsilon = 1e-10;
+  const epsilon = 1e-14;
   if (Math.abs(cross(start, end, point)) > epsilon) return false;
   return point[0] >= Math.min(start[0], end[0]) - epsilon
     && point[0] <= Math.max(start[0], end[0]) + epsilon
@@ -55,12 +56,13 @@ function pointOnSegment(point, start, end) {
 }
 
 function segmentsProperlyIntersect(a, b, c, d) {
+  const epsilon = 1e-14;
   const abC = cross(a, b, c);
   const abD = cross(a, b, d);
   const cdA = cross(c, d, a);
   const cdB = cross(c, d, b);
-  return ((abC > 0 && abD < 0) || (abC < 0 && abD > 0))
-    && ((cdA > 0 && cdB < 0) || (cdA < 0 && cdB > 0));
+  return ((abC > epsilon && abD < -epsilon) || (abC < -epsilon && abD > epsilon))
+    && ((cdA > epsilon && cdB < -epsilon) || (cdA < -epsilon && cdB > epsilon));
 }
 
 function segmentsIntersect(a, b, c, d) {
@@ -233,6 +235,66 @@ function geometryAreaSquareKilometers(geometry) {
     return total + Math.max(0, outerArea - holeArea);
   }, 0);
   return areaSquareMeters / 1_000_000;
+}
+
+function segmentSharedLengthMeters(firstStart, firstEnd, secondStart, secondEnd) {
+  const firstVector = [
+    firstEnd[0] - firstStart[0],
+    firstEnd[1] - firstStart[1],
+  ];
+  const secondVector = [
+    secondEnd[0] - secondStart[0],
+    secondEnd[1] - secondStart[1],
+  ];
+  const firstLength = Math.hypot(...firstVector);
+  const secondLength = Math.hypot(...secondVector);
+  if (firstLength < 0.001 || secondLength < 0.001) return 0;
+
+  const directionCross = Math.abs(
+    firstVector[0] * secondVector[1] - firstVector[1] * secondVector[0],
+  );
+  if (directionCross / (firstLength * secondLength) > 1e-8) return 0;
+  const distanceToFirstLine = (point) => Math.abs(
+    firstVector[0] * (point[1] - firstStart[1])
+    - firstVector[1] * (point[0] - firstStart[0]),
+  ) / firstLength;
+  if (distanceToFirstLine(secondStart) > 0.05
+    || distanceToFirstLine(secondEnd) > 0.05) return 0;
+
+  const project = (point) => (
+    (point[0] - firstStart[0]) * firstVector[0]
+    + (point[1] - firstStart[1]) * firstVector[1]
+  ) / firstLength;
+  const secondStartOffset = project(secondStart);
+  const secondEndOffset = project(secondEnd);
+  const overlapStart = Math.max(0, Math.min(secondStartOffset, secondEndOffset));
+  const overlapEnd = Math.min(firstLength, Math.max(secondStartOffset, secondEndOffset));
+  return Math.max(0, overlapEnd - overlapStart);
+}
+
+function sharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
+  const firstRings = polygonGroupsForGeometry(firstGeometry)
+    .map((polygon) => polygon[0]?.map(projectWgs84ToComparisonPlane))
+    .filter(Boolean);
+  const secondRings = polygonGroupsForGeometry(secondGeometry)
+    .map((polygon) => polygon[0]?.map(projectWgs84ToComparisonPlane))
+    .filter(Boolean);
+  let total = 0;
+  for (const firstRing of firstRings) {
+    for (const secondRing of secondRings) {
+      for (let first = 0; first < firstRing.length - 1; first += 1) {
+        for (let second = 0; second < secondRing.length - 1; second += 1) {
+          total += segmentSharedLengthMeters(
+            firstRing[first],
+            firstRing[first + 1],
+            secondRing[second],
+            secondRing[second + 1],
+          );
+        }
+      }
+    }
+  }
+  return total;
 }
 
 const comparisonMetricMethod = {
@@ -708,6 +770,11 @@ const edgeIds = edges.map((edge) => edge.id);
 const candidates = candidateData.features ?? [];
 const candidateIds = candidates.map((feature) => feature.properties?.id);
 const candidateManifestEntries = candidateManifest.sectors ?? [];
+const candidateDefinitions = candidateDefinitionsData.sectors ?? [];
+const topologySectorIds = new Set(
+  (candidateDefinitionsData.topologyGroups ?? [])
+    .flatMap((group) => group.prioritySectorIds ?? []),
+);
 const candidateManifestIds = candidateManifestEntries.map((entry) => entry.id);
 const subscopes = subscopeData.features ?? [];
 const subscopeIds = subscopes.map((feature) => feature.properties?.id);
@@ -746,6 +813,9 @@ for (const featureId of featureIds) {
 
 const legacyFeatureById = new Map(features.map((feature) => [feature.properties?.id, feature]));
 const registryById = new Map(registry.map((record) => [record.id, record]));
+const candidateDefinitionById = new Map(
+  candidateDefinitions.map((definition) => [definition.id, definition]),
+);
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
@@ -919,6 +989,20 @@ for (const candidate of candidates) {
   if (!record.geometry.sourceIds.includes(osmSourceLock.id)) error(`${id}: 候选 registry 缺少锁定 OSM 几何来源`);
   if (!manifestById.has(id)) error(`${id}: 候选几何缺少 OSM 对象 manifest`);
   if (!isFinitePositive(candidate.properties.areaSquareKilometers)) error(`${id}: 候选面积无效`);
+  const candidateDefinition = candidateDefinitionById.get(id);
+  if (candidateDefinition?.historicalReferenceAreaSquareKilometers) {
+    if (!nearlyEqual(
+      candidate.properties.historicalReferenceAreaSquareKilometers,
+      candidateDefinition.historicalReferenceAreaSquareKilometers,
+      0.0001,
+    ) || candidate.properties.historicalReferenceAreaAsOf
+      !== candidateDefinition.historicalReferenceAreaAsOf) {
+      error(`${id}: 历史面积参考值或时间口径与 definition 不一致`);
+    }
+    if (candidate.properties.officialAreaSquareKilometers !== undefined) {
+      error(`${id}: 调整前历史面积不得冒充调整后官方面积硬校验`);
+    }
+  }
   validateWgs84PolygonalGeometry(candidate, `${id}: 候选面`, candidate.properties.labelPoint);
 
   const featureAnchors = candidate.properties.boundaryAnchors ?? [];
@@ -971,6 +1055,40 @@ for (const candidate of candidates) {
       if (!isFinitePositive(manifestAnchor.boundaryCoverageWithinToleranceMeters)) {
         error(`${label} 缺少有效的中心线覆盖长度`);
       }
+      if (manifestAnchor.coverageStage !== "final-topology") {
+        error(`${label} 覆盖率必须针对最终拓扑几何复算`);
+      }
+      const featureComponents = featureAnchor.components ?? [];
+      const manifestComponents = manifestAnchor.components ?? [];
+      if (featureAnchor.featureType === "composite-linear") {
+        if (featureComponents.length < 2
+          || featureComponents.length !== manifestComponents.length) {
+          error(`${label} 复合边界必须完整记录各组成道路或水系`);
+        }
+        for (const [componentIndex, featureComponent] of featureComponents.entries()) {
+          const manifestComponent = manifestComponents[componentIndex];
+          const componentLabel = `${label} 组成 ${componentIndex + 1}`;
+          if (!manifestComponent
+            || featureComponent.featureType !== manifestComponent.featureType
+            || featureComponent.expectedIdentity !== manifestComponent.expectedIdentity) {
+            error(`${componentLabel} feature 与 manifest 身份字段不一致`);
+            continue;
+          }
+          if (!Array.isArray(manifestComponent.osmRefs)
+            || manifestComponent.osmRefs.length === 0) {
+            error(`${componentLabel} 缺少锁定 OSM 对象`);
+          }
+          if (!Array.isArray(manifestComponent.inputOsmRefs)
+            || manifestComponent.inputOsmRefs.length < manifestComponent.osmRefs.length
+            || manifestComponent.osmRefs.some(
+              (ref) => !manifestComponent.inputOsmRefs.includes(ref),
+            )) {
+            error(`${componentLabel} 输入对象与边界贴合对象的来源链无效`);
+          }
+        }
+      } else if (featureComponents.length > 0 || manifestComponents.length > 0) {
+        error(`${label} 非复合边界不应声明 components`);
+      }
       if (featureAnchor.identityStatus.endsWith("candidate")) {
         const edge = record.boundaryEvidenceIds
           .map((edgeId) => edgeById.get(edgeId))
@@ -979,6 +1097,47 @@ for (const candidate of candidates) {
           error(`${label} 未核验身份必须在边界证据中保持 low 且不得标记 definition_confirmed`);
         }
       }
+    }
+  }
+
+  const sharedEdgeSectorIds = candidate.properties.sharedEdgeSectorIds ?? [];
+  const manifestSharedEdgeSectorIds = manifestById.get(id)?.osmRefs?.sharedEdgeSectorIds ?? [];
+  if (normalizedStringSet(sharedEdgeSectorIds)
+    !== normalizedStringSet(manifestSharedEdgeSectorIds)) {
+    error(`${id}: 候选面与 manifest 的共享边板块记录不一致`);
+  }
+  const snapDependencySectorIds = candidate.properties.snapDependencySectorIds ?? [];
+  const manifestSnapDependencySectorIds = manifestById.get(id)?.osmRefs?.snapDependencySectorIds ?? [];
+  if (normalizedStringSet(snapDependencySectorIds)
+    !== normalizedStringSet(manifestSnapDependencySectorIds)) {
+    error(`${id}: 候选面与 manifest 的吸附依赖记录不一致`);
+  }
+  if (snapDependencySectorIds.some(
+    (sectorId) => !sharedEdgeSectorIds.includes(sectorId),
+  )) {
+    error(`${id}: 吸附依赖必须同时登记为对称共享边`);
+  }
+
+  if (topologySectorIds.has(id)) {
+    const topologySnapDistance = candidate.properties.topologySnapDistanceMeters;
+    const topologyDisplacement = candidate.properties.topologyMaxBoundaryDisplacementMeters;
+    if (!isFinitePositive(topologySnapDistance)
+      || !Number.isFinite(topologyDisplacement)
+      || topologyDisplacement < 0
+      || topologyDisplacement > topologySnapDistance + 0.1) {
+      error(`${id}: 最终拓扑位移必须有效且不超过声明连接距离`);
+    }
+  }
+}
+
+for (const candidate of candidates) {
+  const id = candidate.properties?.id;
+  for (const neighborId of candidate.properties?.sharedEdgeSectorIds ?? []) {
+    const neighbor = candidateById.get(neighborId);
+    if (!neighbor) {
+      error(`${id}: 共享边板块 ${neighborId} 缺少候选几何`);
+    } else if (!(neighbor.properties?.sharedEdgeSectorIds ?? []).includes(id)) {
+      error(`${id} / ${neighborId}: 共享边关系必须双向一致`);
     }
   }
 }
@@ -995,6 +1154,45 @@ for (let first = 0; first < candidates.length; first += 1) {
         + " 的主板块候选面发生面积重叠",
       );
     }
+  }
+}
+
+for (const {
+  firstId,
+  secondId,
+  minimumSharedLengthMeters,
+} of [
+  {
+    firstId: "sector_qiantan",
+    secondId: "sector_shangnan",
+    minimumSharedLengthMeters: 1_400,
+  },
+  {
+    firstId: "sector_qiantan",
+    secondId: "sector_shibo",
+    minimumSharedLengthMeters: 2_400,
+  },
+  {
+    firstId: "sector_shangnan",
+    secondId: "sector_shibo",
+    minimumSharedLengthMeters: 1_300,
+  },
+]) {
+  const firstCandidate = candidateById.get(firstId);
+  const secondCandidate = candidateById.get(secondId);
+  if (!firstCandidate || !secondCandidate) {
+    error(`${firstId} / ${secondId}: 缺少需要校验的共享边候选面`);
+    continue;
+  }
+  const sharedLength = sharedBoundaryLengthMeters(
+    firstCandidate.geometry,
+    secondCandidate.geometry,
+  );
+  if (sharedLength < minimumSharedLengthMeters) {
+    error(
+      `${firstId} / ${secondId}: 共享边只有 ${sharedLength.toFixed(1)} 米，`
+      + `低于 ${minimumSharedLengthMeters} 米`,
+    );
   }
 }
 
@@ -1238,6 +1436,7 @@ const allowedReferenceVerdicts = new Set([
 ]);
 const allowedGeometryDecisions = new Set([
   "keep_official_scope_candidate",
+  "keep_market_candidate",
   "keep_market_candidate_with_subscope",
   "keep_market_candidate_with_admin_reference",
   "keep_demo_until_scope_selected",
@@ -1259,6 +1458,10 @@ for (const check of referenceChecks) {
   if (!allowedReferenceVerdicts.has(check.verdict)) error(`${id}: verdict 无效`);
   if (!allowedGeometryDecisions.has(check.geometryDecision)) error(`${id}: geometryDecision 无效`);
   if (typeof check.summary !== "string" || check.summary.trim().length === 0) error(`${id}: reference-check 缺少摘要`);
+  if (["sector_shibo", "sector_shangnan"].includes(id)
+    && check.verdict !== "standard_map_superseded_in_segments") {
+    error(`${id}: 2025年7月标准图局部线位已被2025年11月公告调整段替代`);
+  }
 
   const standardMapSource = sourceById.get(check.standardMapSourceId);
   if (!standardMapSource) error(`${id}: standardMapSourceId 不存在`);
@@ -1324,8 +1527,19 @@ for (const check of referenceChecks) {
 
   const candidate = candidateById.get(id);
   if (candidate) {
-    if (!comparison) error(`${id}: 候选面缺少旧演示面差异指标`);
-    else if (comparison.reference !== "reviewed-candidate") {
+    const editorSeed = legacyFeatureById.get(id);
+    const isGeneratedEditorSeed = editorSeed?.properties?.geometryRole
+      === "generated-editor-seed";
+    if (isGeneratedEditorSeed) {
+      if (editorSeed.properties.generatedFromCandidateId !== id) {
+        error(`${id}: 生成式编辑器底稿没有指向同 ID 候选面`);
+      }
+      if (comparison) {
+        error(`${id}: 生成式编辑器底稿不得伪装为旧版几何做循环比较`);
+      }
+    } else if (!comparison) {
+      error(`${id}: 候选面缺少旧演示面差异指标`);
+    } else if (comparison.reference !== "reviewed-candidate") {
       error(`${id}: 候选面差异指标必须引用 reviewed-candidate`);
     }
   }

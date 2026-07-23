@@ -48,6 +48,39 @@
       "summary": "杨思前滩是市场主板块，不应套用浦东街镇界；主范围按川杨河、春塘河、中环路—华夏西路、黄浦江独立重建，官方前滩 Z000801 / ES4 仅作为内部子范围。"
     },
     {
+      "sectorId": "sector_shibo",
+      "comparisonRole": "functional_scope_not_admin",
+      "verdict": "standard_map_superseded_in_segments",
+      "geometryDecision": "keep_market_candidate",
+      "comparableAdminName": "上钢新村街道",
+      "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
+      "standardMapDocuments": [
+        {
+          "title": "浦东新区行政区划示意图",
+          "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+          "mapDate": "2025-07",
+          "reviewNumber": "沪S（2025）043号"
+        }
+      ],
+      "summary": "世博是用户裁定的市场一级板块；上钢新村街道和天地图只校核行政方向，2025年7月标准图中的周家渡—上钢局部界线已被2025年11月公告调整段替代，候选面按黄浦江、川杨河、上南路共享段及公告后的场馆红线骨架重建。"
+    },
+    {
+      "sectorId": "sector_shangnan",
+      "comparisonRole": "functional_scope_not_admin",
+      "verdict": "standard_map_superseded_in_segments",
+      "geometryDecision": "keep_market_candidate",
+      "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
+      "standardMapDocuments": [
+        {
+          "title": "浦东新区行政区划示意图",
+          "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+          "mapDate": "2025-07",
+          "reviewNumber": "沪S（2025）043号"
+        }
+      ],
+      "summary": "上南是用户裁定的市场一级板块；周家渡 Z000202 规划单元和天地图只提供起画与行政参照，2025年7月标准图中的周家渡—上钢局部界线已被2025年11月公告调整段替代；候选面仍须按分隔式道路两侧完整小区归属修正。"
+    },
+    {
       "sectorId": "sector_xuhuibinjiang",
       "comparisonRole": "functional_scope_not_admin",
       "verdict": "not_directly_comparable",
@@ -176,7 +209,7 @@
       ],
       "legacyGeometryComparison": {
         "reference": "reviewed-candidate",
-        "intersectionOverUnion": 0.387,
+        "intersectionOverUnion": 0.388,
         "referenceCoveredPercent": 75.8,
         "legacyAreaRatio": 1.72,
         "centroidDistanceKilometers": 1.4

@@ -74,6 +74,8 @@ export interface SectorProperties {
   description: string;
   sourceName: string;
   boundaryBasis?: string;
+  geometryRole?: "generated-editor-seed";
+  generatedFromCandidateId?: string;
   isMock: boolean;
   center: [number, number];
 }
@@ -154,6 +156,7 @@ export type SectorReferenceVerdict =
 
 export type SectorGeometryDecision =
   | "keep_official_scope_candidate"
+  | "keep_market_candidate"
   | "keep_market_candidate_with_subscope"
   | "keep_demo_until_scope_selected"
   | "show_admin_reference_without_replacing_market_definition"

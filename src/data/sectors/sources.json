@@ -13,6 +13,16 @@
       "note": "现有坐标只用于界面演示；没有可复核的逐边来源、原始坐标系或外部再利用许可。"
     },
     {
+      "id": "internal-user-sector-scope-decision-2026-07-23",
+      "title": "世博—上南一级板块范围裁定",
+      "publisher": "上海楼盘地图项目用户",
+      "url": null,
+      "sourceType": "internal_user_scope_decision",
+      "licenseStatus": "internal",
+      "allowedUse": "sector_definition_and_geometry_rule",
+      "note": "记录用户裁定：世博与上南为互斥一级市场板块，共享边以上南路为骨架；上南采用 Z000202 四至起画，世博采用上钢新村框架方案 1。该记录是产品范围决定，不是外部事实来源。"
+    },
+    {
       "id": "official-qiantan-z000801-2012",
       "title": "黄浦江南延伸段前滩地区（Z000801单元）控制性详细规划附加图则公示",
       "publisher": "上海市规划和自然资源局",
@@ -32,6 +42,16 @@
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
       "note": "用于确认主流卖方存在“杨思前滩”这一板块身份；不复制其清单、坐标或边界。"
+    },
+    {
+      "id": "seller-lianjia-shanghai-sector-sitemap",
+      "title": "链家上海网站地图",
+      "publisher": "链家",
+      "url": "https://sh.lianjia.com/seositemap/",
+      "sourceType": "seller_sector_taxonomy",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "仅用于核对链家使用“世博”等楼市板块名称；不复制网站清单、坐标或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
     },
     {
       "id": "seller-anjuke-yangsi-scope",
@@ -127,7 +147,27 @@
       "publishedAt": "2025-11-14",
       "licenseStatus": "reference_only",
       "allowedUse": "boundary_definition_only",
-      "note": "调整北蔡—张江、金桥—张江和北蔡—康桥部分界线；任何更早街镇面都必须先做版本核验。"
+      "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江和北蔡—康桥部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
+    },
+    {
+      "id": "official-shanggang-scope-2023",
+      "title": "上钢新村街道精品城区专项行动计划（2022—2025）",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14495.gkml_ywl_cxjsgl/2023/268/317167.html",
+      "sourceType": "official_scope_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出上钢新村街道东至上南路、南至川杨河、西北临黄浦江及约 7.54 平方公里的行政范围；本项目只用作世博市场候选的定位骨架，不把街道界当作楼市定稿。"
+    },
+    {
+      "id": "official-zhoujiadu-z000202-2010",
+      "title": "关于批准《上海市浦东新区周家渡社区Z000202单元控制性详细规划》的批复",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/00601000303/2022/302/256055.html",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "给出 Z000202 单元北至浦东南路—白莲泾、东至东明路、南至川杨河、西至上南路的文字四至；本项目只用作上南候选起画骨架，不把规划单元当作楼市定稿。"
     },
     {
       "id": "official-jinqiao-eia-scope-2024",

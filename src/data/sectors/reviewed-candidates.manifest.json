@@ -74,7 +74,8 @@
               "869135480"
             ],
             "boundaryCoverageWithinToleranceMeters": 7995.8,
-            "centerlineToleranceMeters": 15.0
+            "centerlineToleranceMeters": 15.0,
+            "coverageStage": "final-topology"
           },
           {
             "side": "east",
@@ -95,7 +96,8 @@
             ],
             "boundaryCoverageWithinToleranceMeters": 1654.3,
             "centerlineToleranceMeters": 15.0,
-            "note": "固定 OSM 快照中的两段水线没有名称；空间位置与卖方文字东界相符，但现有官方材料未把这两个 OSM ID 绑定为春塘河，因此不得标记为已核验。"
+            "note": "固定 OSM 快照中的两段水线没有名称；空间位置与卖方文字东界相符，但现有官方材料未把这两个 OSM ID 绑定为春塘河，因此不得标记为已核验。",
+            "coverageStage": "final-topology"
           },
           {
             "side": "south",
@@ -270,7 +272,8 @@
             ],
             "boundaryCoverageWithinToleranceMeters": 9719.8,
             "centerlineToleranceMeters": 15.0,
-            "note": "道路名称已核对，但分隔式道路包含主线、平行车道与匝道；当前输出与道路对象保持 15 米内贴合，尚未证明为唯一走廊中位线。"
+            "note": "道路名称已核对，但分隔式道路包含主线、平行车道与匝道；当前输出与道路对象保持 15 米内贴合，尚未证明为唯一走廊中位线。",
+            "coverageStage": "final-topology"
           },
           {
             "side": "west",
@@ -288,8 +291,412 @@
               "47088277"
             ],
             "boundaryCoverageWithinToleranceMeters": 2354.5,
-            "centerlineToleranceMeters": 15.0
+            "centerlineToleranceMeters": 15.0,
+            "coverageStage": "final-topology"
           }
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_shangnan",
+          "sector_shibo",
+          "sector_sanlin"
+        ],
+        "snapDependencySectorIds": []
+      }
+    },
+    {
+      "id": "sector_shangnan",
+      "scopeVersion": "zhoujiadu-market-baseline-2026-07",
+      "method": "market_four_sides_osm_linear_component_with_shared_topology",
+      "osmRefs": {
+        "roads": [
+          "1110490125",
+          "1110490154",
+          "1206661079",
+          "1206661082",
+          "1211523859",
+          "1219577022",
+          "1219577023",
+          "1219577029",
+          "1298040476",
+          "137230488",
+          "179018539",
+          "179018540",
+          "179018541",
+          "47384195",
+          "667543941",
+          "667543944",
+          "829077461",
+          "829077462",
+          "829077463",
+          "829077464",
+          "829097339",
+          "829097340",
+          "836691594",
+          "836691595",
+          "967979550",
+          "967979571",
+          "968332488",
+          "968332495",
+          "968332521",
+          "968332523",
+          "968332524",
+          "968332526"
+        ],
+        "waterways": [
+          "42967047",
+          "869135480"
+        ],
+        "boundaryAnchors": [
+          {
+            "side": "north",
+            "featureType": "composite-linear",
+            "expectedIdentity": "浦东南路—白莲泾候选中心线",
+            "identityStatus": "verified-name-alignment-candidate",
+            "verificationSourceIds": [
+              "official-zhoujiadu-z000202-2010",
+              "osm-geofabrik-shanghai-260721"
+            ],
+            "osmRefs": [
+              "1206661079",
+              "1298040476",
+              "42967047",
+              "829097339",
+              "829097340",
+              "836691594",
+              "836691595",
+              "967979550",
+              "967979571",
+              "968332495",
+              "968332521"
+            ],
+            "inputOsmRefs": [
+              "1108472463",
+              "1108493231",
+              "1198911578",
+              "1206661068",
+              "1206661079",
+              "1213091926",
+              "1213091931",
+              "1236534021",
+              "1236534026",
+              "12611483",
+              "12611492",
+              "12611498",
+              "12611501",
+              "1271499761",
+              "1271499762",
+              "1271702657",
+              "1292568600",
+              "1292568615",
+              "1298040476",
+              "1324096355",
+              "1324169932",
+              "1326193786",
+              "1326193788",
+              "1327168519",
+              "1327168520",
+              "1337978658",
+              "135721886",
+              "135721890",
+              "135721892",
+              "135721894",
+              "14909570",
+              "14909575",
+              "159933499",
+              "42967047",
+              "439447785",
+              "439447789",
+              "439447814",
+              "439447819",
+              "666886092",
+              "829097339",
+              "829097340",
+              "829097341",
+              "829097342",
+              "836691594",
+              "836691595",
+              "836693108",
+              "836693109",
+              "967979550",
+              "967979571",
+              "968332495",
+              "968332496",
+              "968332501",
+              "968332503",
+              "968332504",
+              "968332519",
+              "968332520",
+              "968332521"
+            ],
+            "boundaryCoverageWithinToleranceMeters": 2043.8,
+            "centerlineToleranceMeters": 15.0,
+            "components": [
+              {
+                "featureType": "road",
+                "expectedIdentity": "浦东南路",
+                "osmRefs": [
+                  "1206661079",
+                  "1298040476",
+                  "829097339",
+                  "829097340",
+                  "836691594",
+                  "836691595",
+                  "967979550",
+                  "967979571",
+                  "968332495",
+                  "968332521"
+                ],
+                "inputOsmRefs": [
+                  "1108472463",
+                  "1108493231",
+                  "1198911578",
+                  "1206661068",
+                  "1206661079",
+                  "1213091926",
+                  "1213091931",
+                  "1236534021",
+                  "1236534026",
+                  "12611483",
+                  "12611492",
+                  "12611498",
+                  "12611501",
+                  "1271499761",
+                  "1271499762",
+                  "1271702657",
+                  "1292568600",
+                  "1292568615",
+                  "1298040476",
+                  "1324096355",
+                  "1324169932",
+                  "1326193786",
+                  "1326193788",
+                  "1327168519",
+                  "1327168520",
+                  "1337978658",
+                  "135721886",
+                  "135721890",
+                  "135721892",
+                  "135721894",
+                  "14909570",
+                  "14909575",
+                  "159933499",
+                  "439447785",
+                  "439447789",
+                  "439447814",
+                  "439447819",
+                  "666886092",
+                  "829097339",
+                  "829097340",
+                  "829097341",
+                  "829097342",
+                  "836691594",
+                  "836691595",
+                  "836693108",
+                  "836693109",
+                  "967979550",
+                  "967979571",
+                  "968332495",
+                  "968332496",
+                  "968332501",
+                  "968332503",
+                  "968332504",
+                  "968332519",
+                  "968332520",
+                  "968332521"
+                ]
+              },
+              {
+                "featureType": "waterway",
+                "expectedIdentity": "白莲泾",
+                "osmRefs": [
+                  "42967047"
+                ],
+                "inputOsmRefs": [
+                  "42967047"
+                ]
+              }
+            ],
+            "note": "规划文字确认北界由浦东南路与白莲泾共同组成；浦东南路为分隔式道路，当前只确认到 15 米内走廊贴合，尚待沿线小区核验唯一共享中位线。",
+            "coverageStage": "final-topology"
+          },
+          {
+            "side": "east",
+            "featureType": "road",
+            "expectedIdentity": "东明路候选中心线",
+            "identityStatus": "verified-name-alignment-candidate",
+            "verificationSourceIds": [
+              "official-zhoujiadu-z000202-2010",
+              "osm-geofabrik-shanghai-260721"
+            ],
+            "osmRefs": [
+              "1206661082",
+              "1211523859",
+              "137230488",
+              "179018539",
+              "179018540",
+              "179018541",
+              "47384195",
+              "667543941",
+              "968332488",
+              "968332523",
+              "968332524",
+              "968332526"
+            ],
+            "inputOsmRefs": [
+              "1108528466",
+              "1108528503",
+              "1108528504",
+              "1109172893",
+              "1110782222",
+              "1206661082",
+              "1210496299",
+              "1210496317",
+              "1211523859",
+              "1213062193",
+              "1213062211",
+              "1260481134",
+              "1330708629",
+              "1330708630",
+              "1332789608",
+              "135843982",
+              "137230484",
+              "137230488",
+              "179018537",
+              "179018538",
+              "179018539",
+              "179018540",
+              "179018541",
+              "179018542",
+              "179018543",
+              "244317674",
+              "47384195",
+              "667543941",
+              "968332487",
+              "968332488",
+              "968332523",
+              "968332524",
+              "968332526"
+            ],
+            "boundaryCoverageWithinToleranceMeters": 2129.6,
+            "centerlineToleranceMeters": 15.0,
+            "note": "规划文字确认东界为东明路；分隔式道路的唯一市场共享中位线仍待沿线小区核验。",
+            "coverageStage": "final-topology"
+          },
+          {
+            "side": "south",
+            "featureType": "waterway",
+            "expectedIdentity": "川杨河",
+            "identityStatus": "verified-by-osm-name",
+            "verificationSourceIds": [
+              "official-zhoujiadu-z000202-2010",
+              "osm-geofabrik-shanghai-260721"
+            ],
+            "osmRefs": [
+              "869135480"
+            ],
+            "inputOsmRefs": [
+              "869135480"
+            ],
+            "boundaryCoverageWithinToleranceMeters": 1493.5,
+            "centerlineToleranceMeters": 15.0,
+            "coverageStage": "final-topology"
+          },
+          {
+            "side": "west",
+            "featureType": "road",
+            "expectedIdentity": "上南路候选中心线",
+            "identityStatus": "verified-name-alignment-candidate",
+            "verificationSourceIds": [
+              "official-zhoujiadu-z000202-2010",
+              "official-pudong-boundary-adjustment-2025",
+              "osm-geofabrik-shanghai-260721"
+            ],
+            "osmRefs": [
+              "1110490125",
+              "1110490154",
+              "1219577022",
+              "1219577023",
+              "1219577029",
+              "667543944",
+              "829077461",
+              "829077462",
+              "829077463",
+              "829077464"
+            ],
+            "inputOsmRefs": [
+              "1108528481",
+              "1108528482",
+              "1108528497",
+              "1108528498",
+              "1110490124",
+              "1110490125",
+              "1110490154",
+              "1110490155",
+              "1154910018",
+              "1154910019",
+              "1155683455",
+              "1155731270",
+              "1206661066",
+              "1209279394",
+              "1209279396",
+              "1210496315",
+              "1210496336",
+              "1210496337",
+              "1213514612",
+              "1214524437",
+              "1214524463",
+              "1219577022",
+              "1219577023",
+              "1219577029",
+              "1220272647",
+              "1220272648",
+              "1234177874",
+              "1234279956",
+              "1271499769",
+              "1271499777",
+              "1324096342",
+              "178995835",
+              "47380141",
+              "48769297",
+              "48769300",
+              "667543944",
+              "829077461",
+              "829077462",
+              "829077463",
+              "829077464"
+            ],
+            "boundaryCoverageWithinToleranceMeters": 1493.6,
+            "centerlineToleranceMeters": 15.0,
+            "note": "用户裁定世博—上南以上南路为共享边骨架；分隔式道路当前按 15 米走廊贴合，完整小区修正尚未执行。",
+            "coverageStage": "final-topology"
+          }
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_qiantan",
+          "sector_shibo"
+        ],
+        "sharedEdgeSnapDistanceMeters": 60.0,
+        "snapDependencySectorIds": [
+          "sector_qiantan"
+        ]
+      }
+    },
+    {
+      "id": "sector_shibo",
+      "scopeVersion": "shanggang-market-baseline-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14178805"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_qiantan",
+          "sector_shangnan"
+        ],
+        "sharedEdgeSnapDistanceMeters": 60.0,
+        "snapDependencySectorIds": [
+          "sector_qiantan",
+          "sector_shangnan"
         ]
       }
     },
@@ -316,6 +723,12 @@
         ],
         "includedMarketAreas": [
           "东明路街道"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_qiantan"
+        ],
+        "snapDependencySectorIds": [
+          "sector_qiantan"
         ]
       }
     }

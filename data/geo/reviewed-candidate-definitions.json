@@ -3,6 +3,17 @@
   "workingCrs": "EPSG:32651",
   "outputCrs": "OGC:CRS84",
   "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "topologyGroups": [
+    {
+      "snapDistanceMeters": 60,
+      "prioritySectorIds": [
+        "sector_qiantan",
+        "sector_shangnan",
+        "sector_shibo",
+        "sector_sanlin"
+      ]
+    }
+  ],
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -55,9 +66,101 @@
       "cutBufferMeters": 5,
       "centerlineToleranceMeters": 15,
       "minimumBboxClearanceMeters": 100,
+      "preserveTopologyPrecision": true,
+      "sharedEdgeSectorIds": ["sector_shangnan", "sector_shibo", "sector_sanlin"],
+      "snapDependencySectorIds": [],
       "areaRangeSquareKilometers": [15, 18],
       "definitionSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
       "geometryRule": "市场候选四至采用北川杨河、东春塘河、南中环路—华夏西路、西黄浦江；道路与河流均取固定 OSM 快照中心线。东侧当前使用两段未命名 OSM 水线作为春塘河候选线，身份未核验。5 米缓冲只用于切割并验证闭合，生成后回扩至线位；候选面不得接触临时裁剪框。"
+    },
+    {
+      "id": "sector_shangnan",
+      "canonicalName": "上南",
+      "scopeVersion": "zhoujiadu-market-baseline-2026-07",
+      "method": "market_four_sides_osm_linear_component_with_shared_topology",
+      "bbox": [121.45, 31.15, 121.54, 31.22],
+      "insidePoint": [121.498027, 31.178601],
+      "boundaryAnchors": [
+        {
+          "side": "north",
+          "featureType": "composite-linear",
+          "expectedIdentity": "浦东南路—白莲泾候选中心线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "components": [
+            {
+              "featureType": "road",
+              "expectedIdentity": "浦东南路",
+              "match": { "names": ["浦东南路"] }
+            },
+            {
+              "featureType": "waterway",
+              "expectedIdentity": "白莲泾",
+              "match": { "names": ["白莲泾"] }
+            }
+          ],
+          "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1500,
+          "minimumObjectCoverageMeters": 20,
+          "note": "规划文字确认北界由浦东南路与白莲泾共同组成；浦东南路为分隔式道路，当前只确认到 15 米内走廊贴合，尚待沿线小区核验唯一共享中位线。"
+        },
+        {
+          "side": "east",
+          "featureType": "road",
+          "expectedIdentity": "东明路候选中心线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": { "names": ["东明路"] },
+          "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1800,
+          "minimumObjectCoverageMeters": 20,
+          "note": "规划文字确认东界为东明路；分隔式道路的唯一市场共享中位线仍待沿线小区核验。"
+        },
+        {
+          "side": "south",
+          "featureType": "waterway",
+          "expectedIdentity": "川杨河",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["川杨河"] },
+          "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1400
+        },
+        {
+          "side": "west",
+          "featureType": "road",
+          "expectedIdentity": "上南路候选中心线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": { "names": ["上南路"] },
+          "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1400,
+          "minimumObjectCoverageMeters": 20,
+          "note": "用户裁定世博—上南以上南路为共享边骨架；分隔式道路当前按 15 米走廊贴合，完整小区修正尚未执行。"
+        }
+      ],
+      "cutBufferMeters": 5,
+      "centerlineToleranceMeters": 15,
+      "minimumBboxClearanceMeters": 100,
+      "sharedEdgeSectorIds": ["sector_qiantan", "sector_shibo"],
+      "snapDependencySectorIds": ["sector_qiantan"],
+      "sharedEdgeSnapDistanceMeters": 60,
+      "areaRangeSquareKilometers": [2.4, 2.7],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
+      "geometryRule": "上南候选骨架采用周家渡社区 Z000202 文字四至：北浦东南路—白莲泾、东东明路、南川杨河、西上南路。固定 OSM 快照的命名道路与河流用于独立闭合；5 米缓冲仅用于切割，生成后回扩至线位。最终在声明的 60 米最大连接距离内接入杨思前滩、世博共享线，并针对最终拓扑复算道路水系覆盖率；分隔式道路仍按 15 米走廊候选处理，待完整小区核验。"
+    },
+    {
+      "id": "sector_shibo",
+      "canonicalName": "世博",
+      "scopeVersion": "shanggang-market-baseline-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14178805",
+      "expectedOsmName": "上钢新村街道",
+      "insidePoint": [121.475568, 31.178504],
+      "sharedEdgeSectorIds": ["sector_qiantan", "sector_shangnan"],
+      "snapDependencySectorIds": ["sector_qiantan", "sector_shangnan"],
+      "sharedEdgeSnapDistanceMeters": 60,
+      "historicalReferenceAreaSquareKilometers": 7.54,
+      "historicalReferenceAreaAsOf": "2023-pre-adjustment",
+      "areaRangeSquareKilometers": [7.1, 7.9],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "official-shanggang-scope-2023", "official-pudong-boundary-adjustment-2025"],
+      "geometryRule": "世博候选面以上钢新村街道框架为定位骨架：西、北临黄浦江，南至川杨河；东侧在世博—上南共享段贴合上南路，北端以后服从 2025 年世博场馆红线调整。固定 OSM 行政关系只提供开放几何骨架，并在声明的 60 米最大连接距离内接入已裁定的杨思前滩、上南共享线以消除缝隙或重叠；2023 年 7.54 平方公里只作调整前历史量级参考，不作为调整后面积硬校验。"
     },
     {
       "id": "sector_beiwaitan",
@@ -81,6 +184,9 @@
       "insidePoint": [121.5127542, 31.1454076],
       "includedMarketAreas": ["东明路街道"],
       "subtractSectorIds": ["sector_qiantan"],
+      "sharedEdgeSectorIds": ["sector_qiantan"],
+      "snapDependencySectorIds": ["sector_qiantan"],
+      "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [25, 27],
       "definitionSourceIds": ["official-sanlin-profile-2023"],
       "geometryRule": "用户裁定楼市三林包含位于三林镇外轮廓内部的东明路街道；候选面以固定 OSM 三林镇 relation 的外轮廓为骨架，填平东明路行政内洞，并扣除已单列的杨思前滩主板块，保留包含东明路市场裁定点的连续主面。行政参考面继续保留原内洞，不改变行政事实。"
