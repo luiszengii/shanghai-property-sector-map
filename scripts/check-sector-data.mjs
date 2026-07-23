@@ -979,6 +979,19 @@ validateLockedOsmCollection(subscopeData, candidateManifest, "板块子范围", 
 
 const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
 const candidateById = new Map(candidates.map((feature) => [feature.properties?.id, feature]));
+const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
+const yangsiPrimaryCandidate = candidateById.get("sector_yangsi");
+if (!qiantanPrimaryCandidate || qiantanPrimaryCandidate.properties?.name !== "前滩") {
+  error("sector_qiantan: 前滩必须保持独立一级候选面");
+}
+if (!yangsiPrimaryCandidate || yangsiPrimaryCandidate.properties?.name !== "杨思") {
+  error("sector_yangsi: 杨思必须保持独立一级候选面");
+} else if (!yangsiPrimaryCandidate.properties?.excludedMarketAreas?.includes("前滩")) {
+  error("sector_yangsi: 必须显式记录从原合并范围扣除前滩");
+}
+if (subscopes.some((feature) => feature.properties?.parentSectorId === "sector_qiantan")) {
+  error("sector_qiantan: 前滩已升级为一级板块，不得继续登记为杨思内部子范围");
+}
 const sanlinMarketCandidate = candidateById.get("sector_sanlin");
 const dongmingMarketPoint = [121.5127542, 31.1454076];
 if (!sanlinMarketCandidate) {

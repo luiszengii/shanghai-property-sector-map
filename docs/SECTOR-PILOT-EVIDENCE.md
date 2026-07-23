@@ -1,6 +1,6 @@
 # 上海楼市板块首批 12 个试点：边界证据表
 
-> 2026-07-23 口径更新：`sector_qiantan` 的主板块身份已改为“杨思前滩”，市场候选四至为北川杨河、东春塘河、南中环路—华夏西路、西黄浦江；本文以下关于 Z000801 / ES4 的“前滩”证据仅适用于其内部官方子范围，不再代表完整主板块。详见 [ADR-0014](adr/0014-yangsi-qiantan-primary-with-qiantan-subscope.md)。
+> 2026-07-23 最新口径：`sector_qiantan` 已恢复为独立“前滩”一级板块，新增 `sector_yangsi`；杨思采用原合并候选面扣除前滩后的差集。本文以下 Z000801 / ES4 证据重新用于前滩一级候选。详见 [ADR-0022](adr/0022-split-yangsi-and-qiantan-primary-sectors.md)。
 
 > 核对日期：2026-07-22
 > 对象：`src/data/sectors.geojson` 中现有 12 个演示板块。

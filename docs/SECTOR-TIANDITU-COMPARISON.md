@@ -1,6 +1,6 @@
 # 12 个板块与天地图·上海的逐项对照
 
-> 2026-07-23 口径更新：`sector_qiantan` 已采用“杨思前滩”市场主板块，官方前滩 Z000801 / ES4 改为内部子范围。下文旧“前滩”差异指标属于历史试点口径；现行可复算指标见 `src/data/sectors/reference-checks.json`。
+> 2026-07-23 最新口径：`sector_qiantan` 为独立“前滩”一级板块，新增 `sector_yangsi`；杨思严格取原“杨思前滩”候选面扣除前滩后的差集。前滩不再是内部子范围。现行可复算结论见 `src/data/sectors/reference-checks.json`，裁定见 ADR-0022。
 
 核验日期：2026-07-22
 
