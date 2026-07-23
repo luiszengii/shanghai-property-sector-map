@@ -1,0 +1,96 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import {
+  buildSectorDraftFeatureCollection,
+  createSectorDraft,
+  isCompleteSectorDraft,
+  normalizeAmapPolygonRing,
+  parseSectorEditorState,
+  parseSectorDraftFeatureCollection,
+  serializeSectorEditorState,
+// @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
+} from "./sector-editor-drafts.ts";
+
+test("exported sector drafts are closed GCJ-02 polygons with an explicit warning", () => {
+  const draft = {
+    ...createSectorDraft("sector-test", "2026-07-23T08:00:00.000Z"),
+    name: "测试板块",
+    ring: [
+      [121.4, 31.2],
+      [121.5, 31.2],
+      [121.5, 31.3],
+    ] as [number, number][],
+  };
+
+  const collection = buildSectorDraftFeatureCollection([draft], "2026-07-23T09:00:00.000Z");
+
+  assert.equal(collection.metadata.coordinateSystem, "GCJ-02");
+  assert.match(collection.metadata.warning, /非行政区/);
+  assert.deepEqual(collection.features[0].geometry.coordinates[0], [
+    [121.4, 31.2],
+    [121.5, 31.2],
+    [121.5, 31.3],
+    [121.4, 31.2],
+  ]);
+});
+
+test("an editor export can be imported without keeping the closing coordinate twice", () => {
+  const draft = {
+    ...createSectorDraft("sector-roundtrip", "2026-07-23T08:00:00.000Z"),
+    name: "往返测试",
+    ring: [
+      [121.1, 31.1],
+      [121.2, 31.1],
+      [121.2, 31.2],
+    ] as [number, number][],
+  };
+  const collection = buildSectorDraftFeatureCollection([draft]);
+
+  const imported = parseSectorDraftFeatureCollection(collection);
+
+  assert.equal(imported.length, 1);
+  assert.equal(imported[0].ring.length, 3);
+  assert.deepEqual(imported[0].ring[0], [121.1, 31.1]);
+});
+
+test("import rejects files without an explicit GCJ-02 coordinate system", () => {
+  assert.throws(
+    () => parseSectorDraftFeatureCollection({
+      type: "FeatureCollection",
+      metadata: { schemaVersion: 1 },
+      features: [],
+    }),
+    /坐标系不是 GCJ-02/,
+  );
+});
+
+test("an unfinished local draft survives browser-storage serialization", () => {
+  const draft = {
+    ...createSectorDraft("sector-in-progress", "2026-07-23T08:00:00.000Z"),
+    name: "画到一半",
+    ring: [[121.4, 31.2]] as [number, number][],
+  };
+
+  const restored = parseSectorEditorState(serializeSectorEditorState([draft]));
+
+  assert.equal(restored[0].name, "画到一半");
+  assert.deepEqual(restored[0].ring, [[121.4, 31.2]]);
+});
+
+test("AMap polygon paths work whether the outer ring is direct or nested", () => {
+  const direct = [[121.4, 31.2], [121.5, 31.2], [121.5, 31.3]];
+  const nested = [direct];
+
+  assert.deepEqual(normalizeAmapPolygonRing(direct), direct);
+  assert.deepEqual(normalizeAmapPolygonRing(nested), direct);
+});
+
+test("a drawn polygon still needs a real sector name before export", () => {
+  const draft = {
+    ...createSectorDraft("sector-unnamed"),
+    ring: [[121.4, 31.2], [121.5, 31.2], [121.5, 31.3]] as [number, number][],
+  };
+
+  assert.equal(isCompleteSectorDraft(draft), false);
+  assert.equal(buildSectorDraftFeatureCollection([draft]).features.length, 0);
+});
