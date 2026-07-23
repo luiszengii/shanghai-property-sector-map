@@ -39,6 +39,16 @@ NEXT_PUBLIC_AMAP_SECURITY_JS_CODE=你的高德安全密钥
 - `src/data/places.json`：10 类设施、每类少量演示点位
 - `src/data/categories.json`：分类名称、分组、颜色与图标配置
 
+### 小红书房产观点样本
+
+本地工作区另有一批通过 MediaCrawler 采集的小红书房产讨论样本，当前覆盖前滩、张江、大宁和徐泾。它用于发现用户关注点和生成待核验线索，不属于地图正式事实数据。
+
+- 数据说明、使用边界与复爬方法：[`docs/XHS-DATA-GUIDE.md`](docs/XHS-DATA-GUIDE.md)
+- 本地报告：`outputs/xhs_analysis/REPORT.md`
+- 清洗脚本：`scripts/xhs_property_report.py`
+
+`outputs/` 默认不进入 Git，避免误提交平台原文、用户信息和临时访问参数。
+
 替换正式数据时请保持现有字段结构；板块边界使用 WGS84/GCJ-02 前需核对坐标系并统一转换。当前演示坐标仅用于界面功能演示。
 
 ## 功能

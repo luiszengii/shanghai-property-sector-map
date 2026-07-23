@@ -24,6 +24,7 @@ export function MapContainer() {
   const [status, setStatus] = useState<LoadStatus>(() => process.env.NEXT_PUBLIC_AMAP_KEY ? "loading" : "missing-key");
   const [errorMessage, setErrorMessage] = useState("");
   const [viewportVersion, setViewportVersion] = useState(0);
+  const [viewportInteracting, setViewportInteracting] = useState(false);
   const {
     zoom,
     enabledCategories,
@@ -71,6 +72,46 @@ export function MapContainer() {
 
         let wheelFrame: number | null = null;
         let wheelDelta = 0;
+        let zoomSettleTimer: number | null = null;
+        let revealFrame: number | null = null;
+        let zooming = false;
+        const commitViewport = () => {
+          const center = map.getCenter();
+          setZoom(map.getZoom());
+          setCenter([center.lng, center.lat]);
+          setViewportVersion((value) => value + 1);
+        };
+        const beginZoomInteraction = () => {
+          if (revealFrame !== null) {
+            window.cancelAnimationFrame(revealFrame);
+            revealFrame = null;
+          }
+          zooming = true;
+          setViewportInteracting(true);
+        };
+        const scheduleZoomSettlement = () => {
+          beginZoomInteraction();
+          if (zoomSettleTimer !== null) window.clearTimeout(zoomSettleTimer);
+          zoomSettleTimer = window.setTimeout(() => {
+            zoomSettleTimer = null;
+            zooming = false;
+            commitViewport();
+            // Keep the interaction class through React's overlay rebuild, then
+            // reveal the fresh markers so they fade in instead of popping in.
+            revealFrame = window.requestAnimationFrame(() => {
+              revealFrame = window.requestAnimationFrame(() => {
+                revealFrame = null;
+                setViewportInteracting(false);
+              });
+            });
+          }, 180);
+        };
+        const handleMoveEnd = () => {
+          if (zooming) return;
+          const center = map.getCenter();
+          setCenter([center.lng, center.lat]);
+          setViewportVersion((value) => value + 1);
+        };
         const handlePinchWheel = (event: WheelEvent) => {
           if (!event.ctrlKey) return;
           const eventTarget = event.target;
@@ -93,16 +134,24 @@ export function MapContainer() {
           window.removeEventListener("wheel", handlePinchWheel, true);
           if (wheelFrame !== null) window.cancelAnimationFrame(wheelFrame);
         };
-        map.on("zoomchange", () => setZoom(map.getZoom()));
-        map.on("moveend", () => {
-          const center = map.getCenter();
-          setCenter([center.lng, center.lat]);
-          setViewportVersion((value) => value + 1);
-        });
+        map.on("zoomstart", beginZoomInteraction);
+        map.on("zoomchange", scheduleZoomSettlement);
+        map.on("zoomend", scheduleZoomSettlement);
+        map.on("moveend", handleMoveEnd);
         mapRef.current = map;
         setMapInstance(map);
         setAmapApi(api);
         setStatus("ready");
+        removeGestureGuard = () => {
+          window.removeEventListener("wheel", handlePinchWheel, true);
+          if (wheelFrame !== null) window.cancelAnimationFrame(wheelFrame);
+          if (zoomSettleTimer !== null) window.clearTimeout(zoomSettleTimer);
+          if (revealFrame !== null) window.cancelAnimationFrame(revealFrame);
+          map.off("zoomstart", beginZoomInteraction);
+          map.off("zoomchange", scheduleZoomSettlement);
+          map.off("zoomend", scheduleZoomSettlement);
+          map.off("moveend", handleMoveEnd);
+        };
       })
       .catch((error: unknown) => {
         if (cancelled) return;
@@ -114,8 +163,13 @@ export function MapContainer() {
     return () => {
       cancelled = true;
       removeGestureGuard();
-      mapRef.current?.destroy();
+      const map = mapRef.current;
       mapRef.current = null;
+      if (map) {
+        // React runs this parent cleanup before the child layer cleanups. Let the
+        // layers detach their overlays before destroying the underlying map.
+        queueMicrotask(() => map.destroy());
+      }
     };
   }, [setCenter, setZoom]);
 
@@ -168,7 +222,21 @@ export function MapContainer() {
   }, [selectProject]);
 
   return (
-    <div className="map-stage" aria-label="上海楼市互动地图">
+    <div
+      className={`map-stage${viewportInteracting ? " is-viewport-interacting" : ""}`}
+      aria-label="上海楼市互动地图"
+    >
+      <style>{`
+        .map-stage .amap-marker {
+          transition: opacity 140ms ease, visibility 0s linear;
+        }
+        .map-stage.is-viewport-interacting .amap-marker {
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          transition: opacity 110ms ease-out, visibility 0s linear 110ms;
+        }
+      `}</style>
       <div ref={containerRef} className="amap-host" />
       {status === "ready" && (
         <div className="map-zoom-controls" role="group" aria-label="地图缩放控制">

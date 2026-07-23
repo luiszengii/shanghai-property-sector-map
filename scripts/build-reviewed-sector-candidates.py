@@ -292,6 +292,55 @@ def build_market_linear_component(
     return output_geometry, float(restored.area), osm_refs
 
 
+def build_market_linear_component_minus_candidates(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+    geometry_by_id: dict[str, Any],
+):
+    geometry, _, osm_refs = build_market_linear_component(
+        gpkg,
+        definition,
+        working_crs,
+        output_crs,
+    )
+    projected = project_geometry(geometry, output_crs, working_crs)
+    for sector_id in definition["subtractSectorIds"]:
+        neighbor = geometry_by_id.get(sector_id)
+        if neighbor is None:
+            raise ValueError(
+                f"{definition['canonicalName']} 找不到待扣除板块 {sector_id}"
+            )
+        projected = projected.difference(
+            project_geometry(neighbor, output_crs, working_crs)
+        )
+    minimum_part_area = float(
+        definition.get("minimumRetainedPartSquareMeters", 0)
+    )
+    retained_parts = [
+        part for part in polygons(make_valid(projected))
+        if part.area >= minimum_part_area
+    ]
+    if not retained_parts:
+        raise ValueError(
+            f"{definition['canonicalName']} 扣除相邻板块后没有可保留面"
+        )
+    projected = normalize_polygonal(unary_union(retained_parts))
+    inside_point = project_geometry(
+        Point(*definition["insidePoint"]),
+        output_crs,
+        working_crs,
+    )
+    if not projected.contains(inside_point):
+        raise ValueError(
+            f"{definition['canonicalName']} 扣除相邻板块后不包含市场裁定点"
+        )
+    osm_refs["subtractSectorIds"] = definition["subtractSectorIds"]
+    output_geometry = project_geometry(projected, working_crs, output_crs)
+    return output_geometry, float(projected.area), osm_refs
+
+
 def build_osm_admin_candidate(gpkg: Path, definition: dict[str, Any], working_crs: str):
     relation_id = str(definition["osmAdminRelationId"])
     frame = pyogrio.read_dataframe(
@@ -591,9 +640,21 @@ def finalize_topology_group(
                 f"{definition['canonicalName']} 米制拓扑最大位移 {displacement:.2f} 米，"
                 f"超出声明连接距离 {snap_distance:.2f} 米"
             )
-        feature["properties"]["topologySnapDistanceMeters"] = snap_distance
+        previous_snap_distance = float(
+            feature["properties"].get("topologySnapDistanceMeters", 0)
+        )
+        previous_displacement = float(
+            feature["properties"].get(
+                "topologyMaxBoundaryDisplacementMeters",
+                0,
+            )
+        )
+        feature["properties"]["topologySnapDistanceMeters"] = max(
+            previous_snap_distance,
+            snap_distance,
+        )
         feature["properties"]["topologyMaxBoundaryDisplacementMeters"] = round(
-            displacement,
+            max(previous_displacement, displacement),
             2,
         )
         area_km2 = projected.area / 1_000_000
@@ -796,9 +857,17 @@ def recompute_final_anchor_coverage(
             })
 
         manifest = manifest_by_side[anchor["side"]]
+        manifest["featureType"] = anchor["featureType"]
+        manifest["expectedIdentity"] = anchor["expectedIdentity"]
+        manifest["identityStatus"] = anchor["identityStatus"]
+        manifest["verificationSourceIds"] = anchor["verificationSourceIds"]
         manifest["osmRefs"] = sorted(final_refs)
         manifest["boundaryCoverageWithinToleranceMeters"] = round(coverage, 1)
         manifest["coverageStage"] = "final-topology"
+        if anchor.get("note"):
+            manifest["note"] = anchor["note"]
+        else:
+            manifest.pop("note", None)
         if anchor.get("components"):
             manifest["components"] = component_manifest
 
@@ -879,6 +948,9 @@ def build_feature(
             **({
                 "includedMarketAreas": definition["includedMarketAreas"],
             } if definition.get("includedMarketAreas") else {}),
+            **({
+                "excludedMarketAreas": definition["excludedMarketAreas"],
+            } if definition.get("excludedMarketAreas") else {}),
             **({
                 "historicalReferenceAreaSquareKilometers": float(
                     definition["historicalReferenceAreaSquareKilometers"]
@@ -972,6 +1044,14 @@ def main() -> None:
                 definition,
                 definitions["workingCrs"],
                 definitions["outputCrs"],
+            )
+        elif definition["method"] == "market_four_sides_osm_linear_component_minus_candidates":
+            geometry, area, osm_refs = build_market_linear_component_minus_candidates(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+                topology_geometry_by_id,
             )
         elif definition["method"] == "market_four_sides_osm_linear_component_with_shared_topology":
             geometry, area, osm_refs = build_market_linear_component_with_shared_topology(

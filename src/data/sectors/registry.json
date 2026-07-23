@@ -1,29 +1,52 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-23",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、世博、上南、北蔡、御桥、徐泾、虹桥商务区、古美、莘庄、春申、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。行政参考层继续独立叠加，不替代市场板块；正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩与杨思已拆成两个互斥一级板块；世博、上南、北蔡、御桥、徐泾、虹桥商务区、古美、莘庄、春申、北外滩等继续作为内部复核候选面。行政参考层独立叠加，不替代市场板块；正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
-      "canonicalName": "杨思前滩",
-      "aliases": ["前滩", "杨思前滩板块"],
+      "canonicalName": "前滩",
+      "aliases": ["前滩板块", "前滩 Z000801", "前滩 ES4"],
       "districtNames": ["浦东新区"],
       "kind": "market_sector",
       "reviewStatus": "draft-medium",
-      "definitionStatus": "market_scope_candidate",
-      "definitionCandidate": "杨思前滩主板块：北至川杨河、东至春塘河、南至中环路—华夏西路、西至黄浦江；官方前滩 Z000801 / ES4 作为内部子范围，不替代主板块。",
-      "definitionSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
-      "boundaryEvidenceIds": ["yangsi-qiantan-north", "yangsi-qiantan-east", "yangsi-qiantan-south", "yangsi-qiantan-west"],
+      "definitionStatus": "official_scope_market_candidate",
+      "definitionCandidate": "前滩独立一级板块：北至川杨河、东至济阳路、南至中环线（华夏路）、西至黄浦江；以 Z000801 / ES4 官方四至重建内部候选。",
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
+      "boundaryEvidenceIds": ["qiantan-north", "qiantan-east", "qiantan-south", "qiantan-west"],
       "geometry": {
         "status": "draft",
         "confidence": "medium",
         "coordinateSystem": "WGS84",
         "coordinateSystemVerified": true,
-        "version": "osm-shanghai-260721-market-baseline-v1",
+        "version": "osm-shanghai-260721-qiantan-primary-v1",
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
-        "verificationSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
+        "verificationSourceIds": ["official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
         "publicationPolicy": "internal_review",
-        "note": "已按市场四至和固定日期 OSM 道路、河流线独立重建 16.2209 平方公里候选面；临时裁剪框不参与边界。东侧两段 OSM 水线没有名称，只能作为春塘河候选线；南侧分隔式中环只确认到 15 米内道路走廊贴合，尚未确定唯一共享中位线；同时仅有一个卖方来源给出完整四至，因此仍待东界身份、南界中位线、第二来源与沿线项目核验。官方前滩 2.9314 平方公里重建面作为内部子范围另行显示。"
+        "note": "已将原内部子范围提升为独立一级板块，按官方四至与固定 OSM 地物重建约 2.9314 平方公里候选面。它不再从属于杨思；总装后与杨思、三林保持互斥拓扑。"
+      }
+    },
+    {
+      "id": "sector_yangsi",
+      "canonicalName": "杨思",
+      "aliases": ["杨思板块", "杨思（不含前滩）"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_scope_candidate",
+      "definitionCandidate": "杨思独立一级板块：严格取原杨思前滩市场候选面扣除独立前滩后的差集，不再包含前滩，也不改变原外部四至。",
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river", "official-qiantan-z000801-2012"],
+      "boundaryEvidenceIds": ["yangsi-north", "yangsi-east", "yangsi-south", "yangsi-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-yangsi-minus-qiantan-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river", "official-qiantan-z000801-2012"],
+        "publicationPolicy": "internal_review",
+        "note": "严格以原市场候选面扣除独立前滩，形成约 13.2943 平方公里的杨思候选面；小于 100 平方米的数值碎片未保留。东侧春塘河身份和南侧分隔式道路中位线仍待进一步核验。"
       }
     },
     {
@@ -147,7 +170,7 @@
       "kind": "market_sector",
       "reviewStatus": "draft-medium",
       "definitionStatus": "user_decided_market_scope",
-      "definitionCandidate": "楼市三林采用三林镇外轮廓作为定位骨架，明确包含东明路街道；与已单列的杨思前滩重叠部分从三林扣除，其余相邻板块共享边继续逐段核验。",
+      "definitionCandidate": "楼市三林采用三林镇外轮廓作为定位骨架，明确包含东明路街道；与已单列的前滩、杨思重叠部分从三林扣除，其余相邻板块共享边继续逐段核验。",
       "definitionSourceIds": ["official-sanlin-profile-2023", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["sanlin-north", "sanlin-east", "sanlin-south", "sanlin-west"],
       "geometry": {
@@ -159,7 +182,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-sanlin-profile-2023", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "用户已裁定东明路街道划入楼市三林。候选面填平三林镇行政参考面的东明路内洞，并扣除已单列的杨思前滩；原行政参考面仍保留内洞，仅作行政事实核对。"
+        "note": "用户已裁定东明路街道划入楼市三林。候选面填平三林镇行政参考面的东明路内洞，并扣除已单列的前滩、杨思；原行政参考面仍保留内洞，仅作行政事实核对。"
       }
     },
     {
@@ -183,7 +206,7 @@
         "marketGeometryVerificationSourceIds": ["official-shanghai-beicai-wedge-green-2024"],
         "verificationSourceIds": ["official-beicai-town-area-2023", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "用户已裁定北蔡与御桥拆分。候选面约 15.02 平方公里，以固定 OSM 北蔡镇外壳和华夏西路—华夏中路派生中线独立重建，并与杨思前滩、三林统一拓扑；东侧张江边尚未冻结。行政参考面继续单独叠加，不代表市场边界。"
+        "note": "用户已裁定北蔡与御桥拆分。候选面约 15.02 平方公里，以固定 OSM 北蔡镇外壳和华夏西路—华夏中路派生中线独立重建，并与杨思、三林统一拓扑；东侧张江边尚未冻结。行政参考面继续单独叠加，不代表市场边界。"
       }
     },
     {
@@ -349,7 +372,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "official-shanggang-scope-2023", "official-pudong-boundary-adjustment-2025"],
         "publicationPolicy": "internal_review",
-        "note": "已按用户选择的上钢新村框架与固定日期 OSM relation 独立重建约 7.52 平方公里候选面，并接入杨思前滩、上南候选共享边以消除缝隙和重叠。2023 年 7.54 平方公里是 2025 年界线调整前的历史量级参考，不作为调整后面积硬校验；该面是楼市候选而非行政界，东侧分隔式道路和场馆红线段仍待完整项目归属核验。"
+        "note": "已按用户选择的上钢新村框架与固定日期 OSM relation 独立重建约 7.52 平方公里候选面，并接入杨思、上南候选共享边以消除缝隙和重叠。2023 年 7.54 平方公里是 2025 年界线调整前的历史量级参考，不作为调整后面积硬校验；该面是楼市候选而非行政界，东侧分隔式道路和场馆红线段仍待完整项目归属核验。"
       }
     },
     {
@@ -372,7 +395,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
         "publicationPolicy": "internal_review",
-        "note": "已按用户选择的周家渡 Z000202 四至框架与固定日期 OSM 命名道路、水系独立重建约 2.52 平方公里候选面，并与杨思前滩、世博候选面建立无重叠共享边。规划框架不等于楼市定稿；浦东南路、东明路、上南路均需按沿线完整小区归属继续修正。"
+        "note": "已按用户选择的周家渡 Z000202 四至框架与固定日期 OSM 命名道路、水系独立重建约 2.52 平方公里候选面，并与杨思、世博候选面建立无重叠共享边。规划框架不等于楼市定稿；浦东南路、东明路、上南路均需按沿线完整小区归属继续修正。"
       }
     }
   ]

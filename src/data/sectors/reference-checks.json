@@ -28,7 +28,7 @@
       "sectorId": "sector_qiantan",
       "comparisonRole": "functional_scope_not_admin",
       "verdict": "not_directly_comparable",
-      "geometryDecision": "keep_market_candidate_with_subscope",
+      "geometryDecision": "keep_official_scope_candidate",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
         {
@@ -38,14 +38,23 @@
           "reviewNumber": "沪S（2025）043号"
         }
       ],
-      "legacyGeometryComparison": {
-        "reference": "reviewed-candidate",
-        "intersectionOverUnion": 0.259,
-        "referenceCoveredPercent": 45.3,
-        "legacyAreaRatio": 1.2,
-        "centroidDistanceKilometers": 2.46
-      },
-      "summary": "杨思前滩是市场主板块，不应套用浦东街镇界；主范围按川杨河、春塘河、中环路—华夏西路、黄浦江独立重建，官方前滩 Z000801 / ES4 仅作为内部子范围。"
+      "summary": "用户裁定前滩从原杨思前滩合并面中独立为一级板块；候选采用 Z000801 / ES4 官方四至并由固定 OSM 地物独立重建，不再作为杨思内部子范围。"
+    },
+    {
+      "sectorId": "sector_yangsi",
+      "comparisonRole": "functional_scope_not_admin",
+      "verdict": "not_directly_comparable",
+      "geometryDecision": "keep_market_candidate",
+      "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
+      "standardMapDocuments": [
+        {
+          "title": "浦东新区行政区划示意图",
+          "url": "https://shanghai.tianditu.gov.cn/map/data/standardMap/上海市标准地图/11-浦东新区行政区划示意图.pdf",
+          "mapDate": "2025-07",
+          "reviewNumber": "沪S（2025）043号"
+        }
+      ],
+      "summary": "用户裁定杨思与前滩拆成两个一级板块；杨思候选严格取原市场四至候选面扣除独立前滩后的差集，不用街镇行政面替代。"
     },
     {
       "sectorId": "sector_shibo",

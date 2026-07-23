@@ -34,7 +34,7 @@ export function DataDisclaimerDialog() {
           <li>46 个新盘点位已于 2026-07-22 按项目 POI、公开地址逐项核对并固定，不再使用板块近似点。</li>
           <li>多期或多组团项目采用主地块/整体代表点，详情卡会单独标注；中等置信点位建议看房前再次确认具体入口。</li>
           <li>{candidateSectorNames}共 {candidateSectors.length} 个板块，已按可追溯文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线研究候选面。</li>
-          <li>杨思前滩内部另以橙色虚线显示官方前滩 Z000801 / ES4 子范围；子范围不创建新的主板块，也不参与主板块互斥分区。</li>
+          <li>前滩与杨思现为两个互斥一级板块：前滩采用 Z000801 / ES4 四至候选，杨思为原合并候选面扣除前滩后的差集。</li>
           <li>{administrativeReferenceSectorNames}共 {administrativeReferenceSectors.length} 个板块，只叠加蓝色虚线街镇行政参考层；行政范围不会自动等同于楼市板块。</li>
           <li>上海天地图 2025 年 7 月标准地图只用于逐块视觉核对形状、面积量级和邻接关系，不从图件复制坐标；浦东 2025 年 11 月已调整的边界段以后续公告为准。</li>
           <li>另有 {unresolvedMarketSectorCount} 个板块尚未形成互斥的楼市候选边界；旧灰色演示面只保留在数据与编辑器中，不在主地图冒充主板块。</li>

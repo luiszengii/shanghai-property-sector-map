@@ -1187,13 +1187,23 @@ for (const {
 } of [
   {
     firstId: "sector_qiantan",
-    secondId: "sector_shangnan",
-    minimumSharedLengthMeters: 1_400,
+    secondId: "sector_yangsi",
+    minimumSharedLengthMeters: 5_000,
   },
   {
     firstId: "sector_qiantan",
+    secondId: "sector_sanlin",
+    minimumSharedLengthMeters: 2_500,
+  },
+  {
+    firstId: "sector_yangsi",
+    secondId: "sector_shangnan",
+    minimumSharedLengthMeters: 450,
+  },
+  {
+    firstId: "sector_yangsi",
     secondId: "sector_shibo",
-    minimumSharedLengthMeters: 2_400,
+    minimumSharedLengthMeters: 2_000,
   },
   {
     firstId: "sector_shangnan",

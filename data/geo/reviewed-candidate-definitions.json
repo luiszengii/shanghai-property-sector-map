@@ -28,6 +28,14 @@
       "snapDistanceMeters": 60,
       "prioritySectorIds": [
         "sector_qiantan",
+        "sector_yangsi"
+      ]
+    },
+    {
+      "snapDistanceMeters": 60,
+      "prioritySectorIds": [
+        "sector_qiantan",
+        "sector_yangsi",
         "sector_shangnan",
         "sector_shibo",
         "sector_sanlin"
@@ -37,6 +45,7 @@
       "snapDistanceMeters": 1,
       "prioritySectorIds": [
         "sector_qiantan",
+        "sector_yangsi",
         "sector_sanlin",
         "sector_beicai",
         "sector_yuqiao"
@@ -66,9 +75,30 @@
   "sectors": [
     {
       "id": "sector_qiantan",
-      "canonicalName": "杨思前滩",
-      "scopeVersion": "market-baseline-2026-07",
-      "method": "market_four_sides_osm_linear_component",
+      "canonicalName": "前滩",
+      "scopeVersion": "Z000801-ES4-primary-2026-07",
+      "method": "official_four_sides_osm_land_component",
+      "bbox": [121.44, 31.12, 121.51, 31.18],
+      "insidePoint": [121.474, 31.155],
+      "roadNames": ["济阳路", "华夏西路", "中环路"],
+      "waterwayNames": ["黄浦江", "川杨河"],
+      "roadSnapBufferMeters": 3,
+      "waterSurfaceMaxDistanceMeters": 60,
+      "minimumWaterSurfaceSquareMeters": 100,
+      "fillHolesBelowSquareMeters": 10,
+      "officialAreaSquareKilometers": 2.8317,
+      "areaToleranceRatio": 0.05,
+      "preserveTopologyPrecision": true,
+      "sharedEdgeSectorIds": ["sector_yangsi", "sector_sanlin"],
+      "snapDependencySectorIds": [],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
+      "geometryRule": "用户裁定前滩为独立一级市场板块。候选按官方 Z000801 / ES4 四至重建：北川杨河、东济阳路、南中环线（华夏路）、西黄浦江；道路取靠范围一侧的固定 OSM 车行线中心线，河流取 OSM 水面与陆地交界。它是内部复核候选，不宣称复刻法定规划坐标。"
+    },
+    {
+      "id": "sector_yangsi",
+      "canonicalName": "杨思",
+      "scopeVersion": "market-minus-qiantan-2026-07",
+      "method": "market_four_sides_osm_linear_component_minus_candidates",
       "bbox": [121.44, 31.12, 121.565, 31.195],
       "insidePoint": [121.515, 31.165],
       "boundaryAnchors": [
@@ -98,7 +128,7 @@
           "identityStatus": "verified-name-alignment-candidate",
           "match": { "names": ["华夏西路", "中环路"] },
           "verificationSourceIds": ["seller-anjuke-yangsi-scope", "osm-geofabrik-shanghai-260721"],
-          "minimumBoundaryCoverageMeters": 7000,
+          "minimumBoundaryCoverageMeters": 6500,
           "minimumObjectCoverageMeters": 20,
           "note": "道路名称已核对，但分隔式道路包含主线、平行车道与匝道；当前输出与道路对象保持 15 米内贴合，尚未证明为唯一走廊中位线。"
         },
@@ -116,11 +146,14 @@
       "centerlineToleranceMeters": 15,
       "minimumBboxClearanceMeters": 100,
       "preserveTopologyPrecision": true,
-      "sharedEdgeSectorIds": ["sector_shangnan", "sector_shibo", "sector_sanlin", "sector_beicai"],
-      "snapDependencySectorIds": [],
-      "areaRangeSquareKilometers": [15, 18],
-      "definitionSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
-      "geometryRule": "市场候选四至采用北川杨河、东春塘河、南中环路—华夏西路、西黄浦江；道路与河流均取固定 OSM 快照中心线。东侧当前使用两段未命名 OSM 水线作为春塘河候选线，身份未核验。5 米缓冲只用于切割并验证闭合，生成后回扩至线位；候选面不得接触临时裁剪框。"
+      "sharedEdgeSectorIds": ["sector_qiantan", "sector_shangnan", "sector_shibo", "sector_sanlin", "sector_beicai"],
+      "snapDependencySectorIds": ["sector_qiantan"],
+      "subtractSectorIds": ["sector_qiantan"],
+      "minimumRetainedPartSquareMeters": 100,
+      "areaRangeSquareKilometers": [13, 14],
+      "excludedMarketAreas": ["前滩"],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river", "official-qiantan-z000801-2012"],
+      "geometryRule": "用户裁定杨思与前滩拆成两个互斥一级板块。杨思严格取原杨思前滩市场四至候选面（北川杨河、东春塘河、南中环路—华夏西路、西黄浦江）扣除独立前滩 Z000801 / ES4 候选面后的差集，不把被扣除部分重分给三林；东侧未命名 OSM 水线仍仅作春塘河候选线。"
     },
     {
       "id": "sector_shangnan",
@@ -187,12 +220,12 @@
       "cutBufferMeters": 5,
       "centerlineToleranceMeters": 15,
       "minimumBboxClearanceMeters": 100,
-      "sharedEdgeSectorIds": ["sector_qiantan", "sector_shibo"],
-      "snapDependencySectorIds": ["sector_qiantan"],
+      "sharedEdgeSectorIds": ["sector_yangsi", "sector_shibo"],
+      "snapDependencySectorIds": ["sector_yangsi"],
       "sharedEdgeSnapDistanceMeters": 60,
       "areaRangeSquareKilometers": [2.4, 2.7],
       "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-zhoujiadu-z000202-2010", "official-pudong-boundary-adjustment-2025"],
-      "geometryRule": "上南候选骨架采用周家渡社区 Z000202 文字四至：北浦东南路—白莲泾、东东明路、南川杨河、西上南路。固定 OSM 快照的命名道路与河流用于独立闭合；5 米缓冲仅用于切割，生成后回扩至线位。最终在声明的 60 米最大连接距离内接入杨思前滩、世博共享线，并针对最终拓扑复算道路水系覆盖率；分隔式道路仍按 15 米走廊候选处理，待完整小区核验。"
+      "geometryRule": "上南候选骨架采用周家渡社区 Z000202 文字四至：北浦东南路—白莲泾、东东明路、南川杨河、西上南路。固定 OSM 快照的命名道路与河流用于独立闭合；5 米缓冲仅用于切割，生成后回扩至线位。最终在声明的 60 米最大连接距离内接入杨思与世博共享线，并针对最终拓扑复算道路水系覆盖率；分隔式道路仍按 15 米走廊候选处理，待完整小区核验。"
     },
     {
       "id": "sector_shibo",
@@ -202,14 +235,14 @@
       "osmAdminRelationId": "14178805",
       "expectedOsmName": "上钢新村街道",
       "insidePoint": [121.475568, 31.178504],
-      "sharedEdgeSectorIds": ["sector_qiantan", "sector_shangnan"],
-      "snapDependencySectorIds": ["sector_qiantan", "sector_shangnan"],
+      "sharedEdgeSectorIds": ["sector_yangsi", "sector_shangnan"],
+      "snapDependencySectorIds": ["sector_yangsi", "sector_shangnan"],
       "sharedEdgeSnapDistanceMeters": 60,
       "historicalReferenceAreaSquareKilometers": 7.54,
       "historicalReferenceAreaAsOf": "2023-pre-adjustment",
       "areaRangeSquareKilometers": [7.1, 7.9],
       "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "official-shanggang-scope-2023", "official-pudong-boundary-adjustment-2025"],
-      "geometryRule": "世博候选面以上钢新村街道框架为定位骨架：西、北临黄浦江，南至川杨河；东侧在世博—上南共享段贴合上南路，北端以后服从 2025 年世博场馆红线调整。固定 OSM 行政关系只提供开放几何骨架，并在声明的 60 米最大连接距离内接入已裁定的杨思前滩、上南共享线以消除缝隙或重叠；2023 年 7.54 平方公里只作调整前历史量级参考，不作为调整后面积硬校验。"
+      "geometryRule": "世博候选面以上钢新村街道框架为定位骨架：西、北临黄浦江，南至川杨河；东侧在世博—上南共享段贴合上南路，北端以后服从 2025 年世博场馆红线调整。固定 OSM 行政关系只提供开放几何骨架，并在声明的 60 米最大连接距离内接入已裁定的杨思与上南共享线以消除缝隙或重叠；2023 年 7.54 平方公里只作调整前历史量级参考，不作为调整后面积硬校验。"
     },
     {
       "id": "sector_beiwaitan",
@@ -232,13 +265,13 @@
       "expectedOsmName": "三林镇",
       "insidePoint": [121.5127542, 31.1454076],
       "includedMarketAreas": ["东明路街道"],
-      "subtractSectorIds": ["sector_qiantan"],
-      "sharedEdgeSectorIds": ["sector_qiantan", "sector_beicai", "sector_yuqiao"],
-      "snapDependencySectorIds": ["sector_qiantan"],
+      "subtractSectorIds": ["sector_qiantan", "sector_yangsi"],
+      "sharedEdgeSectorIds": ["sector_qiantan", "sector_yangsi", "sector_beicai", "sector_yuqiao"],
+      "snapDependencySectorIds": ["sector_qiantan", "sector_yangsi"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [25, 27],
       "definitionSourceIds": ["official-sanlin-profile-2023"],
-      "geometryRule": "用户裁定楼市三林包含位于三林镇外轮廓内部的东明路街道；候选面以固定 OSM 三林镇 relation 的外轮廓为骨架，填平东明路行政内洞，并扣除已单列的杨思前滩主板块，保留包含东明路市场裁定点的连续主面。行政参考面继续保留原内洞，不改变行政事实。"
+      "geometryRule": "用户裁定楼市三林包含位于三林镇外轮廓内部的东明路街道；候选面以固定 OSM 三林镇 relation 的外轮廓为骨架，填平东明路行政内洞，并扣除已单列的前滩与杨思主板块，保留包含东明路市场裁定点的连续主面。行政参考面继续保留原内洞，不改变行政事实。"
     },
     {
       "id": "sector_beicai",
@@ -251,14 +284,14 @@
         "selectedForAssembly": true
       },
       "insidePoint": [121.5487544, 31.1792249],
-      "sharedEdgeSectorIds": ["sector_yuqiao", "sector_qiantan", "sector_sanlin"],
-      "snapDependencySectorIds": ["sector_qiantan", "sector_sanlin"],
+      "sharedEdgeSectorIds": ["sector_yuqiao", "sector_yangsi", "sector_sanlin"],
+      "snapDependencySectorIds": ["sector_yangsi", "sector_sanlin"],
       "sharedEdgeSnapDistanceMeters": 1,
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [14.8, 15.3],
       "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-beicai-dahua-eleven", "seller-anjuke-beicai-lianxi-one", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-boundary-adjustment-2025"],
       "geometryVerificationSourceIds": ["official-shanghai-beicai-wedge-green-2024"],
-      "geometryRule": "用户裁定北蔡与御桥拆成两个互斥一级市场板块，莲溪、大华只作北蔡内部片区。固定 OSM 北蔡镇 relation 仅作起画外壳；北蔡取华夏西路—华夏中路派生道路中线北侧，并在 1 米总装容差内服从既有杨思前滩、三林共享边。东侧张江边仍保持待相邻板块复核。"
+      "geometryRule": "用户裁定北蔡与御桥拆成两个互斥一级市场板块，莲溪、大华只作北蔡内部片区。固定 OSM 北蔡镇 relation 仅作起画外壳；北蔡取华夏西路—华夏中路派生道路中线北侧，并在 1 米总装容差内服从既有杨思、三林共享边。东侧张江边仍保持待相邻板块复核。"
     },
     {
       "id": "sector_yuqiao",
@@ -381,26 +414,5 @@
       "geometryRule": "用户裁定春申为独立一级市场板块。候选以都市路、莘朱路、虹梅南路、银都路固定 OSM 道路中线形成保守框架，并按两家卖方共同归属保持完整项目；四个莘庄项目洞继续归莘庄，不为形成单一外观强行填平。"
     }
   ],
-  "subscopes": [
-    {
-      "id": "subscope_qiantan_z000801",
-      "parentSectorId": "sector_qiantan",
-      "canonicalName": "前滩（Z000801 / ES4）",
-      "scopeVersion": "Z000801-ES4",
-      "method": "official_four_sides_osm_land_component",
-      "bbox": [121.44, 31.12, 121.51, 31.18],
-      "insidePoint": [121.474, 31.155],
-      "roadNames": ["济阳路", "华夏西路", "中环路"],
-      "waterwayNames": ["黄浦江", "川杨河"],
-      "roadSnapBufferMeters": 3,
-      "waterSurfaceMaxDistanceMeters": 60,
-      "minimumWaterSurfaceSquareMeters": 100,
-      "fillHolesBelowSquareMeters": 10,
-      "officialAreaSquareKilometers": 2.8317,
-      "areaToleranceRatio": 0.05,
-      "maximumOutsideParentRatio": 0.001,
-      "definitionSourceIds": ["official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
-      "geometryRule": "官方前滩子范围按北川杨河、东济阳路、南中环线（华夏路）、西黄浦江重建；道路取靠范围一侧的 OSM 车行线中心线，河流取 OSM 水面与陆地交界。3 米缓冲只用于闭合拓扑，生成后回扩至线位。"
-    }
-  ]
+  "subscopes": []
 }
