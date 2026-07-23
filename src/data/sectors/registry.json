@@ -275,6 +275,50 @@
         "publicationPolicy": "demo_only",
         "note": "现有小范围演示面未标明采用哪一官方版本，且行政区字段遗漏嘉定区。"
       }
+    },
+    {
+      "id": "sector_shibo",
+      "canonicalName": "世博",
+      "aliases": ["世博滨江"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "user_decided_market_scope",
+      "definitionCandidate": "与上南拆分为两个互斥一级楼市板块；两者以上南路中心线为共享边骨架，南起川杨河，北止浦东南路—白莲泾。其余边界待人工绘制和逐边核验。",
+      "definitionSourceIds": [],
+      "boundaryEvidenceIds": [],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "unassigned",
+        "sourceIds": [],
+        "publicationPolicy": "internal_review",
+        "note": "板块身份已由用户裁定并记录于 ADR 0017；尚无候选几何，不得在主地图渲染。"
+      }
+    },
+    {
+      "id": "sector_shangnan",
+      "canonicalName": "上南",
+      "aliases": ["上南新村"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "user_decided_market_scope",
+      "definitionCandidate": "候选骨架采用周家渡社区 Z000202 编制单元四至：北至浦东南路—白莲泾、东至东明路、南至川杨河、西至上南路；规划框架不等同于楼市板块，仍需按项目归属逐边修正。",
+      "definitionSourceIds": [],
+      "boundaryEvidenceIds": [],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "unassigned",
+        "sourceIds": [],
+        "publicationPolicy": "internal_review",
+        "note": "板块身份和起画骨架已记录于 ADR 0017、0018；尚无候选几何，不得在主地图渲染。"
+      }
     }
   ]
 }

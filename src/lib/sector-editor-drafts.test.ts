@@ -114,6 +114,7 @@ test("an existing sector becomes an editable copy without changing its identity"
     district: "浦东新区",
     boundaryBasis: "沿主要道路与水系",
     note: "从当前地图载入",
+    geometryStatus: "candidate",
     ring: [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]],
   }, "2026-07-23T10:00:00.000Z");
 

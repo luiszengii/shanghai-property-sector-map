@@ -67,10 +67,12 @@ const administrativeReferenceById = new Map(
   administrativeReferences.map((feature) => [feature.properties.id, feature]),
 );
 const researchGeometryRecords = registry.filter(
-  (record) => record.geometry.status !== "demo",
+  (record) => record.geometry.status !== "demo" && record.geometry.status !== "missing",
 );
 const candidateGeometryRecords = registry.filter(
-  (record) => record.geometry.status !== "demo" && record.geometry.status !== "admin-reference",
+  (record) => record.geometry.status !== "missing"
+    && record.geometry.status !== "demo"
+    && record.geometry.status !== "admin-reference",
 );
 const administrativeReferenceRecords = registry.filter(
   (record) => record.geometry.status === "admin-reference",
@@ -172,7 +174,7 @@ export const sectorCatalog = {
   ),
   hasResearchGeometry: (id: string) => {
     const status = recordById.get(id)?.geometry.status;
-    return status !== undefined && status !== "demo";
+    return status !== undefined && status !== "demo" && status !== "missing";
   },
   getSources: getSourcesForSector,
   getGeometrySources: getGeometrySourcesForSector,

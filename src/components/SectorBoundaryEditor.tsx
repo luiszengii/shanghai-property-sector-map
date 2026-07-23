@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
+import { buildSectorEditorTemplates } from "@/src/lib/sector-editor-catalog";
 import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
@@ -55,27 +56,11 @@ type SidebarSectorItem =
     draft: SectorBoundaryDraft;
   };
 
-const existingSectorTemplates: ExistingSectorDraftTemplate[] = sectorCatalog.features.flatMap((feature) => {
-  const activeGeometry = sectorCatalog.resolveActiveGeometry(feature.properties.id);
-  if (!activeGeometry) return [];
-  const firstRing = activeGeometry.geometry.type === "Polygon"
-    ? activeGeometry.geometry.coordinates[0]
-    : activeGeometry.geometry.coordinates[0]?.[0];
-  if (!firstRing?.length) return [];
-  const record = sectorCatalog.getRecord(feature.properties.id);
-  return [{
-    id: feature.properties.id,
-    name: feature.properties.name,
-    district: feature.properties.district,
-    boundaryBasis: feature.properties.boundaryBasis ?? record?.definitionCandidate ?? "",
-    note: activeGeometry.kind === "reviewed-market-candidate"
-      ? "从当前地图的研究候选面载入；修改后仍需逐边核验。"
-      : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
-    ring: normalizeAmapPolygonRing(firstRing.map(([lng, lat]) => (
-      coordinateToDisplayPosition([lng, lat], activeGeometry.coordinateSystem)
-    ))),
-  }];
-});
+const existingSectorTemplates: ExistingSectorDraftTemplate[] = buildSectorEditorTemplates(
+  sectorCatalog.registry,
+  sectorCatalog.resolveActiveGeometry,
+  coordinateToDisplayPosition,
+);
 
 function createDraftId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -206,7 +191,9 @@ export function SectorBoundaryEditor() {
     setIsDrawing(false);
     setNotice({
       tone: "success",
-      message: `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
+      message: template.geometryStatus === "missing"
+        ? `已载入“${template.name}”；该板块尚无边界，请点击“开始画边界”。`
+        : `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
     });
   }, []);
 
@@ -416,7 +403,7 @@ export function SectorBoundaryEditor() {
         .filter((id): id is string => Boolean(id)),
     );
     const sourceReferences = existingSectorTemplates
-      .filter((template) => !editableSourceIds.has(template.id))
+      .filter((template) => template.ring.length >= 3 && !editableSourceIds.has(template.id))
       .map((template) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
@@ -610,7 +597,11 @@ export function SectorBoundaryEditor() {
           <div className={styles.sidebarIntro}>
             <div>
               <span>已有板块与草稿</span>
-              <strong>{existingDraftBySourceId.size} / {existingSectorTemplates.length} 已载入 · {customDrafts.length} 自建</strong>
+              <strong>
+                {existingSectorTemplates.length} 个已登记 · {" "}
+                {existingSectorTemplates.filter((template) => template.geometryStatus === "missing").length} 个待绘制 · {" "}
+                {customDrafts.length} 个自建
+              </strong>
             </div>
             <button type="button" className={styles.newButton} onClick={addDraft}>
               <Plus size={15} />
@@ -654,7 +645,9 @@ export function SectorBoundaryEditor() {
                         setIsDrawing(false);
                         setNotice({
                           tone: "success",
-                          message: `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
+                          message: template.geometryStatus === "missing"
+                            ? `已载入“${template.name}”；该板块尚无边界，请点击“开始画边界”。`
+                            : `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
                         });
                       }
                     } else if (draft) {
@@ -669,7 +662,9 @@ export function SectorBoundaryEditor() {
                     <small>
                       {displayDistrict}
                       {isExistingSector
-                        ? ` · ${draft ? "编辑副本" : "点击编辑"}`
+                        ? template?.geometryStatus === "missing"
+                          ? ` · ${draft?.ring.length ? `${draft.ring.length} 个边界点` : "待绘制"}`
+                          : ` · ${draft ? "编辑副本" : "点击编辑"}`
                         : isComplete ? ` · ${draft?.ring.length ?? 0} 个边界点` : " · 待完善"}
                     </small>
                   </div>

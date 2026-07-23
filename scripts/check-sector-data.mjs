@@ -739,10 +739,9 @@ for (const [label, ids] of [
   if (new Set(ids).size !== ids.length) error(`${label} ID 存在重复`);
 }
 
-const sortedFeatureIds = [...featureIds].sort();
-const sortedRegistryIds = [...registryIds].sort();
-if (normalizedJson(sortedFeatureIds) !== normalizedJson(sortedRegistryIds)) {
-  error("registry 与 GeoJSON 的板块 ID 必须一一对应");
+const registryIdSet = new Set(registryIds);
+for (const featureId of featureIds) {
+  if (!registryIdSet.has(featureId)) error(`${featureId}: GeoJSON 板块没有 registry 身份记录`);
 }
 
 const legacyFeatureById = new Map(features.map((feature) => [feature.properties?.id, feature]));
@@ -751,13 +750,35 @@ const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
 const candidateGeometryStatuses = new Set(["draft", "reviewed", "published"]);
-const knownGeometryStatuses = ["demo", "admin-reference", ...candidateGeometryStatuses];
+const knownGeometryStatuses = ["missing", "demo", "admin-reference", ...candidateGeometryStatuses];
 const geometryStatusCounts = new Map(knownGeometryStatuses.map((status) => [status, 0]));
 
 for (const record of registry) {
   const status = record.geometry?.status;
   if (!geometryStatusCounts.has(status)) error(`${record.id}: 未知 geometry.status ${status}`);
   else geometryStatusCounts.set(status, geometryStatusCounts.get(status) + 1);
+  const verificationSourceIds = record.geometry?.verificationSourceIds ?? [];
+  for (const sourceId of [
+    ...(record.definitionSourceIds ?? []),
+    ...(record.geometry?.sourceIds ?? []),
+    ...verificationSourceIds,
+  ]) {
+    if (!sourceById.has(sourceId)) error(`${record.id}: 引用了不存在的 sourceId ${sourceId}`);
+  }
+  for (const boundaryEvidenceId of record.boundaryEvidenceIds ?? []) {
+    const edge = edgeById.get(boundaryEvidenceId);
+    if (!edge) error(`${record.id}: 引用了不存在的 boundaryEvidenceId ${boundaryEvidenceId}`);
+    else if (edge.sectorId !== record.id) {
+      error(`${record.id}: 边界证据 ${boundaryEvidenceId} 指向了其他板块`);
+    }
+  }
+  if (status === "missing") {
+    if (featureIds.includes(record.id)) error(`${record.id}: missing 状态不应存在入口面几何`);
+    if (record.geometry.coordinateSystem !== "unknown" || record.geometry.coordinateSystemVerified !== false) {
+      error(`${record.id}: missing 状态必须使用未确认坐标系`);
+    }
+    if (record.geometry.sourceIds?.length) error(`${record.id}: missing 状态不应声明几何来源`);
+  }
 }
 
 const candidateRegistryIds = registry
@@ -787,8 +808,8 @@ if (normalizedStringSet(adminReferenceManifestIds) !== normalizedStringSet(admin
 if (normalizedStringSet(adminReferenceDefinitionIds) !== normalizedStringSet(adminReferenceIds)) {
   error("行政参考面 definition 必须与行政参考几何一一对应");
 }
-if (normalizedStringSet(referenceCheckIds) !== normalizedStringSet(registryIds)) {
-  error("reference-checks 必须与 registry 板块一一对应");
+if (normalizedStringSet(referenceCheckIds) !== normalizedStringSet(featureIds)) {
+  error("reference-checks 必须与已有入口面几何一一对应；待绘制身份无需伪造几何检查");
 }
 
 for (const feature of features) {
@@ -801,24 +822,18 @@ for (const feature of features) {
   if (record.geometry.status === "demo" && record.geometry.publicationPolicy !== "demo_only") {
     error(`${id}: demo 几何必须限制为 demo_only`);
   }
-  if (record.geometry.status !== "demo" && !record.geometry.coordinateSystemVerified) {
+  if (record.geometry.status !== "demo" && record.geometry.status !== "missing"
+    && !record.geometry.coordinateSystemVerified) {
     error(`${id}: 非演示几何必须确认坐标系`);
-  }
-  const verificationSourceIds = record.geometry.verificationSourceIds ?? [];
-  for (const sourceId of [...record.definitionSourceIds, ...record.geometry.sourceIds, ...verificationSourceIds]) {
-    if (!sourceById.has(sourceId)) error(`${id}: 引用了不存在的 sourceId ${sourceId}`);
-  }
-  for (const boundaryEvidenceId of record.boundaryEvidenceIds) {
-    const edge = edgeById.get(boundaryEvidenceId);
-    if (!edge) error(`${id}: 引用了不存在的 boundaryEvidenceId ${boundaryEvidenceId}`);
-    else if (edge.sectorId !== id) error(`${id}: 边界证据 ${boundaryEvidenceId} 指向了其他板块`);
   }
   const recordEdges = record.boundaryEvidenceIds
     .map((boundaryEvidenceId) => edgeById.get(boundaryEvidenceId))
     .filter(Boolean);
-  for (const side of requiredBoundarySides) {
-    const sideCount = recordEdges.filter((edge) => edge.side === side).length;
-    if (sideCount !== 1) error(`${id}: ${side} 边界证据应且仅应有 1 条，实际 ${sideCount} 条`);
+  if (record.geometry.status !== "missing") {
+    for (const side of requiredBoundarySides) {
+      const sideCount = recordEdges.filter((edge) => edge.side === side).length;
+      if (sideCount !== 1) error(`${id}: ${side} 边界证据应且仅应有 1 条，实际 ${sideCount} 条`);
+    }
   }
   if (record.reviewStatus === "reviewed-high") {
     const confirmedEdges = record.boundaryEvidenceIds
@@ -826,7 +841,7 @@ for (const feature of features) {
       .filter((edge) => edge?.status === "definition_confirmed");
     if (confirmedEdges.length < 4) error(`${id}: reviewed-high 至少需要 4 条已确认定义边`);
   }
-  if (record.geometry.status !== "demo") {
+  if (record.geometry.status !== "demo" && record.geometry.status !== "missing") {
     const reusableGeometrySources = record.geometry.sourceIds
       .map((sourceId) => sourceById.get(sourceId))
       .filter((source) => source?.licenseStatus !== "reference_only" && source?.allowedUse?.includes("geometry"));

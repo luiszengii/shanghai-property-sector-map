@@ -130,6 +130,7 @@ export interface ExistingSectorDraftTemplate {
   district: string;
   boundaryBasis: string;
   note: string;
+  geometryStatus: "missing" | "demo" | "candidate";
   ring: DraftPosition[];
 }
 
