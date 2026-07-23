@@ -159,7 +159,7 @@ export function SectorBoundaryEditor() {
   });
 
   const activeDraft = useMemo(
-    () => drafts.find((draft) => draft.id === activeId) ?? null,
+    () => drafts.find((draft) => !draft.archived && draft.id === activeId) ?? null,
     [activeId, drafts],
   );
   const existingDraftBySourceId = useMemo(
@@ -171,7 +171,11 @@ export function SectorBoundaryEditor() {
     [drafts],
   );
   const customDrafts = useMemo(
-    () => drafts.filter((draft) => !draft.sourceSectorId),
+    () => drafts.filter((draft) => !draft.archived && !draft.sourceSectorId),
+    [drafts],
+  );
+  const archivedDrafts = useMemo(
+    () => drafts.filter((draft) => draft.archived),
     [drafts],
   );
   const outdatedSourceIds = useMemo(
@@ -208,7 +212,7 @@ export function SectorBoundaryEditor() {
   }, [query, sidebarItems]);
   const inactiveGeometrySignature = useMemo(
     () => drafts
-      .filter((draft) => draft.id !== activeId)
+      .filter((draft) => !draft.archived && draft.id !== activeId)
       .map((draft) => `${draft.id}:${JSON.stringify(draftFingerprintRings(draft))}`)
       .join("|"),
     [activeId, drafts],
@@ -272,8 +276,13 @@ export function SectorBoundaryEditor() {
           const restored = parseSectorEditorState(stored);
           const synced = syncUntouchedDraftsToCurrentTemplates(restored, existingSectorTemplates);
           setDrafts(synced.drafts);
-          setActiveId(synced.drafts[0]?.id ?? null);
-          if (synced.preservedModifiedSourceIds.length) {
+          setActiveId(synced.drafts.find((draft) => !draft.archived)?.id ?? null);
+          if (synced.archivedDraftIds.length) {
+            setNotice({
+              tone: "warning",
+              message: `已按当前口径拆分前滩与杨思，并归档 ${synced.archivedDraftIds.length} 个旧“杨思前滩”手工草稿；需要时可从侧栏恢复备份。`,
+            });
+          } else if (synced.preservedModifiedSourceIds.length) {
             setNotice({
               tone: "warning",
               message: `${synced.preservedModifiedSourceIds.length} 个手工修改草稿仍基于旧源边界，已保留；放弃该副本后可重新载入当前高精度边界。`,
@@ -389,7 +398,9 @@ export function SectorBoundaryEditor() {
     activePolygonRef.current = null;
     queueMicrotask(() => setArea(0));
 
-    const draft = draftsRef.current.find((item) => item.id === activeIdRef.current);
+    const draft = draftsRef.current.find(
+      (item) => !item.archived && item.id === activeIdRef.current,
+    );
     if (!draft || draftParts(draft).length === 0) return;
 
     const polygon = new api.Polygon();
@@ -447,7 +458,11 @@ export function SectorBoundaryEditor() {
     }
 
     const editableReferences = draftsRef.current
-      .filter((draft) => draft.id !== activeId && draftParts(draft).length > 0)
+      .filter(
+        (draft) => !draft.archived
+          && draft.id !== activeId
+          && draftParts(draft).length > 0,
+      )
       .map((draft) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
@@ -600,12 +615,38 @@ export function SectorBoundaryEditor() {
     anchor.download = formatSectorDraftFilename();
     anchor.click();
     URL.revokeObjectURL(url);
-    const skipped = draftsRef.current.length - collection.features.length;
+    const referenceOnlyCount = draftsRef.current.filter(
+      (draft) => !draft.archived && draft.referenceOnly,
+    ).length;
+    const skipped = draftsRef.current.filter(
+      (draft) => !draft.archived && !draft.referenceOnly,
+    ).length - collection.features.length;
+    const exclusions = [
+      skipped ? `${skipped} 个未完成草稿未导出` : "",
+      referenceOnlyCount ? `${referenceOnlyCount} 个旧合并参考备份按规则未导出` : "",
+    ].filter(Boolean);
     setNotice({
       tone: "success",
-      message: skipped
-        ? `已导出 ${collection.features.length} 个完整板块；${skipped} 个未完成草稿未导出。`
+      message: exclusions.length
+        ? `已导出 ${collection.features.length} 个完整板块；${exclusions.join("；")}。`
         : `已导出全部 ${collection.features.length} 个板块草稿。`,
+    });
+  }, []);
+
+  const restoreArchivedDrafts = useCallback(() => {
+    const archived = draftsRef.current.filter((draft) => draft.archived);
+    if (!archived.length) return;
+    const restoredIds = new Set(archived.map((draft) => draft.id));
+    setDrafts((current) => current.map((draft) => (
+      restoredIds.has(draft.id)
+        ? { ...draft, archived: false, referenceOnly: true }
+        : draft
+    )));
+    setActiveId(archived[0].id);
+    setGeometryRevision((value) => value + 1);
+    setNotice({
+      tone: "warning",
+      message: `已恢复 ${archived.length} 个旧合并草稿为自建备份；它们仅用于人工参考，不会改回前滩与杨思的独立身份。`,
     });
   }, []);
 
@@ -683,6 +724,15 @@ export function SectorBoundaryEditor() {
               新建
             </button>
           </div>
+          {archivedDrafts.length ? (
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={restoreArchivedDrafts}
+            >
+              恢复 {archivedDrafts.length} 个旧合并草稿备份
+            </button>
+          ) : null}
 
           <label className={styles.searchBox}>
             <Search size={14} />
@@ -742,7 +792,11 @@ export function SectorBoundaryEditor() {
                           : template?.geometryStatus === "missing"
                           ? ` · ${draft && draftPointCount(draft) ? `${draftPointCount(draft)} 个边界点` : "待绘制"}`
                           : ` · ${draft ? "编辑副本" : "点击编辑"}`
-                        : isComplete && draft ? ` · ${draftPointCount(draft)} 个边界点` : " · 待完善"}
+                        : draft?.referenceOnly
+                          ? " · 旧合并草稿参考（不导出）"
+                          : isComplete && draft
+                            ? ` · ${draftPointCount(draft)} 个边界点`
+                            : " · 待完善"}
                     </small>
                   </div>
                   <i className={isExistingSector && !draft

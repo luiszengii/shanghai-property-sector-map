@@ -7,6 +7,8 @@ export interface SectorBoundaryDraft {
   id: string;
   sourceSectorId?: string;
   sourceGeometryFingerprint?: string;
+  archived?: boolean;
+  referenceOnly?: boolean;
   name: string;
   district: string;
   boundaryBasis: string;
@@ -68,9 +70,13 @@ const exportWarning = "用户在高德地图上人工绘制的市场板块草稿
 const retiredDraftSourcesBySourceId = new Map<string, {
   names: Set<string>;
   geometryFingerprints: Set<string>;
+  boundaryBases: Set<string>;
 }>([
   ["sector_qiantan", {
     names: new Set(["杨思前滩"]),
+    boundaryBases: new Set([
+      "候选四至：北川杨河、东春塘河、南中环路—华夏西路、西黄浦江",
+    ]),
     // Historical generated-candidate and editor-seed fingerprints from before ADR-0022 split the sector.
     geometryFingerprints: new Set([
       "ring-182-810406e2",
@@ -327,6 +333,8 @@ export function parseSectorEditorState(serialized: string): SectorBoundaryDraft[
       id,
       sourceSectorId: stringProperty(draft.sourceSectorId) || undefined,
       sourceGeometryFingerprint: stringProperty(draft.sourceGeometryFingerprint) || undefined,
+      archived: draft.archived === true,
+      referenceOnly: draft.referenceOnly === true,
       name: stringProperty(draft.name) || "未命名板块",
       district: stringProperty(draft.district),
       boundaryBasis: stringProperty(draft.boundaryBasis),
@@ -353,7 +361,11 @@ export function buildSectorDraftFeatureCollection(
   exportedAt = new Date().toISOString(),
 ): SectorDraftFeatureCollection {
   const features = drafts
-    .filter(isCompleteSectorDraft)
+    .filter(
+      (draft) => !draft.archived
+        && !draft.referenceOnly
+        && isCompleteSectorDraft(draft),
+    )
     .map((draft): SectorDraftFeatureCollection["features"][number] => {
       const parts = draftParts(draft);
       const holes = draftHoles(draft);
@@ -499,16 +511,19 @@ export function syncUntouchedDraftsToCurrentTemplates(
   const templateById = new Map(templates.map((template) => [template.id, template]));
   const updatedSourceIds: string[] = [];
   const preservedModifiedSourceIds: string[] = [];
-  const syncedDrafts = drafts.map((draft) => {
-    if (!draft.sourceSectorId) return draft;
+  const archivedDraftIds: string[] = [];
+  const syncedDrafts = drafts.flatMap((draft) => {
+    if (draft.archived || !draft.sourceSectorId) return [draft];
     const template = templateById.get(draft.sourceSectorId);
-    if (!template) return draft;
+    if (!template) return [draft];
     const retiredSource = retiredDraftSourcesBySourceId.get(draft.sourceSectorId);
     const draftGeometryFingerprint = fingerprintDraftParts(
       draftFingerprintRings(draft),
     );
     const hasRetiredIdentity = Boolean(
       retiredSource?.names.has(draft.name)
+      || retiredSource?.boundaryBases.has(draft.boundaryBasis)
+      || retiredSource?.geometryFingerprints.has(draftGeometryFingerprint)
       || (
         draft.sourceGeometryFingerprint
         && retiredSource?.geometryFingerprints.has(draft.sourceGeometryFingerprint)
@@ -521,49 +536,59 @@ export function syncUntouchedDraftsToCurrentTemplates(
         && draft.sourceGeometryFingerprint === draftGeometryFingerprint
       ),
     );
-    const mustResetToCurrentTemplate = Boolean(
-      hasRetiredIdentity && matchesRetiredDefaultGeometry,
-    );
+    const mustResetToCurrentTemplate = hasRetiredIdentity;
     if (mustResetToCurrentTemplate) {
       updatedSourceIds.push(draft.sourceSectorId);
-      return {
+      const currentDraft = {
         ...createDraftFromExistingSector(template, draft.createdAt),
         id: draft.id,
       };
+      if (matchesRetiredDefaultGeometry) return [currentDraft];
+      const archivedDraft = {
+        ...draft,
+        id: `retired-backup-${draft.id}-${draftGeometryFingerprint}`,
+        sourceSectorId: undefined,
+        archived: true,
+        referenceOnly: true,
+        name: `${draft.name}（旧合并草稿备份）`,
+      };
+      archivedDraftIds.push(archivedDraft.id);
+      return [currentDraft, archivedDraft];
     }
     const migratedDraft = draft;
     if (template.ring.length < 3
       || migratedDraft.sourceGeometryFingerprint === template.geometryFingerprint) {
-      return migratedDraft;
+      return [migratedDraft];
     }
     if (draftGeometryFingerprint === template.geometryFingerprint) {
-      return {
+      return [{
         ...migratedDraft,
         sourceGeometryFingerprint: template.geometryFingerprint,
-      };
+      }];
     }
     const matchesKnownOldGeometry = Boolean(
       template.previousGeometryFingerprints?.includes(draftGeometryFingerprint),
     );
     if (!matchesKnownOldGeometry) {
       preservedModifiedSourceIds.push(migratedDraft.sourceSectorId!);
-      return migratedDraft;
+      return [migratedDraft];
     }
     updatedSourceIds.push(migratedDraft.sourceSectorId!);
-    return {
+    return [{
       ...migratedDraft,
       ring: normalizeDraftRing(template.ring),
       holes: normalizeDraftRings(template.holes),
       additionalRings: normalizeDraftRings(template.additionalRings),
       additionalHoles: draftAdditionalHoles(template),
       sourceGeometryFingerprint: template.geometryFingerprint,
-    };
+    }];
   });
 
   return {
     drafts: syncedDrafts,
     updatedSourceIds,
     preservedModifiedSourceIds,
+    archivedDraftIds,
   };
 }
 

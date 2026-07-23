@@ -328,7 +328,7 @@ test("an untouched exterior-only copy upgrades when the source gains a protected
   assert.deepEqual(synced.updatedSourceIds, ["sector-hongqiao-residential"]);
 });
 
-test("only an untouched retired Yangsi Qiantan default resets to the independent Qiantan template", () => {
+test("an untouched retired Yangsi Qiantan default resets to the independent Qiantan template", () => {
   const legacyDefaultRing = [
     [121.4, 31.1],
     [121.5, 31.1],
@@ -350,7 +350,7 @@ test("only an untouched retired Yangsi Qiantan default resets to the independent
       id: "sector_qiantan",
       name: "前滩",
       district: "浦东新区",
-      boundaryBasis: "旧合并口径",
+      boundaryBasis: "候选四至：北川杨河、东春塘河、南中环路—华夏西路、西黄浦江",
       note: "用户已经拖动过边界",
       geometryStatus: "candidate",
       geometryFingerprint: "ring-182-810406e2",
@@ -386,10 +386,14 @@ test("only an untouched retired Yangsi Qiantan default resets to the independent
     [editedLegacyDraft],
     [currentTemplate],
   );
-  assert.deepEqual(editedSynced.drafts[0].ring, editedLegacyDraft.ring);
-  assert.equal(editedSynced.drafts[0].note, "用户已经拖动过边界");
-  assert.deepEqual(editedSynced.updatedSourceIds, []);
-  assert.deepEqual(editedSynced.preservedModifiedSourceIds, ["sector_qiantan"]);
+  assert.equal(editedSynced.drafts[0].name, "前滩");
+  assert.deepEqual(editedSynced.drafts[0].ring, currentTemplate.ring);
+  assert.equal(editedSynced.drafts[1].name, "前滩（旧合并草稿备份）");
+  assert.equal(editedSynced.drafts[1].archived, true);
+  assert.deepEqual(editedSynced.drafts[1].ring, editedLegacyDraft.ring);
+  assert.equal(editedSynced.drafts[1].note, "用户已经拖动过边界");
+  assert.deepEqual(editedSynced.updatedSourceIds, ["sector_qiantan"]);
+  assert.deepEqual(editedSynced.archivedDraftIds, [editedSynced.drafts[1].id]);
 
   const fingerprintlessLegacyDraft = {
     ...editedLegacyDraft,
@@ -399,8 +403,89 @@ test("only an untouched retired Yangsi Qiantan default resets to the independent
     [fingerprintlessLegacyDraft],
     [currentTemplate],
   );
-  assert.deepEqual(fingerprintlessSynced.drafts[0].ring, fingerprintlessLegacyDraft.ring);
-  assert.equal(fingerprintlessSynced.drafts[0].note, "用户已经拖动过边界");
-  assert.deepEqual(fingerprintlessSynced.updatedSourceIds, []);
-  assert.deepEqual(fingerprintlessSynced.preservedModifiedSourceIds, ["sector_qiantan"]);
+  assert.deepEqual(fingerprintlessSynced.drafts[0].ring, currentTemplate.ring);
+  assert.equal(fingerprintlessSynced.drafts[1].archived, true);
+  assert.equal(fingerprintlessSynced.drafts[1].referenceOnly, true);
+  assert.deepEqual(fingerprintlessSynced.drafts[1].ring, fingerprintlessLegacyDraft.ring);
+  assert.deepEqual(fingerprintlessSynced.updatedSourceIds, ["sector_qiantan"]);
+  assert.deepEqual(
+    fingerprintlessSynced.archivedDraftIds,
+    [fingerprintlessSynced.drafts[1].id],
+  );
+});
+
+test("a modified draft still named Yangsi Qiantan cannot override the independent sectors", () => {
+  const legacyCombinedDraft = {
+    ...createDraftFromExistingSector({
+      id: "sector_qiantan",
+      name: "杨思前滩",
+      district: "浦东新区",
+      boundaryBasis: "旧合并口径",
+      note: "用户修改过的旧合并草稿",
+      geometryStatus: "candidate",
+      geometryFingerprint: "ring-182-810406e2",
+      ring: [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]],
+    }),
+    ring: [[121.41, 31.11], [121.51, 31.11], [121.51, 31.21]] as [number, number][],
+  };
+  const currentQiantanTemplate = {
+    id: "sector_qiantan",
+    name: "前滩",
+    district: "浦东新区",
+    boundaryBasis: "独立前滩口径",
+    note: "当前前滩边界",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: "current-qiantan-source",
+    previousGeometryFingerprints: [],
+    ring: [[121.45, 31.15], [121.55, 31.15], [121.55, 31.25]] as [number, number][],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates(
+    [legacyCombinedDraft],
+    [currentQiantanTemplate],
+  );
+
+  assert.equal(synced.drafts[0].name, "前滩");
+  assert.equal(synced.drafts[0].boundaryBasis, "独立前滩口径");
+  assert.deepEqual(synced.drafts[0].ring, currentQiantanTemplate.ring);
+  assert.equal(
+    synced.drafts[0].sourceGeometryFingerprint,
+    currentQiantanTemplate.geometryFingerprint,
+  );
+  assert.deepEqual(synced.updatedSourceIds, ["sector_qiantan"]);
+  assert.deepEqual(synced.preservedModifiedSourceIds, []);
+  assert.equal(synced.drafts[1].name, "杨思前滩（旧合并草稿备份）");
+  assert.equal(synced.drafts[1].sourceSectorId, undefined);
+  assert.equal(synced.drafts[1].archived, true);
+  assert.equal(synced.drafts[1].referenceOnly, true);
+  assert.deepEqual(synced.drafts[1].ring, legacyCombinedDraft.ring);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[1].id]);
+});
+
+test("archived retired drafts stay in browser storage but are excluded from GeoJSON export", () => {
+  const archivedDraft = {
+    ...createSectorDraft("retired-backup-sector_qiantan"),
+    name: "杨思前滩（旧合并草稿备份）",
+    ring: [[121.41, 31.11], [121.51, 31.11], [121.51, 31.21]] as [number, number][],
+    archived: true,
+    referenceOnly: true,
+  };
+
+  const restored = parseSectorEditorState(
+    serializeSectorEditorState([archivedDraft]),
+  );
+  const exported = buildSectorDraftFeatureCollection(restored);
+
+  assert.equal(restored[0].archived, true);
+  assert.equal(restored[0].referenceOnly, true);
+  assert.equal(exported.features.length, 0);
+
+  const restoredForReference = [{
+    ...restored[0],
+    archived: false,
+  }];
+  assert.equal(
+    buildSectorDraftFeatureCollection(restoredForReference).features.length,
+    0,
+  );
 });
