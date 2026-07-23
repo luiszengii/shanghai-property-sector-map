@@ -4,7 +4,7 @@
   "notice": "这些记录确认的是文字定义依据，不等于已取得相应道路、河流或规划图的可复用矢量。",
   "edges": [
     { "id": "yangsi-qiantan-north", "sectorId": "sector_qiantan", "side": "north", "basisType": "seller_market_scope", "featureName": "川杨河中心线", "status": "candidate_scope_confirmed", "confidence": "medium", "sourceId": "seller-anjuke-yangsi-scope", "note": "现有一个卖方来源给出该侧市场四至；待第二独立卖方来源和沿线项目核验。" },
-    { "id": "yangsi-qiantan-east", "sectorId": "sector_qiantan", "side": "east", "basisType": "seller_market_scope", "featureName": "春塘河中心线", "status": "candidate_scope_confirmed", "confidence": "medium", "sourceId": "seller-anjuke-yangsi-scope", "note": "浦东官方河道资料确认春塘河实体；其作为市场东界仍待第二独立卖方来源核验。" },
+    { "id": "yangsi-qiantan-east", "sectorId": "sector_qiantan", "side": "east", "basisType": "seller_market_scope", "featureName": "春塘河候选中心线（OSM 42967124 / 42967153）", "status": "partial", "confidence": "low", "sourceId": "seller-anjuke-yangsi-scope", "note": "浦东官方资料确认春塘河实体，但固定 OSM 快照中的两段候选水线没有名称，现有材料未把 OSM ID 与春塘河直接绑定；该线仅用于闭合可编辑候选面，不能标记为已核验。" },
     { "id": "yangsi-qiantan-south", "sectorId": "sector_qiantan", "side": "south", "basisType": "seller_market_scope", "featureName": "中环路—华夏西路中心线", "status": "candidate_scope_confirmed", "confidence": "medium", "sourceId": "seller-anjuke-yangsi-scope", "note": "现有一个卖方来源给出该侧市场四至；待第二独立卖方来源和沿线项目核验。" },
     { "id": "yangsi-qiantan-west", "sectorId": "sector_qiantan", "side": "west", "basisType": "seller_market_scope", "featureName": "黄浦江中心线", "status": "candidate_scope_confirmed", "confidence": "medium", "sourceId": "seller-anjuke-yangsi-scope", "note": "现有一个卖方来源给出该侧市场四至；待第二独立卖方来源和沿线项目核验。" },
 

@@ -23,7 +23,7 @@
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
         "publicationPolicy": "internal_review",
-        "note": "已按市场四至和固定日期 OSM 道路、河流中心线独立重建 16.2209 平方公里候选面；临时裁剪框不参与边界。当前仅有一个卖方来源给出完整四至，因此仍是待第二来源与沿线项目核验的内部候选。官方前滩 2.9314 平方公里重建面作为内部子范围另行显示。"
+        "note": "已按市场四至和固定日期 OSM 道路、河流中心线独立重建 16.2209 平方公里候选面；临时裁剪框不参与边界。东侧两段 OSM 水线没有名称，只能作为春塘河候选线；同时仅有一个卖方来源给出完整四至，因此仍待东界身份、第二来源与沿线项目核验。官方前滩 2.9314 平方公里重建面作为内部子范围另行显示。"
       }
     },
     {

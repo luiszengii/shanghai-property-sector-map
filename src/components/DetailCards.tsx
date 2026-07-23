@@ -136,7 +136,7 @@ export function DetailCard() {
     label: string;
     sources: typeof geometrySources;
   }> = [];
-  if (geometryStatus === "demo" || usesAdministrativeReference || isRuntimeLoading || isRuntimeFallback) {
+  if (geometryStatus === "demo" || isRuntimeFallback) {
     geometrySourceRows.push({ label: "楼市演示面来源", sources: sectorCatalog.marketDemoSources });
   }
   if (geometryStatus !== undefined && geometryStatus !== "demo") {
@@ -146,8 +146,8 @@ export function DetailCard() {
     });
   }
   const geometryLabel = isRuntimeLoading
-    ? usesAdministrativeReference
-      ? "行政参考层加载中 · 楼市演示面可见"
+      ? usesAdministrativeReference
+      ? "行政参考层加载中"
       : "候选边界加载中 · 暂显演示面"
     : isRuntimeFallback
       ? usesAdministrativeReference
@@ -155,9 +155,9 @@ export function DetailCard() {
         : "演示几何 · 候选面转换失败"
       : isReviewedCandidate
         ? "楼市研究候选面"
-        : isAdministrativeReference
-          ? "楼市演示面 + 行政参考层"
-          : "演示几何";
+      : isAdministrativeReference
+          ? "行政参考层（非楼市主板块）"
+          : "旧演示几何（主地图隐藏）";
   const reviewLabel = isRuntimeLoading
     ? usesAdministrativeReference
       ? "WGS84 行政参考层正在转换为地图显示坐标"
@@ -166,6 +166,8 @@ export function DetailCard() {
     ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
+    : sectorRecord?.definitionStatus === "market_scope_candidate"
+      ? "身份已裁定 · 待第二来源、东界身份与沿线项目核验"
     : sectorRecord?.reviewStatus === "reviewed-high"
       ? "边界规则已核验 · 候选面待人工复核"
       : sectorRecord?.reviewStatus === "draft-medium"
@@ -175,7 +177,7 @@ export function DetailCard() {
   const description = isReviewedCandidate
     ? `${baseDescription}；当前显示按可追溯文字四至与开放地物独立重建的研究候选面。`
     : isAdministrativeReference
-      ? `${baseDescription}；灰色面仍是待定楼市演示口径，蓝色虚线另行叠加${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层。`
+      ? `${baseDescription}；当前只显示蓝色虚线${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层，不把旧演示面当作楼市主板块。`
       : sector.properties.description;
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
@@ -205,13 +207,15 @@ export function DetailCard() {
           <dt><MapPin size={15} /> 当前几何</dt>
           <dd>{isRuntimeLoading
             ? usesAdministrativeReference
-              ? "行政参考层正在转换为高德显示坐标；灰色楼市演示面仍保持可见，完成后会另行叠加蓝色虚线。"
+              ? "行政参考层正在转换为高德显示坐标；旧楼市演示面保持隐藏。"
               : "候选面正在转换为高德显示坐标，地图暂时显示灰色虚线演示面；转换完成后会自动替换。"
             : isRuntimeFallback
               ? usesAdministrativeReference
                 ? "本次行政参考层坐标转换失败，灰色楼市演示面仍保留；WGS84 参考数据可稍后刷新重试。"
                 : "本次候选面坐标转换失败，地图已安全回退到虚线演示面；WGS84 研究数据仍保留，可稍后刷新重试。"
-              : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd>
+              : geometryStatus === "demo"
+                ? "旧演示面只在边界编辑器中作为重画起点，主地图保持留白。"
+                : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd>
         </div>
         {(isReviewedCandidate || isAdministrativeReference) && (
           <div>

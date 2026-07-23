@@ -19,11 +19,54 @@
         "coordinateSystem": "WGS84",
         "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
         "method": "market_four_sides_osm_linear_component",
-        "geometryRule": "市场候选四至采用北川杨河、东春塘河、南中环路—华夏西路、西黄浦江；道路与河流均取固定 OSM 快照中心线。5 米缓冲只用于切割并验证闭合，生成后回扩至线位；候选面不得接触临时裁剪框。",
+        "geometryRule": "市场候选四至采用北川杨河、东春塘河、南中环路—华夏西路、西黄浦江；道路与河流均取固定 OSM 快照中心线。东侧当前使用两段未命名 OSM 水线作为春塘河候选线，身份未核验。5 米缓冲只用于切割并验证闭合，生成后回扩至线位；候选面不得接触临时裁剪框。",
         "definitionSourceIds": [
           "seller-lianjia-yangsi-qiantan",
           "seller-anjuke-yangsi-scope",
           "official-pudong-chuntang-river"
+        ],
+        "boundaryAnchors": [
+          {
+            "side": "north",
+            "featureType": "waterway",
+            "expectedIdentity": "川杨河",
+            "identityStatus": "verified-by-osm-name",
+            "verificationSourceIds": [
+              "seller-anjuke-yangsi-scope",
+              "osm-geofabrik-shanghai-260721"
+            ]
+          },
+          {
+            "side": "east",
+            "featureType": "waterway",
+            "expectedIdentity": "春塘河候选线",
+            "identityStatus": "unverified-candidate",
+            "verificationSourceIds": [
+              "official-pudong-chuntang-river",
+              "osm-geofabrik-shanghai-260721"
+            ],
+            "note": "固定 OSM 快照中的两段水线没有名称；空间位置与卖方文字东界相符，但现有官方材料未把这两个 OSM ID 绑定为春塘河，因此不得标记为已核验。"
+          },
+          {
+            "side": "south",
+            "featureType": "road",
+            "expectedIdentity": "中环路—华夏西路",
+            "identityStatus": "verified-by-osm-name",
+            "verificationSourceIds": [
+              "seller-anjuke-yangsi-scope",
+              "osm-geofabrik-shanghai-260721"
+            ]
+          },
+          {
+            "side": "west",
+            "featureType": "waterway",
+            "expectedIdentity": "黄浦江",
+            "identityStatus": "verified-by-osm-name",
+            "verificationSourceIds": [
+              "seller-anjuke-yangsi-scope",
+              "osm-geofabrik-shanghai-260721"
+            ]
+          }
         ],
         "areaSquareKilometers": 16.2209,
         "labelPoint": [

@@ -87,6 +87,7 @@ interface SectorOverlay {
   baseColor: string;
   sector: SectorFeature;
   geometryKind: SectorGeometryKind;
+  hiddenLegacyDemo: boolean;
 }
 
 function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = false) {
@@ -186,6 +187,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           baseColor,
           sector,
           geometryKind: "demo",
+          hiddenLegacyDemo: !sectorCatalog.getReviewedCandidate(sector.properties.id),
         };
         applyOverlayStyle(
           overlay,
@@ -194,6 +196,10 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
         );
         bindOverlayInteractions(overlay);
         map.add([polygon, label]);
+        if (overlay.hiddenLegacyDemo) {
+          polygon.hide();
+          label.hide();
+        }
         overlays.push(overlay);
       }
       overlaysRef.current = overlays;
@@ -251,6 +257,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
               baseColor: "#60a5fa",
               sector: marketOverlay.sector,
               geometryKind,
+              hiddenLegacyDemo: false,
             };
             applyOverlayStyle(
               administrativeOverlay,
@@ -270,6 +277,16 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           setSectorGeometryLoading(id, false);
           setSectorGeometryFallback(id, true);
           const layerName = reviewedCandidate ? "候选面" : "行政参考层";
+          if (!reviewedCandidate) {
+            marketOverlay.hiddenLegacyDemo = false;
+            marketOverlay.polygon.show();
+            marketOverlay.label?.show();
+            applyOverlayStyle(
+              marketOverlay,
+              zoomRef.current,
+              selectedSectorIdRef.current === id,
+            );
+          }
           console.warn(`${marketOverlay.sector.properties.name}${layerName}坐标转换失败，已保留灰色虚线演示面`, error);
         }
       }
@@ -291,6 +308,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             baseColor: "#f59e0b",
             sector: parentSector,
             geometryKind: "official-subscope-reference",
+            hiddenLegacyDemo: false,
           };
           applyOverlayStyle(
             overlay,
@@ -329,7 +347,12 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
 
   useEffect(() => {
     overlaysRef.current.forEach((overlay) => {
-      const { label, sector } = overlay;
+      const { label, polygon, sector } = overlay;
+      if (overlay.hiddenLegacyDemo) {
+        polygon.hide();
+        label?.hide();
+        return;
+      }
       const selected = sector.properties.id === selectedSectorId;
       applyOverlayStyle(overlay, zoom, selected);
       if (zoom <= 13.2) label?.show();

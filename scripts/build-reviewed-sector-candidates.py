@@ -153,29 +153,39 @@ def build_market_linear_component(
     output_crs: str,
 ):
     bbox_value = tuple(definition["bbox"])
-    roads = pyogrio.read_dataframe(
-        gpkg,
-        layer="gis_osm_roads_free",
-        bbox=bbox_value,
-        where=sql_names(definition["roadNames"]),
-    ).to_crs(working_crs)
-    waterways = pyogrio.read_dataframe(
-        gpkg,
-        layer="gis_osm_waterways_free",
-        bbox=bbox_value,
-    ).to_crs(working_crs)
-    waterway_names = set(definition.get("waterwayNames", []))
-    waterway_ids = {str(value) for value in definition.get("waterwayOsmIds", [])}
-    waterways = waterways[
-        waterways["name"].isin(waterway_names)
-        | waterways["osm_id"].astype(str).isin(waterway_ids)
-    ]
-    if roads.empty or waterways.empty:
-        raise ValueError(f"{definition['canonicalName']} 构建所需的道路或水系图层为空")
+    anchor_frames = []
+    boundary_geometries = []
+    for anchor in definition["boundaryAnchors"]:
+        layer = {
+            "road": "gis_osm_roads_free",
+            "waterway": "gis_osm_waterways_free",
+        }.get(anchor["featureType"])
+        if layer is None:
+            raise ValueError(f"未知边界锚点类型：{anchor['featureType']}")
+        match = anchor["match"]
+        names = match.get("names", [])
+        osm_ids = {str(value) for value in match.get("osmIds", [])}
+        read_options = {"layer": layer, "bbox": bbox_value}
+        if names and not osm_ids:
+            read_options["where"] = sql_names(names)
+        frame = pyogrio.read_dataframe(gpkg, **read_options)
+        if names or osm_ids:
+            frame = frame[
+                frame["name"].isin(names)
+                | frame["osm_id"].astype(str).isin(osm_ids)
+            ]
+        if frame.empty:
+            raise ValueError(
+                f"{definition['canonicalName']} {anchor['side']} 侧锚点 "
+                f"{anchor['expectedIdentity']} 没有匹配 OSM 对象"
+            )
+        frame = frame.to_crs(working_crs)
+        anchor_frames.append((anchor, frame))
+        boundary_geometries.extend(frame.geometry)
 
     rectangle = project_geometry(box(*bbox_value), output_crs, working_crs)
     inside_point = project_geometry(Point(*definition["insidePoint"]), output_crs, working_crs)
-    boundary_lines = unary_union([*roads.geometry, *waterways.geometry])
+    boundary_lines = unary_union(boundary_geometries)
     cut_buffer = float(definition["cutBufferMeters"])
     cut = rectangle.difference(boundary_lines.buffer(cut_buffer))
     containing = [part for part in polygons(cut) if part.contains(inside_point)]
@@ -198,10 +208,41 @@ def build_market_linear_component(
             f"{bbox_clearance:.2f} 米"
         )
 
+    anchor_manifest = []
+    road_refs = set()
+    waterway_refs = set()
+    tolerance = float(definition["centerlineToleranceMeters"])
+    for anchor, frame in anchor_frames:
+        anchor_union = unary_union(frame.geometry)
+        coverage = restored.boundary.intersection(anchor_union.buffer(tolerance)).length
+        minimum_coverage = float(anchor["minimumBoundaryCoverageMeters"])
+        if coverage < minimum_coverage:
+            raise ValueError(
+                f"{definition['canonicalName']} {anchor['side']} 侧边界在 {tolerance:.0f} 米"
+                f"容差内只覆盖 {coverage:.1f} 米，低于 {minimum_coverage:.1f} 米"
+            )
+        refs = sorted({str(value) for value in frame.osm_id})
+        if anchor["featureType"] == "road":
+            road_refs.update(refs)
+        else:
+            waterway_refs.update(refs)
+        anchor_manifest.append({
+            "side": anchor["side"],
+            "featureType": anchor["featureType"],
+            "expectedIdentity": anchor["expectedIdentity"],
+            "identityStatus": anchor["identityStatus"],
+            "verificationSourceIds": anchor["verificationSourceIds"],
+            "osmRefs": refs,
+            "boundaryCoverageWithinToleranceMeters": round(coverage, 1),
+            "centerlineToleranceMeters": tolerance,
+            **({"note": anchor["note"]} if anchor.get("note") else {}),
+        })
+
     output_geometry = project_geometry(restored, working_crs, output_crs)
     osm_refs = {
-        "roads": sorted({str(value) for value in roads.osm_id}),
-        "waterways": sorted({str(value) for value in waterways.osm_id}),
+        "roads": sorted(road_refs),
+        "waterways": sorted(waterway_refs),
+        "boundaryAnchors": anchor_manifest,
     }
     return output_geometry, float(restored.area), osm_refs
 
@@ -266,6 +307,16 @@ def build_feature(
             "method": definition["method"],
             "geometryRule": definition["geometryRule"],
             "definitionSourceIds": definition["definitionSourceIds"],
+            **({
+                "boundaryAnchors": [{
+                    "side": anchor["side"],
+                    "featureType": anchor["featureType"],
+                    "expectedIdentity": anchor["expectedIdentity"],
+                    "identityStatus": anchor["identityStatus"],
+                    "verificationSourceIds": anchor["verificationSourceIds"],
+                    **({"note": anchor["note"]} if anchor.get("note") else {}),
+                } for anchor in definition["boundaryAnchors"]],
+            } if definition.get("boundaryAnchors") else {}),
             "areaSquareKilometers": round(area_km2, 4),
             "labelPoint": [round(representative.x, 7), round(representative.y, 7)],
         },

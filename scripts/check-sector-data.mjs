@@ -890,6 +890,73 @@ for (const candidate of candidates) {
   if (!manifestById.has(id)) error(`${id}: 候选几何缺少 OSM 对象 manifest`);
   if (!isFinitePositive(candidate.properties.areaSquareKilometers)) error(`${id}: 候选面积无效`);
   validateWgs84PolygonalGeometry(candidate, `${id}: 候选面`, candidate.properties.labelPoint);
+
+  const featureAnchors = candidate.properties.boundaryAnchors ?? [];
+  const manifestAnchors = manifestById.get(id)?.osmRefs?.boundaryAnchors ?? [];
+  if (featureAnchors.length > 0 || manifestAnchors.length > 0) {
+    const featureSides = featureAnchors.map((anchor) => anchor.side);
+    const manifestSides = manifestAnchors.map((anchor) => anchor.side);
+    if (normalizedStringSet(featureSides) !== normalizedStringSet(requiredBoundarySides)
+      || normalizedStringSet(manifestSides) !== normalizedStringSet(requiredBoundarySides)) {
+      error(`${id}: 逐边锚点必须完整覆盖 north/east/south/west`);
+    }
+    for (const featureAnchor of featureAnchors) {
+      const label = `${id}: ${featureAnchor.side} 侧锚点`;
+      const manifestAnchor = manifestAnchors.find((anchor) => anchor.side === featureAnchor.side);
+      if (!manifestAnchor) {
+        error(`${label} 缺少 manifest 记录`);
+        continue;
+      }
+      if (!["verified-by-osm-name", "unverified-candidate"].includes(featureAnchor.identityStatus)) {
+        error(`${label} identityStatus 无效`);
+      }
+      if (featureAnchor.identityStatus !== manifestAnchor.identityStatus
+        || featureAnchor.expectedIdentity !== manifestAnchor.expectedIdentity
+        || featureAnchor.featureType !== manifestAnchor.featureType) {
+        error(`${label} feature 与 manifest 身份字段不一致`);
+      }
+      if (!Array.isArray(featureAnchor.verificationSourceIds)
+        || featureAnchor.verificationSourceIds.length === 0) {
+        error(`${label} 缺少 verificationSourceIds`);
+      } else {
+        for (const sourceId of featureAnchor.verificationSourceIds) {
+          if (!sourceById.has(sourceId)) error(`${label} 引用了不存在的 sourceId ${sourceId}`);
+        }
+      }
+      if (!Array.isArray(manifestAnchor.osmRefs) || manifestAnchor.osmRefs.length === 0) {
+        error(`${label} 缺少锁定 OSM 对象`);
+      }
+      if (manifestAnchor.centerlineToleranceMeters !== 15) {
+        error(`${label} 必须以 15 米容差核验中心线贴合`);
+      }
+      if (!isFinitePositive(manifestAnchor.boundaryCoverageWithinToleranceMeters)) {
+        error(`${label} 缺少有效的中心线覆盖长度`);
+      }
+      if (featureAnchor.identityStatus === "unverified-candidate") {
+        const edge = record.boundaryEvidenceIds
+          .map((edgeId) => edgeById.get(edgeId))
+          .find((item) => item?.side === featureAnchor.side);
+        if (!edge || edge.status === "definition_confirmed" || edge.confidence !== "low") {
+          error(`${label} 未核验身份必须在边界证据中保持 low 且不得标记 definition_confirmed`);
+        }
+      }
+    }
+  }
+}
+
+for (let first = 0; first < candidates.length; first += 1) {
+  for (let second = first + 1; second < candidates.length; second += 1) {
+    const firstPolygons = polygonGroupsForGeometry(candidates[first].geometry);
+    const secondPolygons = polygonGroupsForGeometry(candidates[second].geometry);
+    if (firstPolygons.some((firstPolygon) => (
+      secondPolygons.some((secondPolygon) => ringsOverlap(firstPolygon[0], secondPolygon[0]))
+    ))) {
+      error(
+        `${candidates[first].properties.name} 与 ${candidates[second].properties.name}`
+        + " 的主板块候选面发生面积重叠",
+      );
+    }
+  }
 }
 
 const subscopeManifestById = new Map(subscopeManifestEntries.map((item) => [item.id, item]));
@@ -1266,7 +1333,7 @@ for (let first = 0; first < features.length; first += 1) {
     const firstRing = features[first].geometry?.coordinates?.[0];
     const secondRing = features[second].geometry?.coordinates?.[0];
     if (firstRing && secondRing && ringsOverlap(firstRing, secondRing)) {
-      warn(`${features[first].properties.name} 与 ${features[second].properties.name} 的演示面重叠`);
+      warn(`${features[first].properties.name} 与 ${features[second].properties.name} 的编辑器入口演示面重叠`);
     }
   }
 }
