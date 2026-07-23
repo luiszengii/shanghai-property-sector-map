@@ -168,6 +168,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "changning-zhongshan-park-core",
   }],
+  ["jingan-putuo-eleven-direct-admin-aligned-2026-07", {
+    expectedSectorCount: 11,
+    districtCounts: {
+      静安区: 4,
+      普陀区: 7,
+    },
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -178,6 +185,11 @@ const aliasesBySectorId = new Map([
   ["sector_jinshanxincheng", ["石化"]],
   ["sector_tianshan", ["天山路"]],
   ["sector_xianxia", ["仙霞新村"]],
+  ["sector_caoyang", ["曹杨新村街道"]],
+  ["sector_zhenru", ["真如镇街道"]],
+  ["sector_changfeng", ["长风新村街道"]],
+  ["sector_changzheng", ["长征镇"]],
+  ["sector_taopu", ["桃浦镇"]],
 ]);
 const sides = [
   ["north", "北"],
@@ -276,6 +288,7 @@ for (const definition of batch.sectors) {
   );
   const isJinshanNewCity = definition.id === "sector_jinshanxincheng";
   const isTinglinCombinedProxy = definition.id === "sector_tinglin";
+  const isTaopuOverwideProxy = definition.id === "sector_taopu";
   registryRecords.push({
     id: definition.id,
     canonicalName: definition.canonicalName,
@@ -300,7 +313,9 @@ for (const definition of batch.sectors) {
         ? "当前只显示石化街道行政骨架，不代表完整金山新城市场边界；必须在编辑器中按石化、山阳、金山卫项目归属继续修订。"
         : isTinglinCombinedProxy
           ? "当前 OSM 亭林镇 relation 与天地图行政示意均覆盖官方规划所称亭林镇与金山工业区合并范围；它只是约 122.725 平方公里的可编辑代理，不代表已排除工业区的市场亭林。"
-        : "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。",
+          : isTaopuOverwideProxy
+            ? "当前完整桃浦镇行政骨架约 19.1581 平方公里，明显混入产业、铁路和非住宅功能；只作低置信起画代理，必须按住宅连续区和完整项目归属显著收窄。"
+            : "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。",
     },
   });
 }
@@ -378,6 +393,7 @@ for (const definition of batch.sectors) {
   for (const [side, sideLabel] of sides) {
     const isJinshanNewCity = definition.id === "sector_jinshanxincheng";
     const isTinglinCombinedProxy = definition.id === "sector_tinglin";
+    const isTaopuOverwideProxy = definition.id === "sector_taopu";
     evidenceRecords.push({
       id: `${definition.id.replace(/^sector_/, "")}-${side}`,
       sectorId: definition.id,
@@ -396,7 +412,9 @@ for (const definition of batch.sectors) {
         ? "石化街道只作金山新城的临时代理骨架；金山新城可能跨石化、山阳、金山卫，本边不得视为市场定稿。"
         : isTinglinCombinedProxy
           ? "固定 OSM 亭林镇 relation 与天地图行政示意均呈现亭林镇和金山工业区合并范围；官方规划拆分为亭林镇 78.21 平方公里、金山工业区 43.22 平方公里。本边只属合并行政展示代理，不得视为已排除工业区的市场亭林。"
-        : "固定行政 relation 只提供可编辑市场候选骨架；官方材料只用于名称、邻接和面积量级人工复核，不提供本项目可再分发坐标。",
+          : isTaopuOverwideProxy
+            ? "完整桃浦镇固定行政 relation 只提供约 19.1581 平方公里的过宽起画骨架；产业、铁路和非住宅范围待按项目归属收窄，本边不得视为最终市场四至。"
+            : "固定行政 relation 只提供可编辑市场候选骨架；官方材料只用于名称、邻接和面积量级人工复核，不提供本项目可再分发坐标。",
     });
   }
 }

@@ -51,7 +51,7 @@
       "sourceType": "seller_sector_taxonomy",
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
-      "note": "仅用于核对链家使用“世博”等楼市板块名称；不复制网站清单、坐标或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
+      "note": "仅用于核对链家公开使用的楼市板块名称，包括静安、普陀本批 11 个市场身份；不复制网站清单、坐标、房源或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
     },
     {
       "id": "seller-anjuke-yangsi-scope",
@@ -697,6 +697,27 @@
       "licenseStatus": "reference_only",
       "allowedUse": "spatial_relationship_only",
       "note": "官方简介直接确认虹桥街道辖区内有古北新区；用于证明古北应从虹桥街道骨架中独立扣除，不代表官方把剩余街道面命名为楼市虹桥。"
+    },
+    {
+      "id": "official-jingan-admin-divisions-2026",
+      "title": "静安区区划概况",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/jagl/006001/006001003/006001003001/jaglmoreinfo.html",
+      "sourceType": "official_admin_divisions",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "官方页面列出静安区 13 个街道和 1 个镇；用于核对南京西路、静安寺、曹家渡、江宁路等同名行政关系，不据此声称行政边界等于最终楼市边界。"
+    },
+    {
+      "id": "official-putuo-admin-divisions-2026",
+      "title": "普陀区区划人口与街镇职责清单",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/ptgk-ms/20260121/967028.html",
+      "sourceType": "official_admin_divisions",
+      "publishedAt": "2026-01-21",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "官方页面列出普陀区 10 个街道镇；并与 2025 年街镇职责事项清单交叉核对。用于同名低置信市场骨架的行政身份和面积量级核验，不替代市场边界研究。"
     },
     {
       "id": "official-shanghai-zhongshan-park-landscape-scope-2022",

@@ -331,6 +331,91 @@ test("the Changning direct batch exposes four candidates without inventing custo
   );
 });
 
+test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbones and keeps unresolved markets out", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/jingan-putuo-eleven-direct-admin-aligned-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.equal(batchIds.length, 11);
+  assert.equal(batchIdSet.size, 11);
+  assert.equal(records.length, 11);
+  assert.ok(records.every((record: {
+    reviewStatus: string;
+    geometry: { confidence: string; publicationPolicy: string };
+  }) => (
+    record.reviewStatus === "draft-low"
+      && record.geometry.confidence === "low"
+      && record.geometry.publicationPolicy === "internal_review"
+  )));
+  assert.ok(batchIds.every((id: string) => candidateById.has(id)));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+  assert.equal(templates.length, 11);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate" && template.ring.length >= 3
+  )));
+
+  const taopu = records.find((record: { id: string }) => record.id === "sector_taopu");
+  const taopuDefinition = batch.sectors.find(
+    (definition: { id: string }) => definition.id === "sector_taopu",
+  );
+  assert.match(taopu?.geometry?.note ?? "", /19\.1581.*明显.*收窄/);
+  assert.deepEqual(taopu?.aliases, ["桃浦镇"]);
+  assert.deepEqual(
+    taopuDefinition?.riskFlags,
+    ["overwide_admin_proxy", "mixed_industrial_rail_non_residential"],
+  );
+  assert.deepEqual(
+    taopuDefinition?.requiredAdjacencyReviewIds,
+    ["sector_zhenru", "sector_changzheng", "sector_wanli", "unresolved_baoshan_interface"],
+  );
+  for (const forbiddenName of [
+    "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
+    "不夜城", "苏河湾", "阳城—永和", "武宁", "真光", "光新", "甘泉宜川",
+  ]) {
+    assert.ok(!registryData.sectors.some(
+      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
+    ));
+  }
+});
+
 test("the Zhongshan Park official core is editable without inventing a full West Suburb sector", () => {
   const batch = JSON.parse(readFileSync(
     new URL(

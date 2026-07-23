@@ -2217,6 +2217,183 @@
       }
     },
     {
+      "id": "sector_nanjingxilu",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14186016"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jingansi",
+          "sector_jiangninglu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_jingansi",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14186014"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_nanjingxilu",
+          "sector_caojiadu",
+          "sector_jiangninglu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_caojiadu",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14186015"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jingansi",
+          "sector_jiangninglu",
+          "sector_changshoulu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_jiangninglu",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14186018"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_nanjingxilu",
+          "sector_jingansi",
+          "sector_caojiadu",
+          "sector_changshoulu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_changshoulu",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187871"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_caojiadu",
+          "sector_jiangninglu",
+          "sector_caoyang",
+          "sector_changfeng"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_caoyang",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187873"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_changshoulu",
+          "sector_zhenru",
+          "sector_changfeng",
+          "sector_changzheng"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_zhenru",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187866"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_caoyang",
+          "sector_changzheng",
+          "sector_taopu",
+          "sector_wanli"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_changfeng",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187872"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_changshoulu",
+          "sector_caoyang",
+          "sector_changzheng"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_changzheng",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187865"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_caoyang",
+          "sector_zhenru",
+          "sector_changfeng"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_taopu",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187864"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_zhenru",
+          "sector_wanli"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_wanli",
+      "scopeVersion": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187867"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_zhenru",
+          "sector_taopu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
       "id": "sector_xinhualu",
       "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
       "method": "market_admin_candidate_with_shared_topology",

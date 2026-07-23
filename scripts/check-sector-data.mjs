@@ -1670,6 +1670,71 @@ for (const pair of changningFourSharedPairs) {
   }
 }
 
+const expectedJinganPutuoElevenRelations = new Map([
+  ["sector_nanjingxilu", "14186016"],
+  ["sector_jingansi", "14186014"],
+  ["sector_caojiadu", "14186015"],
+  ["sector_jiangninglu", "14186018"],
+  ["sector_changshoulu", "14187871"],
+  ["sector_caoyang", "14187873"],
+  ["sector_zhenru", "14187866"],
+  ["sector_changfeng", "14187872"],
+  ["sector_changzheng", "14187865"],
+  ["sector_taopu", "14187864"],
+  ["sector_wanli", "14187867"],
+]);
+const jinganPutuoElevenDefinitions = candidateDefinitions.filter(
+  (definition) => expectedJinganPutuoElevenRelations.has(definition.id),
+);
+if (normalizedStringSet(jinganPutuoElevenDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedJinganPutuoElevenRelations.keys())) {
+  error("静安—普陀直接行政骨架批次必须恰好包含研究确认的 11 个市场候选");
+}
+for (const definition of jinganPutuoElevenDefinitions) {
+  const expectedRelation = expectedJinganPutuoElevenRelations.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 静安—普陀批次没有锁定研究确认的行政关系与正式生成方法`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+    error(`${definition.id}: 静安—普陀行政骨架必须保持 low / draft-low / internal_review`);
+  }
+}
+for (const forbiddenName of [
+  "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
+  "不夜城", "苏河湾", "阳城—永和", "武宁", "真光", "光新", "甘泉宜川",
+]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === forbiddenName,
+  )) {
+    error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+  }
+}
+const taopuDefinition = candidateDefinitionById.get("sector_taopu");
+if (normalizedStringSet(taopuDefinition?.riskFlags ?? [])
+    !== normalizedStringSet([
+      "overwide_admin_proxy",
+      "mixed_industrial_rail_non_residential",
+    ])
+  || normalizedStringSet(taopuDefinition?.requiredAdjacencyReviewIds ?? [])
+    !== normalizedStringSet([
+      "sector_zhenru",
+      "sector_changzheng",
+      "sector_wanli",
+      "unresolved_baoshan_interface",
+    ])) {
+  error("sector_taopu: 必须保留过宽/非住宅混合风险和真如、长征、万里、宝山接口复核门槛");
+}
+
 const gubeiDefinition = candidateDefinitionById.get("sector_gubei");
 const changningHongqiaoDefinition = candidateDefinitionById.get(
   "sector_changning_hongqiao",

@@ -2751,5 +2751,433 @@
         "publicationPolicy": "internal_review",
         "note": "约 1.0727 平方公里的道路围合核心候选；市级文件确认四至，但它不代表完整楼市板块，江苏路、华阳路、周家桥剩余区域继续明确留白。"
       }
+    },
+    {
+      "id": "sector_nanjingxilu",
+      "canonicalName": "南京西路",
+      "aliases": [],
+      "districtNames": [
+        "静安区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场南京西路暂以同名南京西路街道固定行政关系作为低置信、可编辑骨架；南京西路商圈可能跨越街道边界，沿线完整项目归属仍待人工精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jingan-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "nanjingxilu-north",
+        "nanjingxilu-east",
+        "nanjingxilu-south",
+        "nanjingxilu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jingansi",
+      "canonicalName": "静安寺",
+      "aliases": [],
+      "districtNames": [
+        "静安区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场静安寺暂以同名静安寺街道固定行政关系作为低置信、可编辑骨架；商业核心、愚园路与华山路沿线的市场语义不据此自动扩张。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jingan-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "jingansi-north",
+        "jingansi-east",
+        "jingansi-south",
+        "jingansi-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_caojiadu",
+      "canonicalName": "曹家渡",
+      "aliases": [],
+      "districtNames": [
+        "静安区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场曹家渡暂以同名曹家渡街道固定行政关系作为低置信、可编辑骨架；跨苏州河的长寿路市场关系继续由相邻板块项目样本复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jingan-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "caojiadu-north",
+        "caojiadu-east",
+        "caojiadu-south",
+        "caojiadu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jiangninglu",
+      "canonicalName": "江宁路",
+      "aliases": [],
+      "districtNames": [
+        "静安区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场江宁路暂以同名江宁路街道固定行政关系作为低置信、可编辑骨架；苏河沿线与南京西路商圈的市场边仍待逐项目精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-jingan-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "jiangninglu-north",
+        "jiangninglu-east",
+        "jiangninglu-south",
+        "jiangninglu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_changshoulu",
+      "canonicalName": "长寿路",
+      "aliases": [],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场长寿路暂以同名长寿路街道固定行政关系作为低置信、可编辑骨架；武宁、光新等市场身份不得在未裁定前静默并入。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "changshoulu-north",
+        "changshoulu-east",
+        "changshoulu-south",
+        "changshoulu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_caoyang",
+      "canonicalName": "曹杨",
+      "aliases": [
+        "曹杨新村街道"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场曹杨暂以同名曹杨新村街道固定行政关系作为低置信、可编辑骨架；曹杨新村生活圈与真如副中心的市场接口仍待完整小区归属核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "caoyang-north",
+        "caoyang-east",
+        "caoyang-south",
+        "caoyang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhenru",
+      "canonicalName": "真如",
+      "aliases": [
+        "真如镇街道"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场真如暂以同名真如镇街道固定行政关系作为低置信、可编辑骨架；真如副中心核心与完整街道并非严格同义，武宁、真光、光新接口后续单独裁定。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "zhenru-north",
+        "zhenru-east",
+        "zhenru-south",
+        "zhenru-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_changfeng",
+      "canonicalName": "长风",
+      "aliases": [
+        "长风新村街道"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场长风暂以同名长风新村街道固定行政关系作为低置信、可编辑骨架；长风生态商务区和住宅市场的边界关系不据此视为官方统一口径。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "changfeng-north",
+        "changfeng-east",
+        "changfeng-south",
+        "changfeng-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_changzheng",
+      "canonicalName": "长征",
+      "aliases": [
+        "长征镇"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场长征暂以同名长征镇固定行政关系作为低置信、可编辑骨架；真光等内部或相邻市场身份须在后续批次拆分，不把当前镇域骨架当成最终市场四至。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "changzheng-north",
+        "changzheng-east",
+        "changzheng-south",
+        "changzheng-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_taopu",
+      "canonicalName": "桃浦",
+      "aliases": [
+        "桃浦镇"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场桃浦暂以同名桃浦镇固定行政关系作为低置信、可编辑骨架；镇域约 19 平方公里，包含产业、铁路和非住宅功能，市场核心后续必须按项目归属显著收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "taopu-north",
+        "taopu-east",
+        "taopu-south",
+        "taopu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "当前完整桃浦镇行政骨架约 19.1581 平方公里，明显混入产业、铁路和非住宅功能；只作低置信起画代理，必须按住宅连续区和完整项目归属显著收窄。"
+      }
+    },
+    {
+      "id": "sector_wanli",
+      "canonicalName": "万里",
+      "aliases": [],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场万里暂以同名万里街道固定行政关系作为低置信、可编辑骨架；与真如、桃浦和大华的市场接口仍需完整小区逐边核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "wanli-north",
+        "wanli-east",
+        "wanli-south",
+        "wanli-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "jingan-putuo-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }
