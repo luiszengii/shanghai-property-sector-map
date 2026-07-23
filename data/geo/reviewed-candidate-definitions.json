@@ -5,7 +5,8 @@
   "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
   "batchFiles": [
     "data/geo/reviewed-candidate-batches/qingpu-songjiang-jinshan-thirty-2026-07.json",
-    "data/geo/reviewed-candidate-batches/xuhui-twelve-admin-aligned-2026-07.json"
+    "data/geo/reviewed-candidate-batches/xuhui-twelve-admin-aligned-2026-07.json",
+    "data/geo/reviewed-candidate-batches/changning-four-direct-admin-aligned-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {

@@ -2215,6 +2215,61 @@
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
+    },
+    {
+      "id": "sector_xinhualu",
+      "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469094"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_tianshan"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_tianshan",
+      "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469232"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xinhualu",
+          "sector_xianxia"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_xianxia",
+      "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469351"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_tianshan"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_beixinjing",
+      "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14184083"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
     }
   ],
   "subscopes": []

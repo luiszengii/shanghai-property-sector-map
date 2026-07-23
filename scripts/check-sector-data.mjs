@@ -1542,6 +1542,84 @@ for (const [sectorId, protectedSectorId, minimumSharedLengthMeters] of [
   }
 }
 
+const expectedChangningFourRelations = new Map([
+  ["sector_xinhualu", "13469094"],
+  ["sector_tianshan", "13469232"],
+  ["sector_xianxia", "13469351"],
+  ["sector_beixinjing", "14184083"],
+]);
+const changningFourDefinitions = candidateDefinitions.filter(
+  (definition) => expectedChangningFourRelations.has(definition.id),
+);
+if (normalizedStringSet(changningFourDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedChangningFourRelations.keys())) {
+  error("长宁直接同名街道批次必须恰好包含研究确认的 4 个市场候选");
+}
+const changningFourIds = new Set(expectedChangningFourRelations.keys());
+const changningFourSharedPairs = new Set(changningFourDefinitions.flatMap(
+  (definition) => (definition.sharedEdgeSectorIds ?? [])
+    .filter((neighborId) => changningFourIds.has(neighborId))
+    .map((neighborId) => [definition.id, neighborId].sort().join("/")),
+));
+if (changningFourSharedPairs.size !== 2
+  || !changningFourSharedPairs.has("sector_tianshan/sector_xinhualu")
+  || !changningFourSharedPairs.has("sector_tianshan/sector_xianxia")) {
+  error("长宁直接同名街道批次必须保持新华路—天山—仙霞两组固定共享边");
+}
+for (const forbiddenName of ["中山公园", "虹桥", "古北", "西郊"]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === forbiddenName,
+  )) {
+    error(`长宁直接骨架批次不得在自定义四至冻结前自动注册 ${forbiddenName}`);
+  }
+}
+const protectedHongqiaoBusinessRegistry = registryById.get("sector_hongqiao");
+const protectedHongqiaoBusinessCandidate = candidateById.get("sector_hongqiao");
+if (protectedHongqiaoBusinessRegistry?.canonicalName !== "虹桥商务区"
+  || protectedHongqiaoBusinessCandidate?.properties?.name !== "虹桥商务区") {
+  error("sector_hongqiao 必须永久保留给虹桥商务区；长宁住宅虹桥必须使用 sector_changning_hongqiao");
+}
+for (const definition of changningFourDefinitions) {
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  const expectedRelation = expectedChangningFourRelations.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 长宁批次没有锁定研究确认的 OSM 行政关系`);
+  }
+  if (definition.districtName !== "长宁区"
+    || normalizedStringSet(registryRecord?.districtNames ?? [])
+      !== normalizedStringSet(["长宁区"])) {
+    error(`${definition.id}: 长宁批次行政归属必须保持长宁区`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+    error(`${definition.id}: 长宁行政骨架必须保持 low / draft-low / internal_review`);
+  }
+}
+for (const pair of changningFourSharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < 500
+    || exactSharedLength < 500
+    || Math.abs(exactSharedLength - sharedLength) > 0.01) {
+    error(`${firstId} / ${secondId}: 长宁批次共享边必须使用完全相同的坐标序列`);
+  }
+}
+
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
 const yangsiPrimaryCandidate = candidateById.get("sector_yangsi");
 if (!qiantanPrimaryCandidate || qiantanPrimaryCandidate.properties?.name !== "前滩") {

@@ -148,6 +148,12 @@ const batchPolicies = new Map([
       徐汇区: 12,
     },
   }],
+  ["changning-four-direct-admin-aligned-2026-07", {
+    expectedSectorCount: 4,
+    districtCounts: {
+      长宁区: 4,
+    },
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -156,6 +162,8 @@ if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
 
 const aliasesBySectorId = new Map([
   ["sector_jinshanxincheng", ["石化"]],
+  ["sector_tianshan", ["天山路"]],
+  ["sector_xianxia", ["仙霞新村"]],
 ]);
 const sides = [
   ["north", "北"],

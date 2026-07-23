@@ -2469,5 +2469,165 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
+    },
+    {
+      "id": "sector_xinhualu",
+      "canonicalName": "新华路",
+      "aliases": [],
+      "districtNames": [
+        "长宁区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场新华路暂以同名新华路街道固定行政关系作为低置信、可编辑骨架；新华路历史风貌区、法华镇路等功能或生活圈标签不据此自动扩张，沿线完整小区归属仍待人工精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-changning-admin-divisions-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xinhualu-north",
+        "xinhualu-east",
+        "xinhualu-south",
+        "xinhualu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "changning-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_tianshan",
+      "canonicalName": "天山",
+      "aliases": [
+        "天山路"
+      ],
+      "districtNames": [
+        "长宁区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场天山暂以同名天山路街道固定行政关系作为低置信、可编辑骨架；虹桥—古北商圈等跨街道功能语义不用于改写本轮外框，沿线完整小区归属仍待人工精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-changning-admin-divisions-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "tianshan-north",
+        "tianshan-east",
+        "tianshan-south",
+        "tianshan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "changning-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xianxia",
+      "canonicalName": "仙霞",
+      "aliases": [
+        "仙霞新村"
+      ],
+      "districtNames": [
+        "长宁区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场仙霞暂以同名仙霞新村街道固定行政关系作为低置信、可编辑骨架；古北、西郊和虹桥住宅板块保持独立研究，不把相邻功能区静默并入仙霞。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-changning-admin-divisions-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xianxia-north",
+        "xianxia-east",
+        "xianxia-south",
+        "xianxia-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "changning-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_beixinjing",
+      "canonicalName": "北新泾",
+      "aliases": [],
+      "districtNames": [
+        "长宁区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场北新泾暂以同名北新泾街道固定行政关系作为低置信、可编辑骨架；其与新泾镇及西郊市场板块的边界需在西郊自定义批次中按完整小区归属联合复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-changning-admin-divisions-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "beixinjing-north",
+        "beixinjing-east",
+        "beixinjing-south",
+        "beixinjing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "changning-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }

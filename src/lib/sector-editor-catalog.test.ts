@@ -256,3 +256,49 @@ test("the Xuhui admin-aligned batch exposes all 12 candidates without inventing 
     template.geometryStatus === "candidate" && template.ring.length >= 3
   )));
 });
+
+test("the Changning direct batch exposes four candidates without inventing custom market scopes", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL("../../data/geo/reviewed-candidate-batches/changning-four-direct-admin-aligned-2026-07.json", import.meta.url),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const candidateIds = new Set(candidateData.features.map(
+    (feature: { properties: { id: string } }) => feature.properties.id,
+  ));
+
+  assert.deepEqual(
+    [...batchIds].sort(),
+    ["sector_beixinjing", "sector_tianshan", "sector_xianxia", "sector_xinhualu"],
+  );
+  assert.ok(batchIds.every((id: string) => candidateIds.has(id)));
+  assert.equal(registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  ).length, 4);
+  for (const forbiddenName of ["中山公园", "虹桥", "古北", "西郊"]) {
+    assert.ok(!registryData.sectors.some(
+      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
+    ));
+  }
+  assert.equal(
+    registryData.sectors.find(
+      (record: { id: string }) => record.id === "sector_hongqiao",
+    )?.canonicalName,
+    "虹桥商务区",
+  );
+  assert.equal(
+    candidateData.features.find(
+      (feature: { properties: { id: string } }) => feature.properties.id === "sector_hongqiao",
+    )?.properties?.name,
+    "虹桥商务区",
+  );
+});

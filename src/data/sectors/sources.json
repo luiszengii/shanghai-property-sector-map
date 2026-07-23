@@ -666,6 +666,17 @@
       "note": "只核实现行街镇名称与隶属关系，不提供楼市板块定义或可再分发边界。"
     },
     {
+      "id": "official-changning-admin-divisions-2025",
+      "title": "长宁区行政区划",
+      "publisher": "上海市长宁区人民政府",
+      "url": "https://www.shcn.gov.cn/col8221/20211125/1111560.html",
+      "sourceType": "official_admin_register",
+      "publishedAt": "2025-09-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "确认长宁区现辖 9 个街道、1 个镇及其自西向东顺序；只用于身份和邻接核对，不提供楼市板块定义或可再分发边界。"
+    },
+    {
       "id": "official-qingpu-master-plan-2035",
       "title": "上海市青浦区总体规划暨土地利用总体规划（2017-2035）",
       "publisher": "上海市规划和自然资源局",
