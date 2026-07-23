@@ -40,6 +40,7 @@ import {
   type SectorBoundaryDraft,
 } from "@/src/lib/sector-editor-drafts";
 import { mapZoomDeltaForShortcut } from "@/src/lib/map-keyboard-shortcuts";
+import { sectorEditorMapOptions } from "@/src/lib/sector-editor-map-options";
 import styles from "./SectorBoundaryEditor.module.css";
 
 type LoadStatus = "loading" | "ready" | "missing-key" | "error";
@@ -299,16 +300,7 @@ export function SectorBoundaryEditor() {
       }))
       .then((api: typeof AMap) => {
         if (cancelled || !mapHostRef.current) return;
-        const map = new api.Map(mapHostRef.current, {
-          zoom: 10.8,
-          center: [121.4737, 31.2304],
-          viewMode: "2D",
-          mapStyle: "amap://styles/normal",
-          showLabel: true,
-          doubleClickZoom: false,
-          scrollWheel: true,
-          keyboardEnable: true,
-        });
+        const map = new api.Map(mapHostRef.current, sectorEditorMapOptions);
         const syncZoom = () => setMapZoom(map.getZoom());
         const handleZoomShortcut = (event: KeyboardEvent) => {
           if (event.isComposing) return;
