@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0-workpack-fragment",
+  "workpackId": "gumei-xinzhuang",
+  "mergeStatus": "internal_draft_merged_geometry_not_publication_ready",
+  "outputCrs": "EPSG:4326",
+  "workingCrs": "EPSG:32651",
+  "sourceLock": "osm-geofabrik-shanghai-260721",
+  "sectors": [
+    {
+      "id": "sector_gumei",
+      "canonicalName": "古美",
+      "aliases": ["古美罗阳", "古美路"],
+      "kind": "market_sector",
+      "identityStatus": "selected",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "market-gumei_admin-outer-frame_fill-seller-consensus-project-holes",
+      "candidateFeatureId": "sector_gumei",
+      "definitionSourceIds": [
+        "seller-anjuke-gumei-projects-2026-07-23",
+        "seller-fang-gumei-projects-2026-07-23",
+        "official-gumei-street-scope-2024",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "以古美路街道外框作保守骨架；填平两个会切走东兰小区、华一新城和同济华城完整项目的行政洞。南侧古美罗阳争议项目保持完整并暂不分配，等待与梅陇、莘庄联合裁边。",
+      "geometryMergeStatus": "internal_draft_merged_adjacent_market_edge_open"
+    },
+    {
+      "id": "sector_xinzhuang",
+      "canonicalName": "莘庄",
+      "aliases": ["莘庄北广场", "莘庄南广场"],
+      "kind": "market_sector",
+      "identityStatus": "selected",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "market-xinzhuang_town-backbone_minus-chunshen_keep-complete-xinzhuang-projects",
+      "candidateFeatureId": "sector_xinzhuang",
+      "definitionSourceIds": [
+        "seller-anjuke-xinzhuang-projects-2026-07-23",
+        "seller-fang-xinzhuang-projects-2026-07-23",
+        "official-xinzhuang-transport-plan-2024",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "莘庄镇骨架扣除春申和古美候选；名都新城、柏林春天完整归莘庄；新梅花苑两期因古美罗阳归属证据而保持未分配。当前项目岛导致 MultiPolygon，不能直接总装。",
+      "geometryMergeStatus": "internal_draft_merged_disconnected_project_islands_preserved"
+    },
+    {
+      "id": "sector_chunshen",
+      "canonicalName": "春申",
+      "aliases": ["梅陇春申"],
+      "kind": "market_sector",
+      "identityStatus": "selected_new_primary",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "market-chunshen_named-road-frame_with-complete-project-inclusions-and-exclusions",
+      "candidateFeatureId": "sector_chunshen",
+      "boundaryAnchors": [
+        {"side": "west", "featureType": "road", "expectedIdentity": "都市路", "identityStatus": "verified-by-osm-name"},
+        {"side": "north", "featureType": "road", "expectedIdentity": "莘朱路", "identityStatus": "verified-by-osm-name"},
+        {"side": "east", "featureType": "road", "expectedIdentity": "虹梅南路", "identityStatus": "verified-by-osm-name"},
+        {"side": "south", "featureType": "road", "expectedIdentity": "银都路", "identityStatus": "verified-by-osm-name"}
+      ],
+      "includedMarketProjects": [
+        "春申景城",
+        "春申景城湖滨晨韵",
+        "春申景城湖畔林语",
+        "高兴花园一街坊",
+        "高兴花园二三四街坊",
+        "高兴花园五街坊",
+        "上海春城",
+        "中海寰宇天下",
+        "莘南花苑各组团"
+      ],
+      "excludedXinzhuangProjects": [
+        "名都新城",
+        "名都新城四期",
+        "柏林春天二期",
+        "春申复地城柏林春天一期"
+      ],
+      "definitionSourceIds": [
+        "seller-anjuke-chunshen-projects-2026-07-23",
+        "seller-fang-chunshen-projects-2026-07-23",
+        "official-xinzhuang-subcenter-2021",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "以都市路、莘朱路、虹梅南路、银都路中心线形成保守框架，再按两家独立卖方的完整项目归属修正。不得填入梅陇或七宝未核验区域。",
+      "geometryMergeStatus": "internal_draft_merged_xinzhuang_project_holes_preserved"
+    }
+  ],
+  "subscopes": [
+    {
+      "id": "subscope_xinzhuang_north",
+      "canonicalName": "莘庄北片",
+      "parentSectorId": "sector_xinzhuang",
+      "kind": "market_subscope",
+      "identityStatus": "selected",
+      "geometryStatus": "missing",
+      "note": "仅为莘庄内部子范围；未取得两家独立卖方和完整项目支持的分界线。"
+    },
+    {
+      "id": "subscope_xinzhuang_south",
+      "canonicalName": "莘庄南片",
+      "parentSectorId": "sector_xinzhuang",
+      "kind": "market_subscope",
+      "identityStatus": "selected",
+      "geometryStatus": "missing",
+      "note": "仅为莘庄内部子范围；不得与独立一级春申重叠发布。"
+    }
+  ],
+  "topologyNotes": {
+    "primarySectorIds": ["sector_gumei", "sector_xinzhuang", "sector_chunshen"],
+    "unassignedAreaAllowed": true,
+    "topologyOverlapToleranceSquareMeters": 0.01,
+    "neighborSectorsRequiringJointReview": ["七宝", "梅陇"],
+    "doNotMergeCandidateGeometryYet": false,
+    "centralMergeMode": "internal-review-draft",
+    "publicationReady": false
+  }
+}

@@ -569,6 +569,24 @@ function signedRingsIntersectionArea(firstRings, secondRings, label) {
   return area;
 }
 
+function polygonComparisonRings(polygon, label) {
+  return polygon.map((ring, ringIndex) => ({
+    label: `${label} ${ringIndex === 0 ? "外环" : `内环 ${ringIndex}`}`,
+    sign: ringIndex === 0 ? 1 : -1,
+    ring: ring.map(projectWgs84ToComparisonPlane),
+  }));
+}
+
+function polygonsHaveAreaOverlap(first, second, label) {
+  const firstRings = polygonComparisonRings(first, `${label} 第一面`);
+  const secondRings = polygonComparisonRings(second, `${label} 第二面`);
+  const intersectionArea = signedRingsIntersectionArea(firstRings, secondRings, label);
+  if (!Number.isFinite(intersectionArea) || intersectionArea < -0.01) {
+    throw new Error(`${label} 相交面积计算无效：${intersectionArea}`);
+  }
+  return intersectionArea > 0.01;
+}
+
 function roundedMetric(value, digits) {
   return Number(value.toFixed(digits));
 }
@@ -1146,8 +1164,13 @@ for (let first = 0; first < candidates.length; first += 1) {
   for (let second = first + 1; second < candidates.length; second += 1) {
     const firstPolygons = polygonGroupsForGeometry(candidates[first].geometry);
     const secondPolygons = polygonGroupsForGeometry(candidates[second].geometry);
-    if (firstPolygons.some((firstPolygon) => (
-      secondPolygons.some((secondPolygon) => ringsOverlap(firstPolygon[0], secondPolygon[0]))
+    const pairLabel = `${candidates[first].properties.name} / ${candidates[second].properties.name}`;
+    if (firstPolygons.some((firstPolygon, firstPolygonIndex) => (
+      secondPolygons.some((secondPolygon, secondPolygonIndex) => polygonsHaveAreaOverlap(
+        firstPolygon,
+        secondPolygon,
+        `${pairLabel} polygon ${firstPolygonIndex + 1} × ${secondPolygonIndex + 1}`,
+      ))
     ))) {
       error(
         `${candidates[first].properties.name} 与 ${candidates[second].properties.name}`

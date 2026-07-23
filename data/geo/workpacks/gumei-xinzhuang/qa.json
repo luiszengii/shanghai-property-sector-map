@@ -1,0 +1,398 @@
+{
+  "schemaVersion": "2.0.0",
+  "workpackId": "gumei-xinzhuang",
+  "checkedAt": "2026-07-23",
+  "candidateSha256": "3d265f5cbedc4408807c3df1f7d19bee0db5a49e7b1be100474629ab50f82967",
+  "coordinateSystem": {
+    "declared": "WGS84 / OGC:CRS84",
+    "axisOrder": "longitude, latitude",
+    "metricQaCrs": "EPSG:32651",
+    "verified": true
+  },
+  "overallStatus": "valid_market_candidates_merged_as_internal_drafts_with_promotion_blockers",
+  "features": [
+    {
+      "id": "sector_gumei",
+      "geometryType": "Polygon",
+      "areaSquareKilometers": 6.1169,
+      "perimeterKilometers": 15.0473,
+      "partCount": 1,
+      "holeCount": 0,
+      "coordinatePointCount": 29,
+      "bboxWgs84": [
+        121.3725623,
+        31.1286493,
+        121.40537,
+        31.164045
+      ],
+      "valid": true,
+      "boundarySimple": true,
+      "selfIntersection": false,
+      "publishableAsReviewedMarketSector": false
+    },
+    {
+      "id": "sector_xinzhuang",
+      "geometryType": "MultiPolygon",
+      "areaSquareKilometers": 17.1559,
+      "perimeterKilometers": 28.5718,
+      "partCount": 5,
+      "holeCount": 2,
+      "coordinatePointCount": 242,
+      "bboxWgs84": [
+        121.3405231,
+        31.0925954,
+        121.3944626,
+        31.1416858
+      ],
+      "valid": true,
+      "boundarySimple": true,
+      "selfIntersection": false,
+      "publishableAsReviewedMarketSector": false,
+      "partAreasSquareKilometers": [
+        16.900597,
+        0.132004,
+        0.052344,
+        0.042016,
+        0.028971
+      ]
+    },
+    {
+      "id": "sector_chunshen",
+      "geometryType": "Polygon",
+      "areaSquareKilometers": 7.4145,
+      "perimeterKilometers": 15.9395,
+      "partCount": 1,
+      "holeCount": 4,
+      "coordinatePointCount": 509,
+      "bboxWgs84": [
+        121.3834127,
+        31.0945122,
+        121.4271509,
+        31.1250164
+      ],
+      "valid": true,
+      "boundarySimple": true,
+      "selfIntersection": false,
+      "publishableAsReviewedMarketSector": false
+    }
+  ],
+  "pairwiseTopology": [
+    {
+      "sectorIds": [
+        "sector_gumei",
+        "sector_xinzhuang"
+      ],
+      "overlapSquareMeters": 0.0,
+      "passesNoAreaOverlapTolerance": true,
+      "minimumDistanceMeters": 0.0,
+      "sharedBoundaryMeters": 955.7884
+    },
+    {
+      "sectorIds": [
+        "sector_gumei",
+        "sector_chunshen"
+      ],
+      "overlapSquareMeters": 0.0,
+      "passesNoAreaOverlapTolerance": true,
+      "minimumDistanceMeters": 1759.0167,
+      "sharedBoundaryMeters": 0.0
+    },
+    {
+      "sectorIds": [
+        "sector_xinzhuang",
+        "sector_chunshen"
+      ],
+      "overlapSquareMeters": 0.000102,
+      "passesNoAreaOverlapTolerance": true,
+      "minimumDistanceMeters": 0.0,
+      "sharedBoundaryMeters": 6584.7143
+    }
+  ],
+  "knownReviewedCandidateOverlapSquareMeters": {
+    "sector_gumei": {
+      "sector_qiantan": 0.0,
+      "sector_shangnan": 0.0,
+      "sector_shibo": 0.0,
+      "sector_beiwaitan": 0.0,
+      "sector_sanlin": 0.0
+    },
+    "sector_xinzhuang": {
+      "sector_qiantan": 0.0,
+      "sector_shangnan": 0.0,
+      "sector_shibo": 0.0,
+      "sector_beiwaitan": 0.0,
+      "sector_sanlin": 0.0
+    },
+    "sector_chunshen": {
+      "sector_qiantan": 0.0,
+      "sector_shangnan": 0.0,
+      "sector_shibo": 0.0,
+      "sector_beiwaitan": 0.0,
+      "sector_sanlin": 0.0
+    }
+  },
+  "projectIntegrityChecks": [
+    {
+      "group": "gumeiIncluded",
+      "project": "东兰小区",
+      "coveragePercentBySector": {
+        "sector_gumei": 100.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "gumeiIncluded",
+      "project": "华一新城",
+      "coveragePercentBySector": {
+        "sector_gumei": 100.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0.0
+    },
+    {
+      "group": "gumeiIncluded",
+      "project": "同济华城",
+      "coveragePercentBySector": {
+        "sector_gumei": 100.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "gumeiUnassignedFringe",
+      "project": "平南一二村",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 100.0
+    },
+    {
+      "group": "gumeiUnassignedFringe",
+      "project": "新梅花苑-东区",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 100.0
+    },
+    {
+      "group": "gumeiUnassignedFringe",
+      "project": "新梅花苑-西区",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 100.0
+    },
+    {
+      "group": "gumeiUnassignedFringe",
+      "project": "南方城",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 100.0
+    },
+    {
+      "group": "gumeiUnassignedFringe",
+      "project": "南方新村",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 100.0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "春申景城",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0.0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "春申景城湖滨晨韵",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0.0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "春申景城湖畔林语",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "高兴花园一街坊",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "高兴花园二三四街坊",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0.0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "高兴花园五街坊",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0.0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "上海春城",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "中海寰宇天下",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "莘南花苑二村东区",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "莘南花苑一街坊",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "莘南花苑一村",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "chunshenIncluded",
+      "project": "莘南花苑商办楼",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 0.0,
+        "sector_chunshen": 100.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "xinzhuangIncluded",
+      "project": "名都新城四期",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 100.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "xinzhuangIncluded",
+      "project": "名都新城",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 100.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "xinzhuangIncluded",
+      "project": "柏林春天二期",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 100.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    },
+    {
+      "group": "xinzhuangIncluded",
+      "project": "春申复地城柏林春天一期",
+      "coveragePercentBySector": {
+        "sector_gumei": 0.0,
+        "sector_xinzhuang": 100.0,
+        "sector_chunshen": 0.0
+      },
+      "unassignedPercent": 0
+    }
+  ],
+  "identityDecisions": {
+    "gumei": "market primary sector",
+    "xinzhuang": "market primary sector",
+    "chunshen": "independent market primary sector",
+    "xinzhuangNorthSouth": "subscopes only; geometry missing"
+  },
+  "assemblyReadiness": {
+    "sector_gumei": "merged-internal-draft: southern Gumei-Luoyang fringe and Pingnan boundary against Meilong/Xinzhuang remain unresolved",
+    "sector_xinzhuang": "merged-internal-draft: MultiPolygon project islands are preserved as interleaved seller attribution evidence",
+    "sector_chunshen": "merged-internal-draft: four holes retain complete Xinzhuang project islands"
+  },
+  "gapChecks": {
+    "qibao": "Gumei does not expand beyond its conservative outer backbone; Qibao gap/edge remains for joint review",
+    "meilong": "Chunshen is bounded conservatively by seller projects and named roads; Meilong is not mechanically filled",
+    "gumeiLuoyangFringe": "New Meihua Garden phases and other southern seller-labeled Gumei projects remain unassigned rather than being captured by Xinzhuang"
+  },
+  "checksNotYetPassing": [
+    "Single connected Xinzhuang primary geometry",
+    "Hole-free Chunshen primary geometry after Xinzhuang project adjudication",
+    "Joint road/project-level shared edges with Qibao and Meilong",
+    "Geometry for Xinzhuang north/south subscopes"
+  ]
+}

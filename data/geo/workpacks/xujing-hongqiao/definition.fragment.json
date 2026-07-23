@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "1.0.0",
+  "workpackId": "xujing-hongqiao",
+  "status": "selected-candidate-merged-for-internal-review",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "selectedScenarioId": "selected_market_core_corridor_2026_07",
+  "topologyGroups": [
+    {
+      "prioritySectorIds": [
+        "sector_hongqiao",
+        "sector_xujing"
+      ],
+      "sharedEdgeId": "edge_xujing_hongqiao_zhuguang_candidate",
+      "sharedEdgeOwnerSectorId": "sector_hongqiao",
+      "sharedEdgeSectorIds": [
+        "sector_xujing",
+        "sector_hongqiao"
+      ],
+      "snapDistanceMeters": 15
+    }
+  ],
+  "sectors": [
+    {
+      "id": "sector_xujing",
+      "canonicalName": "徐泾",
+      "scopeVersion": "market-residential-core-2026-07",
+      "method": "market_four_sides_locked_osm_road_centerlines",
+      "bbox": [
+        121.21,
+        31.14,
+        121.31,
+        31.21
+      ],
+      "insidePoint": [
+        121.27,
+        31.176
+      ],
+      "boundaryAnchors": [
+        {
+          "side": "west",
+          "featureType": "road",
+          "expectedIdentity": "徐乐路",
+          "identityStatus": "verified-by-osm-name",
+          "match": {
+            "names": [
+              "徐乐路"
+            ]
+          }
+        },
+        {
+          "side": "north",
+          "featureType": "composite-road",
+          "expectedIdentity": "北青公路候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": {
+            "names": [
+              "北青公路"
+            ]
+          }
+        },
+        {
+          "side": "south",
+          "featureType": "road",
+          "expectedIdentity": "徐南路",
+          "identityStatus": "verified-by-osm-name",
+          "match": {
+            "names": [
+              "徐南路"
+            ]
+          }
+        },
+        {
+          "side": "east",
+          "featureType": "road",
+          "expectedIdentity": "诸光路候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": {
+            "names": [
+              "诸光路"
+            ]
+          }
+        }
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_hongqiao"
+      ],
+      "areaRangeSquareKilometers": [
+        33.5,
+        35.5
+      ],
+      "definitionSourceIds": [
+        "internal-user-sector-scope-decision-2026-07-23",
+        "seller-anjuke-xujing-list-2026",
+        "seller-fang-panlong-tiandi-xujing",
+        "seller-fang-panlong-east-25-07",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "用户裁定市场徐泾住宅板块。候选四至为西徐乐路、北北青公路、南徐南路、东诸光路；固定OSM快照中的多车行线按逐横断面中位值推导候选中心线。蟠龙天地及蟠龙路东侧25-07地块由安居客与房天下两个独立来源家族共同归入徐泾。"
+    },
+    {
+      "id": "sector_hongqiao",
+      "canonicalName": "虹桥商务区",
+      "scopeVersion": "market-core-function-corridor-2026-07",
+      "method": "market_four_sides_locked_osm_road_centerlines",
+      "bbox": [
+        121.27,
+        31.15,
+        121.37,
+        31.21
+      ],
+      "insidePoint": [
+        121.315,
+        31.188
+      ],
+      "boundaryAnchors": [
+        {
+          "side": "west",
+          "featureType": "road",
+          "expectedIdentity": "诸光路候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": {
+            "names": [
+              "诸光路"
+            ]
+          }
+        },
+        {
+          "side": "north",
+          "featureType": "composite-road",
+          "expectedIdentity": "崧泽大道—崧泽高架路候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "components": [
+            {
+              "match": {
+                "names": [
+                  "崧泽大道"
+                ]
+              }
+            },
+            {
+              "match": {
+                "names": [
+                  "崧泽高架路"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "side": "south",
+          "featureType": "road",
+          "expectedIdentity": "沪青平公路候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": {
+            "names": [
+              "沪青平公路"
+            ]
+          }
+        },
+        {
+          "side": "east",
+          "featureType": "road",
+          "expectedIdentity": "外环高速候选中位线",
+          "identityStatus": "verified-name-alignment-candidate",
+          "match": {
+            "names": [
+              "外环高速"
+            ]
+          }
+        }
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_xujing"
+      ],
+      "areaRangeSquareKilometers": [
+        16.0,
+        17.5
+      ],
+      "definitionSourceIds": [
+        "internal-user-sector-scope-decision-2026-07-23",
+        "official-hongqiao-core-west-necc",
+        "official-hongqiao-special-plan-2025",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "用户裁定核心功能走廊小范围市场板块，并把国家会展中心、虹桥枢纽都归入本板块。候选四至为西诸光路、北崧泽大道—崧泽高架路、南沪青平公路、东外环高速；固定OSM快照多车行线按逐横断面中位值推导。候选约16.81平方公里只与公开16平方公里核心区作量级核对，不宣称等同或复刻官方范围。"
+    }
+  ],
+  "auditDiscardedScenarios": [
+    {
+      "scenarioId": "b_necc_to_xujing_hub_to_hongqiao",
+      "status": "rejected-by-user",
+      "reason": "用户裁定国家会展中心与虹桥枢纽都归虹桥商务区；行政代理几何不再输出。"
+    }
+  ]
+}

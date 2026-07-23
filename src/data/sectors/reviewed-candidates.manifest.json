@@ -741,9 +741,12 @@
       "method": "selected_workpack_candidate_with_shared_topology",
       "osmRefs": {
         "workpackId": "beicai-yuqiao",
+        "workpackSourceId": "beicai-yuqiao-selected-v1",
         "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
         "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
         "sourceFeatureId": "sector_beicai",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
         "sourceAdminRelationId": "14179101",
         "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
         "splitRoadOsmRefs": [
@@ -789,9 +792,12 @@
       "method": "selected_workpack_candidate_with_shared_topology",
       "osmRefs": {
         "workpackId": "beicai-yuqiao",
+        "workpackSourceId": "beicai-yuqiao-selected-v1",
         "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
         "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
         "sourceFeatureId": "sector_yuqiao",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
         "sourceAdminRelationId": "14179101",
         "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
         "splitRoadOsmRefs": [
@@ -828,6 +834,131 @@
         "snapDependencySectorIds": [
           "sector_beicai",
           "sector_sanlin"
+        ]
+      }
+    },
+    {
+      "id": "sector_xujing",
+      "scopeVersion": "market-residential-core-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "xujing-hongqiao",
+        "workpackSourceId": "xujing-hongqiao-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/xujing-hongqiao/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "478d04cc53d37ee1ac18308d511db55105266cd25bb689811413dea40c1073ba",
+        "sourceFeatureId": "sector_xujing__selected_market_core_corridor_2026_07",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_hongqiao"
+        ]
+      }
+    },
+    {
+      "id": "sector_hongqiao",
+      "scopeVersion": "market-core-function-corridor-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "xujing-hongqiao",
+        "workpackSourceId": "xujing-hongqiao-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/xujing-hongqiao/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "478d04cc53d37ee1ac18308d511db55105266cd25bb689811413dea40c1073ba",
+        "sourceFeatureId": "sector_hongqiao__selected_market_core_corridor_2026_07",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_xujing"
+        ],
+        "snapDependencySectorIds": [
+          "sector_xujing"
+        ]
+      }
+    },
+    {
+      "id": "sector_gumei",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "gumei-xinzhuang",
+        "workpackSourceId": "gumei-xinzhuang-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/gumei-xinzhuang/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "60ca5e8362a585f560ab5e3fa5a5ce53c13dc4000c9c576850143cdaf6141601",
+        "sourceFeatureId": "sector_gumei",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_xinzhuang"
+        ]
+      }
+    },
+    {
+      "id": "sector_xinzhuang",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "gumei-xinzhuang",
+        "workpackSourceId": "gumei-xinzhuang-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/gumei-xinzhuang/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "60ca5e8362a585f560ab5e3fa5a5ce53c13dc4000c9c576850143cdaf6141601",
+        "sourceFeatureId": "sector_xinzhuang",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_gumei",
+          "sector_chunshen"
+        ],
+        "snapDependencySectorIds": [
+          "sector_gumei"
+        ]
+      }
+    },
+    {
+      "id": "sector_chunshen",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "gumei-xinzhuang",
+        "workpackSourceId": "gumei-xinzhuang-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/gumei-xinzhuang/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "60ca5e8362a585f560ab5e3fa5a5ce53c13dc4000c9c576850143cdaf6141601",
+        "sourceFeatureId": "sector_chunshen",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_xinzhuang"
+        ],
+        "snapDependencySectorIds": [
+          "sector_xinzhuang"
         ]
       }
     }

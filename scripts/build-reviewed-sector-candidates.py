@@ -361,10 +361,18 @@ def build_market_admin_candidate_with_shared_topology(
 
 def build_selected_workpack_candidate(
     definition: dict[str, Any],
+    workpack_sources: dict[str, dict[str, Any]],
     working_crs: str,
     output_crs: str,
+    snapshot_id: str,
 ):
-    source_path = (REPO_ROOT / definition["sourceGeojson"]).resolve()
+    workpack_source_id = definition["workpackSourceId"]
+    source_config = workpack_sources.get(workpack_source_id)
+    if source_config is None:
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到 workpack source：{workpack_source_id}"
+        )
+    source_path = (REPO_ROOT / source_config["sourceGeojson"]).resolve()
     if not source_path.is_relative_to(REPO_ROOT):
         raise ValueError(
             f"{definition['canonicalName']} workpack 路径必须位于仓库内"
@@ -374,16 +382,18 @@ def build_selected_workpack_candidate(
             f"{definition['canonicalName']} 找不到 workpack 候选：{source_path}"
         )
     actual_hash = sha256(source_path)
-    expected_hash = definition["sourceGeojsonSha256"]
+    expected_hash = source_config["sourceGeojsonSha256"]
     if actual_hash != expected_hash:
         raise ValueError(
             f"{definition['canonicalName']} workpack SHA-256 不匹配：{actual_hash}"
         )
 
     source = read_json(source_path)
+    source_feature_id_property = definition.get("sourceFeatureIdProperty", "id")
     matches = [
         feature for feature in source.get("features", [])
-        if feature.get("properties", {}).get("id") == definition["sourceFeatureId"]
+        if feature.get("properties", {}).get(source_feature_id_property)
+        == definition["sourceFeatureId"]
     ]
     if len(matches) != 1:
         raise ValueError(
@@ -391,12 +401,37 @@ def build_selected_workpack_candidate(
         )
     source_feature = matches[0]
     source_properties = source_feature.get("properties", {})
-    if source_properties.get("workpackId") != definition["expectedWorkpackId"]:
+    collection_workpack_id = (
+        source.get("properties", {}).get("workpackId")
+        or source.get("metadata", {}).get("workpackId")
+        or source_properties.get("workpackId")
+    )
+    if collection_workpack_id != source_config["expectedWorkpackId"]:
         raise ValueError(f"{definition['canonicalName']} workpackId 不匹配")
-    if source_properties.get("selectedForAssembly") is not True:
-        raise ValueError(f"{definition['canonicalName']} workpack 候选尚未获准总装")
-    if source_properties.get("coordinateSystem") != "WGS84":
-        raise ValueError(f"{definition['canonicalName']} workpack 坐标系不是 WGS84")
+    for property_name, expected_value in definition.get(
+        "requiredSourceProperties",
+        {},
+    ).items():
+        if source_properties.get(property_name) != expected_value:
+            raise ValueError(
+                f"{definition['canonicalName']} workpack 属性 {property_name} "
+                f"不是声明值 {expected_value!r}"
+            )
+    if source_properties.get("coordinateSystem") not in {
+        "WGS84",
+        "OGC:CRS84",
+    }:
+        raise ValueError(f"{definition['canonicalName']} workpack 坐标系不是 WGS84/CRS84")
+    expected_snapshot_id = source_config["expectedGeometrySourceSnapshotId"]
+    if source_properties.get("geometrySourceSnapshotId") != expected_snapshot_id:
+        raise ValueError(
+            f"{definition['canonicalName']} workpack geometrySourceSnapshotId "
+            f"不是锁定值 {expected_snapshot_id!r}"
+        )
+    if expected_snapshot_id != snapshot_id:
+        raise ValueError(
+            f"{definition['canonicalName']} workpack 快照与中央 source lock 不一致"
+        )
 
     geometry = normalize_polygonal(shape(source_feature["geometry"]))
     inside_point = Point(*definition["insidePoint"])
@@ -404,10 +439,13 @@ def build_selected_workpack_candidate(
         raise ValueError(f"{definition['canonicalName']} workpack 不包含市场裁定点")
     projected = project_geometry(geometry, output_crs, working_crs)
     workpack_refs = {
-        "workpackId": definition["expectedWorkpackId"],
-        "sourceGeojson": definition["sourceGeojson"],
+        "workpackId": source_config["expectedWorkpackId"],
+        "workpackSourceId": workpack_source_id,
+        "sourceGeojson": source_config["sourceGeojson"],
         "sourceGeojsonSha256": actual_hash,
         "sourceFeatureId": definition["sourceFeatureId"],
+        "sourceFeatureIdProperty": source_feature_id_property,
+        "geometrySourceSnapshotId": expected_snapshot_id,
         "sourceAdminRelationId": source_properties.get("sourceAdminRelationId"),
         "splitEdgeId": source_properties.get("splitEdgeId"),
         "splitRoadOsmRefs": source_properties.get("splitRoadOsmRefs", []),
@@ -443,6 +481,9 @@ def finalize_topology_group(
     source_projected_by_id = {}
     occupied = None
     snap_distance = float(group.get("snapDistanceMeters", 30))
+    preserve_all_parts_sector_ids = set(
+        group.get("preserveAllPartsSectorIds", [])
+    )
     for sector_id in sector_ids:
         projected = project_geometry(
             geometry_by_id[sector_id],
@@ -471,8 +512,9 @@ def finalize_topology_group(
             output_crs,
             working_crs,
         )
+        valid_parts = polygons(make_valid(projected))
         containing = [
-            part for part in polygons(make_valid(projected))
+            part for part in valid_parts
             if part.contains(inside_point)
         ]
         if len(containing) != 1:
@@ -480,7 +522,10 @@ def finalize_topology_group(
                 f"{definition['canonicalName']} 米制拓扑必须唯一包含市场裁定点，"
                 f"实际找到 {len(containing)} 个"
             )
-        projected = normalize_polygonal(containing[0])
+        if sector_id in preserve_all_parts_sector_ids:
+            projected = normalize_polygonal(unary_union(valid_parts))
+        else:
+            projected = normalize_polygonal(containing[0])
         projected_by_id[sector_id] = projected
         occupied = (
             projected
@@ -965,8 +1010,10 @@ def main() -> None:
         elif definition["method"] == "selected_workpack_candidate_with_shared_topology":
             geometry, area, osm_refs = build_selected_workpack_candidate(
                 definition,
+                definitions.get("workpackSources", {}),
                 definitions["workingCrs"],
                 definitions["outputCrs"],
+                source_lock["id"],
             )
         else:
             raise ValueError(f"未知构建方法：{definition['method']}")

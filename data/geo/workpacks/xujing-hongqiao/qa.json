@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "workpackId": "xujing-hongqiao",
+  "generatedAt": "2026-07-23",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceSnapshotId": "osm-geofabrik-shanghai-260721",
+  "sourceGeoPackageSha256": "3a45dcc2173cc1e67471e0190564b7f6c19b3655697d0eff830bda48e2dcbba1",
+  "overallStatus": "merged-internal-draft-needs-outer-edge-review",
+  "assemblyReviewReady": true,
+  "centralMergeReady": true,
+  "centralMergeMode": "internal-review-draft",
+  "publicationReady": false,
+  "selectedScopeDecision": {
+    "xujing": "市场徐泾住宅板块",
+    "hongqiao": "虹桥商务区核心功能走廊小范围市场板块",
+    "facilityAssignment": "国家会展中心和虹桥枢纽均归虹桥商务区"
+  },
+  "selectedCandidate": {
+    "scenarioId": "selected_market_core_corridor_2026_07",
+    "expectedSharedAnchor": "诸光路固定OSM道路对象推导中位线",
+    "featureCount": 2,
+    "validGeometry": true,
+    "selfIntersectionFree": true,
+    "areasSquareKilometers": {
+      "sector_xujing": 34.4794,
+      "sector_hongqiao": 16.8075
+    },
+    "overlapSquareMeters": 0.0,
+    "gapAgainstScenarioDomainSquareMeters": 0.0,
+    "sharedBoundaryLengthMeters": 2652.96,
+    "sharedBoundaryConnectedPartCount": 1,
+    "oneSharedEdge": true,
+    "mutuallyExclusive": true,
+    "roadObjectMappedRanges": {
+      "sharedZhuguangLatitude": [
+        31.1625979,
+        31.1996917
+      ],
+      "xujingWestXuleLatitude": [
+        31.1701636,
+        31.1982244
+      ],
+      "xujingSouthXunanLongitude": [
+        121.2511685,
+        121.3128992
+      ],
+      "xujingNorthBeiqingLongitude": [
+        121.1937303,
+        121.2981024
+      ],
+      "hongqiaoNorthSongzeLongitude": [
+        121.1580236,
+        121.3123203
+      ],
+      "hongqiaoSouthHuqingpingLongitude": [
+        121.1998791,
+        121.3540389
+      ],
+      "hongqiaoEastS20Latitude": [
+        31.1261466,
+        31.2435581
+      ]
+    },
+    "facilityIntegrityChecks": [
+      {
+        "expectedIdentity": "国家会展中心",
+        "osmId": "345301248",
+        "insideHongqiaoCandidate": true,
+        "insideXujingCandidate": false,
+        "cutByEitherBoundary": false
+      },
+      {
+        "expectedIdentity": "上海虹桥站",
+        "osmId": "70364443",
+        "insideHongqiaoCandidate": true,
+        "insideXujingCandidate": false,
+        "cutByEitherBoundary": false
+      }
+    ],
+    "sellerProjectChecks": [
+      {
+        "project": "上海蟠龙天地",
+        "representativePoint": [
+          121.2725202,
+          31.1894927
+        ],
+        "pointSource": "OSM node 11343446415 inside 蟠龙天地公共空间",
+        "sellerSourceIds": [
+          "seller-anjuke-panlong-tiandi-xujing",
+          "seller-fang-panlong-tiandi-xujing"
+        ],
+        "insideXujingCandidate": true,
+        "insideHongqiaoCandidate": false,
+        "distanceToSharedBoundaryMeters": 1764.265
+      },
+      {
+        "project": "青浦区西虹桥蟠龙路东侧25-07地块",
+        "representativePoint": [
+          121.2805,
+          31.187
+        ],
+        "pointSource": "仅按公开四至设置的核验点，不是地籍坐标",
+        "sellerSourceIds": [
+          "seller-anjuke-xujing-list-2026",
+          "seller-fang-panlong-east-25-07"
+        ],
+        "insideXujingCandidate": true,
+        "insideHongqiaoCandidate": false,
+        "distanceToSharedBoundaryMeters": 1221.277
+      }
+    ],
+    "outerEdgeStatus": [
+      {
+        "sectorId": "sector_xujing",
+        "side": "west",
+        "anchor": "徐乐路",
+        "status": "partial-road-object-plus-unverified-south-closure",
+        "note": "固定OSM徐乐路对象纬度范围未到徐南路交点；南端以道路趋势外推闭合，需总装者复核。"
+      },
+      {
+        "sectorId": "sector_xujing",
+        "side": "north",
+        "anchor": "北青公路",
+        "status": "named-road-candidate-needs-market-project-review"
+      },
+      {
+        "sectorId": "sector_xujing",
+        "side": "south",
+        "anchor": "徐南路",
+        "status": "named-road-candidate-needs-market-project-review"
+      },
+      {
+        "sectorId": "sector_hongqiao",
+        "side": "north/south/east",
+        "anchor": "崧泽大道—崧泽高架路 / 沪青平公路 / 外环高速",
+        "status": "named-road-candidate-needs-core-corridor-version-review",
+        "note": "面积量级接近公开16平方公里核心区，但没有逐边官方或双卖方边界证据。"
+      }
+    ]
+  },
+  "discardedScenarioAudit": {
+    "scenarioId": "b_necc_to_xujing_hub_to_hongqiao",
+    "status": "rejected-by-user",
+    "geometryBasis": "徐泾镇与新虹街道行政代理，仅保留身份审计，不在candidate中输出。",
+    "previousAreasSquareKilometers": {
+      "sector_xujing": 39.5402,
+      "sector_hongqiao": 19.1317
+    }
+  },
+  "requiredBeforePublication": [
+    "总装者复核徐乐路、北青公路、徐南路是否完整覆盖市场徐泾住宅外缘",
+    "总装者复核崧泽大道—崧泽高架路、沪青平公路、外环高速是否为核心功能走廊合适外缘",
+    "对卖方未给完整四至的外边逐项目抽样，当前两家独立来源只充分支持蟠龙项目归徐泾",
+    "确认固定OSM多车行线中位推导可作为项目约5—15米目标精度的候选，不宣称法定界址"
+  ]
+}

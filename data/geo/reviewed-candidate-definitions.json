@@ -3,6 +3,26 @@
   "workingCrs": "EPSG:32651",
   "outputCrs": "OGC:CRS84",
   "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "workpackSources": {
+    "beicai-yuqiao-selected-v1": {
+      "expectedWorkpackId": "beicai-yuqiao",
+      "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+      "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a"
+    },
+    "xujing-hongqiao-selected-v1": {
+      "expectedWorkpackId": "xujing-hongqiao",
+      "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+      "sourceGeojson": "data/geo/workpacks/xujing-hongqiao/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "478d04cc53d37ee1ac18308d511db55105266cd25bb689811413dea40c1073ba"
+    },
+    "gumei-xinzhuang-selected-v1": {
+      "expectedWorkpackId": "gumei-xinzhuang",
+      "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+      "sourceGeojson": "data/geo/workpacks/gumei-xinzhuang/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "60ca5e8362a585f560ab5e3fa5a5ce53c13dc4000c9c576850143cdaf6141601"
+    }
+  },
   "topologyGroups": [
     {
       "snapDistanceMeters": 60,
@@ -20,6 +40,26 @@
         "sector_sanlin",
         "sector_beicai",
         "sector_yuqiao"
+      ]
+    },
+    {
+      "snapDistanceMeters": 0.1,
+      "prioritySectorIds": [
+        "sector_hongqiao",
+        "sector_xujing"
+      ]
+    },
+    {
+      "snapDistanceMeters": 0.1,
+      "prioritySectorIds": [
+        "sector_gumei",
+        "sector_xinzhuang",
+        "sector_chunshen"
+      ],
+      "preserveAllPartsSectorIds": [
+        "sector_gumei",
+        "sector_xinzhuang",
+        "sector_chunshen"
       ]
     }
   ],
@@ -205,10 +245,11 @@
       "canonicalName": "北蔡",
       "scopeVersion": "market-split-candidate-2026-07",
       "method": "selected_workpack_candidate_with_shared_topology",
-      "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
-      "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+      "workpackSourceId": "beicai-yuqiao-selected-v1",
       "sourceFeatureId": "sector_beicai",
-      "expectedWorkpackId": "beicai-yuqiao",
+      "requiredSourceProperties": {
+        "selectedForAssembly": true
+      },
       "insidePoint": [121.5487544, 31.1792249],
       "sharedEdgeSectorIds": ["sector_yuqiao", "sector_qiantan", "sector_sanlin"],
       "snapDependencySectorIds": ["sector_qiantan", "sector_sanlin"],
@@ -224,10 +265,11 @@
       "canonicalName": "御桥",
       "scopeVersion": "market-split-candidate-2026-07",
       "method": "selected_workpack_candidate_with_shared_topology",
-      "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
-      "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+      "workpackSourceId": "beicai-yuqiao-selected-v1",
       "sourceFeatureId": "sector_yuqiao",
-      "expectedWorkpackId": "beicai-yuqiao",
+      "requiredSourceProperties": {
+        "selectedForAssembly": true
+      },
       "insidePoint": [121.5678422, 31.1631883],
       "sharedEdgeSectorIds": ["sector_beicai", "sector_sanlin"],
       "snapDependencySectorIds": ["sector_beicai", "sector_sanlin"],
@@ -236,6 +278,107 @@
       "areaRangeSquareKilometers": [4.8, 5.2],
       "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-yuqiao-renhe", "seller-anjuke-yuqiao-baige", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-yuqiao-industry-eia-2022", "official-pudong-boundary-adjustment-2025"],
       "geometryRule": "用户裁定御桥为与北蔡互斥的一级市场板块。固定 OSM 北蔡镇 relation 仅作起画外壳；御桥取华夏西路—华夏中路派生道路中线南侧，并在 1 米总装容差内服从既有三林和北蔡共享边。东侧张江、南侧康桥边仍保持待相邻板块复核。"
+    },
+    {
+      "id": "sector_xujing",
+      "canonicalName": "徐泾",
+      "scopeVersion": "market-residential-core-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "workpackSourceId": "xujing-hongqiao-selected-v1",
+      "sourceFeatureId": "sector_xujing__selected_market_core_corridor_2026_07",
+      "requiredSourceProperties": {
+        "candidateStatus": "selected-market-candidate",
+        "scenarioId": "selected_market_core_corridor_2026_07"
+      },
+      "insidePoint": [121.27, 31.176],
+      "sharedEdgeSectorIds": ["sector_hongqiao"],
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [33.5, 35.5],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-xujing-profile-2025", "seller-anjuke-xujing-list-2026", "seller-fang-panlong-tiandi-xujing", "seller-fang-panlong-east-25-07"],
+      "geometryVerificationSourceIds": ["osm-geofabrik-shanghai-260721"],
+      "geometryRule": "用户裁定市场徐泾住宅板块，候选四至为西徐乐路、北北青公路、南徐南路、东诸光路；固定 OSM 多车行线按横断面中位推导。诸光路与虹桥商务区共用唯一候选线；徐乐路南端和其余外边仍只达到内部复核候选，不作为法定或行业统一界线。"
+    },
+    {
+      "id": "sector_hongqiao",
+      "canonicalName": "虹桥商务区",
+      "scopeVersion": "market-core-function-corridor-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "workpackSourceId": "xujing-hongqiao-selected-v1",
+      "sourceFeatureId": "sector_hongqiao__selected_market_core_corridor_2026_07",
+      "requiredSourceProperties": {
+        "candidateStatus": "selected-market-candidate",
+        "scenarioId": "selected_market_core_corridor_2026_07"
+      },
+      "insidePoint": [121.315, 31.188],
+      "sharedEdgeSectorIds": ["sector_xujing"],
+      "snapDependencySectorIds": ["sector_xujing"],
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [16, 17.5],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "official-hongqiao-core-west-necc", "official-hongqiao-special-plan-2025"],
+      "geometryVerificationSourceIds": ["osm-geofabrik-shanghai-260721"],
+      "geometryRule": "用户裁定核心功能走廊小范围市场板块，并把国家会展中心、虹桥枢纽都归入本板块。候选四至为西诸光路、北崧泽大道—崧泽高架路、南沪青平公路、东外环高速；约 16.81 平方公里只与公开核心区作量级核对，不宣称等同或复刻官方范围。"
+    },
+    {
+      "id": "sector_gumei",
+      "canonicalName": "古美",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "workpackSourceId": "gumei-xinzhuang-selected-v1",
+      "sourceFeatureId": "sector_gumei",
+      "requiredSourceProperties": {
+        "status": "market-candidate-project-corrected",
+        "publishableAsReviewedMarketSector": false
+      },
+      "insidePoint": [121.3905002, 31.1461914],
+      "sharedEdgeSectorIds": ["sector_xinzhuang"],
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [6, 6.3],
+      "includedMarketAreas": ["东兰小区", "华一新城", "同济华城"],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-anjuke-gumei-projects-2026-07-23", "seller-fang-gumei-projects-2026-07-23"],
+      "geometryVerificationSourceIds": ["official-gumei-street-scope-2024", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "用户裁定市场古美，古美路街道只作保守骨架；填平会切走东兰小区、华一新城和同济华城完整项目的行政洞。南侧古美罗阳—梅陇连续外边仍待相邻板块复核，争议项目和空白区不为视觉闭合强行纳入。"
+    },
+    {
+      "id": "sector_xinzhuang",
+      "canonicalName": "莘庄",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "workpackSourceId": "gumei-xinzhuang-selected-v1",
+      "sourceFeatureId": "sector_xinzhuang",
+      "requiredSourceProperties": {
+        "status": "market-candidate-project-corrected-topology-blocked",
+        "publishableAsReviewedMarketSector": false
+      },
+      "insidePoint": [121.3682958, 31.1171342],
+      "sharedEdgeSectorIds": ["sector_gumei", "sector_chunshen"],
+      "snapDependencySectorIds": ["sector_gumei"],
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [16.8, 17.4],
+      "includedMarketAreas": ["名都新城", "柏林春天", "莘庄北片（子范围）", "莘庄南片（子范围）"],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-anjuke-xinzhuang-projects-2026-07-23", "seller-fang-xinzhuang-projects-2026-07-23"],
+      "geometryVerificationSourceIds": ["official-xinzhuang-transport-plan-2024", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "用户裁定市场莘庄，莘庄镇只作骨架；候选扣除独立一级春申和古美，并完整保留两家卖方共同归入莘庄的项目。五个组成面与两个内洞原样保留为交错项目归属证据，不把梅陇、七宝或古美罗阳争议区强行填入。"
+    },
+    {
+      "id": "sector_chunshen",
+      "canonicalName": "春申",
+      "scopeVersion": "market-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "workpackSourceId": "gumei-xinzhuang-selected-v1",
+      "sourceFeatureId": "sector_chunshen",
+      "requiredSourceProperties": {
+        "status": "market-candidate-project-corrected-topology-blocked",
+        "publishableAsReviewedMarketSector": false
+      },
+      "insidePoint": [121.4062333, 31.1097249],
+      "sharedEdgeSectorIds": ["sector_xinzhuang"],
+      "snapDependencySectorIds": ["sector_xinzhuang"],
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [7.2, 7.6],
+      "includedMarketAreas": ["春申景城", "高兴花园", "上海春城", "中海寰宇天下", "莘南花苑"],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-anjuke-chunshen-projects-2026-07-23", "seller-fang-chunshen-projects-2026-07-23"],
+      "geometryVerificationSourceIds": ["osm-geofabrik-shanghai-260721"],
+      "geometryRule": "用户裁定春申为独立一级市场板块。候选以都市路、莘朱路、虹梅南路、银都路固定 OSM 道路中线形成保守框架，并按两家卖方共同归属保持完整项目；四个莘庄项目洞继续归莘庄，不为形成单一外观强行填平。"
     }
   ],
   "subscopes": [

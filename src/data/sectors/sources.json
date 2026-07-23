@@ -401,6 +401,117 @@
       "note": "公开页面把沪南路 2518 弄代表项目归为浦东—御桥；只核对名称归属，不复制商圈几何。"
     },
     {
+      "id": "official-hongqiao-core-west-necc",
+      "title": "国家会展中心位于虹桥商务区核心区西部",
+      "publisher": "国家会展中心（上海）",
+      "url": "https://www.neccsh.com/cecsh/companynews/1243.jhtml",
+      "sourceType": "official_functional_area_description",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "只用于确认国家会展中心的虹桥核心功能身份，不提供可复用边界几何。"
+    },
+    {
+      "id": "official-hongqiao-special-plan-2025",
+      "title": "虹桥国际中央商务区及周边地区专项规划正式发布",
+      "publisher": "上海虹桥国际中央商务区管理委员会",
+      "url": "https://www.shhqcbd.gov.cn/ywdt/mtjj/718005942059077.html",
+      "sourceType": "official_functional_area_plan",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "只使用虹桥枢纽、核心区、国家会展中心的功能关系和 151/535 平方公里版本关系；不从规划图提取坐标。"
+    },
+    {
+      "id": "seller-anjuke-xujing-list-2026",
+      "title": "上海青浦区徐泾楼盘信息",
+      "publisher": "安居客",
+      "url": "https://sh.fang.anjuke.com/loupan/qingpu_164/q9-50-593-483_k7_a2-6-295_s2/",
+      "sourceType": "seller_sector_project_list",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "只核对蟠龙路、徐民东路、双联路住宅项目的徐泾分类；列表不作为边界线表。"
+    },
+    {
+      "id": "seller-fang-panlong-tiandi-xujing",
+      "title": "上海蟠龙天地房价页面",
+      "publisher": "房天下",
+      "url": "https://fangjia.fang.com/sh/process/1210131474.htm",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面层级将上海蟠龙天地归入青浦—徐泾；只核对项目归属，不复制地图几何。"
+    },
+    {
+      "id": "seller-fang-panlong-east-25-07",
+      "title": "青浦区西虹桥蟠龙路东侧 25-07 地块分析",
+      "publisher": "房天下",
+      "url": "https://m.fang.com/xf/housereport/sh/1210201926.html",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面把蟠龙路东侧地块归为徐泾，支持徐泾市场语义跨到蟠龙路东侧；不提供地籍坐标或完整板块边界。"
+    },
+    {
+      "id": "seller-anjuke-gumei-projects-2026-07-23",
+      "title": "安居客古美罗阳项目归属样本",
+      "publisher": "安居客",
+      "url": "https://shanghai.anjuke.com/sale/minhang-q-gumeiluoyang/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对东兰、华一、新梅花苑、南方城等项目的古美罗阳分类；完整样本链接记录在工作包 sources.md，不复制商圈几何。"
+    },
+    {
+      "id": "seller-fang-gumei-projects-2026-07-23",
+      "title": "房天下古美项目归属样本",
+      "publisher": "房天下",
+      "url": "https://sh.esf.fang.com/housing/18_1601_0_39_0_0_1_5%2C4_0_0/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对东兰小区、华一新城、平南、新梅花苑、南方城等项目的古美分类；不复制商圈几何。"
+    },
+    {
+      "id": "seller-anjuke-xinzhuang-projects-2026-07-23",
+      "title": "安居客莘庄项目归属样本",
+      "publisher": "安居客",
+      "url": "https://sh.fang.anjuke.com/fangjia/minhang_106/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对名都新城、莘庄南北广场等市场语义；项目级链接记录在工作包，不复制边界几何。"
+    },
+    {
+      "id": "seller-fang-xinzhuang-projects-2026-07-23",
+      "title": "房天下莘庄项目归属样本",
+      "publisher": "房天下",
+      "url": "https://sh.esf.fang.com/housing/18_1599_0_26_0_0_3_0_0_0/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对名都新城、柏林春天等项目的莘庄分类，同时保留与春申交错的分歧记录。"
+    },
+    {
+      "id": "seller-anjuke-chunshen-projects-2026-07-23",
+      "title": "安居客春申项目归属样本",
+      "publisher": "安居客",
+      "url": "https://shanghai.anjuke.com/gongyu-sale/chunshen/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对春申景城、高兴花园、上海春城、中海寰宇天下等春申归属；不复制商圈几何。"
+    },
+    {
+      "id": "seller-fang-chunshen-projects-2026-07-23",
+      "title": "房天下春申项目归属样本",
+      "publisher": "房天下",
+      "url": "https://sh.esf.fang.com/housing/18_1609_0_0_0_0_1_0_0_0/",
+      "sourceType": "seller_project_classification_set",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "核对春申景城、高兴花园、上海春城、中海寰宇天下、莘南花苑等春申归属；不复制商圈几何。"
+    },
+    {
       "id": "official-gumei-street-scope-2024",
       "title": "上海市水务局关于闵行区古美街道雨水排水及污水处理系统规划（2023-2035年）行业意见的通知",
       "publisher": "上海市水务局",

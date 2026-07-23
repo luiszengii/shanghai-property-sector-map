@@ -244,7 +244,7 @@
       "sectorId": "sector_gumei",
       "comparisonRole": "admin_proxy",
       "verdict": "consistent",
-      "geometryDecision": "show_admin_reference",
+      "geometryDecision": "keep_market_candidate_with_admin_reference",
       "comparableAdminName": "古美路街道",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
@@ -256,19 +256,19 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-14187991",
-        "intersectionOverUnion": 0.193,
-        "referenceCoveredPercent": 94.6,
-        "legacyAreaRatio": 4.85,
-        "centroidDistanceKilometers": 1.37
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.199,
+        "referenceCoveredPercent": 94.7,
+        "legacyAreaRatio": 4.71,
+        "centroidDistanceKilometers": 1.33
       },
-      "summary": "统一坐标后，旧演示面覆盖古美路街道参考面的 94.6%，面积达到其 4.85 倍，仍是本批偏差最大的一块；现将 6.2 平方公里量级的街道参考面作为独立蓝色图层叠加，不替换楼市口径。"
+      "summary": "用户裁定市场古美，候选面按完整项目修正行政骨架；古美路街道参考面继续作为独立蓝色图层叠加，不替换楼市口径。"
     },
     {
       "sectorId": "sector_xinzhuang",
       "comparisonRole": "admin_proxy",
       "verdict": "consistent",
-      "geometryDecision": "show_admin_reference",
+      "geometryDecision": "keep_market_candidate_with_admin_reference",
       "comparableAdminName": "莘庄镇",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
@@ -280,19 +280,19 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-14187988",
-        "intersectionOverUnion": 0.488,
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.432,
         "referenceCoveredPercent": 100,
-        "legacyAreaRatio": 2.05,
-        "centroidDistanceKilometers": 0.25
+        "legacyAreaRatio": 2.32,
+        "centroidDistanceKilometers": 0.19
       },
-      "summary": "旧演示面完全覆盖莘庄镇但面积约为其 2.05 倍；行政参考面与天地图街镇形状和官方 19.14 平方公里面积一致。"
+      "summary": "用户裁定市场莘庄并把春申拆为独立一级板块；市场候选保留项目交错形成的多个组成面，莘庄镇行政参考面继续独立叠加。"
     },
     {
       "sectorId": "sector_xujing",
       "comparisonRole": "admin_proxy",
       "verdict": "consistent",
-      "geometryDecision": "show_admin_reference",
+      "geometryDecision": "keep_market_candidate_with_admin_reference",
       "comparableAdminName": "徐泾镇",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
@@ -304,19 +304,19 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-12979866",
-        "intersectionOverUnion": 0.556,
-        "referenceCoveredPercent": 91.4,
-        "legacyAreaRatio": 1.56,
-        "centroidDistanceKilometers": 1.3
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.547,
+        "referenceCoveredPercent": 98.6,
+        "legacyAreaRatio": 1.79,
+        "centroidDistanceKilometers": 0.75
       },
-      "summary": "旧演示面约为徐泾镇行政参考面的 1.56 倍；行政参考面与天地图形状、官方 38.55 平方公里面积和四周邻接关系一致。"
+      "summary": "用户裁定市场徐泾住宅板块并以诸光路和虹桥商务区拆分；徐泾镇行政参考面继续独立叠加，不替代市场候选。"
     },
     {
       "sectorId": "sector_hongqiao",
       "comparisonRole": "cross_district_functional_scope",
       "verdict": "not_directly_comparable",
-      "geometryDecision": "keep_demo_until_scope_selected",
+      "geometryDecision": "keep_market_candidate",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
         {
@@ -344,7 +344,14 @@
           "reviewNumber": "沪S（2025）046号"
         }
       ],
-      "summary": "虹桥商务区是跨长宁、闵行、嘉定、青浦的功能区，四张行政图只能校核所涉街镇；必须先在历史主功能区、86.6 或 151.4 平方公里版本中选定口径。"
+      "legacyGeometryComparison": {
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.39,
+        "referenceCoveredPercent": 97.8,
+        "legacyAreaRatio": 2.49,
+        "centroidDistanceKilometers": 1.03
+      },
+      "summary": "用户裁定核心功能走廊小范围市场板块，并把国家会展中心和虹桥枢纽归入本板块；候选不等同 86.6、151.4 或 535 平方公里官方版本。"
     }
   ]
 }
