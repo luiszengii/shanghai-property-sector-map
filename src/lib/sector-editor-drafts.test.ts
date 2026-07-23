@@ -320,6 +320,48 @@ test("an existing local copy receives newly added linked-topology metadata", () 
   );
 });
 
+test("a modified sector reports each affected shared-edge pair separately", () => {
+  const ring = [
+    [121.4, 31.2],
+    [121.5, 31.2],
+    [121.5, 31.3],
+  ] as [number, number][];
+  const makeLinkedDraft = (id: string, linkedTopologySectorIds: string[]) => (
+    createDraftFromExistingSector({
+      id,
+      name: id,
+      district: "宝山区",
+      boundaryBasis: "同名行政骨架",
+      note: "",
+      geometryStatus: "candidate",
+      geometryFingerprint: fingerprintDraftParts([ring]),
+      linkedTopologySectorIds,
+      ring,
+    })
+  );
+  const gucun = makeLinkedDraft(
+    "sector_gucun",
+    ["sector_zhangmiao", "sector_yanghang"],
+  );
+  const zhangmiao = makeLinkedDraft("sector_zhangmiao", ["sector_gucun"]);
+  const yanghang = makeLinkedDraft("sector_yanghang", ["sector_gucun"]);
+  gucun.ring = [...gucun.ring, [121.4, 31.3]];
+
+  assert.deepEqual(
+    findDirtyLinkedTopologyGroups([gucun, zhangmiao, yanghang]),
+    [
+      {
+        sectorIds: ["sector_gucun", "sector_zhangmiao"],
+        dirtySectorIds: ["sector_gucun"],
+      },
+      {
+        sectorIds: ["sector_gucun", "sector_yanghang"],
+        dirtySectorIds: ["sector_gucun"],
+      },
+    ],
+  );
+});
+
 test("an untouched local copy follows a newer high-precision source without overwriting user edits", () => {
   const oldDraft = {
     ...createDraftFromExistingSector({

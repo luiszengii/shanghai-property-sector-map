@@ -51,7 +51,7 @@
       "sourceType": "seller_sector_taxonomy",
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
-      "note": "仅用于核对链家公开使用的楼市板块名称，包括静安—普陀 11 个候选及虹口—杨浦 7 个候选的市场身份；不复制网站清单、坐标、房源或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
+      "note": "仅用于核对链家公开使用的楼市板块名称，包括静安—普陀、虹口—杨浦及宝山同名候选的市场身份；不复制网站清单、坐标、房源或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
     },
     {
       "id": "seller-anjuke-yangsi-scope",
@@ -653,6 +653,94 @@
       "licenseStatus": "reference_only",
       "allowedUse": "visual_comparison_only",
       "note": "区级图显示街镇界，但 PDF 无 CRS 或地理配准且图面注明行政界线仅供参考；只做名称、形状和邻接关系的人工核对，不从图中提取坐标。"
+    },
+    {
+      "id": "official-baoshan-gucun-profile-2025",
+      "title": "顾村镇区域概况",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://www.shbsq.gov.cn/shbs/gczqygk/20181215/143580.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2025-09-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出顾村镇约41.66平方公里面积及东杨行、南蕰藻浜、西嘉定马陆、北罗店的相邻关系；用于面积和邻接复核，不提供可直接导入的边界坐标。"
+    },
+    {
+      "id": "official-baoshan-zhangmiao-profile-2025",
+      "title": "张庙街道概况",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://www.shbsq.gov.cn/shbs/zmjdqygk/20251114/421203.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025-03-31",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "现行页面确认张庙街道约5.19平方公里及宝山中南部行政身份；固定 OSM 关系约4.7558平方公里，面积差异必须保留复核风险。"
+    },
+    {
+      "id": "official-baoshan-songnan-profile-2025",
+      "title": "淞南镇区域概况",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://www.shbsq.gov.cn/shbs/snzqygk/20251021/419963.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2025-10-10",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出淞南镇约13.65平方公里及东杨浦、西泗塘河、南一二八纪念路、北蕰藻浜四至；只用于行政包络与面积量级核验。"
+    },
+    {
+      "id": "official-baoshan-gaojing-profile-2024",
+      "title": "高境镇基本情况",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://www.shbsq.gov.cn/shbs/gjzqygk/20210203/293163.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2024-01-02",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面确认高境镇约7.1平方公里并与杨浦、静安、虹口交界；没有逐段坐标，不能把文字包装为官方市场多边形。"
+    },
+    {
+      "id": "official-baoshan-yanghang-master-plan-2035",
+      "title": "宝山区杨行镇国土空间总体规划（2021—2035年）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/ef27905a2e60404abcb02f95abfe861f.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "规划确认杨行镇约39.5平方公里及东北泗塘、南蕰藻浜等范围关系；规划图不作为本项目可再分发坐标来源。"
+    },
+    {
+      "id": "official-baoshan-luodian-profile-2024",
+      "title": "罗店镇镇域概况",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=dc9b8e74-ef84-4ccb-ad8e-bcc2aae9d90c",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2024-10-22",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出罗店镇约44.19平方公里及东月浦杨行、西嘉定、南顾村、北罗泾的邻接关系；石太路以南规划范围不得误作完整镇域。"
+    },
+    {
+      "id": "official-baoshan-yuepu-flood-plan-2025",
+      "title": "月浦镇防汛防台专项应急预案",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=fda24d63-8e3b-4dc8-8829-267114f7b924",
+      "sourceType": "official_town_scope",
+      "publishedAt": "2025-04-10",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方材料给出月浦镇约45.3平方公里及东宝钢、南杨行、西罗店、北罗泾关系；固定 OSM 关系约48.5951平方公里，面积版本差异待核。"
+    },
+    {
+      "id": "official-baoshan-luojing-master-plan-2035",
+      "title": "宝山区罗泾镇国土空间总体规划（2021—2035年）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/7a662ae11a69422f9d89e89fcb37b050.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "规划材料给出罗泾镇约48.24平方公里及东长江、北太仓浏河、南月浦罗店、西嘉定关系；固定 OSM 关系约41.1224平方公里，约15%差异必须优先复核。"
     },
     {
       "id": "official-shanghai-town-list-2025",

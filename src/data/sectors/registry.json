@@ -3705,5 +3705,452 @@
         "publicationPolicy": "internal_review",
         "note": "约 4.2060 平方公里候选是甘泉路、宜川路行政并集扣除中远两湾城后的低置信剩余面；它解决了已知独立市场重叠，但不等于完成光新接口或全部住宅市场归属。"
       }
+    },
+    {
+      "id": "sector_gucun",
+      "canonicalName": "顾村",
+      "aliases": [
+        "顾村镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场顾村暂以同名顾村镇固定行政关系作为低置信、可编辑骨架。镇域约 41.6 平方公里，明显大于连续住宅市场，并包含乡村、产业和交通用地；大华、上大、南大、共康接口必须按完整项目归属另行裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-gucun-profile-2025"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_dahua",
+        "unresolved_shangda",
+        "unresolved_nanda",
+        "unresolved_gongkang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_zhangmiao",
+        "sector_yanghang",
+        "sector_luodian"
+      ],
+      "boundaryEvidenceIds": [
+        "gucun-north",
+        "gucun-east",
+        "gucun-south",
+        "gucun-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhangmiao",
+      "canonicalName": "张庙",
+      "aliases": [
+        "张庙街道"
+      ],
+      "riskFlags": [
+        "area_mismatch_review_required",
+        "mixed_non_residential_scope",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场张庙暂以同名张庙街道固定行政关系作为低置信、可编辑骨架；共康及周边完整小区的市场归属仍需逐边核验，行政街道边界不视为行业统一楼市边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-zhangmiao-profile-2025"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_gongkang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_gucun",
+        "sector_yanghang",
+        "sector_songnan",
+        "sector_gaojing"
+      ],
+      "boundaryEvidenceIds": [
+        "zhangmiao-north",
+        "zhangmiao-east",
+        "zhangmiao-south",
+        "zhangmiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_songnan",
+      "canonicalName": "淞南",
+      "aliases": [
+        "淞南镇"
+      ],
+      "riskFlags": [
+        "area_mismatch_review_required",
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场淞南暂以同名淞南镇固定行政关系作为低置信、可编辑骨架。镇域包含产业、铁路和非住宅空间；南侧新江湾城共享界及北侧淞宝市场接口需按完整项目继续精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-songnan-profile-2025"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_xinjiangwancheng",
+        "unresolved_songbao"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_zhangmiao",
+        "sector_yanghang",
+        "sector_gaojing"
+      ],
+      "boundaryEvidenceIds": [
+        "songnan-north",
+        "songnan-east",
+        "songnan-south",
+        "songnan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_gaojing",
+      "canonicalName": "高境",
+      "aliases": [
+        "高境镇"
+      ],
+      "riskFlags": [
+        "mixed_non_residential_scope",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场高境暂以同名高境镇固定行政关系作为低置信、可编辑骨架；与江湾镇、五角场、新江湾城以及共康的市场接口必须按完整小区联合核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-gaojing-profile-2024"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_jiangwanzhen",
+        "sector_wujiaochang",
+        "sector_xinjiangwancheng",
+        "unresolved_gongkang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_zhangmiao",
+        "sector_songnan"
+      ],
+      "boundaryEvidenceIds": [
+        "gaojing-north",
+        "gaojing-east",
+        "gaojing-south",
+        "gaojing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_yanghang",
+      "canonicalName": "杨行",
+      "aliases": [
+        "杨行镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场杨行暂以同名杨行镇固定行政关系作为低置信、可编辑骨架。约 39.3 平方公里镇域混合产业、铁路和非住宅范围，南大、淞宝接口必须另行按项目收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-yanghang-master-plan-2035"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_nanda",
+        "unresolved_songbao"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_gucun",
+        "sector_zhangmiao",
+        "sector_songnan",
+        "sector_luodian",
+        "sector_yuepu"
+      ],
+      "boundaryEvidenceIds": [
+        "yanghang-north",
+        "yanghang-east",
+        "yanghang-south",
+        "yanghang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_luodian",
+      "canonicalName": "罗店",
+      "aliases": [
+        "罗店镇"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场罗店暂以同名罗店镇固定行政关系作为低置信、可编辑骨架；完整镇域包含新镇、老镇、乡村和产业空间，必须按楼盘连续区继续收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-luodian-profile-2024"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "linkedTopologySectorIds": [
+        "sector_gucun",
+        "sector_yanghang",
+        "sector_yuepu",
+        "sector_luojing"
+      ],
+      "boundaryEvidenceIds": [
+        "luodian-north",
+        "luodian-east",
+        "luodian-south",
+        "luodian-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_yuepu",
+      "canonicalName": "月浦",
+      "aliases": [
+        "月浦镇"
+      ],
+      "riskFlags": [
+        "area_mismatch_review_required",
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场月浦暂以同名月浦镇固定行政关系作为低置信、可编辑骨架。镇域约 48.6 平方公里且工业功能显著，当前只提供总装连续性，不代表住宅市场已精确完成。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-yuepu-flood-plan-2025"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "linkedTopologySectorIds": [
+        "sector_yanghang",
+        "sector_luodian",
+        "sector_luojing"
+      ],
+      "boundaryEvidenceIds": [
+        "yuepu-north",
+        "yuepu-east",
+        "yuepu-south",
+        "yuepu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_luojing",
+      "canonicalName": "罗泾",
+      "aliases": [
+        "罗泾镇"
+      ],
+      "riskFlags": [
+        "area_mismatch_review_required",
+        "overwide_admin_proxy",
+        "mixed_industrial_rail_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "宝山区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场罗泾暂以同名罗泾镇固定行政关系作为低置信、可编辑骨架；长江岸线、乡村、生态和产业空间均被包含，住宅市场范围必须在后续人工精修中显著收窄。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-baoshan-luojing-master-plan-2035"
+      ],
+      "marketAdminAlignmentUnverified": true,
+      "adminAreaVersionMismatch": true,
+      "linkedTopologySectorIds": [
+        "sector_luodian",
+        "sector_yuepu"
+      ],
+      "boundaryEvidenceIds": [
+        "luojing-north",
+        "luojing-east",
+        "luojing-south",
+        "luojing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "baoshan-eight-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }

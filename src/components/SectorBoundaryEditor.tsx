@@ -96,7 +96,7 @@ function linkedTopologyWarning(draft: SectorBoundaryDraft | undefined) {
   const linkedNames = draft.linkedTopologySectorIds.map(
     (sectorId) => existingSectorTemplateById.get(sectorId)?.name ?? sectorId,
   );
-  return `“${draft.name}”已修改，与“${linkedNames.join("、")}”的差集拓扑可能失配；导出前请联合更新并复核两块边界。`;
+  return `“${draft.name}”已修改，与“${linkedNames.join("、")}”的共享边或关联拓扑可能失配；导出前请联合更新并复核两块边界。`;
 }
 
 function polygonToDraftGeometry(polygon: AMap.Polygon) {
@@ -627,7 +627,7 @@ export function SectorBoundaryEditor() {
         ).join(" / ")
       ));
       if (!window.confirm(
-        `${pairNames.join("；")} 至少一方已修改，差集拓扑可能失配。请确认已联合更新并复核成对边界；仍继续导出？`,
+        `${pairNames.join("；")} 至少一方已修改，共享边或关联拓扑可能失配。请确认已联合更新并复核成对边界；仍继续导出？`,
       )) {
         setNotice({
           tone: "warning",

@@ -1918,6 +1918,160 @@ if (normalizedStringSet(taopuDefinition?.riskFlags ?? [])
   error("sector_taopu: 必须保留过宽/非住宅混合风险和真如、长征、万里、宝山接口复核门槛");
 }
 
+const expectedBaoshanEightRelations = new Map([
+  ["sector_gucun", "3531170"],
+  ["sector_zhangmiao", "3530696"],
+  ["sector_songnan", "3530842"],
+  ["sector_gaojing", "3531159"],
+  ["sector_yanghang", "3532291"],
+  ["sector_luodian", "3531102"],
+  ["sector_yuepu", "3532305"],
+  ["sector_luojing", "3531114"],
+]);
+const expectedBaoshanOfficialAreas = new Map([
+  ["sector_gucun", 41.66],
+  ["sector_zhangmiao", 5.19],
+  ["sector_songnan", 13.65],
+  ["sector_gaojing", 7.1],
+  ["sector_yanghang", 39.5],
+  ["sector_luodian", 44.19],
+  ["sector_yuepu", 45.3],
+  ["sector_luojing", 48.24],
+]);
+const baoshanAreaMismatchMinimumDeltaPercent = new Map([
+  ["sector_zhangmiao", 7],
+  ["sector_songnan", 3],
+  ["sector_yuepu", 7],
+  ["sector_luojing", 14],
+]);
+const baoshanEightDefinitions = candidateDefinitions.filter(
+  (definition) => expectedBaoshanEightRelations.has(definition.id),
+);
+if (normalizedStringSet(baoshanEightDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedBaoshanEightRelations.keys())) {
+  error("宝山直接行政骨架批次必须恰好包含研究确认的 8 个市场候选");
+}
+for (const definition of baoshanEightDefinitions) {
+  const expectedRelation = expectedBaoshanEightRelations.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 宝山批次没有锁定研究确认的行政关系与正式生成方法`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || candidate?.properties?.marketAdminAlignmentUnverified !== true
+    || registryRecord?.marketAdminAlignmentUnverified !== true
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review"
+    || !definition.riskFlags?.includes("market_boundary_not_official")
+    || normalizedStringSet(registryRecord?.requiredAdjacencyReviewIds ?? [])
+      !== normalizedStringSet(definition.requiredAdjacencyReviewIds ?? [])
+    || normalizedStringSet(registryRecord?.linkedTopologySectorIds ?? [])
+      !== normalizedStringSet(definition.sharedEdgeSectorIds ?? [])) {
+    error(`${definition.id}: 宝山行政骨架必须保持 low / draft-low / internal_review 及市场未核准风险`);
+  }
+  if (definition.officialAreaSquareKilometers
+      !== expectedBaoshanOfficialAreas.get(definition.id)
+    || candidate?.properties?.officialAreaSquareKilometers
+      !== expectedBaoshanOfficialAreas.get(definition.id)
+    || !Number.isFinite(candidate?.properties?.areaSquareKilometers)
+    || !nearlyEqual(
+      candidate?.properties?.areaDeltaPercent,
+      (
+        candidate.properties.areaSquareKilometers
+        - candidate.properties.officialAreaSquareKilometers
+      ) / candidate.properties.officialAreaSquareKilometers * 100,
+      0.02,
+    )
+    || (baoshanAreaMismatchMinimumDeltaPercent.has(definition.id)
+      && (!definition.riskFlags?.includes("area_mismatch_review_required")
+        || definition.adminAreaVersionMismatch !== true
+        || candidate?.properties?.adminAreaVersionMismatch !== true
+        || registryRecord?.adminAreaVersionMismatch !== true
+        || !Number.isFinite(candidate?.properties?.areaDeltaPercent)
+        || Math.abs(candidate.properties.areaDeltaPercent)
+          < baoshanAreaMismatchMinimumDeltaPercent.get(definition.id)))) {
+    error(`${definition.id}: 宝山官方面积、开放 relation 差异和版本风险没有完整保留`);
+  }
+}
+const baoshanEightDeclaredSharedPairs = new Set(
+  baoshanEightDefinitions.flatMap((definition) => (
+    (definition.sharedEdgeSectorIds ?? [])
+      .filter((sectorId) => expectedBaoshanEightRelations.has(sectorId))
+      .map((sectorId) => [definition.id, sectorId].sort().join("/"))
+  )),
+);
+const expectedBaoshanEightSharedPairs = new Map([
+  ["sector_gucun/sector_zhangmiao", 386.79],
+  ["sector_yanghang/sector_zhangmiao", 1506.69],
+  ["sector_songnan/sector_zhangmiao", 3136.41],
+  ["sector_gaojing/sector_zhangmiao", 2881.83],
+  ["sector_yanghang/sector_yuepu", 13127.25],
+  ["sector_songnan/sector_yanghang", 3385.24],
+  ["sector_gucun/sector_yanghang", 10385.83],
+  ["sector_luodian/sector_yanghang", 3836.91],
+  ["sector_luodian/sector_yuepu", 11046.75],
+  ["sector_luojing/sector_yuepu", 6519.42],
+  ["sector_gaojing/sector_songnan", 5696.95],
+  ["sector_gucun/sector_luodian", 9627.37],
+  ["sector_luodian/sector_luojing", 6041.55],
+]);
+if (normalizedStringSet(baoshanEightDeclaredSharedPairs)
+  !== normalizedStringSet(expectedBaoshanEightSharedPairs.keys())) {
+  error("宝山批次必须完整声明研究确认的 13 对共享边，不能从两侧同时删除后绕过校验");
+}
+for (const [pair, expectedSharedMeters] of expectedBaoshanEightSharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < 300
+    || exactSharedLength < 300
+    || Math.abs(exactSharedLength - sharedLength) > 0.01
+    // Research baselines use EPSG:32651 while this checker uses its local
+    // WGS84 distance estimator, so keep the independently locked graph and
+    // lengths while allowing the two measurement methods a 0.5% tolerance.
+    || Math.abs(exactSharedLength - expectedSharedMeters) / expectedSharedMeters > 0.005) {
+    error(
+      `${firstId} / ${secondId}: 宝山批次共享边必须使用完全相同的坐标序列`
+      + `（实际 ${exactSharedLength.toFixed(2)} m，研究基线 ${expectedSharedMeters.toFixed(2)} m）`,
+    );
+  }
+}
+for (const [firstId, secondId, minimumSharedMeters] of [
+  ["sector_songnan", "sector_xinjiangwancheng", 1000],
+  ["sector_gaojing", "sector_jiangwanzhen", 700],
+  ["sector_gaojing", "sector_wujiaochang", 900],
+  ["sector_gaojing", "sector_xinjiangwancheng", 2700],
+]) {
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (exactSharedLength < minimumSharedMeters) {
+    error(`${firstId} / ${secondId}: 宝山—杨浦跨区行政骨架共享边不足 ${minimumSharedMeters} 米`);
+  }
+}
+for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === forbiddenName,
+  )) {
+    error(`宝山直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+  }
+}
+
 const expectedHongkouYangpuSevenRelations = new Map([
   ["sector_sichuanbeilu", "13462869"],
   ["sector_quyang", "13466001"],
@@ -2426,6 +2580,27 @@ for (const candidate of candidates) {
   if (!manifestById.has(id)) error(`${id}: 候选几何缺少 OSM 对象 manifest`);
   if (!isFinitePositive(candidate.properties.areaSquareKilometers)) error(`${id}: 候选面积无效`);
   const candidateDefinition = candidateDefinitionById.get(id);
+  if (candidateDefinition?.officialAreaSquareKilometers !== undefined) {
+    const officialArea = Number(candidateDefinition.officialAreaSquareKilometers);
+    const expectedSignedDeltaPercent = (
+      candidate.properties.areaSquareKilometers - officialArea
+    ) / officialArea * 100;
+    if (!nearlyEqual(
+      candidate.properties.officialAreaSquareKilometers,
+      officialArea,
+      0.0001,
+    ) || !nearlyEqual(
+      candidate.properties.areaDeltaPercent,
+      expectedSignedDeltaPercent,
+      0.02,
+    )) {
+      error(`${id}: 候选官方面积或有符号面积差与 definition 不一致`);
+    }
+    if (Math.abs(candidate.properties.areaDeltaPercent)
+      > Number(candidateDefinition.areaToleranceRatio) * 100 + 0.01) {
+      error(`${id}: 候选面积差超过 definition 声明容差`);
+    }
+  }
   if (candidateDefinition?.historicalReferenceAreaSquareKilometers) {
     if (!nearlyEqual(
       candidate.properties.historicalReferenceAreaSquareKilometers,

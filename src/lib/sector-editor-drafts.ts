@@ -651,21 +651,19 @@ export function findDirtyLinkedTopologyGroups(
   const dirtyGroups: DirtyLinkedTopologyGroup[] = [];
 
   for (const draft of sourceDraftById.values()) {
-    const sectorIds = [
-      draft.sourceSectorId!,
-      ...(draft.linkedTopologySectorIds ?? []),
-    ].sort();
-    if (sectorIds.length < 2) continue;
-    const groupKey = sectorIds.join("|");
-    if (seenGroups.has(groupKey)) continue;
-    seenGroups.add(groupKey);
-    const dirtySectorIds = sectorIds.filter((sectorId) => {
-      const member = sourceDraftById.get(sectorId);
-      if (!member) return false;
-      return fingerprintDraftParts(draftFingerprintRings(member))
-        !== member.sourceGeometryFingerprint;
-    });
-    if (dirtySectorIds.length) dirtyGroups.push({ sectorIds, dirtySectorIds });
+    for (const linkedSectorId of draft.linkedTopologySectorIds ?? []) {
+      const sectorIds = [draft.sourceSectorId!, linkedSectorId].sort();
+      const groupKey = sectorIds.join("|");
+      if (seenGroups.has(groupKey)) continue;
+      seenGroups.add(groupKey);
+      const dirtySectorIds = sectorIds.filter((sectorId) => {
+        const member = sourceDraftById.get(sectorId);
+        if (!member) return false;
+        return fingerprintDraftParts(draftFingerprintRings(member))
+          !== member.sourceGeometryFingerprint;
+      });
+      if (dirtySectorIds.length) dirtyGroups.push({ sectorIds, dirtySectorIds });
+    }
   }
 
   return dirtyGroups;

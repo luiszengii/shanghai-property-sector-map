@@ -195,6 +195,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "putuo-liangwancheng-ganquan-pair",
   }],
+  ["baoshan-eight-direct-admin-aligned-2026-07", {
+    expectedSectorCount: 8,
+    districtCounts: {
+      宝山区: 8,
+    },
+    catalogMode: "linked-admin-batch",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -221,6 +228,14 @@ const aliasesBySectorId = new Map([
   ["sector_zhongyuan", ["殷行街道"]],
   ["sector_zhongyuanliangwancheng", ["两湾城", "中远两湾"]],
   ["sector_ganquanyichuan", ["甘泉", "宜川"]],
+  ["sector_gucun", ["顾村镇"]],
+  ["sector_zhangmiao", ["张庙街道"]],
+  ["sector_songnan", ["淞南镇"]],
+  ["sector_gaojing", ["高境镇"]],
+  ["sector_yanghang", ["杨行镇"]],
+  ["sector_luodian", ["罗店镇"]],
+  ["sector_yuepu", ["月浦镇"]],
+  ["sector_luojing", ["罗泾镇"]],
 ]);
 const sides = [
   ["north", "北"],
@@ -412,6 +427,15 @@ for (const definition of batch.sectors) {
       : {}),
     ...(definition.sharedEdgeReview
       ? { sharedEdgeReview: definition.sharedEdgeReview }
+      : {}),
+    ...(definition.requiredAdjacencyReviewIds
+      ? {
+        requiredAdjacencyReviewIds:
+          definition.requiredAdjacencyReviewIds,
+      }
+      : {}),
+    ...(batchPolicy.catalogMode === "linked-admin-batch"
+      ? { linkedTopologySectorIds: definition.sharedEdgeSectorIds }
       : {}),
     boundaryEvidenceIds,
     geometry: {

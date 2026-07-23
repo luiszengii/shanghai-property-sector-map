@@ -1187,13 +1187,15 @@ def finalize_topology_group(
             "officialAreaSquareKilometers"
         )
         if official_area is not None:
-            delta_ratio = abs(area_km2 - float(official_area)) / float(official_area)
-            if delta_ratio > float(definition["areaToleranceRatio"]):
+            signed_delta_ratio = (
+                area_km2 - float(official_area)
+            ) / float(official_area)
+            if abs(signed_delta_ratio) > float(definition["areaToleranceRatio"]):
                 raise ValueError(
                     f"{definition['canonicalName']} 米制拓扑后面积超出官方参考容差"
                 )
             feature["properties"]["areaDeltaPercent"] = round(
-                delta_ratio * 100,
+                signed_delta_ratio * 100,
                 2,
             )
         elif definition.get("areaRangeSquareKilometers") is not None:
@@ -1490,11 +1492,11 @@ def build_feature(
     area_km2 = area_square_meters / 1_000_000
     official_area = definition.get("officialAreaSquareKilometers")
     area_range = definition.get("areaRangeSquareKilometers")
-    delta_ratio = None
+    signed_delta_ratio = None
     if official_area is not None:
         official_area = float(official_area)
-        delta_ratio = abs(area_km2 - official_area) / official_area
-        if delta_ratio > definition["areaToleranceRatio"]:
+        signed_delta_ratio = (area_km2 - official_area) / official_area
+        if abs(signed_delta_ratio) > definition["areaToleranceRatio"]:
             raise ValueError(
                 f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² 超出容差，"
                 f"官方参考 {official_area:.4f} km²"
@@ -1624,9 +1626,12 @@ def build_feature(
         },
         "geometry": geometry_mapping,
     }
-    if official_area is not None and delta_ratio is not None:
+    if official_area is not None and signed_delta_ratio is not None:
         feature["properties"]["officialAreaSquareKilometers"] = official_area
-        feature["properties"]["areaDeltaPercent"] = round(delta_ratio * 100, 2)
+        feature["properties"]["areaDeltaPercent"] = round(
+            signed_delta_ratio * 100,
+            2,
+        )
     if area_range is not None:
         feature["properties"]["areaSafetyRangeSquareKilometers"] = area_range
     return feature
