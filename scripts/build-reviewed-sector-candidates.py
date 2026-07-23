@@ -966,7 +966,7 @@ def build_feature(
             "name": definition["canonicalName"],
             "scopeVersion": definition["scopeVersion"],
             "status": "reviewed-candidate",
-            "confidence": "medium",
+            "confidence": definition.get("confidence", "medium"),
             "coordinateSystem": "WGS84",
             "geometrySourceSnapshotId": snapshot_id,
             "method": definition["method"],

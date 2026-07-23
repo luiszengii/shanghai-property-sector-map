@@ -1,5 +1,7 @@
 # ADR 0023：黄浦九板块采用同名街道骨架起画
 
+> 后续状态：`sector_xintiandi` 已按用户指认的完整中心缺口补入黄浦拓扑；现行十块口径见 [ADR-0024](0024-fill-xintiandi-gap-and-use-pudong-town-backbones.md)。本文保留九块批次当时为何不自动填洞的决策记录。
+
 - 状态：已接受
 - 日期：2026-07-23
 

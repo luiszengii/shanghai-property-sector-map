@@ -57,6 +57,9 @@ interface StoredSectorEditorState {
 }
 
 const exportWarning = "用户在高德地图上人工绘制的市场板块草稿，非行政区、规划或官方边界；发布前需核验并转换坐标。";
+const retiredDefaultNamesBySourceId = new Map<string, string[]>([
+  ["sector_qiantan", ["杨思前滩"]],
+]);
 
 function isFinitePosition(value: unknown): value is DraftPosition {
   return Array.isArray(value)
@@ -315,12 +318,20 @@ export function syncUntouchedDraftsToCurrentTemplates(
   const syncedDrafts = drafts.map((draft) => {
     if (!draft.sourceSectorId) return draft;
     const template = templateById.get(draft.sourceSectorId);
-    if (!template || template.ring.length < 3
-      || draft.sourceGeometryFingerprint === template.geometryFingerprint) return draft;
-    const draftGeometryFingerprint = fingerprintDraftRing(draft.ring);
+    if (!template) return draft;
+    const migratedDraft = retiredDefaultNamesBySourceId
+      .get(draft.sourceSectorId)
+      ?.includes(draft.name)
+      ? { ...draft, name: template.name }
+      : draft;
+    if (template.ring.length < 3
+      || migratedDraft.sourceGeometryFingerprint === template.geometryFingerprint) {
+      return migratedDraft;
+    }
+    const draftGeometryFingerprint = fingerprintDraftRing(migratedDraft.ring);
     if (draftGeometryFingerprint === template.geometryFingerprint) {
       return {
-        ...draft,
+        ...migratedDraft,
         sourceGeometryFingerprint: template.geometryFingerprint,
       };
     }
@@ -328,12 +339,12 @@ export function syncUntouchedDraftsToCurrentTemplates(
       template.previousGeometryFingerprints?.includes(draftGeometryFingerprint),
     );
     if (!matchesKnownOldGeometry) {
-      preservedModifiedSourceIds.push(draft.sourceSectorId);
-      return draft;
+      preservedModifiedSourceIds.push(migratedDraft.sourceSectorId!);
+      return migratedDraft;
     }
-    updatedSourceIds.push(draft.sourceSectorId);
+    updatedSourceIds.push(migratedDraft.sourceSectorId!);
     return {
-      ...draft,
+      ...migratedDraft,
       ring: normalizeDraftRing(template.ring),
       sourceGeometryFingerprint: template.geometryFingerprint,
     };

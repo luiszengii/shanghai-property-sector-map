@@ -147,7 +147,7 @@
       "publishedAt": "2025-11-14",
       "licenseStatus": "reference_only",
       "allowedUse": "boundary_definition_only",
-      "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江和北蔡—康桥部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
+      "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江、川沙—祝桥和北蔡—康桥等部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
     },
     {
       "id": "official-shanggang-scope-2023",
@@ -523,6 +523,116 @@
       "note": "明确规划范围为古美街道范围，总面积 6.2 平方公里，用于行政参考面的面积交叉核验。"
     },
     {
+      "id": "official-kangqiao-town-plan-2035",
+      "title": "浦东新区康桥镇国土空间总体规划（2022—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/7cd6ae83f8fa4d5d9e473493bbc580ad.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于核对康桥镇和镇内居住单元的规划语义；不把规划附图直接当作可再分发 GIS 坐标。"
+    },
+    {
+      "id": "official-zhoupu-town-plan-2035",
+      "title": "浦东新区周浦镇国土空间总体规划（2022—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/d70391e819a14e369f00ef00d5a99c6f.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于核对周浦镇及周浦居住内核的规划语义；本轮不从规划图提取坐标。"
+    },
+    {
+      "id": "official-hangtou-town-plan-2035",
+      "title": "浦东新区航头镇（大治河以北）国土空间总体规划（2022—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/db6338282a9a464fb57d8ddc5db7a52c.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "规划范围只覆盖大治河以北，用于提醒全镇候选与规划范围不可混用；不从附图提取坐标。"
+    },
+    {
+      "id": "official-xinchang-town-plan-2035",
+      "title": "浦东新区新场镇总体规划暨土地利用总体规划（2017—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20210817/79c1c0328daf45a7a66313b41c1e6e9c.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2021-08-17",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于核对新场镇、古镇和轨交核心区等不同层级语义；不从附图提取坐标。"
+    },
+    {
+      "id": "official-chuansha-town-plan-2035",
+      "title": "浦东新区川沙新镇国土空间总体规划（2023—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230427/46215f9766c040f59de86686813bbd85.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-04-27",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于区分川沙新镇全域、川沙主城区、迪士尼和六灶等范围；不从规划图提取坐标。"
+    },
+    {
+      "id": "official-tangzhen-town-plan-2035",
+      "title": "浦东新区唐镇国土空间总体规划（2022—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/ba726d4532414af6b1e14de928f58ea7.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于区分唐镇全域与约 8.70 平方公里唐镇新市镇；不从规划图提取坐标。"
+    },
+    {
+      "id": "official-xuanqiao-town-plan-2035",
+      "title": "浦东新区宣桥镇（大治河以北）国土空间总体规划（2022—2035）",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/ghjh/20230309/1e59c003dd9746a3aecee5b4ab8b7165.html",
+      "sourceType": "official_town_master_plan",
+      "publishedAt": "2023-03-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "规划只覆盖大治河以北 34.96 平方公里，用于核对宣桥核心和邻接；不能当作完整镇域或市场边界。"
+    },
+    {
+      "id": "official-huinan-rural-plan-2024",
+      "title": "惠南镇关于2024-2025年度全域和美乡村建设实施方案的请示",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/azt_ncgz/2025/7/335749.html",
+      "sourceType": "official_town_scope",
+      "publishedAt": "2024-12-25",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "给出惠南全域 65.78 平方公里、开发边界 35.58 平方公里与郊野 30.20 平方公里，用于区分镇域和市场核心。"
+    },
+    {
+      "id": "official-zhuqiao-town-area-2024",
+      "title": "祝桥镇关于2024年度贯彻落实河湖长制工作情况的报告",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14535.gkml_ywl_cxjsgl/2025/36/336816.html",
+      "sourceType": "official_town_scope",
+      "publishedAt": "2024-12-18",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "给出祝桥镇域约 160.19 平方公里，用于校验全镇量级并提醒机场相关功能与住宅市场口径不同。"
+    },
+    {
+      "id": "official-xintiandi-management-scope-2024",
+      "title": "黄浦区新天地地区综合管理办法",
+      "publisher": "上海市黄浦区人民政府",
+      "url": "https://www.shhuangpu.gov.cn/BigFileUpLoadStorage/temp/2024-05-17/f03089e7-cecb-4240-a660-a2acdc941594/%E5%85%AC%E6%8A%A5-2024%E7%AC%AC2%E6%9C%9F.pdf",
+      "sourceType": "official_functional_area_scope",
+      "publishedAt": "2024",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方综合管理区小于完整淮海中路街道；用于明确本项目完整缺口候选不是狭义官方新天地范围。"
+    },
+    {
       "id": "official-tianditu-shanghai-standard-maps-2025",
       "title": "天地图·上海标准地图（2025年7月版）",
       "publisher": "上海市规划和自然资源局、上海市测绘院",
@@ -535,11 +645,11 @@
     },
     {
       "id": "official-shanghai-town-list-2025",
-      "title": "上海市街道、镇、乡名单",
+      "title": "上海市各区乡镇、街道名称表（截至2025年12月31日）",
       "publisher": "上海市民政局",
       "url": "https://mzj.sh.gov.cn/MZ_zhuzhan1539_0-2-8-1459/20250701/13c356554a0a4634b311b7aeb10d1918.html",
       "sourceType": "official_admin_register",
-      "publishedAt": "2025-07-01",
+      "publishedAt": "2026-01-05",
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
       "note": "只核实现行街镇名称与隶属关系，不提供楼市板块定义或可再分发边界。"

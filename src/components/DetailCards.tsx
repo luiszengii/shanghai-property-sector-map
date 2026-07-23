@@ -16,6 +16,9 @@ const boundarySideLabels: Record<SectorBoundarySide, string> = { north: "北", e
 const evidenceStatusLabels: Record<SectorBoundaryStatus, string> = {
   definition_confirmed: "已确认",
   candidate_scope_confirmed: "候选口径已确认",
+  candidate_backbone_confirmed: "候选骨架已确认",
+  project_integrity_checked_candidate: "项目完整性已核验",
+  adjacent_review_required: "相邻板块待联审",
   partial: "部分明确",
   geometry_missing: "缺几何",
   scope_ambiguous: "口径待定",

@@ -84,12 +84,55 @@ export type SectorReviewStatus = "reviewed-high" | "draft-medium" | "draft-low";
 export type SectorGeometryStatus = "missing" | "demo" | "admin-reference" | "draft" | "reviewed" | "published";
 export type SectorGeometryConfidence = "high" | "medium" | "low";
 export type SectorKind = "market_sector_with_official_scope_candidate" | "market_sector" | "ambiguous_market_sector" | "ambiguous_official_functional_scope";
-export type SectorDefinitionStatus = "official_scope_available" | "market_scope_candidate" | "user_decided_market_scope" | "partial_official_scope" | "historical_official_scope_needs_version_check" | "official_scope_available_but_semantics_ambiguous" | "admin_proxy_candidate" | "multiple_official_versions_need_selection";
+export type SectorDefinitionStatus =
+  | "official_scope_available"
+  | "market_scope_candidate"
+  | "user_decided_market_scope"
+  | "partial_official_scope"
+  | "historical_official_scope_needs_version_check"
+  | "official_scope_available_but_semantics_ambiguous"
+  | "official_scope_market_candidate"
+  | "market_identity_admin_backbone_candidate"
+  | "admin_proxy_candidate"
+  | "multiple_official_versions_need_selection";
 export type SectorBoundarySide = "north" | "east" | "south" | "west";
-export type SectorBoundaryStatus = "definition_confirmed" | "candidate_scope_confirmed" | "partial" | "geometry_missing" | "scope_ambiguous";
-export type SectorBoundaryBasis = "official_plan_text" | "seller_market_scope" | "planning_unit_scope" | "historical_official_scope" | "official_scope_text" | "scope_decision_required" | "official_regulation";
+export type SectorBoundaryStatus =
+  | "definition_confirmed"
+  | "candidate_scope_confirmed"
+  | "candidate_backbone_confirmed"
+  | "project_integrity_checked_candidate"
+  | "adjacent_review_required"
+  | "partial"
+  | "geometry_missing"
+  | "scope_ambiguous";
+export type SectorBoundaryBasis =
+  | "official_plan_text"
+  | "seller_market_scope"
+  | "planning_unit_scope"
+  | "historical_official_scope"
+  | "official_scope_text"
+  | "scope_decision_required"
+  | "official_regulation"
+  | "existing_market_candidate_shared_edge"
+  | "market_candidate_from_admin_backbone"
+  | "named_road_market_candidate"
+  | "osm_admin_relation_market_backbone"
+  | "project_integrity_market_candidate"
+  | "user_decided_market_shared_edge";
 export type SectorSourceLicenseStatus = "unverified" | "reference_only" | "ODbL-1.0";
-export type SectorSourceAllowedUse = "demo_only" | "boundary_definition_only" | "version_check_only" | "boundary_relationship_only" | "spatial_relationship_only" | "scope_comparison_only" | "name_verification_only" | "visual_comparison_only" | "geometry_with_attribution_and_odbl_compliance";
+export type SectorSourceAllowedUse =
+  | "demo_only"
+  | "boundary_definition_only"
+  | "boundary_verification_only"
+  | "version_check_only"
+  | "boundary_relationship_only"
+  | "spatial_relationship_only"
+  | "scope_comparison_only"
+  | "market_identity_verification_only"
+  | "sector_definition_and_geometry_rule"
+  | "name_verification_only"
+  | "visual_comparison_only"
+  | "geometry_with_attribution_and_odbl_compliance";
 
 export interface SectorGeometryRecord {
   status: SectorGeometryStatus;
@@ -138,6 +181,7 @@ export interface SectorBoundaryEvidence {
   status: SectorBoundaryStatus;
   confidence: SectorGeometryConfidence;
   sourceId: string;
+  supportingSourceIds?: string[];
   note?: string;
 }
 

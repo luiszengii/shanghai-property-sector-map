@@ -837,11 +837,86 @@ const candidateDefinitionById = new Map(
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
+const knownDefinitionStatuses = new Set([
+  "official_scope_available",
+  "market_scope_candidate",
+  "user_decided_market_scope",
+  "partial_official_scope",
+  "historical_official_scope_needs_version_check",
+  "official_scope_available_but_semantics_ambiguous",
+  "official_scope_market_candidate",
+  "market_identity_admin_backbone_candidate",
+  "admin_proxy_candidate",
+  "multiple_official_versions_need_selection",
+]);
+const knownSourceAllowedUses = new Set([
+  "demo_only",
+  "boundary_definition_only",
+  "boundary_verification_only",
+  "version_check_only",
+  "boundary_relationship_only",
+  "spatial_relationship_only",
+  "scope_comparison_only",
+  "market_identity_verification_only",
+  "sector_definition_and_geometry_rule",
+  "name_verification_only",
+  "visual_comparison_only",
+  "geometry_with_attribution_and_odbl_compliance",
+]);
+const knownBoundaryStatuses = new Set([
+  "definition_confirmed",
+  "candidate_scope_confirmed",
+  "candidate_backbone_confirmed",
+  "project_integrity_checked_candidate",
+  "adjacent_review_required",
+  "partial",
+  "geometry_missing",
+  "scope_ambiguous",
+]);
+const knownBoundaryBasisTypes = new Set([
+  "official_plan_text",
+  "seller_market_scope",
+  "planning_unit_scope",
+  "historical_official_scope",
+  "official_scope_text",
+  "scope_decision_required",
+  "official_regulation",
+  "existing_market_candidate_shared_edge",
+  "market_candidate_from_admin_backbone",
+  "named_road_market_candidate",
+  "osm_admin_relation_market_backbone",
+  "project_integrity_market_candidate",
+  "user_decided_market_shared_edge",
+]);
 const candidateGeometryStatuses = new Set(["draft", "reviewed", "published"]);
 const knownGeometryStatuses = ["missing", "demo", "admin-reference", ...candidateGeometryStatuses];
 const geometryStatusCounts = new Map(knownGeometryStatuses.map((status) => [status, 0]));
 
+for (const source of sources) {
+  if (!knownSourceAllowedUses.has(source.allowedUse)) {
+    error(`${source.id}: 未知 source allowedUse ${source.allowedUse}`);
+  }
+}
+
+for (const edge of edges) {
+  if (!requiredBoundarySides.includes(edge.side)) {
+    error(`${edge.id}: 未知 boundary side ${edge.side}`);
+  }
+  if (!knownBoundaryStatuses.has(edge.status)) {
+    error(`${edge.id}: 未知 boundary status ${edge.status}`);
+  }
+  if (!knownBoundaryBasisTypes.has(edge.basisType)) {
+    error(`${edge.id}: 未知 boundary basisType ${edge.basisType}`);
+  }
+  for (const sourceId of [edge.sourceId, ...(edge.supportingSourceIds ?? [])]) {
+    if (!sourceById.has(sourceId)) error(`${edge.id}: 引用了不存在的 sourceId ${sourceId}`);
+  }
+}
+
 for (const record of registry) {
+  if (!knownDefinitionStatuses.has(record.definitionStatus)) {
+    error(`${record.id}: 未知 definitionStatus ${record.definitionStatus}`);
+  }
   const status = record.geometry?.status;
   if (!geometryStatusCounts.has(status)) error(`${record.id}: 未知 geometry.status ${status}`);
   else geometryStatusCounts.set(status, geometryStatusCounts.get(status) + 1);
@@ -886,6 +961,13 @@ if (adminReferenceRegistryIds.some((id) => !adminReferenceIds.includes(id))) {
 }
 if (normalizedStringSet(candidateManifestIds) !== normalizedStringSet(candidateIds)) {
   error("候选面 manifest 必须与候选几何一一对应");
+}
+for (const candidate of candidates) {
+  const candidateId = candidate.properties?.id;
+  const registryRecord = registryById.get(candidateId);
+  if (candidate.properties?.confidence !== registryRecord?.geometry?.confidence) {
+    error(`${candidateId}: 候选面 confidence 与 registry geometry.confidence 不一致`);
+  }
 }
 if (normalizedStringSet(subscopeManifestIds) !== normalizedStringSet(subscopeIds)) {
   error("板块子范围 manifest 必须与子范围几何一一对应");
@@ -1013,6 +1095,115 @@ for (const [sectorId, relationId] of huangpuBatchRelationIds) {
     if (neighbor
       && sharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry) < 250) {
       error(`${sectorId} / ${neighborId}: 黄浦批次声明共享边不足 250 米`);
+    }
+  }
+}
+const xintiandiDefinition = candidateDefinitionById.get("sector_xintiandi");
+const xintiandiCandidate = candidateById.get("sector_xintiandi");
+const xintiandiManifest = manifestById.get("sector_xintiandi");
+if (!xintiandiDefinition || !xintiandiCandidate) {
+  error("sector_xintiandi: 黄浦中心缺口必须补成独立新天地候选面");
+} else {
+  if (xintiandiDefinition.method !== "market_admin_candidate_with_shared_topology"
+    || String(xintiandiDefinition.osmAdminRelationId) !== "12236003") {
+    error("sector_xintiandi: 必须锁定淮海中路街道 relation 12236003 作为保守市场骨架");
+  }
+  if (xintiandiCandidate.properties?.topologyMaxBoundaryDisplacementMeters > 0.1) {
+    error("sector_xintiandi: 与黄浦九板块同源的骨架位移不得超过 0.1 米");
+  }
+  if (normalizedStringSet(xintiandiManifest?.osmRefs?.adminRelations ?? [])
+    !== normalizedStringSet(["12236003"])) {
+    error("sector_xintiandi: manifest 必须记录唯一 OSM relation 12236003");
+  }
+  const xintiandiNeighborIds = [
+    "sector_ruijinerlu",
+    "sector_dapuqiao",
+    "sector_laoximen",
+    "sector_yuyuan",
+    "sector_waitan",
+    "sector_nanjingdonglu",
+  ];
+  for (const neighborId of xintiandiNeighborIds) {
+    const neighbor = candidateById.get(neighborId);
+    if (!neighbor
+      || sharedBoundaryLengthMeters(xintiandiCandidate.geometry, neighbor.geometry) < 100) {
+      error(`sector_xintiandi / ${neighborId}: 被围缺口共享边不足 100 米`);
+    }
+  }
+}
+
+const pudongTownBackboneDefinitions = candidateDefinitions.filter(
+  (definition) => definition.scopeVersion
+    === "pudong-town-backbone-market-candidate-2026-07",
+);
+const expectedPudongTownBackboneRelations = new Map([
+  ["sector_kangqiao", "14179369"],
+  ["sector_zhoupu", "14179320"],
+  ["sector_hangtou", "14179368"],
+  ["sector_xinchang", "14179332"],
+  ["sector_chuansha", "14179063"],
+  ["sector_tangzhen", "14179148"],
+  ["sector_xuanqiao", "14180407"],
+  ["sector_huinan", "14179286"],
+  ["sector_zhuqiao", "14179522"],
+]);
+if (normalizedStringSet(pudongTownBackboneDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedPudongTownBackboneRelations.keys())) {
+  error("浦东连续九板块定义集合与研究裁定不一致");
+}
+const pudongTownBackboneIds = new Set(
+  pudongTownBackboneDefinitions.map((definition) => definition.id),
+);
+const declaredPudongSharedPairs = new Set(pudongTownBackboneDefinitions.flatMap(
+  (definition) => (definition.sharedEdgeSectorIds ?? [])
+    .filter((neighborId) => pudongTownBackboneIds.has(neighborId))
+    .map((neighborId) => [definition.id, neighborId].sort().join("/")),
+));
+const expectedPudongSharedPairs = [
+  "sector_kangqiao/sector_zhoupu",
+  "sector_chuansha/sector_kangqiao",
+  "sector_hangtou/sector_zhoupu",
+  "sector_xinchang/sector_zhoupu",
+  "sector_chuansha/sector_zhoupu",
+  "sector_hangtou/sector_xinchang",
+  "sector_chuansha/sector_xinchang",
+  "sector_xinchang/sector_xuanqiao",
+  "sector_chuansha/sector_tangzhen",
+  "sector_chuansha/sector_xuanqiao",
+  "sector_chuansha/sector_zhuqiao",
+  "sector_huinan/sector_xuanqiao",
+  "sector_xuanqiao/sector_zhuqiao",
+  "sector_huinan/sector_zhuqiao",
+];
+if (normalizedStringSet(declaredPudongSharedPairs)
+  !== normalizedStringSet(expectedPudongSharedPairs)) {
+  error("浦东连续九板块必须声明研究确认的 14 组共享边");
+}
+for (const definition of pudongTownBackboneDefinitions) {
+  const candidate = candidateById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology") {
+    error(`${definition.id}: 浦东连续九板块必须使用同名镇关系市场候选构建方法`);
+  }
+  if (!candidate) {
+    error(`${definition.id}: 浦东连续九板块批次缺少候选面`);
+    continue;
+  }
+  if (candidate.properties?.topologyMaxBoundaryDisplacementMeters > 1) {
+    error(`${definition.id}: 浦东同源镇骨架的拓扑位移不得超过 1 米`);
+  }
+  const expectedRelationId = expectedPudongTownBackboneRelations.get(definition.id);
+  if (String(definition.osmAdminRelationId) !== expectedRelationId
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelationId])) {
+    error(`${definition.id}: definition / manifest 没有锁定研究确认的 OSM relation`);
+  }
+  for (const neighborId of candidate.properties?.sharedEdgeSectorIds ?? []) {
+    if (!pudongTownBackboneIds.has(neighborId)) continue;
+    const neighbor = candidateById.get(neighborId);
+    if (neighbor
+      && sharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry) < 500) {
+      error(`${definition.id} / ${neighborId}: 浦东批次声明共享边不足 500 米`);
     }
   }
 }

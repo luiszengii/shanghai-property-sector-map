@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-23",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩与杨思已拆成两个互斥一级板块；黄浦区瑞金二路、打浦桥、五里桥、半淞园路、老西门、小东门、豫园、外滩、南京东路采用同名街道开放关系作为可编辑保守骨架。所有候选继续限内部复核；行政参考层独立叠加，不替代市场板块，正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩与杨思已拆成两个互斥一级板块；黄浦十块及浦东东南九块采用同名街镇开放关系作为可编辑保守骨架。新天地使用完整淮海中路街道骨架填合中心缺口，但不宣称两者严格同义。所有候选继续限内部复核；行政参考层独立叠加，不替代市场板块，正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -590,7 +590,7 @@
       "kind": "market_sector",
       "reviewStatus": "draft-medium",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场南京东路采用同名街道范围作为本轮保守骨架；与外滩、瑞金二路采用同源共享边，淮海中路—新天地侧留待独立语义批次。",
+      "definitionCandidate": "市场南京东路采用同名街道范围作为本轮保守骨架；与外滩、瑞金二路采用同源共享边，并与新天地候选共用淮海中路街道关系南侧边。",
       "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["nanjingdonglu-north", "nanjingdonglu-east", "nanjingdonglu-south", "nanjingdonglu-west"],
       "geometry": {
@@ -603,6 +603,236 @@
         "verificationSourceIds": ["official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
         "publicationPolicy": "internal_review",
         "note": "约 2.3882 平方公里内部候选；固定 OSM relation 12236005 提供高点数骨架，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_xintiandi",
+      "canonicalName": "新天地",
+      "aliases": ["新天地板块", "淮海中路"],
+      "districtNames": ["黄浦区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "用完整淮海中路街道 relation 填合黄浦九板块围成的唯一中心缺口，登记为新天地一级市场候选；淮海中路街道全域与狭义新天地核心区不视为严格同义。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-xintiandi-management-scope-2024", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["xintiandi-north", "xintiandi-east", "xintiandi-south", "xintiandi-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-xintiandi-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-xintiandi-management-scope-2024", "official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025", "seller-lianjia-shanghai-sector-sitemap"],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.4165 平方公里内部候选；固定 OSM relation 12236003 与黄浦六个相邻候选使用同源共享边，拓扑位移 0 米。"
+      }
+    },
+    {
+      "id": "sector_kangqiao",
+      "canonicalName": "康桥",
+      "aliases": ["康桥镇", "康桥板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场康桥采用同名康桥镇现行开放关系作为可编辑保守骨架，北侧服从既有三林、御桥候选。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-kangqiao-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["kangqiao-north", "kangqiao-east", "kangqiao-south", "kangqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-kangqiao-town-plan-2035", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 40.9294 平方公里内部候选；relation 14179369 经统一拓扑总装最大位移 0.5 米，镇域与市场口径仍需逐项目收窄。"
+      }
+    },
+    {
+      "id": "sector_zhoupu",
+      "canonicalName": "周浦",
+      "aliases": ["周浦镇", "周浦板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场周浦采用同名周浦镇现行开放关系作为保守骨架，与康桥、航头、新场、川沙共用快照边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-zhoupu-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["zhoupu-north", "zhoupu-east", "zhoupu-south", "zhoupu-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-zhoupu-town-plan-2035", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 43.1844 平方公里内部候选；relation 14179320 最大拓扑位移 0.5 米，规划居住内核与全镇市场范围继续分开记录。"
+      }
+    },
+    {
+      "id": "sector_hangtou",
+      "canonicalName": "航头",
+      "aliases": ["航头镇", "航头板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场航头采用同名航头镇现行开放关系作为保守骨架，与周浦、新场共用快照边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-hangtou-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["hangtou-north", "hangtou-east", "hangtou-south", "hangtou-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-hangtou-town-plan-2035", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 59.4648 平方公里内部候选；relation 14179368 最大拓扑位移 0.5 米，大治河以北规划口径不冒充全镇市场定稿。"
+      }
+    },
+    {
+      "id": "sector_xinchang",
+      "canonicalName": "新场",
+      "aliases": ["新场镇", "新场板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场新场采用同名新场镇现行开放关系作为保守骨架；与周浦、航头、宣桥相邻，并保留固定关系几何中实测约 1.1 公里的川沙短共享边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-xinchang-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["xinchang-north", "xinchang-east", "xinchang-south", "xinchang-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-xinchang-town-plan-2035", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 53.3699 平方公里内部候选；relation 14179332 最大拓扑位移 0.5 米，古镇与轨交核心区仍是镇内更小范围。"
+      }
+    },
+    {
+      "id": "sector_chuansha",
+      "canonicalName": "川沙",
+      "aliases": ["川沙新镇", "川沙板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场川沙采用同名川沙新镇现行开放关系作为保守骨架；狭义川沙主城区、迪士尼和六灶等内部语义后续另行收窄。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-chuansha-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["chuansha-north", "chuansha-east", "chuansha-south", "chuansha-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-chuansha-town-plan-2035", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 94.3728 平方公里内部候选；relation 14179063 最大拓扑位移 0.5 米，全镇骨架不等于狭义川沙主城区。"
+      }
+    },
+    {
+      "id": "sector_tangzhen",
+      "canonicalName": "唐镇",
+      "aliases": ["唐镇板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场唐镇采用同名唐镇现行开放关系作为保守骨架，与川沙共用快照边；张江、金桥侧留待既有身份精修。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-tangzhen-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["tangzhen-north", "tangzhen-east", "tangzhen-south", "tangzhen-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-tangzhen-town-plan-2035", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 32.1451 平方公里内部候选；relation 14179148 最大拓扑位移 0.5 米，不与约 8.70 平方公里唐镇新市镇混用。"
+      }
+    },
+    {
+      "id": "sector_xuanqiao",
+      "canonicalName": "宣桥",
+      "aliases": ["宣桥镇", "宣桥板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场宣桥采用同名宣桥镇现行开放关系作为保守骨架，连接新场、川沙、惠南、祝桥。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-xuanqiao-town-plan-2035", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["xuanqiao-north", "xuanqiao-east", "xuanqiao-south", "xuanqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-xuanqiao-town-plan-2035", "official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 45.5625 平方公里内部候选；relation 14180407 最大拓扑位移 0.5 米。"
+      }
+    },
+    {
+      "id": "sector_huinan",
+      "canonicalName": "惠南",
+      "aliases": ["惠南镇", "惠南板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场惠南采用同名惠南镇现行开放关系作为保守骨架，与宣桥、祝桥共用快照边。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-huinan-rural-plan-2024", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["huinan-north", "huinan-east", "huinan-south", "huinan-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-huinan-rural-plan-2024", "official-shanghai-town-list-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 65.8608 平方公里内部候选；relation 14179286 最大拓扑位移 0.5 米，镇内主城区仍可继续精修。"
+      }
+    },
+    {
+      "id": "sector_zhuqiao",
+      "canonicalName": "祝桥",
+      "aliases": ["祝桥镇", "祝桥板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场祝桥采用同名祝桥镇现行开放关系作为保守骨架，与川沙、宣桥、惠南共用快照边；机场相关功能区后续按项目归属收窄。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-zhuqiao-town-area-2024", "official-pudong-boundary-adjustment-2025", "official-shanghai-town-list-2025"],
+      "boundaryEvidenceIds": ["zhuqiao-north", "zhuqiao-east", "zhuqiao-south", "zhuqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "osm-shanghai-260721-pudong-town-backbone-v1",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["official-zhuqiao-town-area-2024", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
+        "publicationPolicy": "internal_review",
+        "note": "约 161.1326 平方公里内部候选；relation 14179522 最大拓扑位移 0.5 米，范围很大且含机场相关功能，只作起画面。"
       }
     }
   ]

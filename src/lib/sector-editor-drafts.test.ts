@@ -173,3 +173,39 @@ test("an untouched local copy follows a newer high-precision source without over
   assert.deepEqual(preserved.drafts[0].ring, editedDraft.ring);
   assert.deepEqual(preserved.preservedModifiedSourceIds, ["sector-gumei"]);
 });
+
+test("a retired system default name migrates without overwriting hand-edited geometry", () => {
+  const editedLegacyDraft = {
+    ...createDraftFromExistingSector({
+      id: "sector_qiantan",
+      name: "杨思前滩",
+      district: "浦东新区",
+      boundaryBasis: "旧合并口径",
+      note: "用户已经拖动过边界",
+      geometryStatus: "candidate",
+      geometryFingerprint: "old-source",
+      ring: [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]],
+    }),
+    ring: [[121.41, 31.11], [121.51, 31.11], [121.51, 31.21]] as [number, number][],
+  };
+  const currentTemplate = {
+    id: "sector_qiantan",
+    name: "前滩",
+    district: "浦东新区",
+    boundaryBasis: "独立前滩口径",
+    note: "当前边界",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: "current-source",
+    previousGeometryFingerprints: [],
+    ring: [[121.45, 31.15], [121.55, 31.15], [121.55, 31.25]] as [number, number][],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates(
+    [editedLegacyDraft],
+    [currentTemplate],
+  );
+
+  assert.equal(synced.drafts[0].name, "前滩");
+  assert.deepEqual(synced.drafts[0].ring, editedLegacyDraft.ring);
+  assert.deepEqual(synced.preservedModifiedSourceIds, ["sector_qiantan"]);
+});
