@@ -34,11 +34,13 @@
         {
           "side": "south",
           "featureType": "road",
-          "expectedIdentity": "中环路—华夏西路",
-          "identityStatus": "verified-by-osm-name",
+          "expectedIdentity": "中环路—华夏西路走廊候选线",
+          "identityStatus": "verified-name-alignment-candidate",
           "match": { "names": ["华夏西路", "中环路"] },
           "verificationSourceIds": ["seller-anjuke-yangsi-scope", "osm-geofabrik-shanghai-260721"],
-          "minimumBoundaryCoverageMeters": 7000
+          "minimumBoundaryCoverageMeters": 7000,
+          "minimumObjectCoverageMeters": 20,
+          "note": "道路名称已核对，但分隔式道路包含主线、平行车道与匝道；当前输出与道路对象保持 15 米内贴合，尚未证明为唯一走廊中位线。"
         },
         {
           "side": "west",

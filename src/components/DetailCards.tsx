@@ -167,7 +167,7 @@ export function DetailCard() {
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
     : sectorRecord?.definitionStatus === "market_scope_candidate"
-      ? "身份已裁定 · 待第二来源、东界身份与沿线项目核验"
+      ? "身份已裁定 · 待第二来源、东界身份、南界中位线与沿线项目核验"
     : sectorRecord?.reviewStatus === "reviewed-high"
       ? "边界规则已核验 · 候选面待人工复核"
       : sectorRecord?.reviewStatus === "draft-medium"

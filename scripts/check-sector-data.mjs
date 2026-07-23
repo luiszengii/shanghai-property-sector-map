@@ -907,7 +907,11 @@ for (const candidate of candidates) {
         error(`${label} 缺少 manifest 记录`);
         continue;
       }
-      if (!["verified-by-osm-name", "unverified-candidate"].includes(featureAnchor.identityStatus)) {
+      if (![
+        "verified-by-osm-name",
+        "verified-name-alignment-candidate",
+        "unverified-candidate",
+      ].includes(featureAnchor.identityStatus)) {
         error(`${label} identityStatus 无效`);
       }
       if (featureAnchor.identityStatus !== manifestAnchor.identityStatus
@@ -926,13 +930,18 @@ for (const candidate of candidates) {
       if (!Array.isArray(manifestAnchor.osmRefs) || manifestAnchor.osmRefs.length === 0) {
         error(`${label} 缺少锁定 OSM 对象`);
       }
+      if (!Array.isArray(manifestAnchor.inputOsmRefs)
+        || manifestAnchor.inputOsmRefs.length < manifestAnchor.osmRefs.length
+        || manifestAnchor.osmRefs.some((ref) => !manifestAnchor.inputOsmRefs.includes(ref))) {
+        error(`${label} 输入对象与边界贴合对象的来源链无效`);
+      }
       if (manifestAnchor.centerlineToleranceMeters !== 15) {
         error(`${label} 必须以 15 米容差核验中心线贴合`);
       }
       if (!isFinitePositive(manifestAnchor.boundaryCoverageWithinToleranceMeters)) {
         error(`${label} 缺少有效的中心线覆盖长度`);
       }
-      if (featureAnchor.identityStatus === "unverified-candidate") {
+      if (featureAnchor.identityStatus.endsWith("candidate")) {
         const edge = record.boundaryEvidenceIds
           .map((edgeId) => edgeById.get(edgeId))
           .find((item) => item?.side === featureAnchor.side);

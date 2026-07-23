@@ -214,6 +214,7 @@ def build_market_linear_component(
     tolerance = float(definition["centerlineToleranceMeters"])
     for anchor, frame in anchor_frames:
         anchor_union = unary_union(frame.geometry)
+        boundary_buffer = restored.boundary.buffer(tolerance)
         coverage = restored.boundary.intersection(anchor_union.buffer(tolerance)).length
         minimum_coverage = float(anchor["minimumBoundaryCoverageMeters"])
         if coverage < minimum_coverage:
@@ -221,7 +222,20 @@ def build_market_linear_component(
                 f"{definition['canonicalName']} {anchor['side']} 侧边界在 {tolerance:.0f} 米"
                 f"容差内只覆盖 {coverage:.1f} 米，低于 {minimum_coverage:.1f} 米"
             )
-        refs = sorted({str(value) for value in frame.osm_id})
+        input_refs = sorted({str(value) for value in frame.osm_id})
+        minimum_object_coverage = float(anchor.get("minimumObjectCoverageMeters", 1))
+        boundary_frame = frame[
+            frame.geometry.map(
+                lambda geometry: geometry.intersection(boundary_buffer).length
+                >= minimum_object_coverage
+            )
+        ]
+        refs = sorted({str(value) for value in boundary_frame.osm_id})
+        if not refs:
+            raise ValueError(
+                f"{definition['canonicalName']} {anchor['side']} 侧没有对象达到"
+                f" {minimum_object_coverage:.1f} 米边界贴合长度"
+            )
         if anchor["featureType"] == "road":
             road_refs.update(refs)
         else:
@@ -233,6 +247,7 @@ def build_market_linear_component(
             "identityStatus": anchor["identityStatus"],
             "verificationSourceIds": anchor["verificationSourceIds"],
             "osmRefs": refs,
+            "inputOsmRefs": input_refs,
             "boundaryCoverageWithinToleranceMeters": round(coverage, 1),
             "centerlineToleranceMeters": tolerance,
             **({"note": anchor["note"]} if anchor.get("note") else {}),
