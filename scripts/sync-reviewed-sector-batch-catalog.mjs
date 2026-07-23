@@ -133,9 +133,25 @@ const upsertJsonArrayItems = ({
 };
 
 const batch = readJson(batchArgument);
-if (batch.batchId !== "qingpu-songjiang-jinshan-thirty-2026-07"
-  || batch.sectors?.length !== 30) {
-  throw new Error("本同步入口只接受已研究确认的青浦—松江—金山 30 板块批次");
+const batchPolicies = new Map([
+  ["qingpu-songjiang-jinshan-thirty-2026-07", {
+    expectedSectorCount: 30,
+    districtCounts: {
+      青浦区: 10,
+      松江区: 10,
+      金山区: 10,
+    },
+  }],
+  ["xuhui-twelve-admin-aligned-2026-07", {
+    expectedSectorCount: 12,
+    districtCounts: {
+      徐汇区: 12,
+    },
+  }],
+]);
+const batchPolicy = batchPolicies.get(batch.batchId);
+if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
+  throw new Error("本同步入口只接受已登记且数量匹配的行政骨架候选批次");
 }
 
 const aliasesBySectorId = new Map([
@@ -147,11 +163,9 @@ const sides = [
   ["south", "南"],
   ["west", "西"],
 ];
-const expectedDistrictCounts = new Map([
-  ["青浦区", 10],
-  ["松江区", 10],
-  ["金山区", 10],
-]);
+const expectedDistrictCounts = new Map(
+  Object.entries(batchPolicy.districtCounts),
+);
 for (const [districtName, expectedCount] of expectedDistrictCounts) {
   const actualCount = batch.sectors.filter(
     (definition) => definition.districtName === districtName,

@@ -2003,6 +2003,218 @@
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
+    },
+    {
+      "id": "sector_xujiahui",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469990"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_fenglinlu",
+          "sector_tianpinglu",
+          "sector_tianlin",
+          "sector_caohejing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_hunanlu",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469979"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_tianpinglu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_tianpinglu",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13469980"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_hunanlu",
+          "sector_xietulu",
+          "sector_fenglinlu",
+          "sector_xujiahui"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_fenglinlu",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470052"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_longhua",
+          "sector_xietulu",
+          "sector_xujiahui",
+          "sector_tianpinglu",
+          "sector_caohejing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_xietulu",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470053"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_longhua",
+          "sector_fenglinlu",
+          "sector_tianpinglu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_longhua",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470146"
+        ],
+        "subtractedSectorIds": [
+          "sector_yangsi",
+          "sector_shibo"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xietulu",
+          "sector_fenglinlu",
+          "sector_changqiao",
+          "sector_caohejing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_tianlin",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470318"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xujiahui",
+          "sector_caohejing",
+          "sector_kangjian"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_caohejing",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470278"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_lingyunlu",
+          "sector_longhua",
+          "sector_fenglinlu",
+          "sector_xujiahui",
+          "sector_changqiao",
+          "sector_tianlin",
+          "sector_kangjian"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_kangjian",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470479"
+        ],
+        "subtractedSectorIds": [
+          "sector_gumei"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_lingyunlu",
+          "sector_tianlin",
+          "sector_caohejing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_lingyunlu",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470540"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_changqiao",
+          "sector_caohejing",
+          "sector_kangjian"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_changqiao",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470589"
+        ],
+        "subtractedSectorIds": [
+          "sector_yangsi",
+          "sector_sanlin"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_lingyunlu",
+          "sector_longhua",
+          "sector_caohejing",
+          "sector_huajing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_huajing",
+      "scopeVersion": "xuhui-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13470658"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_changqiao"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
     }
   ],
   "subscopes": []

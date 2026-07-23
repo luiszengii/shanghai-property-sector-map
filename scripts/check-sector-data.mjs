@@ -196,6 +196,34 @@ function normalizedStringSet(values) {
   return normalizedJson([...values].sort());
 }
 
+function assertConnectedSharedEdgeBatch({
+  ids,
+  pairs,
+  expectedPairCount,
+  label,
+}) {
+  if (pairs.size !== expectedPairCount) {
+    error(`${label}应有 ${expectedPairCount} 组内部共享边，实际 ${pairs.size} 组`);
+  }
+  const adjacency = new Map([...ids].map((sectorId) => [sectorId, new Set()]));
+  for (const pair of pairs) {
+    const [firstId, secondId] = pair.split("/");
+    adjacency.get(firstId)?.add(secondId);
+    adjacency.get(secondId)?.add(firstId);
+  }
+  const visited = new Set();
+  const queue = [[...ids][0]];
+  while (queue.length > 0) {
+    const sectorId = queue.shift();
+    if (visited.has(sectorId)) continue;
+    visited.add(sectorId);
+    queue.push(...(adjacency.get(sectorId) ?? []));
+  }
+  if (visited.size !== ids.size) {
+    error(`${label}共享边图必须全连通，实际连通 ${visited.size}/${ids.size}`);
+  }
+}
+
 function isFinitePositive(value) {
   return Number.isFinite(value) && value > 0;
 }
@@ -1318,28 +1346,12 @@ const outerThirtySharedPairs = new Set(outerThirtyDefinitions.flatMap(
     .filter((neighborId) => outerThirtyIds.has(neighborId))
     .map((neighborId) => [definition.id, neighborId].sort().join("/")),
 ));
-if (outerThirtySharedPairs.size !== 64) {
-  error(`青浦—松江—金山批次应有 64 组内部共享边，实际 ${outerThirtySharedPairs.size} 组`);
-}
-const outerThirtyAdjacency = new Map(
-  [...outerThirtyIds].map((sectorId) => [sectorId, new Set()]),
-);
-for (const pair of outerThirtySharedPairs) {
-  const [firstId, secondId] = pair.split("/");
-  outerThirtyAdjacency.get(firstId)?.add(secondId);
-  outerThirtyAdjacency.get(secondId)?.add(firstId);
-}
-const outerThirtyVisited = new Set();
-const outerThirtyQueue = [[...outerThirtyIds][0]];
-while (outerThirtyQueue.length > 0) {
-  const sectorId = outerThirtyQueue.shift();
-  if (outerThirtyVisited.has(sectorId)) continue;
-  outerThirtyVisited.add(sectorId);
-  outerThirtyQueue.push(...(outerThirtyAdjacency.get(sectorId) ?? []));
-}
-if (outerThirtyVisited.size !== 30) {
-  error(`青浦—松江—金山批次共享边图必须全连通，实际连通 ${outerThirtyVisited.size}/30`);
-}
+assertConnectedSharedEdgeBatch({
+  ids: outerThirtyIds,
+  pairs: outerThirtySharedPairs,
+  expectedPairCount: 64,
+  label: "青浦—松江—金山批次",
+});
 for (const definition of outerThirtyDefinitions) {
   const candidate = candidateById.get(definition.id);
   const manifest = manifestById.get(definition.id);
@@ -1415,6 +1427,115 @@ for (const [sectorId, protectedSectorId, minimumSharedLengthMeters] of [
   }
   if (approximateSharedLength < minimumSharedLengthMeters) {
     error(`${sectorId} / ${protectedSectorId}: 扣除后共享边不足验收长度`);
+  }
+  if (coordinateEquivalentSharedLength < minimumSharedLengthMeters) {
+    error(`${sectorId} / ${protectedSectorId}: 保护边必须在 1 微米内保持坐标等价`);
+  }
+}
+
+const expectedXuhuiTwelveRelations = new Map([
+  ["sector_xujiahui", "13469990"],
+  ["sector_hunanlu", "13469979"],
+  ["sector_tianpinglu", "13469980"],
+  ["sector_fenglinlu", "13470052"],
+  ["sector_xietulu", "13470053"],
+  ["sector_longhua", "13470146"],
+  ["sector_tianlin", "13470318"],
+  ["sector_caohejing", "13470278"],
+  ["sector_kangjian", "13470479"],
+  ["sector_lingyunlu", "13470540"],
+  ["sector_changqiao", "13470589"],
+  ["sector_huajing", "13470658"],
+]);
+const xuhuiTwelveDefinitions = candidateDefinitions.filter(
+  (definition) => expectedXuhuiTwelveRelations.has(definition.id),
+);
+if (normalizedStringSet(xuhuiTwelveDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedXuhuiTwelveRelations.keys())) {
+  error("徐汇同名街镇批次必须恰好包含研究确认的 12 个市场候选");
+}
+const xuhuiTwelveIds = new Set(expectedXuhuiTwelveRelations.keys());
+const xuhuiTwelveSharedPairs = new Set(xuhuiTwelveDefinitions.flatMap(
+  (definition) => (definition.sharedEdgeSectorIds ?? [])
+    .filter((neighborId) => xuhuiTwelveIds.has(neighborId))
+    .map((neighborId) => [definition.id, neighborId].sort().join("/")),
+));
+assertConnectedSharedEdgeBatch({
+  ids: xuhuiTwelveIds,
+  pairs: xuhuiTwelveSharedPairs,
+  expectedPairCount: 21,
+  label: "徐汇同名街镇批次",
+});
+for (const forbiddenName of ["虹梅路", "上海南站"]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === forbiddenName,
+  )) {
+    error(`徐汇批次不得在未裁定市场四至前自动注册 ${forbiddenName}`);
+  }
+}
+for (const definition of xuhuiTwelveDefinitions) {
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  const expectedRelation = expectedXuhuiTwelveRelations.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 徐汇批次没有锁定研究确认的 OSM 行政关系`);
+  }
+  if (definition.districtName !== "徐汇区"
+    || normalizedStringSet(registryRecord?.districtNames ?? [])
+      !== normalizedStringSet(["徐汇区"])) {
+    error(`${definition.id}: 徐汇批次行政归属必须保持徐汇区`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+    error(`${definition.id}: 徐汇行政骨架必须保持 low / draft-low / internal_review`);
+  }
+  for (const neighborId of definition.sharedEdgeSectorIds ?? []) {
+    if (!xuhuiTwelveIds.has(neighborId)) continue;
+    const neighbor = candidateById.get(neighborId);
+    const sharedLength = candidate && neighbor
+      ? sharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry)
+      : 0;
+    const exactSharedLength = candidate && neighbor
+      ? exactSharedBoundaryLengthMeters(candidate.geometry, neighbor.geometry)
+      : 0;
+    if (sharedLength < 100
+      || exactSharedLength < 100
+      || Math.abs(exactSharedLength - sharedLength) > 0.01) {
+      error(`${definition.id} / ${neighborId}: 徐汇批次共享边必须使用完全相同的坐标序列`);
+    }
+  }
+}
+for (const [sectorId, protectedSectorId, minimumSharedLengthMeters] of [
+  ["sector_longhua", "sector_yangsi", 300],
+  ["sector_longhua", "sector_shibo", 1_500],
+  ["sector_changqiao", "sector_yangsi", 40],
+  ["sector_changqiao", "sector_sanlin", 1_000],
+  ["sector_kangjian", "sector_gumei", 1_500],
+]) {
+  const definition = candidateDefinitionById.get(sectorId);
+  const candidate = candidateById.get(sectorId);
+  const protectedCandidate = candidateById.get(protectedSectorId);
+  const manifest = manifestById.get(sectorId);
+  const coordinateEquivalentSharedLength = candidate && protectedCandidate
+    ? sharedBoundaryLengthMeters(
+      candidate.geometry,
+      protectedCandidate.geometry,
+      {
+        directionTolerance: 1e-8,
+        distanceToleranceMeters: 0.000001,
+      },
+    )
+    : 0;
+  if (!(definition?.subtractSectorIds ?? []).includes(protectedSectorId)
+    || !(manifest?.osmRefs?.subtractedSectorIds ?? []).includes(protectedSectorId)) {
+    error(`${sectorId}: 必须显式扣除既有市场候选 ${protectedSectorId}`);
   }
   if (coordinateEquivalentSharedLength < minimumSharedLengthMeters) {
     error(`${sectorId} / ${protectedSectorId}: 保护边必须在 1 微米内保持坐标等价`);

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "checkedAt": "2026-07-23",
+  "checkedAt": "2026-07-24",
   "sources": [
     {
       "id": "internal-legacy-demo-v1",
@@ -93,6 +93,17 @@
       "licenseStatus": "reference_only",
       "allowedUse": "boundary_definition_only",
       "note": "给出约 9.4 平方公里全域开发口径，与 7.4 平方公里重点规划口径并存。"
+    },
+    {
+      "id": "official-xuhui-riverside-four-subdistricts-2023",
+      "title": "斜土街道西岸滨江党群服务阵地联合体成立",
+      "publisher": "上海市徐汇区人民政府",
+      "url": "https://www.xuhui.gov.cn/zfjg_jdz_xtjd_bmdt/20230620/518270.html",
+      "sourceType": "official_functional_area_scope",
+      "publishedAt": "2023-06-20",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "官方明确现有徐汇滨江管理范围横跨斜土、龙华、长桥、华泾 4 个街镇；只用于记录功能范围与行政骨架的交叉关系，不从页面提取坐标。"
     },
     {
       "id": "official-daning-13th-plan-2017",

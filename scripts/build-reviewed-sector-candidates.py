@@ -101,6 +101,14 @@ def round_coordinates(value: Any, digits: int = 7):
     return [round_coordinates(item, digits) for item in value]
 
 
+def round_polygonal_geometry(geometry, digits: int):
+    serialized = mapping(geometry)
+    return normalize_polygonal(shape({
+        "type": serialized["type"],
+        "coordinates": round_coordinates(serialized["coordinates"], digits),
+    }))
+
+
 def sql_names(names: list[str]) -> str:
     escaped = [name.replace("'", "''") for name in names]
     return "name IN (" + ",".join(f"'{name}'" for name in escaped) + ")"
@@ -712,6 +720,11 @@ def finalize_topology_group(
             working_crs,
             output_crs,
         )
+        if group.get("roundOutputCoordinatesDigits") is not None:
+            output_geometry = round_polygonal_geometry(
+                output_geometry,
+                int(group["roundOutputCoordinatesDigits"]),
+            )
         feature = feature_by_id[sector_id]
         displacement = projected.boundary.hausdorff_distance(
             source_projected_by_id[sector_id].boundary
@@ -872,6 +885,14 @@ def canonicalize_topology_group_output_vertices(
             topology_vertices,
             tolerance=1e-11,
         )
+        if (
+            group.get("roundAfterProtectedSubtraction", True)
+            and group.get("roundOutputCoordinatesDigits") is not None
+        ):
+            geometry = round_polygonal_geometry(
+                geometry,
+                int(group["roundOutputCoordinatesDigits"]),
+            )
         feature = feature_by_id[sector_id]
         representative = geometry.representative_point()
         feature["geometry"] = mapping(geometry)

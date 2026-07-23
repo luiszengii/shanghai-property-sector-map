@@ -2008,5 +2008,466 @@
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
     }
-  ]
+  ,
+    {
+      "id": "sector_xujiahui",
+      "canonicalName": "徐家汇",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场徐家汇暂以同名徐家汇街道固定行政关系作为低置信、可编辑骨架；万体馆只作为并入徐家汇的内部标签，沿线项目归属仍待人工精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xujiahui-north",
+        "xujiahui-east",
+        "xujiahui-south",
+        "xujiahui-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_hunanlu",
+      "canonicalName": "湖南路",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场湖南路暂以同名湖南路街道固定行政关系作为低置信骨架；衡山路只作为内部市场标签，不另画互斥一级面。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "hunanlu-north",
+        "hunanlu-east",
+        "hunanlu-south",
+        "hunanlu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_tianpinglu",
+      "canonicalName": "天平路",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场天平路暂以同名天平路街道固定行政关系作为低置信骨架；建国西路作为内部标签合并，不另生成 polygon。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "tianpinglu-north",
+        "tianpinglu-east",
+        "tianpinglu-south",
+        "tianpinglu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_fenglinlu",
+      "canonicalName": "枫林路",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场枫林路暂以同名枫林路街道固定行政关系作为低置信骨架；官方现有徐汇滨江管理范围横跨的 4 个街镇不含枫林路，现有一手证据不支持两者直接重叠。项目级市场标签仍待核验，本轮不使用未定稿滨江演示面裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-xuhui-riverside-four-subdistricts-2023"
+      ],
+      "boundaryEvidenceIds": [
+        "fenglinlu-north",
+        "fenglinlu-east",
+        "fenglinlu-south",
+        "fenglinlu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xietulu",
+      "canonicalName": "斜土路",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场斜土路暂以同名斜土路街道固定行政关系作为低置信骨架；官方明确其属于现有徐汇滨江管理范围横跨的 4 个街镇之一，但滨江存在多套面积口径，版本冻结前保留完整行政骨架，不用演示面自动裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-xuhui-riverside-four-subdistricts-2023"
+      ],
+      "boundaryEvidenceIds": [
+        "xietulu-north",
+        "xietulu-east",
+        "xietulu-south",
+        "xietulu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_longhua",
+      "canonicalName": "龙华",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场龙华暂以同名龙华街道固定行政关系作为低置信骨架，并保护性扣除既有杨思、世博候选在黄浦江中心线附近的交叉碎片；官方明确龙华属于现有徐汇滨江管理范围横跨的 4 个街镇之一，但滨江版本冻结前不据此继续裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-xuhui-riverside-four-subdistricts-2023"
+      ],
+      "boundaryEvidenceIds": [
+        "longhua-north",
+        "longhua-east",
+        "longhua-south",
+        "longhua-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_tianlin",
+      "canonicalName": "田林",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场田林暂以同名田林街道固定行政关系作为低置信、可编辑骨架；漕河泾开发区等功能语义不得据此静默并入。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "tianlin-north",
+        "tianlin-east",
+        "tianlin-south",
+        "tianlin-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_caohejing",
+      "canonicalName": "漕河泾",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场漕河泾暂以同名漕河泾街道固定行政关系作为低置信骨架；本候选不等同漕河泾开发区，也不提前切出上海南站板块。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "caohejing-north",
+        "caohejing-east",
+        "caohejing-south",
+        "caohejing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_kangjian",
+      "canonicalName": "康健",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场康健暂以康健新村街道固定行政关系作为低置信骨架，并保护性扣除既有古美市场候选跨区覆盖部分；上海南站与漕河泾方向的市场边仍待代表项目归属研究。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "kangjian-north",
+        "kangjian-east",
+        "kangjian-south",
+        "kangjian-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_lingyunlu",
+      "canonicalName": "凌云路",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场凌云路暂以同名凌云路街道固定行政关系作为低置信骨架；南站、植物园和长桥方向的边仍需按完整小区归属精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "lingyunlu-north",
+        "lingyunlu-east",
+        "lingyunlu-south",
+        "lingyunlu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_changqiao",
+      "canonicalName": "长桥",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场长桥暂以同名长桥街道固定行政关系作为低置信骨架，并保护性扣除既有杨思、三林候选在黄浦江中心线附近的交叉碎片；官方明确长桥属于现有徐汇滨江管理范围横跨的 4 个街镇之一，但滨江版本冻结前不据此继续裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-xuhui-riverside-four-subdistricts-2023"
+      ],
+      "boundaryEvidenceIds": [
+        "changqiao-north",
+        "changqiao-east",
+        "changqiao-south",
+        "changqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_huajing",
+      "canonicalName": "华泾",
+      "aliases": [],
+      "districtNames": [
+        "徐汇区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场华泾暂以同名华泾镇固定行政关系作为低置信骨架；官方明确华泾属于现有徐汇滨江管理范围横跨的 4 个街镇之一，但滨江南延伸、华泾门站等功能语义不能替代楼市项目归属或用于自动裁切。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-town-list-2025",
+        "official-xuhui-riverside-four-subdistricts-2023"
+      ],
+      "boundaryEvidenceIds": [
+        "huajing-north",
+        "huajing-east",
+        "huajing-south",
+        "huajing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "xuhui-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    }]
 }

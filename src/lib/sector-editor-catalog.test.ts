@@ -198,3 +198,61 @@ test("the Qingpu Songjiang Jinshan batch exposes all 30 candidates to the editor
     /石化街道.*代理/,
   );
 });
+
+test("the Xuhui admin-aligned batch exposes all 12 candidates without inventing Hongmei Road or South Station", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL("../../data/geo/reviewed-candidate-batches/xuhui-twelve-admin-aligned-2026-07.json", import.meta.url),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.equal(batchIds.length, 12);
+  assert.equal(batchIdSet.size, 12);
+  assert.equal(records.length, 12);
+  assert.ok(batchIds.every((id: string) => candidateById.has(id)));
+  assert.ok(!registryData.sectors.some(
+    (record: { canonicalName: string }) => record.canonicalName === "上海南站",
+  ));
+  assert.ok(!registryData.sectors.some(
+    (record: { canonicalName: string }) => record.canonicalName === "虹梅路",
+  ));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+
+  assert.equal(templates.length, 12);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate" && template.ring.length >= 3
+  )));
+});
