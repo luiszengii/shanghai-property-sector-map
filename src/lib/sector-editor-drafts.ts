@@ -57,8 +57,22 @@ interface StoredSectorEditorState {
 }
 
 const exportWarning = "用户在高德地图上人工绘制的市场板块草稿，非行政区、规划或官方边界；发布前需核验并转换坐标。";
-const retiredDefaultNamesBySourceId = new Map<string, string[]>([
-  ["sector_qiantan", ["杨思前滩"]],
+const retiredDraftSourcesBySourceId = new Map<string, {
+  names: Set<string>;
+  geometryFingerprints: Set<string>;
+  resetWhenSourceFingerprintMissing: boolean;
+}>([
+  ["sector_qiantan", {
+    names: new Set(["杨思前滩"]),
+    // Historical generated-candidate and editor-seed fingerprints from before ADR-0022 split the sector.
+    geometryFingerprints: new Set([
+      "ring-182-810406e2",
+      "ring-177-c5469959",
+      "ring-172-4b120fed",
+      "ring-19-37ff99c",
+    ]),
+    resetWhenSourceFingerprintMissing: true,
+  }],
 ]);
 
 function isFinitePosition(value: unknown): value is DraftPosition {
@@ -319,11 +333,26 @@ export function syncUntouchedDraftsToCurrentTemplates(
     if (!draft.sourceSectorId) return draft;
     const template = templateById.get(draft.sourceSectorId);
     if (!template) return draft;
-    const migratedDraft = retiredDefaultNamesBySourceId
-      .get(draft.sourceSectorId)
-      ?.includes(draft.name)
-      ? { ...draft, name: template.name }
-      : draft;
+    const retiredSource = retiredDraftSourcesBySourceId.get(draft.sourceSectorId);
+    const mustResetToCurrentTemplate = Boolean(
+      retiredSource?.names.has(draft.name)
+      || (
+        draft.sourceGeometryFingerprint
+        && retiredSource?.geometryFingerprints.has(draft.sourceGeometryFingerprint)
+      )
+      || (
+        !draft.sourceGeometryFingerprint
+        && retiredSource?.resetWhenSourceFingerprintMissing
+      ),
+    );
+    if (mustResetToCurrentTemplate) {
+      updatedSourceIds.push(draft.sourceSectorId);
+      return {
+        ...createDraftFromExistingSector(template, draft.createdAt),
+        id: draft.id,
+      };
+    }
+    const migratedDraft = draft;
     if (template.ring.length < 3
       || migratedDraft.sourceGeometryFingerprint === template.geometryFingerprint) {
       return migratedDraft;
