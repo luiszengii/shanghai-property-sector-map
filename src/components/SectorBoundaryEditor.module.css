@@ -152,9 +152,11 @@
 }
 
 .sidebarIntro > div {
+  min-width: 0;
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  flex-wrap: wrap;
+  gap: 3px 7px;
 }
 
 .sidebarIntro span {
@@ -164,7 +166,8 @@
 
 .sidebarIntro strong {
   color: #0f766e;
-  font: 700 13px var(--font-geist-mono), monospace;
+  font: 700 10px var(--font-geist-mono), monospace;
+  white-space: nowrap;
 }
 
 .newButton {
@@ -286,6 +289,11 @@
 .incompleteDot {
   background: #d6a64e;
   box-shadow: 0 0 0 3px rgba(214, 166, 78, .11);
+}
+
+.sourceDot {
+  background: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, .13);
 }
 
 .emptyList {

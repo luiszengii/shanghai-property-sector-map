@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   buildSectorDraftFeatureCollection,
+  createDraftFromExistingSector,
   createSectorDraft,
   isCompleteSectorDraft,
   normalizeAmapPolygonRing,
@@ -104,4 +105,27 @@ test("Control or Command plus/minus maps to one map zoom step", () => {
   assert.equal(mapZoomDeltaForShortcut({ key: "_", metaKey: true }), -1);
   assert.equal(mapZoomDeltaForShortcut({ key: "=", ctrlKey: false, metaKey: false }), null);
   assert.equal(mapZoomDeltaForShortcut({ key: "-", ctrlKey: true, altKey: true }), null);
+});
+
+test("an existing sector becomes an editable copy without changing its identity", () => {
+  const draft = createDraftFromExistingSector({
+    id: "sector-qiantan",
+    name: "前滩",
+    district: "浦东新区",
+    boundaryBasis: "沿主要道路与水系",
+    note: "从当前地图载入",
+    ring: [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]],
+  }, "2026-07-23T10:00:00.000Z");
+
+  assert.equal(draft.id, "sector-qiantan");
+  assert.equal(draft.sourceSectorId, "sector-qiantan");
+  assert.equal(draft.coordinateSystem, "GCJ-02");
+  assert.deepEqual(draft.ring, [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]]);
+
+  const restored = parseSectorEditorState(serializeSectorEditorState([draft]));
+  assert.equal(restored[0].sourceSectorId, "sector-qiantan");
+  assert.equal(
+    buildSectorDraftFeatureCollection(restored).features[0].properties.sourceSectorId,
+    "sector-qiantan",
+  );
 });

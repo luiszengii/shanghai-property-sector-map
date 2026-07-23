@@ -5,6 +5,7 @@ export type DraftPosition = [number, number];
 
 export interface SectorBoundaryDraft {
   id: string;
+  sourceSectorId?: string;
   name: string;
   district: string;
   boundaryBasis: string;
@@ -30,6 +31,7 @@ export interface SectorDraftFeatureCollection {
     id: string;
     properties: {
       id: string;
+      sourceSectorId?: string;
       name: string;
       district: string;
       boundaryBasis: string;
@@ -122,6 +124,33 @@ export function createSectorDraft(id: string, timestamp = new Date().toISOString
   };
 }
 
+export interface ExistingSectorDraftTemplate {
+  id: string;
+  name: string;
+  district: string;
+  boundaryBasis: string;
+  note: string;
+  ring: DraftPosition[];
+}
+
+export function createDraftFromExistingSector(
+  template: ExistingSectorDraftTemplate,
+  timestamp = new Date().toISOString(),
+): SectorBoundaryDraft {
+  return {
+    id: template.id,
+    sourceSectorId: template.id,
+    name: template.name,
+    district: template.district,
+    boundaryBasis: template.boundaryBasis,
+    note: template.note,
+    coordinateSystem: "GCJ-02",
+    ring: normalizeDraftRing(template.ring),
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
+}
+
 export function serializeSectorEditorState(drafts: SectorBoundaryDraft[]) {
   const state: StoredSectorEditorState = {
     schemaVersion: SECTOR_EDITOR_SCHEMA_VERSION,
@@ -143,6 +172,7 @@ export function parseSectorEditorState(serialized: string): SectorBoundaryDraft[
     if (!id) throw new Error(`第 ${index + 1} 个本机草稿缺少 ID`);
     return {
       id,
+      sourceSectorId: stringProperty(draft.sourceSectorId) || undefined,
       name: stringProperty(draft.name) || "未命名板块",
       district: stringProperty(draft.district),
       boundaryBasis: stringProperty(draft.boundaryBasis),
@@ -172,6 +202,7 @@ export function buildSectorDraftFeatureCollection(
       id: draft.id,
       properties: {
         id: draft.id,
+        sourceSectorId: draft.sourceSectorId,
         name: draft.name.trim(),
         district: draft.district.trim(),
         boundaryBasis: draft.boundaryBasis.trim(),
@@ -250,6 +281,7 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
 
     return {
       id,
+      sourceSectorId: stringProperty(properties.sourceSectorId) || undefined,
       name,
       district: stringProperty(properties.district),
       boundaryBasis: stringProperty(properties.boundaryBasis),

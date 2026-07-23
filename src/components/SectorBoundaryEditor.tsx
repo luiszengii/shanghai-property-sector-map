@@ -17,8 +17,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { sectorCatalog } from "@/src/data/sector-catalog";
+import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import {
   buildSectorDraftFeatureCollection,
+  createDraftFromExistingSector,
   createSectorDraft,
   formatSectorDraftFilename,
   isCompleteSectorDraft,
@@ -28,6 +31,7 @@ import {
   SECTOR_EDITOR_STORAGE_KEY,
   serializeSectorEditorState,
   type DraftPosition,
+  type ExistingSectorDraftTemplate,
   type SectorBoundaryDraft,
 } from "@/src/lib/sector-editor-drafts";
 import { mapZoomDeltaForShortcut } from "@/src/lib/map-keyboard-shortcuts";
@@ -39,6 +43,39 @@ type Notice = { tone: "neutral" | "success" | "warning"; message: string };
 interface MouseToolDrawEvent {
   obj: AMap.Polygon;
 }
+
+type SidebarSectorItem =
+  | {
+    kind: "existing";
+    template: ExistingSectorDraftTemplate;
+    draft?: SectorBoundaryDraft;
+  }
+  | {
+    kind: "custom";
+    draft: SectorBoundaryDraft;
+  };
+
+const existingSectorTemplates: ExistingSectorDraftTemplate[] = sectorCatalog.features.flatMap((feature) => {
+  const activeGeometry = sectorCatalog.resolveActiveGeometry(feature.properties.id);
+  if (!activeGeometry) return [];
+  const firstRing = activeGeometry.geometry.type === "Polygon"
+    ? activeGeometry.geometry.coordinates[0]
+    : activeGeometry.geometry.coordinates[0]?.[0];
+  if (!firstRing?.length) return [];
+  const record = sectorCatalog.getRecord(feature.properties.id);
+  return [{
+    id: feature.properties.id,
+    name: feature.properties.name,
+    district: feature.properties.district,
+    boundaryBasis: feature.properties.boundaryBasis ?? record?.definitionCandidate ?? "",
+    note: activeGeometry.kind === "official-scope-candidate"
+      ? "从当前地图的官方四至候选面载入；修改后仍需逐边核验。"
+      : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
+    ring: normalizeAmapPolygonRing(firstRing.map(([lng, lat]) => (
+      coordinateToDisplayPosition([lng, lat], activeGeometry.coordinateSystem)
+    ))),
+  }];
+});
 
 function createDraftId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -89,18 +126,39 @@ export function SectorBoundaryEditor() {
     () => drafts.find((draft) => draft.id === activeId) ?? null,
     [activeId, drafts],
   );
-  const completeCount = useMemo(
-    () => drafts.filter(isCompleteSectorDraft).length,
+  const existingDraftBySourceId = useMemo(
+    () => new Map(
+      drafts
+        .filter((draft): draft is SectorBoundaryDraft & { sourceSectorId: string } => Boolean(draft.sourceSectorId))
+        .map((draft) => [draft.sourceSectorId, draft]),
+    ),
     [drafts],
   );
-  const visibleDrafts = useMemo(() => {
+  const customDrafts = useMemo(
+    () => drafts.filter((draft) => !draft.sourceSectorId),
+    [drafts],
+  );
+  const sidebarItems = useMemo<SidebarSectorItem[]>(() => [
+    ...existingSectorTemplates.map((template) => ({
+      kind: "existing" as const,
+      template,
+      draft: existingDraftBySourceId.get(template.id),
+    })),
+    ...customDrafts.map((draft) => ({ kind: "custom" as const, draft })),
+  ], [customDrafts, existingDraftBySourceId]);
+  const visibleSidebarItems = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    if (!normalizedQuery) return drafts;
-    return drafts.filter((draft) => (
-      draft.name.toLowerCase().includes(normalizedQuery)
-      || draft.district.toLowerCase().includes(normalizedQuery)
-    ));
-  }, [drafts, query]);
+    if (!normalizedQuery) return sidebarItems;
+    return sidebarItems.filter((item) => {
+      const draft = item.kind === "existing" ? item.draft : item.draft;
+      const name = draft?.name ?? (item.kind === "existing" ? item.template.name : "");
+      const district = draft?.district ?? (item.kind === "existing" ? item.template.district : "");
+      const canonicalName = item.kind === "existing" ? item.template.name : "";
+      return name.toLowerCase().includes(normalizedQuery)
+        || district.toLowerCase().includes(normalizedQuery)
+        || canonicalName.toLowerCase().includes(normalizedQuery);
+    });
+  }, [query, sidebarItems]);
   const inactiveGeometrySignature = useMemo(
     () => drafts
       .filter((draft) => draft.id !== activeId)
@@ -133,6 +191,23 @@ export function SectorBoundaryEditor() {
     if (!map) return;
     const nextZoom = Math.max(3, Math.min(20, map.getZoom() + delta));
     map.setZoomAndCenter(nextZoom, map.getCenter(), true);
+  }, []);
+
+  const activateExistingSector = useCallback((template: ExistingSectorDraftTemplate) => {
+    const existingDraft = draftsRef.current.find((draft) => draft.sourceSectorId === template.id);
+    if (existingDraft) {
+      setActiveId(existingDraft.id);
+      setIsDrawing(false);
+      return;
+    }
+    const draft = createDraftFromExistingSector(template);
+    setDrafts((current) => [...current, draft]);
+    setActiveId(draft.id);
+    setIsDrawing(false);
+    setNotice({
+      tone: "success",
+      message: `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
+    });
   }, []);
 
   useEffect(() => {
@@ -301,13 +376,20 @@ export function SectorBoundaryEditor() {
 
   useEffect(() => {
     const map = mapRef.current;
+    const polygon = activePolygonRef.current;
+    if (status !== "ready" || !activeId || !map || !polygon) return;
+    map.setFitView([polygon], false, [90, 90, 90, 90], 16);
+  }, [activeId, status]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     const api = amapApiRef.current;
     if (status !== "ready" || !map || !api) return;
     if (referencePolygonsRef.current.length) {
       map.remove(referencePolygonsRef.current);
     }
 
-    const references = draftsRef.current
+    const editableReferences = draftsRef.current
       .filter((draft) => draft.id !== activeId && draft.ring.length >= 3)
       .map((draft) => {
         const polygon = new api.Polygon();
@@ -328,13 +410,37 @@ export function SectorBoundaryEditor() {
         });
         return polygon;
       });
+    const editableSourceIds = new Set(
+      draftsRef.current
+        .map((draft) => draft.sourceSectorId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    const sourceReferences = existingSectorTemplates
+      .filter((template) => !editableSourceIds.has(template.id))
+      .map((template) => {
+        const polygon = new api.Polygon();
+        polygon.setOptions({
+          path: template.ring,
+          strokeColor: "#64748b",
+          strokeWeight: 1.4,
+          strokeOpacity: 0.72,
+          strokeStyle: "dashed",
+          fillColor: "#94a3b8",
+          fillOpacity: 0.045,
+          cursor: "pointer",
+          zIndex: 24,
+        });
+        polygon.on("click", () => activateExistingSector(template));
+        return polygon;
+      });
+    const references = [...sourceReferences, ...editableReferences];
     if (references.length) map.add(references);
     referencePolygonsRef.current = references;
 
     return () => {
       if (references.length) map.remove(references);
     };
-  }, [activeId, inactiveGeometrySignature, status]);
+  }, [activateExistingSector, activeId, inactiveGeometrySignature, status]);
 
   const addDraft = useCallback(() => {
     const draft = createSectorDraft(createDraftId());
@@ -347,12 +453,21 @@ export function SectorBoundaryEditor() {
   const removeActiveDraft = useCallback(() => {
     const draft = draftsRef.current.find((item) => item.id === activeIdRef.current);
     if (!draft) return;
-    if (!window.confirm(`确定删除“${draft.name}”的本机草稿吗？此操作不会删除已经导出的备份。`)) return;
+    const isExistingSectorCopy = Boolean(draft.sourceSectorId);
+    const prompt = isExistingSectorCopy
+      ? `确定放弃“${draft.name}”的本机修改并恢复为原始边界吗？已导出的备份不受影响。`
+      : `确定删除“${draft.name}”的本机草稿吗？此操作不会删除已经导出的备份。`;
+    if (!window.confirm(prompt)) return;
     const remaining = draftsRef.current.filter((item) => item.id !== draft.id);
     setDrafts(remaining);
     setActiveId(remaining[0]?.id ?? null);
     setGeometryRevision((value) => value + 1);
-    setNotice({ tone: "neutral", message: "已删除本机草稿；已导出的 GeoJSON 不受影响。" });
+    setNotice({
+      tone: "neutral",
+      message: isExistingSectorCopy
+        ? "已放弃本机修改；原始板块仍在列表和地图中，可随时重新载入。"
+        : "已删除本机草稿；已导出的 GeoJSON 不受影响。",
+    });
   }, []);
 
   const startDrawing = useCallback(() => {
@@ -494,8 +609,8 @@ export function SectorBoundaryEditor() {
         <aside className={styles.sidebar}>
           <div className={styles.sidebarIntro}>
             <div>
-              <span>板块草稿</span>
-              <strong>{completeCount} / {drafts.length}</strong>
+              <span>已有板块与草稿</span>
+              <strong>{existingDraftBySourceId.size} / {existingSectorTemplates.length} 已载入 · {customDrafts.length} 自建</strong>
             </div>
             <button type="button" className={styles.newButton} onClick={addDraft}>
               <Plus size={15} />
@@ -512,32 +627,61 @@ export function SectorBoundaryEditor() {
             />
           </label>
 
-          <div className={styles.draftList} aria-label="板块草稿列表">
-            {visibleDrafts.length ? visibleDrafts.map((draft, index) => {
-              const isActive = draft.id === activeId;
-              const isComplete = isCompleteSectorDraft(draft);
+          <div className={styles.draftList} aria-label="已有板块与草稿列表">
+            {visibleSidebarItems.length ? visibleSidebarItems.map((item, index) => {
+              const draft = item.draft;
+              const isExistingSector = item.kind === "existing";
+              const template = isExistingSector ? item.template : null;
+              const itemId = template?.id ?? draft?.id ?? `item-${index}`;
+              const isActive = Boolean(draft && draft.id === activeId);
+              const isComplete = Boolean(draft && isCompleteSectorDraft(draft));
+              const displayName = draft?.name ?? template?.name ?? "未命名板块";
+              const displayDistrict = draft?.district ?? template?.district ?? "";
               return (
                 <button
-                  key={draft.id}
+                  key={`${item.kind}-${itemId}`}
                   type="button"
                   className={`${styles.draftItem} ${isActive ? styles.draftItemActive : ""}`}
                   onClick={() => {
-                    setActiveId(draft.id);
-                    setIsDrawing(false);
+                    if (template) {
+                      if (draft) {
+                        setActiveId(draft.id);
+                        setIsDrawing(false);
+                      } else {
+                        const editableDraft = createDraftFromExistingSector(template);
+                        setDrafts((current) => [...current, editableDraft]);
+                        setActiveId(editableDraft.id);
+                        setIsDrawing(false);
+                        setNotice({
+                          tone: "success",
+                          message: `已载入“${template.name}”的可编辑副本；拖动橙色节点或重画边界即可修改。`,
+                        });
+                      }
+                    } else if (draft) {
+                      setActiveId(draft.id);
+                      setIsDrawing(false);
+                    }
                   }}
                 >
                   <span>{String(index + 1).padStart(2, "0")}</span>
                   <div>
-                    <strong>{draft.name || "未命名板块"}</strong>
-                    <small>{draft.district || (isComplete ? `${draft.ring.length} 个边界点` : "待完善")}</small>
+                    <strong>{displayName}</strong>
+                    <small>
+                      {displayDistrict}
+                      {isExistingSector
+                        ? ` · ${draft ? "编辑副本" : "点击编辑"}`
+                        : isComplete ? ` · ${draft?.ring.length ?? 0} 个边界点` : " · 待完善"}
+                    </small>
                   </div>
-                  <i className={isComplete ? styles.completeDot : styles.incompleteDot} />
+                  <i className={isExistingSector && !draft
+                    ? styles.sourceDot
+                    : isComplete ? styles.completeDot : styles.incompleteDot} />
                 </button>
               );
             }) : (
               <div className={styles.emptyList}>
                 <PencilLine size={20} />
-                <span>{drafts.length ? "没有匹配的草稿" : "先新建一个板块草稿"}</span>
+                <span>没有匹配的板块或草稿</span>
               </div>
             )}
           </div>
@@ -546,10 +690,15 @@ export function SectorBoundaryEditor() {
             <div className={styles.form}>
               <div className={styles.formHeading}>
                 <div>
-                  <span>当前编辑</span>
+                  <span>{activeDraft.sourceSectorId ? "已有板块副本" : "自建板块"}</span>
                   <strong>{activeDraft.ring.length} 个点 · {formatArea(area)}</strong>
                 </div>
-                <button type="button" onClick={removeActiveDraft} aria-label="删除当前草稿" title="删除当前草稿">
+                <button
+                  type="button"
+                  onClick={removeActiveDraft}
+                  aria-label={activeDraft.sourceSectorId ? "放弃修改并恢复原始边界" : "删除当前草稿"}
+                  title={activeDraft.sourceSectorId ? "放弃修改并恢复原始边界" : "删除当前草稿"}
+                >
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -596,8 +745,8 @@ export function SectorBoundaryEditor() {
           ) : (
             <button type="button" className={styles.emptyEditor} onClick={addDraft}>
               <Plus size={22} />
-              <strong>新建第一个板块</strong>
-              <span>名称、边界依据和绘制结果都会保存在本机</span>
+              <strong>选择已有板块，或新建一个</strong>
+              <span>点击左侧已有板块即可载入可编辑副本</span>
             </button>
           )}
         </aside>
