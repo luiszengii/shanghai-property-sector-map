@@ -209,7 +209,7 @@ export function MapContainer() {
       if (project) {
         const detailMinZoom = useMapStore.getState().projectDetailMinZoom;
         map.setZoomAndCenter(
-          Math.max(13.8, detailMinZoom),
+          Math.max(map.getZoom(), detailMinZoom),
           project.position,
           false,
           650,

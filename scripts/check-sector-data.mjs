@@ -989,8 +989,23 @@ if (!yangsiPrimaryCandidate || yangsiPrimaryCandidate.properties?.name !== "杨�
 } else if (!yangsiPrimaryCandidate.properties?.excludedMarketAreas?.includes("前滩")) {
   error("sector_yangsi: 必须显式记录从原合并范围扣除前滩");
 }
-if (subscopes.some((feature) => feature.properties?.parentSectorId === "sector_qiantan")) {
+if (subscopes.some((feature) => (
+  feature.properties?.id === "subscope_qiantan_z000801"
+  || feature.properties?.scopeVersion === "Z000801-ES4"
+  || feature.properties?.name === "前滩（Z000801 / ES4）"
+))) {
   error("sector_qiantan: 前滩已升级为一级板块，不得继续登记为杨思内部子范围");
+}
+const yangsiManifest = manifestById.get("sector_yangsi");
+const yangsiReconstructionError = yangsiManifest
+  ?.osmRefs?.differenceReconstructionErrorSquareMeters;
+if (yangsiPrimaryCandidate
+  && yangsiPrimaryCandidate.properties?.topologyMaxBoundaryDisplacementMeters > 0.1) {
+  error("sector_yangsi: 严格差集候选不得再被相邻拓扑走廊扩张");
+}
+if (!Number.isFinite(yangsiReconstructionError)
+  || yangsiReconstructionError > 1) {
+  error("sector_yangsi: 原合并面减前滩的差集重建误差必须不超过 1 平方米");
 }
 const sanlinMarketCandidate = candidateById.get("sector_sanlin");
 const dongmingMarketPoint = [121.5127542, 31.1454076];
@@ -1201,7 +1216,7 @@ for (const {
   {
     firstId: "sector_qiantan",
     secondId: "sector_yangsi",
-    minimumSharedLengthMeters: 5_000,
+    minimumSharedLengthMeters: 4_900,
   },
   {
     firstId: "sector_qiantan",

@@ -305,16 +305,28 @@ def build_market_linear_component_minus_candidates(
         working_crs,
         output_crs,
     )
-    projected = project_geometry(geometry, output_crs, working_crs)
-    for sector_id in definition["subtractSectorIds"]:
+    source_projected = project_geometry(
+        geometry,
+        output_crs,
+        working_crs,
+    )
+    projected = source_projected
+    subtracted_inside_source = []
+    for sector_id in definition["sourceSubtractSectorIds"]:
         neighbor = geometry_by_id.get(sector_id)
         if neighbor is None:
             raise ValueError(
                 f"{definition['canonicalName']} 找不到待扣除板块 {sector_id}"
             )
-        projected = projected.difference(
-            project_geometry(neighbor, output_crs, working_crs)
+        neighbor_projected = project_geometry(
+            neighbor,
+            output_crs,
+            working_crs,
         )
+        subtracted_inside_source.append(
+            source_projected.intersection(neighbor_projected)
+        )
+        projected = projected.difference(neighbor_projected)
     minimum_part_area = float(
         definition.get("minimumRetainedPartSquareMeters", 0)
     )
@@ -336,7 +348,27 @@ def build_market_linear_component_minus_candidates(
         raise ValueError(
             f"{definition['canonicalName']} 扣除相邻板块后不包含市场裁定点"
         )
-    osm_refs["subtractSectorIds"] = definition["subtractSectorIds"]
+    reconstructed = normalize_polygonal(unary_union([
+        projected,
+        *subtracted_inside_source,
+    ]))
+    reconstruction_error = source_projected.symmetric_difference(
+        reconstructed
+    ).area
+    maximum_reconstruction_error = float(
+        definition.get("maximumDifferenceReconstructionErrorSquareMeters", 1)
+    )
+    if reconstruction_error > maximum_reconstruction_error:
+        raise ValueError(
+            f"{definition['canonicalName']} 差集重建误差 "
+            f"{reconstruction_error:.4f} 平方米，超过 "
+            f"{maximum_reconstruction_error:.4f} 平方米"
+        )
+    osm_refs["sourceSubtractSectorIds"] = definition["sourceSubtractSectorIds"]
+    osm_refs["differenceReconstructionErrorSquareMeters"] = round(
+        reconstruction_error,
+        6,
+    )
     output_geometry = project_geometry(projected, working_crs, output_crs)
     return output_geometry, float(projected.area), osm_refs
 
