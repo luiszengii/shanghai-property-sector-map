@@ -419,6 +419,231 @@ def build_osm_admin_candidate(gpkg: Path, definition: dict[str, Any], working_cr
     return geometry, float(projected.area), {"adminRelations": [relation_id]}
 
 
+def build_named_osm_landuse_project_proxy(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+):
+    expected_objects = {
+        str(item["osmId"]): item["expectedName"]
+        for item in definition["namedLanduseObjects"]
+    }
+    if len(expected_objects) != len(definition["namedLanduseObjects"]):
+        raise ValueError(f"{definition['canonicalName']} 同名用地对象 ID 重复")
+    if not all(osm_id.isdigit() for osm_id in expected_objects):
+        raise ValueError(f"{definition['canonicalName']} 同名用地对象 ID 必须是数字")
+    where = "osm_id IN (" + ",".join(sorted(expected_objects)) + ")"
+    frame = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_landuse_a_free",
+        where=where,
+    )
+    actual_ids = {str(value) for value in frame["osm_id"]}
+    if actual_ids != set(expected_objects):
+        raise ValueError(
+            f"{definition['canonicalName']} 同名用地对象集合漂移："
+            f"缺少 {sorted(set(expected_objects) - actual_ids)}，"
+            f"多出 {sorted(actual_ids - set(expected_objects))}"
+        )
+    for row in frame.itertuples():
+        osm_id = str(row.osm_id)
+        if row.name != expected_objects[osm_id]:
+            raise ValueError(
+                f"{definition['canonicalName']} OSM {osm_id} 名称漂移：{row.name}"
+            )
+        if row.fclass != definition["expectedLanduseClass"]:
+            raise ValueError(
+                f"{definition['canonicalName']} OSM {osm_id} 用地类型漂移："
+                f"{row.fclass}"
+            )
+
+    ordered_geometries = [
+        normalize_polygonal(
+            frame.loc[frame["osm_id"].astype(str) == osm_id].iloc[0].geometry
+        )
+        for osm_id in sorted(expected_objects)
+    ]
+    geometry = normalize_polygonal(unary_union(ordered_geometries))
+    actual_part_count = len(polygons(geometry))
+    if actual_part_count != int(definition["expectedPartCount"]):
+        raise ValueError(
+            f"{definition['canonicalName']} 应保留 "
+            f"{definition['expectedPartCount']} 个同名组成面，实际 {actual_part_count}"
+        )
+
+    projected = project_geometry(geometry, frame.crs, working_crs)
+    protected_relations = definition["protectedAdminRelations"]
+    protected_ids = {str(item["osmAdminRelationId"]) for item in protected_relations}
+    if not all(osm_id.isdigit() for osm_id in protected_ids):
+        raise ValueError(f"{definition['canonicalName']} 保护行政关系 ID 必须是数字")
+    protected_frame = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_adminareas_a_free",
+        where="osm_id IN (" + ",".join(sorted(protected_ids)) + ")",
+    )
+    actual_protected_ids = {str(value) for value in protected_frame["osm_id"]}
+    if actual_protected_ids != protected_ids:
+        raise ValueError(f"{definition['canonicalName']} 保护行政关系集合漂移")
+    expected_admin_names = {
+        str(item["osmAdminRelationId"]): item["expectedOsmName"]
+        for item in protected_relations
+    }
+    for row in protected_frame.itertuples():
+        if row.name != expected_admin_names[str(row.osm_id)]:
+            raise ValueError(
+                f"{definition['canonicalName']} 保护行政关系名称漂移：{row.name}"
+            )
+    projected_admin = project_geometry(
+        normalize_polygonal(unary_union(protected_frame.geometry)),
+        protected_frame.crs,
+        working_crs,
+    )
+    outside_area = float(projected.difference(projected_admin).area)
+    maximum_outside = float(
+        definition["maximumOutsideProtectedAdminSquareMeters"]
+    )
+    if outside_area > maximum_outside:
+        raise ValueError(
+            f"{definition['canonicalName']} 有 {outside_area:.3f} 平方米超出保护行政范围"
+        )
+
+    return geometry, float(projected.area), {
+        "namedLanduseObjects": [
+            {
+                "osmId": osm_id,
+                "name": expected_objects[osm_id],
+                "fclass": definition["expectedLanduseClass"],
+            }
+            for osm_id in sorted(expected_objects)
+        ],
+        "landusePartCount": actual_part_count,
+        "protectedAdminRelations": sorted(protected_ids),
+        "outsideProtectedAdminSquareMeters": round(outside_area, 6),
+        "convexHullUsed": False,
+    }
+
+
+def build_market_admin_union_minus_market_candidates(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+    sector_geometry_by_id: dict[str, Any],
+):
+    admin_relations = definition["osmAdminRelations"]
+    relation_names = {
+        str(item["osmAdminRelationId"]): item["expectedOsmName"]
+        for item in admin_relations
+    }
+    if len(relation_names) != len(admin_relations):
+        raise ValueError(f"{definition['canonicalName']} 行政关系 ID 重复")
+    if not all(relation_id.isdigit() for relation_id in relation_names):
+        raise ValueError(f"{definition['canonicalName']} 行政关系 ID 必须是数字")
+    frame = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_adminareas_a_free",
+        where="osm_id IN (" + ",".join(sorted(relation_names)) + ")",
+    )
+    actual_ids = {str(value) for value in frame["osm_id"]}
+    if actual_ids != set(relation_names):
+        raise ValueError(f"{definition['canonicalName']} 行政关系集合漂移")
+    for row in frame.itertuples():
+        if row.name != relation_names[str(row.osm_id)]:
+            raise ValueError(
+                f"{definition['canonicalName']} 行政关系名称漂移：{row.name}"
+            )
+
+    admin_union = normalize_polygonal(unary_union(frame.geometry))
+    projected_admin_union = project_geometry(
+        admin_union,
+        frame.crs,
+        working_crs,
+    )
+    subtract_ids = definition["subtractSectorIds"]
+    missing_ids = [
+        sector_id
+        for sector_id in subtract_ids
+        if sector_id not in sector_geometry_by_id
+    ]
+    if missing_ids:
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到需要扣除的市场候选："
+            f"{', '.join(missing_ids)}"
+        )
+    projected_subtract = unary_union([
+        project_geometry(
+            sector_geometry_by_id[sector_id],
+            output_crs,
+            working_crs,
+        )
+        for sector_id in subtract_ids
+    ])
+    subtract_outside_area = float(
+        projected_subtract.difference(projected_admin_union).area
+    )
+    maximum_subtract_outside = float(
+        definition["maximumSubtractOutsideAdminSquareMeters"]
+    )
+    if subtract_outside_area > maximum_subtract_outside:
+        raise ValueError(
+            f"{definition['canonicalName']} 被扣市场有 "
+            f"{subtract_outside_area:.3f} 平方米超出行政并集"
+        )
+
+    projected_difference = normalize_polygonal(
+        projected_admin_union.difference(projected_subtract)
+    )
+    inside_point = project_geometry(
+        Point(*definition["insidePoint"]),
+        output_crs,
+        working_crs,
+    )
+    if not projected_difference.contains(inside_point):
+        raise ValueError(f"{definition['canonicalName']} 差集不包含市场裁定点")
+    reconstructed = projected_difference.union(
+        projected_subtract.intersection(projected_admin_union)
+    )
+    reconstruction_error = float(
+        reconstructed.symmetric_difference(projected_admin_union).area
+    )
+    maximum_reconstruction_error = float(
+        definition["maximumDifferenceReconstructionErrorSquareMeters"]
+    )
+    if reconstruction_error > maximum_reconstruction_error:
+        raise ValueError(
+            f"{definition['canonicalName']} 差集重建误差 "
+            f"{reconstruction_error:.6f} 平方米超标"
+        )
+    geometry = normalize_polygonal(
+        project_geometry(projected_difference, working_crs, output_crs)
+    )
+    shared_boundary_length = float(
+        projected_difference.boundary.intersection(
+            projected_subtract.boundary
+        ).length
+    )
+    return geometry, float(projected_difference.area), {
+        "adminRelations": [
+            {
+                "osmId": relation_id,
+                "name": relation_names[relation_id],
+            }
+            for relation_id in sorted(relation_names)
+        ],
+        "subtractedSectorIds": subtract_ids,
+        "subtractOutsideAdminSquareMeters": round(subtract_outside_area, 6),
+        "differenceReconstructionErrorSquareMeters": round(
+            reconstruction_error,
+            6,
+        ),
+        "sharedBoundaryWithSubtractedCandidatesMeters": round(
+            shared_boundary_length,
+            3,
+        ),
+    }
+
+
 def build_market_admin_outer_shell(
     gpkg: Path,
     definition: dict[str, Any],
@@ -1319,6 +1544,11 @@ def build_feature(
                 ),
             } if "fullAdminRelationRejected" in definition else {}),
             **({
+                "fullAdminUnionRejected": bool(
+                    definition["fullAdminUnionRejected"]
+                ),
+            } if "fullAdminUnionRejected" in definition else {}),
+            **({
                 "adminAreaVersionMismatch": bool(
                     definition["adminAreaVersionMismatch"]
                 ),
@@ -1345,6 +1575,15 @@ def build_feature(
             **({
                 "excludedMarketAreas": definition["excludedMarketAreas"],
             } if definition.get("excludedMarketAreas") else {}),
+            **({
+                "projectProxyName": definition["projectProxyName"],
+            } if definition.get("projectProxyName") else {}),
+            **({
+                "projectLanduseOsmIds": [
+                    str(value)
+                    for value in definition["projectLanduseOsmIds"]
+                ],
+            } if definition.get("projectLanduseOsmIds") else {}),
             **({
                 "historicalReferenceAreaSquareKilometers": float(
                     definition["historicalReferenceAreaSquareKilometers"]
@@ -1466,6 +1705,23 @@ def main() -> None:
                 args.gpkg,
                 definition,
                 definitions["workingCrs"],
+            )
+        elif definition["method"] == "named_osm_landuse_project_proxy":
+            geometry, area, osm_refs = build_named_osm_landuse_project_proxy(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+            )
+        elif definition["method"] == "market_admin_union_minus_market_candidates":
+            geometry, area, osm_refs = (
+                build_market_admin_union_minus_market_candidates(
+                    args.gpkg,
+                    definition,
+                    definitions["workingCrs"],
+                    definitions["outputCrs"],
+                    topology_geometry_by_id,
+                )
             )
         elif definition["method"] == "market_admin_outer_shell_minus_market_candidates":
             geometry, area, osm_refs = build_market_admin_outer_shell(

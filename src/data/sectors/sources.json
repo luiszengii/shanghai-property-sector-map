@@ -851,6 +851,61 @@
       "note": "用于核对瑞金二路、半淞园路、小东门、外滩等市场身份及黄浦板块拆分口径；只引用名称关系，不复制文章表达、清单或任何边界。"
     },
     {
+      "id": "official-putuo-zhongyuan-liangwancheng-committees-2008",
+      "title": "关于新建中远两湾城第三、第四居委会并调整第一、第二居委会区域的批复",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/zhengwu/2008-4-rmzfgb/2024/104/87546.html",
+      "sourceType": "official_resident_committee_scope",
+      "publishedAt": "2008-12-09",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "普府〔2008〕96号逐一列出中远两湾城四个居委的中潭路、远景路弄号与楼组范围；用于确认独立项目身份和成员地址，不据此把地址凸包当成政府 GIS 边界。"
+    },
+    {
+      "id": "official-putuo-yichuan-committee-scopes-2026",
+      "title": "宜川路街道居委会设置",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/zhengwu/xsdw-ycljdjgxx/2024/107/175492.html",
+      "sourceType": "official_resident_committee_scope",
+      "publishedAt": "2026-03-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "现行页面继续列出中远两湾城第一至第四居民区及对应中潭路、远景路范围；用于复核 2008 年成员身份仍存在，不提供可直接导入的多边形坐标。"
+    },
+    {
+      "id": "official-putuo-yichuan-subdistrict-profile-2026",
+      "title": "宜川路街道办事处概况",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/zhengwu/jgjj-ycljdjgxx/2024/107/175493.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2026-03-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出宜川路街道四至、2.22平方千米面积，并明确南部新城区包含中远两湾城；用于行政包络、包含关系和过宽风险核验，不把行政面替代楼市边界。"
+    },
+    {
+      "id": "official-putuo-ganquan-subdistrict-scope-2019",
+      "title": "甘泉路街道防汛防台预案",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/zhengwu/sqgl-gqljdzdgz/2024/106/169461.html",
+      "sourceType": "official_subdistrict_scope",
+      "publishedAt": "2019-10-10",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方预案给出甘泉路街道东沪太路、南延长西路与交通路、西岚皋路与灵石路、北沪太路灵石路口及2.34平方千米面积；仅用于行政最大包络与面积量级复核。"
+    },
+    {
+      "id": "official-putuo-ganquan-subdistrict-profile-2025",
+      "title": "甘泉路街道概况",
+      "publisher": "上海市普陀区人民政府",
+      "url": "https://www.shpt.gov.cn/zhengwu/jgjj-gqljdjgxx/2024/107/175654.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025-03-12",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "现行官方页面确认甘泉路街道面积2.36平方千米、20个居委及典型老式居住型社区属性；用于身份和面积量级复核，不替代市场边界。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",

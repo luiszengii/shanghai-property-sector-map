@@ -3270,6 +3270,75 @@
         ],
         "snapDependencySectorIds": []
       }
+    },
+    {
+      "id": "sector_zhongyuanliangwancheng",
+      "scopeVersion": "named-osm-residential-landuse-project-proxy-2026-07",
+      "method": "named_osm_landuse_project_proxy",
+      "osmRefs": {
+        "namedLanduseObjects": [
+          {
+            "osmId": "1101637576",
+            "name": "中远两湾城",
+            "fclass": "residential"
+          },
+          {
+            "osmId": "430671374",
+            "name": "中远两湾城",
+            "fclass": "residential"
+          },
+          {
+            "osmId": "430673771",
+            "name": "中远两湾城西区",
+            "fclass": "residential"
+          },
+          {
+            "osmId": "430673775",
+            "name": "中远两湾城西区",
+            "fclass": "residential"
+          },
+          {
+            "osmId": "432976922",
+            "name": "中远两湾城西区",
+            "fclass": "residential"
+          }
+        ],
+        "landusePartCount": 5,
+        "protectedAdminRelations": [
+          "14187868"
+        ],
+        "outsideProtectedAdminSquareMeters": 0.0,
+        "convexHullUsed": false,
+        "sharedEdgeSectorIds": [
+          "sector_ganquanyichuan"
+        ]
+      }
+    },
+    {
+      "id": "sector_ganquanyichuan",
+      "scopeVersion": "ganquan-yichuan-admin-union-minus-liangwancheng-2026-07",
+      "method": "market_admin_union_minus_market_candidates",
+      "osmRefs": {
+        "adminRelations": [
+          {
+            "osmId": "14187868",
+            "name": "宜川路街道"
+          },
+          {
+            "osmId": "14187870",
+            "name": "甘泉路街道"
+          }
+        ],
+        "subtractedSectorIds": [
+          "sector_zhongyuanliangwancheng"
+        ],
+        "subtractOutsideAdminSquareMeters": 0.0,
+        "differenceReconstructionErrorSquareMeters": 0.0,
+        "sharedBoundaryWithSubtractedCandidatesMeters": 5419.411,
+        "sharedEdgeSectorIds": [
+          "sector_zhongyuanliangwancheng"
+        ]
+      }
     }
   ],
   "subscopes": []

@@ -14,6 +14,7 @@ interface EditorSectorRecord {
   districtNames: string[];
   definitionCandidate: string;
   riskFlags?: string[];
+  linkedTopologySectorIds?: string[];
 }
 
 interface EditorActiveGeometry {
@@ -145,6 +146,7 @@ export function buildSectorEditorTemplates(
         : baseNote,
       geometryStatus,
       geometryFingerprint,
+      linkedTopologySectorIds: record.linkedTopologySectorIds,
       previousGeometryFingerprints: [...new Set(previousGeometryFingerprints)],
       ring,
       holes,

@@ -6,6 +6,7 @@ import {
   createSectorDraft,
   draftHoles,
   draftParts,
+  findDirtyLinkedTopologyGroups,
   fingerprintDraftParts,
   fingerprintDraftRing,
   isCompleteSectorDraft,
@@ -239,6 +240,83 @@ test("an existing sector becomes an editable copy without changing its identity"
   assert.equal(
     buildSectorDraftFeatureCollection(restored).features[0].properties.sourceSectorId,
     "sector-qiantan",
+  );
+});
+
+test("linked difference sectors require explicit topology review after either draft changes", () => {
+  const outerRing = [
+    [121.4, 31.2],
+    [121.5, 31.2],
+    [121.5, 31.3],
+  ] as [number, number][];
+  const liangwancheng = createDraftFromExistingSector({
+    id: "sector_zhongyuanliangwancheng",
+    name: "中远两湾城",
+    district: "普陀区",
+    boundaryBasis: "五个项目用地面",
+    note: "",
+    geometryStatus: "candidate",
+    geometryFingerprint: fingerprintDraftParts([outerRing]),
+    linkedTopologySectorIds: ["sector_ganquanyichuan"],
+    ring: outerRing,
+  });
+  const ganquanYichuan = createDraftFromExistingSector({
+    id: "sector_ganquanyichuan",
+    name: "甘泉宜川",
+    district: "普陀区",
+    boundaryBasis: "行政并集差集",
+    note: "",
+    geometryStatus: "candidate",
+    geometryFingerprint: fingerprintDraftParts([outerRing]),
+    linkedTopologySectorIds: ["sector_zhongyuanliangwancheng"],
+    ring: outerRing,
+  });
+
+  assert.deepEqual(
+    findDirtyLinkedTopologyGroups([liangwancheng, ganquanYichuan]),
+    [],
+  );
+
+  liangwancheng.ring = [...liangwancheng.ring, [121.4, 31.3]];
+  assert.deepEqual(
+    findDirtyLinkedTopologyGroups([liangwancheng, ganquanYichuan]),
+    [{
+      sectorIds: ["sector_ganquanyichuan", "sector_zhongyuanliangwancheng"],
+      dirtySectorIds: ["sector_zhongyuanliangwancheng"],
+    }],
+  );
+});
+
+test("an existing local copy receives newly added linked-topology metadata", () => {
+  const ring = [
+    [121.4, 31.2],
+    [121.5, 31.2],
+    [121.5, 31.3],
+  ] as [number, number][];
+  const template = {
+    id: "sector_zhongyuanliangwancheng",
+    name: "中远两湾城",
+    district: "普陀区",
+    boundaryBasis: "五个项目用地面",
+    note: "",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: fingerprintDraftParts([ring]),
+    linkedTopologySectorIds: ["sector_ganquanyichuan"],
+    ring,
+  };
+  const legacyLocalDraft = {
+    ...createDraftFromExistingSector(template),
+    linkedTopologySectorIds: undefined,
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates(
+    [legacyLocalDraft],
+    [template],
+  );
+
+  assert.deepEqual(
+    synced.drafts[0].linkedTopologySectorIds,
+    ["sector_ganquanyichuan"],
   );
 });
 

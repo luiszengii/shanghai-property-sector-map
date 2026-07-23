@@ -409,12 +409,122 @@ test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbone
   for (const forbiddenName of [
     "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
     "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
-    "武宁", "真光", "光新", "甘泉宜川", "中远两湾城",
+    "武宁", "真光", "光新",
   ]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
     ));
   }
+});
+
+test("the Putuo pair preserves five Liangwancheng parts and five Ganquan Yichuan holes", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const evidenceData = JSON.parse(readFileSync(
+    new URL("../data/sectors/boundary-evidence.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.deepEqual(batchIds, [
+    "sector_zhongyuanliangwancheng",
+    "sector_ganquanyichuan",
+  ]);
+  assert.equal(records.length, 2);
+  assert.ok(records.every((record: {
+    reviewStatus: string;
+    geometry: { confidence: string; publicationPolicy: string };
+  }) => (
+    record.reviewStatus === "draft-low"
+      && record.geometry.confidence === "low"
+      && record.geometry.publicationPolicy === "internal_review"
+  )));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+  const liangwancheng = templates.find(
+    (template) => template.id === "sector_zhongyuanliangwancheng",
+  );
+  const ganquanYichuan = templates.find(
+    (template) => template.id === "sector_ganquanyichuan",
+  );
+
+  assert.equal(liangwancheng?.geometryStatus, "candidate");
+  assert.equal(liangwancheng?.additionalRings?.length, 4);
+  assert.deepEqual(
+    liangwancheng?.linkedTopologySectorIds,
+    ["sector_ganquanyichuan"],
+  );
+  assert.equal(ganquanYichuan?.geometryStatus, "candidate");
+  assert.equal(ganquanYichuan?.holes?.length, 5);
+  assert.deepEqual(
+    ganquanYichuan?.linkedTopologySectorIds,
+    ["sector_zhongyuanliangwancheng"],
+  );
+  assert.match(
+    ganquanYichuan?.note ?? "",
+    /行政并集差集.*光新接口/,
+  );
+  assert.ok(batch.sectors.find(
+    (definition: { id: string }) => definition.id === "sector_ganquanyichuan",
+  )?.riskFlags.includes("guangxin_interface_unresolved"));
+  const pairEvidence = evidenceData.edges.filter(
+    (edge: { sectorId: string }) => batchIdSet.has(edge.sectorId),
+  );
+  assert.equal(pairEvidence.filter(
+    (edge: { sectorId: string; side: string }) => (
+      edge.sectorId === "sector_zhongyuanliangwancheng"
+        && edge.side === "component"
+    ),
+  ).length, 5);
+  assert.equal(pairEvidence.filter(
+    (edge: { sectorId: string; side: string }) => (
+      edge.sectorId === "sector_ganquanyichuan"
+        && edge.side === "component"
+    ),
+  ).length, 2);
+  assert.equal(pairEvidence.filter(
+    (edge: { sectorId: string; side: string }) => (
+      edge.sectorId === "sector_ganquanyichuan"
+        && edge.side === "shared_hole"
+    ),
+  ).length, 5);
 });
 
 test("the Hongkou Yangpu direct batch exposes seven editable low-confidence backbones without inventing adjacent markets", () => {

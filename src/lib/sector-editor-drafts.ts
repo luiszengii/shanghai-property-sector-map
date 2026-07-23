@@ -7,6 +7,7 @@ export interface SectorBoundaryDraft {
   id: string;
   sourceSectorId?: string;
   sourceGeometryFingerprint?: string;
+  linkedTopologySectorIds?: string[];
   archived?: boolean;
   referenceOnly?: boolean;
   name: string;
@@ -39,6 +40,7 @@ export interface SectorDraftFeatureCollection {
       id: string;
       sourceSectorId?: string;
       sourceGeometryFingerprint?: string;
+      linkedTopologySectorIds?: string[];
       name: string;
       district: string;
       boundaryBasis: string;
@@ -281,6 +283,7 @@ export interface ExistingSectorDraftTemplate {
   note: string;
   geometryStatus: "missing" | "demo" | "candidate";
   geometryFingerprint: string;
+  linkedTopologySectorIds?: string[];
   previousGeometryFingerprints?: string[];
   ring: DraftPosition[];
   holes?: DraftPosition[][];
@@ -296,6 +299,7 @@ export function createDraftFromExistingSector(
     id: template.id,
     sourceSectorId: template.id,
     sourceGeometryFingerprint: template.geometryFingerprint,
+    linkedTopologySectorIds: template.linkedTopologySectorIds,
     name: template.name,
     district: template.district,
     boundaryBasis: template.boundaryBasis,
@@ -333,6 +337,7 @@ export function parseSectorEditorState(serialized: string): SectorBoundaryDraft[
       id,
       sourceSectorId: stringProperty(draft.sourceSectorId) || undefined,
       sourceGeometryFingerprint: stringProperty(draft.sourceGeometryFingerprint) || undefined,
+      linkedTopologySectorIds: stringArrayProperty(draft.linkedTopologySectorIds),
       archived: draft.archived === true,
       referenceOnly: draft.referenceOnly === true,
       name: stringProperty(draft.name) || "未命名板块",
@@ -381,6 +386,7 @@ export function buildSectorDraftFeatureCollection(
           id: draft.id,
           sourceSectorId: draft.sourceSectorId,
           sourceGeometryFingerprint: draft.sourceGeometryFingerprint,
+          linkedTopologySectorIds: draft.linkedTopologySectorIds,
           name: draft.name.trim(),
           district: draft.district.trim(),
           boundaryBasis: draft.boundaryBasis.trim(),
@@ -425,6 +431,12 @@ export function buildSectorDraftFeatureCollection(
 
 function stringProperty(value: unknown) {
   return typeof value === "string" ? value : "";
+}
+
+function stringArrayProperty(value: unknown) {
+  if (!Array.isArray(value)) return undefined;
+  const values = value.filter((item): item is string => typeof item === "string");
+  return values.length ? values : undefined;
 }
 
 function assertRecord(value: unknown, message: string): asserts value is Record<string, unknown> {
@@ -487,6 +499,7 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
       id,
       sourceSectorId: stringProperty(properties.sourceSectorId) || undefined,
       sourceGeometryFingerprint: stringProperty(properties.sourceGeometryFingerprint) || undefined,
+      linkedTopologySectorIds: stringArrayProperty(properties.linkedTopologySectorIds),
       name,
       district: stringProperty(properties.district),
       boundaryBasis: stringProperty(properties.boundaryBasis),
@@ -555,7 +568,10 @@ export function syncUntouchedDraftsToCurrentTemplates(
       archivedDraftIds.push(archivedDraft.id);
       return [currentDraft, archivedDraft];
     }
-    const migratedDraft = draft;
+    const migratedDraft = {
+      ...draft,
+      linkedTopologySectorIds: template.linkedTopologySectorIds,
+    };
     if (template.ring.length < 3
       || migratedDraft.sourceGeometryFingerprint === template.geometryFingerprint) {
       return [migratedDraft];
@@ -616,6 +632,43 @@ export function fingerprintDraftParts(parts: DraftPosition[][]) {
   }
   const pointCount = normalized.reduce((total, ring) => total + ring.length, 0);
   return `parts-${normalized.length}-${pointCount}-${(hash >>> 0).toString(16)}`;
+}
+
+export interface DirtyLinkedTopologyGroup {
+  sectorIds: string[];
+  dirtySectorIds: string[];
+}
+
+export function findDirtyLinkedTopologyGroups(
+  drafts: SectorBoundaryDraft[],
+): DirtyLinkedTopologyGroup[] {
+  const sourceDraftById = new Map(
+    drafts
+      .filter((draft) => !draft.archived && !draft.referenceOnly && draft.sourceSectorId)
+      .map((draft) => [draft.sourceSectorId!, draft]),
+  );
+  const seenGroups = new Set<string>();
+  const dirtyGroups: DirtyLinkedTopologyGroup[] = [];
+
+  for (const draft of sourceDraftById.values()) {
+    const sectorIds = [
+      draft.sourceSectorId!,
+      ...(draft.linkedTopologySectorIds ?? []),
+    ].sort();
+    if (sectorIds.length < 2) continue;
+    const groupKey = sectorIds.join("|");
+    if (seenGroups.has(groupKey)) continue;
+    seenGroups.add(groupKey);
+    const dirtySectorIds = sectorIds.filter((sectorId) => {
+      const member = sourceDraftById.get(sectorId);
+      if (!member) return false;
+      return fingerprintDraftParts(draftFingerprintRings(member))
+        !== member.sourceGeometryFingerprint;
+    });
+    if (dirtySectorIds.length) dirtyGroups.push({ sectorIds, dirtySectorIds });
+  }
+
+  return dirtyGroups;
 }
 
 export function formatSectorDraftFilename(date = new Date()) {

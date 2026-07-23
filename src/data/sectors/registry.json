@@ -3580,5 +3580,130 @@
         "note": "约 4.6819 平方公里候选取固定殷行街道 relation 内军工路以西住宅连续区；军工路以东企事业单位集聚区已排除，西侧内部仍需按完整小区与卖方项目归属精修。"
       }
     }
-  ]
+  ,
+    {
+      "id": "sector_zhongyuanliangwancheng",
+      "canonicalName": "中远两湾城",
+      "aliases": [
+        "两湾城",
+        "中远两湾"
+      ],
+      "riskFlags": [
+        "named_project_landuse_proxy_requires_validation",
+        "multi_part_project_scope",
+        "official_polygon_unavailable"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_scope_candidate",
+      "definitionCandidate": "中远两湾城作为独立卖方市场身份，候选严格并集固定 OSM 快照中 5 个名称为“中远两湾城”或“中远两湾城西区”的 residential 用地对象；不使用凸包、不填平对象间道路或空隙，并以官方四个中远两湾城居委地址范围核对成员身份。该面是低置信项目用地代理，不是政府发布的 GIS 边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-zhongyuan-liangwancheng-committees-2008",
+        "official-putuo-yichuan-committee-scopes-2026"
+      ],
+      "projectProxyName": "中远两湾城同名住宅用地",
+      "projectLanduseOsmIds": [
+        "430671374",
+        "430673771",
+        "430673775",
+        "432976922",
+        "1101637576"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_ganquanyichuan"
+      ],
+      "boundaryEvidenceIds": [
+        "zhongyuanliangwancheng-landuse-430671374",
+        "zhongyuanliangwancheng-landuse-430673771",
+        "zhongyuanliangwancheng-landuse-430673775",
+        "zhongyuanliangwancheng-landuse-432976922",
+        "zhongyuanliangwancheng-landuse-1101637576"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "named-osm-residential-landuse-project-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-putuo-yichuan-subdistrict-profile-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "约 0.3674 平方公里候选保留 5 个同名住宅用地组成面及其真实间隙；官方居委范围确认项目身份和主要门牌，但没有发布 GIS 面，因此仍需按完整小区、道路和苏州河岸线人工精修。"
+      }
+    },
+    {
+      "id": "sector_ganquanyichuan",
+      "canonicalName": "甘泉宜川",
+      "aliases": [
+        "甘泉",
+        "宜川"
+      ],
+      "riskFlags": [
+        "admin_union_remainder_requires_validation",
+        "independent_market_subtracted",
+        "mixed_non_residential_scope",
+        "guangxin_interface_unresolved",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "普陀区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "admin_proxy_candidate",
+      "definitionCandidate": "甘泉宜川只以固定 OSM 甘泉路街道与宜川路街道行政并集作为最大研究包络，并严格扣除已单列的中远两湾城 5 面候选。该差集不是官方或卖方发布的完整市场边界；光新、万里、长寿路和彭浦接口以及铁路、产业等非住宅范围仍需项目级核验。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-ganquan-subdistrict-scope-2019",
+        "official-putuo-ganquan-subdistrict-profile-2025",
+        "official-putuo-yichuan-subdistrict-profile-2026"
+      ],
+      "fullAdminUnionRejected": true,
+      "excludedMarketAreas": [
+        "中远两湾城"
+      ],
+      "sharedEdgeReview": [
+        "光新",
+        "万里",
+        "长寿路",
+        "彭浦新村"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_zhongyuanliangwancheng"
+      ],
+      "boundaryEvidenceIds": [
+        "ganquanyichuan-admin-14187868",
+        "ganquanyichuan-admin-14187870",
+        "ganquanyichuan-shared-hole-430671374",
+        "ganquanyichuan-shared-hole-430673771",
+        "ganquanyichuan-shared-hole-430673775",
+        "ganquanyichuan-shared-hole-432976922",
+        "ganquanyichuan-shared-hole-1101637576"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "ganquan-yichuan-admin-union-minus-liangwancheng-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "约 4.2060 平方公里候选是甘泉路、宜川路行政并集扣除中远两湾城后的低置信剩余面；它解决了已知独立市场重叠，但不等于完成光新接口或全部住宅市场归属。"
+      }
+    }]
 }

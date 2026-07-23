@@ -359,6 +359,35 @@ function sharedBoundaryLengthMeters(firstGeometry, secondGeometry, options = {})
   return total;
 }
 
+function sharedBoundaryLengthMetersIncludingHoles(
+  firstGeometry,
+  secondGeometry,
+  options = {},
+) {
+  const allProjectedRings = (geometry) => polygonGroupsForGeometry(geometry)
+    .flatMap((polygon) => polygon)
+    .map((ring) => ring.map(projectWgs84ToComparisonPlane));
+  const firstRings = allProjectedRings(firstGeometry);
+  const secondRings = allProjectedRings(secondGeometry);
+  let total = 0;
+  for (const firstRing of firstRings) {
+    for (const secondRing of secondRings) {
+      for (let first = 0; first < firstRing.length - 1; first += 1) {
+        for (let second = 0; second < secondRing.length - 1; second += 1) {
+          total += segmentSharedLengthMeters(
+            firstRing[first],
+            firstRing[first + 1],
+            secondRing[second],
+            secondRing[second + 1],
+            options,
+          );
+        }
+      }
+    }
+  }
+  return total;
+}
+
 function exactSharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
   const segmentMap = (geometry) => {
     const segments = new Map();
@@ -980,6 +1009,7 @@ const candidateDefinitionById = new Map(
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
+const allowedBoundarySides = [...requiredBoundarySides, "component", "shared_hole"];
 const knownDefinitionStatuses = new Set([
   "official_scope_available",
   "market_scope_candidate",
@@ -1031,6 +1061,7 @@ const knownBoundaryBasisTypes = new Set([
   "official_function_divide_osm_road_cut",
   "project_integrity_market_candidate",
   "user_decided_market_shared_edge",
+  "named_osm_landuse_market_proxy",
 ]);
 const candidateGeometryStatuses = new Set(["draft", "reviewed", "published"]);
 const knownGeometryStatuses = ["missing", "demo", "admin-reference", ...candidateGeometryStatuses];
@@ -1043,7 +1074,7 @@ for (const source of sources) {
 }
 
 for (const edge of edges) {
-  if (!requiredBoundarySides.includes(edge.side)) {
+  if (!allowedBoundarySides.includes(edge.side)) {
     error(`${edge.id}: 未知 boundary side ${edge.side}`);
   }
   if (!knownBoundaryStatuses.has(edge.status)) {
@@ -1143,7 +1174,10 @@ for (const feature of features) {
   const recordEdges = record.boundaryEvidenceIds
     .map((boundaryEvidenceId) => edgeById.get(boundaryEvidenceId))
     .filter(Boolean);
-  if (record.geometry.status !== "missing") {
+  const usesComponentEvidence = recordEdges.some(
+    (edge) => edge.side === "component" || edge.side === "shared_hole",
+  );
+  if (record.geometry.status !== "missing" && !usesComponentEvidence) {
     for (const side of requiredBoundarySides) {
       const sideCount = recordEdges.filter((edge) => edge.side === side).length;
       if (sideCount !== 1) error(`${id}: ${side} 边界证据应且仅应有 1 条，实际 ${sideCount} 条`);
@@ -1713,13 +1747,160 @@ for (const definition of jinganPutuoElevenDefinitions) {
 for (const forbiddenName of [
   "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
   "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
-  "武宁", "真光", "光新", "甘泉宜川", "中远两湾城",
+  "武宁", "真光", "光新",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
     error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
   }
+}
+const liangwanchengDefinition = candidateDefinitionById.get(
+  "sector_zhongyuanliangwancheng",
+);
+const liangwanchengCandidate = candidateById.get(
+  "sector_zhongyuanliangwancheng",
+);
+const liangwanchengRegistry = registryById.get(
+  "sector_zhongyuanliangwancheng",
+);
+const liangwanchengManifest = manifestById.get(
+  "sector_zhongyuanliangwancheng",
+);
+const ganquanYichuanDefinition = candidateDefinitionById.get(
+  "sector_ganquanyichuan",
+);
+const ganquanYichuanCandidate = candidateById.get("sector_ganquanyichuan");
+const ganquanYichuanRegistry = registryById.get("sector_ganquanyichuan");
+const ganquanYichuanManifest = manifestById.get("sector_ganquanyichuan");
+const ganquanYichuanReconstructionError = Number(
+  ganquanYichuanManifest?.osmRefs?.differenceReconstructionErrorSquareMeters,
+);
+const ganquanYichuanSubtractOutside = Number(
+  ganquanYichuanManifest?.osmRefs?.subtractOutsideAdminSquareMeters,
+);
+const ganquanYichuanSharedBoundary = Number(
+  ganquanYichuanManifest?.osmRefs
+    ?.sharedBoundaryWithSubtractedCandidatesMeters,
+);
+const expectedLiangwanchengLanduseIds = [
+  "430671374",
+  "430673771",
+  "430673775",
+  "432976922",
+  "1101637576",
+];
+if (liangwanchengDefinition?.method !== "named_osm_landuse_project_proxy"
+  || liangwanchengCandidate?.geometry?.type !== "MultiPolygon"
+  || polygonGroupsForGeometry(liangwanchengCandidate.geometry).length !== 5
+  || liangwanchengCandidate?.properties?.areaSquareKilometers !== 0.3674
+  || normalizedStringSet(liangwanchengDefinition?.riskFlags ?? [])
+    !== normalizedStringSet([
+      "named_project_landuse_proxy_requires_validation",
+      "multi_part_project_scope",
+      "official_polygon_unavailable",
+    ])
+  || normalizedStringSet(liangwanchengRegistry?.riskFlags ?? [])
+    !== normalizedStringSet(liangwanchengDefinition?.riskFlags ?? [])
+  || liangwanchengRegistry?.reviewStatus !== "draft-low"
+  || liangwanchengRegistry?.geometry?.confidence !== "low"
+  || liangwanchengRegistry?.geometry?.publicationPolicy !== "internal_review") {
+  error("sector_zhongyuanliangwancheng: 必须保持 5 面同名住宅用地、低置信内部候选");
+}
+if (normalizedStringSet(liangwanchengDefinition?.projectLanduseOsmIds ?? [])
+    !== normalizedStringSet(expectedLiangwanchengLanduseIds)
+  || normalizedStringSet(
+    (liangwanchengManifest?.osmRefs?.namedLanduseObjects ?? [])
+      .map(({ osmId }) => osmId),
+  ) !== normalizedStringSet(expectedLiangwanchengLanduseIds)
+  || liangwanchengManifest?.osmRefs?.landusePartCount !== 5
+  || liangwanchengManifest?.osmRefs?.outsideProtectedAdminSquareMeters !== 0
+  || liangwanchengManifest?.osmRefs?.convexHullUsed !== false) {
+  error("sector_zhongyuanliangwancheng: 必须锁定 5 个用地 ID、禁用凸包并完全位于宜川路街道内");
+}
+if (ganquanYichuanDefinition?.method
+    !== "market_admin_union_minus_market_candidates"
+  || ganquanYichuanCandidate?.geometry?.type !== "Polygon"
+  || polygonGroupsForGeometry(ganquanYichuanCandidate.geometry).length !== 1
+  || polygonGroupsForGeometry(ganquanYichuanCandidate.geometry)[0]?.length !== 6
+  || ganquanYichuanCandidate?.properties?.areaSquareKilometers !== 4.206
+  || ganquanYichuanCandidate?.properties?.fullAdminUnionRejected !== true
+  || !ganquanYichuanCandidate?.properties?.excludedMarketAreas?.includes(
+    "中远两湾城",
+  )
+  || normalizedStringSet(ganquanYichuanDefinition?.riskFlags ?? [])
+    !== normalizedStringSet([
+      "admin_union_remainder_requires_validation",
+      "independent_market_subtracted",
+      "mixed_non_residential_scope",
+      "guangxin_interface_unresolved",
+      "market_boundary_not_official",
+    ])
+  || normalizedStringSet(ganquanYichuanRegistry?.riskFlags ?? [])
+    !== normalizedStringSet(ganquanYichuanDefinition?.riskFlags ?? [])
+  || ganquanYichuanRegistry?.reviewStatus !== "draft-low"
+  || ganquanYichuanRegistry?.geometry?.confidence !== "low"
+  || ganquanYichuanRegistry?.geometry?.publicationPolicy !== "internal_review") {
+  error("sector_ganquanyichuan: 必须保持两街道行政余量、5 洞、低置信内部候选");
+}
+if (normalizedStringSet(
+  (ganquanYichuanManifest?.osmRefs?.adminRelations ?? [])
+    .map(({ osmId }) => osmId),
+) !== normalizedStringSet(["14187868", "14187870"])
+  || normalizedStringSet(
+    ganquanYichuanManifest?.osmRefs?.subtractedSectorIds ?? [],
+  ) !== normalizedStringSet(["sector_zhongyuanliangwancheng"])
+  || !Number.isFinite(ganquanYichuanReconstructionError)
+  || ganquanYichuanReconstructionError > 1
+  || !Number.isFinite(ganquanYichuanSubtractOutside)
+  || ganquanYichuanSubtractOutside > 0.01
+  || !Number.isFinite(ganquanYichuanSharedBoundary)
+  || ganquanYichuanSharedBoundary < 5000) {
+  error("sector_ganquanyichuan: 行政并集差集必须守恒并与中远两湾城保持完整共享边");
+}
+if (sharedBoundaryLengthMetersIncludingHoles(
+    liangwanchengCandidate?.geometry,
+    ganquanYichuanCandidate?.geometry,
+    { distanceToleranceMeters: 0.01 },
+  ) < 5000) {
+  error("中远两湾城 / 甘泉宜川: 必须保持完全相同的 5 面差集共享边");
+}
+if (!ganquanYichuanDefinition?.riskFlags?.includes(
+  "guangxin_interface_unresolved",
+)) {
+  error("sector_ganquanyichuan: 必须显式保留光新接口未决风险");
+}
+const liangwanchengEvidence = (liangwanchengRegistry?.boundaryEvidenceIds ?? [])
+  .map((edgeId) => edgeById.get(edgeId))
+  .filter(Boolean);
+const ganquanYichuanEvidence = (ganquanYichuanRegistry?.boundaryEvidenceIds ?? [])
+  .map((edgeId) => edgeById.get(edgeId))
+  .filter(Boolean);
+if (liangwanchengEvidence.length !== 5
+  || liangwanchengEvidence.some(
+    (edge) => edge.side !== "component"
+      || edge.basisType !== "named_osm_landuse_market_proxy"
+      || edge.osmRefs?.length !== 1,
+  )
+  || normalizedStringSet(liangwanchengEvidence.flatMap(
+    (edge) => edge.osmRefs ?? [],
+  )) !== normalizedStringSet(expectedLiangwanchengLanduseIds)) {
+  error("sector_zhongyuanliangwancheng: 5 个独立用地面必须各自拥有可寻址的组件证据");
+}
+if (ganquanYichuanEvidence.length !== 7
+  || ganquanYichuanEvidence.filter((edge) => edge.side === "component").length !== 2
+  || ganquanYichuanEvidence.filter((edge) => edge.side === "shared_hole").length !== 5
+  || normalizedStringSet(ganquanYichuanEvidence
+    .filter((edge) => edge.side === "shared_hole")
+    .flatMap((edge) => edge.osmRefs ?? []))
+    !== normalizedStringSet(expectedLiangwanchengLanduseIds)) {
+  error("sector_ganquanyichuan: 两个行政组件与 5 个扣除洞必须分别登记证据");
+}
+if (normalizedStringSet(liangwanchengRegistry?.linkedTopologySectorIds ?? [])
+    !== normalizedStringSet(["sector_ganquanyichuan"])
+  || normalizedStringSet(ganquanYichuanRegistry?.linkedTopologySectorIds ?? [])
+    !== normalizedStringSet(["sector_zhongyuanliangwancheng"])) {
+  error("中远两湾城 / 甘泉宜川: registry 必须保留成对编辑拓扑元数据");
 }
 const taopuDefinition = candidateDefinitionById.get("sector_taopu");
 if (normalizedStringSet(taopuDefinition?.riskFlags ?? [])

@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07",
+  "topologyGroups": [],
+  "editorTopologyGroups": [
+    {
+      "id": "topology_putuo_liangwancheng_ganquanyichuan",
+      "sectorIds": [
+        "sector_zhongyuanliangwancheng",
+        "sector_ganquanyichuan"
+      ],
+      "rule": "sector_ganquanyichuan equals the Ganquan Road and Yichuan Road administrative union minus sector_zhongyuanliangwancheng; editing either member requires joint topology review before export"
+    }
+  ],
+  "sectors": [
+    {
+      "id": "sector_zhongyuanliangwancheng",
+      "canonicalName": "中远两湾城",
+      "districtName": "普陀区",
+      "scopeVersion": "named-osm-residential-landuse-project-proxy-2026-07",
+      "confidence": "low",
+      "method": "named_osm_landuse_project_proxy",
+      "projectProxyName": "中远两湾城同名住宅用地",
+      "projectLanduseOsmIds": [
+        "430671374",
+        "430673771",
+        "430673775",
+        "432976922",
+        "1101637576"
+      ],
+      "namedLanduseObjects": [
+        {
+          "osmId": "430671374",
+          "expectedName": "中远两湾城"
+        },
+        {
+          "osmId": "430673771",
+          "expectedName": "中远两湾城西区"
+        },
+        {
+          "osmId": "430673775",
+          "expectedName": "中远两湾城西区"
+        },
+        {
+          "osmId": "432976922",
+          "expectedName": "中远两湾城西区"
+        },
+        {
+          "osmId": "1101637576",
+          "expectedName": "中远两湾城"
+        }
+      ],
+      "expectedLanduseClass": "residential",
+      "expectedPartCount": 5,
+      "protectedAdminRelations": [
+        {
+          "osmAdminRelationId": "14187868",
+          "expectedOsmName": "宜川路街道"
+        }
+      ],
+      "maximumOutsideProtectedAdminSquareMeters": 0.01,
+      "insidePoint": [121.441518, 31.254068],
+      "sharedEdgeSectorIds": ["sector_ganquanyichuan"],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [0.35, 0.38],
+      "riskFlags": [
+        "named_project_landuse_proxy_requires_validation",
+        "multi_part_project_scope",
+        "official_polygon_unavailable"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-zhongyuan-liangwancheng-committees-2008",
+        "official-putuo-yichuan-committee-scopes-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-putuo-yichuan-subdistrict-profile-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "中远两湾城作为独立卖方市场身份，候选严格并集固定 OSM 快照中 5 个名称为“中远两湾城”或“中远两湾城西区”的 residential 用地对象；不使用凸包、不填平对象间道路或空隙，并以官方四个中远两湾城居委地址范围核对成员身份。该面是低置信项目用地代理，不是政府发布的 GIS 边界。",
+      "registryGeometryNote": "约 0.3674 平方公里候选保留 5 个同名住宅用地组成面及其真实间隙；官方居委范围确认项目身份和主要门牌，但没有发布 GIS 面，因此仍需按完整小区、道路和苏州河岸线人工精修。"
+    },
+    {
+      "id": "sector_ganquanyichuan",
+      "canonicalName": "甘泉宜川",
+      "districtName": "普陀区",
+      "scopeVersion": "ganquan-yichuan-admin-union-minus-liangwancheng-2026-07",
+      "confidence": "low",
+      "method": "market_admin_union_minus_market_candidates",
+      "osmAdminRelations": [
+        {
+          "osmAdminRelationId": "14187868",
+          "expectedOsmName": "宜川路街道"
+        },
+        {
+          "osmAdminRelationId": "14187870",
+          "expectedOsmName": "甘泉路街道"
+        }
+      ],
+      "insidePoint": [121.4297261, 31.2647644],
+      "subtractSectorIds": ["sector_zhongyuanliangwancheng"],
+      "maximumSubtractOutsideAdminSquareMeters": 0.01,
+      "maximumDifferenceReconstructionErrorSquareMeters": 1,
+      "sharedEdgeSectorIds": ["sector_zhongyuanliangwancheng"],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "fullAdminUnionRejected": true,
+      "excludedMarketAreas": ["中远两湾城"],
+      "sharedEdgeReview": ["光新", "万里", "长寿路", "彭浦新村"],
+      "areaRangeSquareKilometers": [4.1, 4.3],
+      "riskFlags": [
+        "admin_union_remainder_requires_validation",
+        "independent_market_subtracted",
+        "mixed_non_residential_scope",
+        "guangxin_interface_unresolved",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-putuo-ganquan-subdistrict-scope-2019",
+        "official-putuo-ganquan-subdistrict-profile-2025",
+        "official-putuo-yichuan-subdistrict-profile-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-tianditu-shanghai-standard-maps-2025",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "甘泉宜川只以固定 OSM 甘泉路街道与宜川路街道行政并集作为最大研究包络，并严格扣除已单列的中远两湾城 5 面候选。该差集不是官方或卖方发布的完整市场边界；光新、万里、长寿路和彭浦接口以及铁路、产业等非住宅范围仍需项目级核验。",
+      "registryGeometryNote": "约 4.2060 平方公里候选是甘泉路、宜川路行政并集扣除中远两湾城后的低置信剩余面；它解决了已知独立市场重叠，但不等于完成光新接口或全部住宅市场归属。"
+    }
+  ]
+}

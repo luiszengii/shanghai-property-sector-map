@@ -188,6 +188,13 @@ const batchPolicies = new Map([
       杨浦区: 2,
     },
   }],
+  ["putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07", {
+    expectedSectorCount: 2,
+    districtCounts: {
+      普陀区: 2,
+    },
+    catalogMode: "putuo-liangwancheng-ganquan-pair",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -212,6 +219,8 @@ const aliasesBySectorId = new Map([
   ["sector_xinjiangwancheng", ["新江湾城街道"]],
   ["sector_anshan", ["四平路街道"]],
   ["sector_zhongyuan", ["殷行街道"]],
+  ["sector_zhongyuanliangwancheng", ["两湾城", "中远两湾"]],
+  ["sector_ganquanyichuan", ["甘泉", "宜川"]],
 ]);
 const sides = [
   ["north", "北"],
@@ -236,6 +245,65 @@ if (batch.sectors.some(({ districtName }) => !expectedDistrictCounts.has(distric
 
 const registryRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "putuo-liangwancheng-ganquan-pair") {
+    const isLiangwancheng = definition.id === "sector_zhongyuanliangwancheng";
+    registryRecords.push({
+      id: definition.id,
+      canonicalName: definition.canonicalName,
+      aliases: aliasesBySectorId.get(definition.id) ?? [],
+      riskFlags: definition.riskFlags ?? [],
+      districtNames: [definition.districtName],
+      kind: "market_sector",
+      reviewStatus: "draft-low",
+      definitionStatus: isLiangwancheng
+        ? "market_scope_candidate"
+        : "admin_proxy_candidate",
+      definitionCandidate: definition.geometryRule,
+      definitionSourceIds: definition.definitionSourceIds,
+      ...(definition.projectProxyName
+        ? { projectProxyName: definition.projectProxyName }
+        : {}),
+      ...(definition.projectLanduseOsmIds
+        ? { projectLanduseOsmIds: definition.projectLanduseOsmIds }
+        : {}),
+      ...("fullAdminUnionRejected" in definition
+        ? { fullAdminUnionRejected: definition.fullAdminUnionRejected }
+        : {}),
+      ...(definition.excludedMarketAreas
+        ? { excludedMarketAreas: definition.excludedMarketAreas }
+        : {}),
+      ...(definition.sharedEdgeReview
+        ? { sharedEdgeReview: definition.sharedEdgeReview }
+        : {}),
+      linkedTopologySectorIds: definition.sharedEdgeSectorIds,
+      boundaryEvidenceIds: isLiangwancheng
+        ? definition.namedLanduseObjects.map(
+          ({ osmId }) => `zhongyuanliangwancheng-landuse-${osmId}`,
+        )
+        : [
+          ...definition.osmAdminRelations.map(
+            ({ osmAdminRelationId }) => `ganquanyichuan-admin-${osmAdminRelationId}`,
+          ),
+          ...batch.sectors
+            .find(({ id }) => id === "sector_zhongyuanliangwancheng")
+            .namedLanduseObjects.map(
+              ({ osmId }) => `ganquanyichuan-shared-hole-${osmId}`,
+            ),
+        ],
+      geometry: {
+        status: "draft",
+        confidence: "low",
+        coordinateSystem: "WGS84",
+        coordinateSystemVerified: true,
+        version: definition.scopeVersion,
+        sourceIds: ["osm-geofabrik-shanghai-260721"],
+        verificationSourceIds: definition.geometryVerificationSourceIds,
+        publicationPolicy: "internal_review",
+        note: definition.registryGeometryNote,
+      },
+    });
+    continue;
+  }
   if (batchPolicy.catalogMode === "changning-zhongshan-park-core") {
     registryRecords.push({
       id: definition.id,
@@ -375,6 +443,72 @@ upsertJsonArrayItems({
 
 const evidenceRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "putuo-liangwancheng-ganquan-pair") {
+    const isLiangwancheng = definition.id === "sector_zhongyuanliangwancheng";
+    if (isLiangwancheng) {
+      for (const namedLanduse of definition.namedLanduseObjects) {
+        evidenceRecords.push({
+          id: `zhongyuanliangwancheng-landuse-${namedLanduse.osmId}`,
+          sectorId: definition.id,
+          side: "component",
+          basisType: "named_osm_landuse_market_proxy",
+          featureName: `${namedLanduse.expectedName} OSM ${namedLanduse.osmId} 项目用地外轮廓`,
+          status: "adjacent_review_required",
+          confidence: "low",
+          sourceId: "osm-geofabrik-shanghai-260721",
+          supportingSourceIds: [
+            "official-putuo-zhongyuan-liangwancheng-committees-2008",
+            "official-putuo-yichuan-committee-scopes-2026",
+          ],
+          osmRefs: [namedLanduse.osmId],
+          note: "该证据只对应一个固定 OSM 同名住宅用地分片；官方门牌确认项目身份，但没有发布 GIS 外轮廓，禁止凸包或跨道路补缝。",
+        });
+      }
+    } else {
+      for (const adminRelation of definition.osmAdminRelations) {
+        evidenceRecords.push({
+          id: `ganquanyichuan-admin-${adminRelation.osmAdminRelationId}`,
+          sectorId: definition.id,
+          side: "component",
+          basisType: "market_candidate_from_admin_backbone",
+          featureName: `${adminRelation.expectedOsmName} OSM relation ${adminRelation.osmAdminRelationId} 最大行政包络`,
+          status: "adjacent_review_required",
+          confidence: "low",
+          sourceId: "osm-geofabrik-shanghai-260721",
+          supportingSourceIds: [
+            "official-putuo-ganquan-subdistrict-scope-2019",
+            "official-putuo-ganquan-subdistrict-profile-2025",
+            "official-putuo-yichuan-subdistrict-profile-2026",
+          ],
+          osmRefs: [adminRelation.osmAdminRelationId],
+          note: "该行政关系只构成甘泉宜川候选的最大包络；它不是楼市边界，光新接口和非住宅范围仍未解决。",
+        });
+      }
+      const liangwanchengDefinition = batch.sectors.find(
+        ({ id }) => id === "sector_zhongyuanliangwancheng",
+      );
+      for (const namedLanduse of liangwanchengDefinition.namedLanduseObjects) {
+        evidenceRecords.push({
+          id: `ganquanyichuan-shared-hole-${namedLanduse.osmId}`,
+          sectorId: definition.id,
+          side: "shared_hole",
+          basisType: "existing_market_candidate_shared_edge",
+          featureName: `扣除中远两湾城 OSM ${namedLanduse.osmId} 后形成的共享洞边`,
+          status: "adjacent_review_required",
+          confidence: "low",
+          sourceId: "osm-geofabrik-shanghai-260721",
+          supportingSourceIds: [
+            "official-putuo-zhongyuan-liangwancheng-committees-2008",
+            "official-putuo-yichuan-committee-scopes-2026",
+          ],
+          relatedSectorId: "sector_zhongyuanliangwancheng",
+          osmRefs: [namedLanduse.osmId],
+          note: "该证据逐一锁定甘泉宜川差集中的一个中远两湾城扣除洞；编辑任一板块后必须联合复核，不得静默保留旧差集。",
+        });
+      }
+    }
+    continue;
+  }
   if (batchPolicy.catalogMode === "changning-zhongshan-park-core") {
     for (const anchor of definition.boundaryAnchors) {
       evidenceRecords.push({

@@ -31,6 +31,7 @@ import {
   draftAdditionalHoles,
   draftHoles,
   draftParts,
+  findDirtyLinkedTopologyGroups,
   formatSectorDraftFilename,
   isCompleteSectorDraft,
   normalizeAmapPolygonGeometry,
@@ -88,6 +89,14 @@ function createDraftId() {
     return `sector-${crypto.randomUUID()}`;
   }
   return `sector-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function linkedTopologyWarning(draft: SectorBoundaryDraft | undefined) {
+  if (!draft?.linkedTopologySectorIds?.length) return undefined;
+  const linkedNames = draft.linkedTopologySectorIds.map(
+    (sectorId) => existingSectorTemplateById.get(sectorId)?.name ?? sectorId,
+  );
+  return `“${draft.name}”已修改，与“${linkedNames.join("、")}”的差集拓扑可能失配；导出前请联合更新并复核两块边界。`;
 }
 
 function polygonToDraftGeometry(polygon: AMap.Polygon) {
@@ -240,6 +249,10 @@ export function SectorBoundaryEditor() {
     if (!ring || ring.length < 3) return;
     updateDraft(id, { ring, holes, additionalRings, additionalHoles });
     setArea(polygon.getArea());
+    const warning = linkedTopologyWarning(
+      draftsRef.current.find((draft) => draft.id === id),
+    );
+    if (warning) setNotice({ tone: "warning", message: warning });
   }, [updateDraft]);
 
   const changeMapZoom = useCallback((delta: -1 | 1) => {
@@ -572,7 +585,12 @@ export function SectorBoundaryEditor() {
         additionalHoles: [],
       });
       setGeometryRevision((value) => value + 1);
-      setNotice({ tone: "success", message: "边界已自动保存。拖动橙色圆点可继续精修。" });
+      const warning = linkedTopologyWarning(
+        draftsRef.current.find((draft) => draft.id === id),
+      );
+      setNotice(warning
+        ? { tone: "warning", message: warning }
+        : { tone: "success", message: "边界已自动保存。拖动橙色圆点可继续精修。" });
     };
     mouseTool.on("draw", handleDraw);
     mouseTool.polygon({
@@ -601,6 +619,23 @@ export function SectorBoundaryEditor() {
   }, []);
 
   const exportDrafts = useCallback(() => {
+    const dirtyTopologyGroups = findDirtyLinkedTopologyGroups(draftsRef.current);
+    if (dirtyTopologyGroups.length) {
+      const pairNames = dirtyTopologyGroups.map(({ sectorIds }) => (
+        sectorIds.map(
+          (sectorId) => existingSectorTemplateById.get(sectorId)?.name ?? sectorId,
+        ).join(" / ")
+      ));
+      if (!window.confirm(
+        `${pairNames.join("；")} 至少一方已修改，差集拓扑可能失配。请确认已联合更新并复核成对边界；仍继续导出？`,
+      )) {
+        setNotice({
+          tone: "warning",
+          message: "已取消导出；请联合更新成对板块后再导出。",
+        });
+        return;
+      }
+    }
     const collection = buildSectorDraftFeatureCollection(draftsRef.current);
     if (!collection.features.length) {
       setNotice({ tone: "warning", message: "至少完成一个有名称、且不少于 3 个点的板块后才能导出。" });
