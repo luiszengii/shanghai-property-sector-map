@@ -1060,6 +1060,61 @@
       "note": "给出华亭镇四向邻接和39.54平方千米面积，用于现行身份、邻接和面积量级复核；不提供可直接导入的法定GIS坐标。"
     },
     {
+      "id": "official-fengxian-current-admin-units-2026",
+      "title": "奉贤区2026年街镇任务表与现行行政单元",
+      "publisher": "上海市奉贤区人民政府",
+      "url": "https://www.shanghai.gov.cn/gwk/search/content/00844664",
+      "sourceType": "official_current_admin_divisions",
+      "publishedAt": "2026",
+      "licenseStatus": "reference_only",
+      "allowedUse": "version_check_only",
+      "note": "逐项列出2026年南桥、奉城、青村、四团、金汇、柘林、庄行、海湾8镇及西渡、头桥等街道；只证明现行行政身份，不提供可直接导入的法定GIS坐标。"
+    },
+    {
+      "id": "official-fengxian-xidu-establishment-2015",
+      "title": "上海市政府关于同意设立西渡街道办事处的批复",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw39222/20200821/0001-39222_45714.html",
+      "sourceType": "official_admin_adjustment",
+      "publishedAt": "2015",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "给出西渡街道及调整后南桥镇四至，用于身份和邻接关系复核；不作为可再分发法定边界坐标。"
+    },
+    {
+      "id": "official-fengxian-fifteenth-five-year-plan-2026",
+      "title": "奉贤区国民经济和社会发展第十五个五年规划纲要",
+      "publisher": "上海市奉贤区人民政府",
+      "url": "https://www.shanghai.gov.cn/gwk/search/content/00843930",
+      "sourceType": "official_district_five_year_plan",
+      "publishedAt": "2026",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于证明奉贤新城核心承载区跨南桥、奉浦、金海及庄行、青村、金汇部分区域，并把海湾镇与海湾旅游区并列；不得据此生成市场边界。"
+    },
+    {
+      "id": "official-fengxian-cultural-units-2026",
+      "title": "奉贤区2026年1月公共文化资源配送预告",
+      "publisher": "上海市奉贤区人民政府",
+      "url": "https://www.shanghai.gov.cn/nw17239/20251231/1090ee561a664d2a80d1d67be7601901.html",
+      "sourceType": "official_current_admin_units",
+      "publishedAt": "2025-12-31",
+      "licenseStatus": "reference_only",
+      "allowedUse": "version_check_only",
+      "note": "把海湾镇与海湾旅游区作为不同属地单位并列，用于保存海湾市场内部口径未决风险。"
+    },
+    {
+      "id": "official-fengxian-touqiao-establishment-2024",
+      "title": "上海市政府关于同意设立奉贤区头桥街道办事处的批复",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/gwk/search/content/de9f1f55d21246c9836fa54047388fef",
+      "sourceType": "official_admin_adjustment",
+      "publishedAt": "2024-07-16",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "确认头桥街道现行四至；结合奉贤区政府挂牌报道的38.4平方公里析出面积，用于拒绝仍含头桥的旧奉城镇开放关系。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",

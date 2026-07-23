@@ -1,0 +1,370 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "fengxian-eight-current-admin-proxies-2026-07",
+  "topologyGroups": [
+    {
+      "snapDistanceMeters": 1,
+      "prioritySectorIds": [
+        "sector_xinchang",
+        "sector_xidu",
+        "sector_nanqiao",
+        "sector_fengxianjinhui",
+        "sector_haiwan",
+        "sector_zhelin",
+        "sector_situan",
+        "sector_qingcun",
+        "sector_zhuanghang"
+      ],
+      "preserveAllPrioritySectorParts": true,
+      "canonicalizeAfterProtectedSubtraction": true
+    }
+  ],
+  "sectors": [
+    {
+      "id": "sector_xidu",
+      "canonicalName": "西渡",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885603",
+      "expectedOsmName": "西渡街道",
+      "adminProxyName": "西渡街道",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.4460607, 30.9908703],
+      "sharedEdgeSectorIds": ["sector_fengxianjinhui", "sector_zhuanghang"],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengpu",
+        "unresolved_jinhai",
+        "unresolved_jiangchuanlu",
+        "unresolved_wujing"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [30.5, 32.7],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-xidu-establishment-2015"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场西渡暂以现行西渡街道固定 OSM relation 作为低置信、可编辑行政代理。完整街道混合滨江、乡村、产业和非连续住宅空间，不能因同名就升级为精确卖方边界。"
+    },
+    {
+      "id": "sector_nanqiao",
+      "canonicalName": "南桥",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885600",
+      "expectedOsmName": "南桥镇",
+      "adminProxyName": "南桥镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.461247, 30.9187575],
+      "sharedEdgeSectorIds": ["sector_qingcun", "sector_zhuanghang", "sector_zhelin"],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengxian_new_city",
+        "unresolved_fengpu",
+        "unresolved_jinhai"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [47.5, 51],
+      "riskFlags": [
+        "not_equal_fengxian_new_city",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-fifteenth-five-year-plan-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场南桥只以现行南桥镇固定 OSM relation 起画。官方奉贤新城核心承载区跨南桥、奉浦、金海及相邻镇部分区域，南桥镇不得被写成奉贤新城，也不得用新城规划范围扩张本候选。"
+    },
+    {
+      "id": "sector_fengxianjinhui",
+      "canonicalName": "奉贤金汇",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885595",
+      "expectedOsmName": "金汇镇",
+      "adminProxyName": "金汇镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.5554557, 30.972826],
+      "sharedEdgeSectorIds": [
+        "sector_xidu",
+        "sector_qingcun",
+        "sector_xinchang"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengpu",
+        "unresolved_jinhai",
+        "unresolved_touqiao",
+        "unresolved_fengxian_new_city",
+        "unresolved_pujiang",
+        "sector_hangtou",
+        "sector_xinchang"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [69, 74.5],
+      "riskFlags": [
+        "market_admin_name_differ",
+        "market_name_disambiguated",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-fifteenth-five-year-plan-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "卖方显示名保留“奉贤金汇”用于与其他行政区的金汇市场消歧，行政代理名严格保存为金汇镇。完整镇域含多个社区、乡村和非住宅空间，只作低置信可编辑骨架。"
+    },
+    {
+      "id": "sector_haiwan",
+      "canonicalName": "海湾",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-haiwan-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885597",
+      "expectedOsmName": "海湾镇",
+      "adminProxyName": "海湾镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.5765253, 30.843899],
+      "sharedEdgeSectorIds": [
+        "sector_situan",
+        "sector_qingcun",
+        "sector_zhelin"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengcheng",
+        "unresolved_haiwan_tourism_area",
+        "unresolved_lingang_main_city",
+        "sector_nicheng"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [105, 112],
+      "riskFlags": [
+        "unresolved_haiwan_tourism_area",
+        "nested_management_zone",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-cultural-units-2026",
+        "official-fengxian-fifteenth-five-year-plan-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-cultural-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "卖方只有一个未公开四至的“海湾”标签，官方则并列海湾镇与海湾旅游区。第一版仅以完整海湾镇固定 relation 作为低置信起画代理；完全嵌套其中的海湾旅游区继续标为内部口径未决，不据此声称已确认卖方海湾的完整范围。"
+    },
+    {
+      "id": "sector_zhelin",
+      "canonicalName": "柘林",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885598",
+      "expectedOsmName": "柘林镇",
+      "adminProxyName": "柘林镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.4379391, 30.8367207],
+      "sharedEdgeSectorIds": [
+        "sector_nanqiao",
+        "sector_haiwan",
+        "sector_qingcun",
+        "sector_zhuanghang"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_haiwan_tourism_area",
+        "sector_caojing",
+        "sector_tinglin"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [92, 98.5],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_chemical_industrial_rural_coastal",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场柘林暂以现行柘林镇固定 OSM relation 起画。完整镇域混合化工、乡村、岸线和住宅空间，明显不能仅凭同名视为精确市场面。"
+    },
+    {
+      "id": "sector_situan",
+      "canonicalName": "四团",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17809482",
+      "expectedOsmName": "四团镇",
+      "adminProxyName": "四团镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.7326552, 30.9343091],
+      "sharedEdgeSectorIds": ["sector_haiwan"],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengcheng",
+        "unresolved_touqiao",
+        "unresolved_lingang_management_area",
+        "unresolved_datuan",
+        "sector_nicheng",
+        "sector_xuanqiao"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [70.5, 75.5],
+      "riskFlags": [
+        "lingang_management_not_admin_boundary",
+        "nested_management_zone",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场四团暂以现行四团镇固定 OSM relation 起画。临港新片区管理范围不改变四团镇行政归属，也不能替代市场四团边界；奉城、头桥接口继续留白待核。"
+    },
+    {
+      "id": "sector_qingcun",
+      "canonicalName": "青村",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885594",
+      "expectedOsmName": "青村镇",
+      "adminProxyName": "青村镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.5425566, 30.906681],
+      "sharedEdgeSectorIds": [
+        "sector_nanqiao",
+        "sector_fengxianjinhui",
+        "sector_haiwan",
+        "sector_zhelin"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengcheng",
+        "unresolved_touqiao",
+        "unresolved_jinhai",
+        "unresolved_fengxian_new_city",
+        "unresolved_haiwan_tourism_area"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [70.5, 75.5],
+      "riskFlags": [
+        "not_equal_fengxian_new_city",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-fifteenth-five-year-plan-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场青村暂以现行青村镇固定 OSM relation 起画。奉贤新城只涉及青村部分区域，不能用新城规划范围替代或扩张本候选；完整镇域仍明显宽于可证住宅市场。"
+    },
+    {
+      "id": "sector_zhuanghang",
+      "canonicalName": "庄行",
+      "districtName": "奉贤区",
+      "scopeVersion": "fengxian-current-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "17885599",
+      "expectedOsmName": "庄行镇",
+      "adminProxyName": "庄行镇",
+      "adminBoundaryVersion": "2024-07-or-later",
+      "insidePoint": [121.3807994, 30.926121],
+      "sharedEdgeSectorIds": ["sector_xidu", "sector_nanqiao", "sector_zhelin"],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_fengxian_new_city",
+        "sector_yexie",
+        "sector_tinglin",
+        "unresolved_jiangchuanlu"
+      ],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [67.5, 72.5],
+      "riskFlags": [
+        "not_equal_fengxian_new_city",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-fengxian-current-admin-units-2026",
+        "official-fengxian-fifteenth-five-year-plan-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-fengxian-current-admin-units-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场庄行暂以现行庄行镇固定 OSM relation 起画。官方奉贤新城只涉及庄行部分区域，不能把完整庄行镇改称新城；乡村、产业与滨江空间仍待按项目归属精修。"
+    }
+  ]
+}

@@ -1553,6 +1553,11 @@ def build_feature(
                 "adminProxyName": definition["adminProxyName"],
             } if definition.get("adminProxyName") else {}),
             **({
+                "adminBoundaryVersion": definition[
+                    "adminBoundaryVersion"
+                ],
+            } if definition.get("adminBoundaryVersion") else {}),
+            **({
                 "marketAdminAlignmentUnverified": bool(
                     definition["marketAdminAlignmentUnverified"]
                 ),

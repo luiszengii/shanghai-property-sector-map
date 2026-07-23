@@ -14,7 +14,8 @@
     "data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json",
     "data/geo/reviewed-candidate-batches/putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07.json",
     "data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json",
-    "data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json"
+    "data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json",
+    "data/geo/reviewed-candidate-batches/fengxian-eight-current-admin-proxies-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {
@@ -691,7 +692,7 @@
       "osmAdminRelationId": "14179332",
       "expectedOsmName": "新场镇",
       "insidePoint": [121.6421028, 31.0426071],
-      "sharedEdgeSectorIds": ["sector_zhoupu", "sector_hangtou", "sector_chuansha", "sector_xuanqiao"],
+      "sharedEdgeSectorIds": ["sector_zhoupu", "sector_hangtou", "sector_chuansha", "sector_xuanqiao", "sector_fengxianjinhui"],
       "snapDependencySectorIds": ["sector_zhoupu", "sector_hangtou"],
       "sharedEdgeSnapDistanceMeters": 1,
       "preserveTopologyPrecision": true,

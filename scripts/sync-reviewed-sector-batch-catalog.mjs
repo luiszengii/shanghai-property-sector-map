@@ -209,6 +209,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "linked-admin-batch",
   }],
+  ["fengxian-eight-current-admin-proxies-2026-07", {
+    expectedSectorCount: 8,
+    districtCounts: {
+      奉贤区: 8,
+    },
+    catalogMode: "linked-admin-batch",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -251,6 +258,14 @@ const aliasesBySectorId = new Map([
   ["sector_anting", ["安亭镇"]],
   ["sector_huating", ["华亭镇"]],
   ["sector_juyuanxinqu", ["菊园街道"]],
+  ["sector_xidu", ["西渡街道"]],
+  ["sector_nanqiao", ["南桥镇"]],
+  ["sector_fengxianjinhui", ["金汇镇"]],
+  ["sector_haiwan", ["海湾镇"]],
+  ["sector_zhelin", ["柘林镇"]],
+  ["sector_situan", ["四团镇"]],
+  ["sector_qingcun", ["青村镇"]],
+  ["sector_zhuanghang", ["庄行镇"]],
 ]);
 const sides = [
   ["north", "北"],
@@ -424,6 +439,9 @@ for (const definition of batch.sectors) {
     definitionSourceIds: definition.definitionSourceIds,
     ...(definition.adminProxyName
       ? { adminProxyName: definition.adminProxyName }
+      : {}),
+    ...(definition.adminBoundaryVersion
+      ? { adminBoundaryVersion: definition.adminBoundaryVersion }
       : {}),
     ...("marketAdminAlignmentUnverified" in definition
       ? {

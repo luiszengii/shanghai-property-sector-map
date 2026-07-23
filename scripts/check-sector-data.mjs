@@ -1019,6 +1019,7 @@ const knownDefinitionStatuses = new Set([
   "official_scope_available_but_semantics_ambiguous",
   "official_scope_market_candidate",
   "market_identity_admin_backbone_candidate",
+  "market_identity_verified_geometry_blocked",
   "admin_proxy_candidate",
   "multiple_official_versions_need_selection",
 ]);
@@ -2260,6 +2261,167 @@ for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
   )) {
     error(`嘉定直接代理批次不得在独立范围研究完成前自动注册 ${forbiddenName}`);
   }
+}
+
+const expectedFengxianEight = new Map([
+  ["sector_xidu", { relation: "17885603", osmName: "西渡街道", adminProxyName: "西渡街道" }],
+  ["sector_nanqiao", { relation: "17885600", osmName: "南桥镇", adminProxyName: "南桥镇" }],
+  ["sector_fengxianjinhui", { relation: "17885595", osmName: "金汇镇", adminProxyName: "金汇镇" }],
+  ["sector_haiwan", { relation: "17885597", osmName: "海湾镇", adminProxyName: "海湾镇" }],
+  ["sector_zhelin", { relation: "17885598", osmName: "柘林镇", adminProxyName: "柘林镇" }],
+  ["sector_situan", { relation: "17809482", osmName: "四团镇", adminProxyName: "四团镇" }],
+  ["sector_qingcun", { relation: "17885594", osmName: "青村镇", adminProxyName: "青村镇" }],
+  ["sector_zhuanghang", { relation: "17885599", osmName: "庄行镇", adminProxyName: "庄行镇" }],
+]);
+const fengxianEightDefinitions = candidateDefinitions.filter(
+  (definition) => expectedFengxianEight.has(definition.id),
+);
+if (normalizedStringSet(fengxianEightDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedFengxianEight.keys())) {
+  error("奉贤现行行政代理批次必须恰好包含 8 个可放行候选，不得混入旧奉城");
+}
+for (const definition of fengxianEightDefinitions) {
+  const expected = expectedFengxianEight.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expected.relation
+    || definition.expectedOsmName !== expected.osmName
+    || definition.adminProxyName !== expected.adminProxyName
+    || candidate?.properties?.adminProxyName !== expected.adminProxyName
+    || registryRecord?.adminProxyName !== expected.adminProxyName
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expected.relation])) {
+    error(`${definition.id}: 奉贤批次没有锁定研究确认的现行行政关系、名称和代理身份`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || candidate?.properties?.marketAdminAlignmentUnverified !== true
+    || registryRecord?.marketAdminAlignmentUnverified !== true
+    || definition.preserveMultiPolygonSemantics !== true
+    || candidate?.geometry?.type !== "MultiPolygon"
+    || definition.adminBoundaryVersion !== "2024-07-or-later"
+    || candidate?.properties?.adminBoundaryVersion !== "2024-07-or-later"
+    || registryRecord?.adminBoundaryVersion !== "2024-07-or-later"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review"
+    || !definition.riskFlags?.includes("market_boundary_not_official")
+    || normalizedStringSet(registryRecord?.requiredAdjacencyReviewIds ?? [])
+      !== normalizedStringSet(definition.requiredAdjacencyReviewIds ?? [])
+    || normalizedStringSet(registryRecord?.linkedTopologySectorIds ?? [])
+      !== normalizedStringSet(definition.sharedEdgeSectorIds ?? [])) {
+    error(`${definition.id}: 奉贤行政代理必须保持低置信、现行版本门槛、内部策略和完整 MultiPolygon 语义`);
+  }
+}
+const fengxianJinhuiDefinition = candidateDefinitionById.get(
+  "sector_fengxianjinhui",
+);
+const fengxianJinhuiCandidate = candidateById.get("sector_fengxianjinhui");
+if (fengxianJinhuiDefinition?.canonicalName !== "奉贤金汇"
+  || fengxianJinhuiDefinition?.adminProxyName !== "金汇镇"
+  || fengxianJinhuiCandidate?.properties?.name !== "奉贤金汇"
+  || !fengxianJinhuiDefinition?.riskFlags?.includes("market_name_disambiguated")) {
+  error("sector_fengxianjinhui: 必须分字段保存卖方显示名奉贤金汇与行政代理金汇镇");
+}
+const haiwanDefinition = candidateDefinitionById.get("sector_haiwan");
+const haiwanCandidate = candidateById.get("sector_haiwan");
+const haiwanManifest = manifestById.get("sector_haiwan");
+if (String(haiwanDefinition?.osmAdminRelationId) !== "17885597"
+  || haiwanCandidate?.properties?.areaSquareKilometers < 105
+  || haiwanCandidate?.properties?.areaSquareKilometers > 112
+  || !haiwanDefinition?.riskFlags?.includes("unresolved_haiwan_tourism_area")
+  || !haiwanDefinition?.riskFlags?.includes("nested_management_zone")
+  || !haiwanDefinition?.requiredAdjacencyReviewIds?.includes(
+    "unresolved_haiwan_tourism_area",
+  )
+  || haiwanManifest?.osmRefs?.subtractedAdminRelations?.length) {
+  error("sector_haiwan: 必须使用完整海湾镇低置信代理，不得静默扣除或升级内嵌海湾旅游区");
+}
+const fengchengRegistry = registryById.get("sector_fengcheng");
+if (candidateDefinitionById.has("sector_fengcheng")
+  || candidateById.has("sector_fengcheng")
+  || fengchengRegistry?.geometry?.status !== "missing"
+  || fengchengRegistry?.definitionStatus
+    !== "market_identity_verified_geometry_blocked"
+  || fengchengRegistry?.legacyOsmAdminRelationId !== "17885593"
+  || fengchengRegistry?.officialCurrentAreaKm2 !== null
+  || fengchengRegistry?.adminAreaVersionMismatch !== true
+  || !fengchengRegistry?.riskFlags?.includes("missing_touqiao_subtraction")
+  || !fengchengRegistry?.boundaryEvidenceIds?.includes(
+    "fengcheng-version-blocker",
+  )) {
+  error("sector_fengcheng: 旧 relation 仍含头桥，必须保持已登记但几何缺失的版本阻断状态");
+}
+const fengxianDeclaredSharedPairs = new Set(
+  fengxianEightDefinitions.flatMap((definition) => (
+    (definition.sharedEdgeSectorIds ?? [])
+      .filter((sectorId) => expectedFengxianEight.has(sectorId))
+      .map((sectorId) => [definition.id, sectorId].sort().join("/"))
+  )),
+);
+const expectedFengxianSharedPairs = new Map([
+  ["sector_fengxianjinhui/sector_xidu", 2572.93],
+  ["sector_xidu/sector_zhuanghang", 3297.11],
+  ["sector_fengxianjinhui/sector_qingcun", 14158.19],
+  ["sector_nanqiao/sector_qingcun", 4948.66],
+  ["sector_nanqiao/sector_zhuanghang", 9925.66],
+  ["sector_nanqiao/sector_zhelin", 11641.24],
+  ["sector_haiwan/sector_situan", 7608.04],
+  ["sector_haiwan/sector_qingcun", 8386.51],
+  ["sector_haiwan/sector_zhelin", 8005.55],
+  ["sector_qingcun/sector_zhelin", 3815.54],
+  ["sector_zhelin/sector_zhuanghang", 11020.19],
+]);
+if (normalizedStringSet(fengxianDeclaredSharedPairs)
+  !== normalizedStringSet(expectedFengxianSharedPairs.keys())) {
+  error("奉贤批次必须完整声明研究确认的 11 对共享边，西渡—南桥点接触不得误报为共享边");
+}
+for (const [pair, expectedSharedMeters] of expectedFengxianSharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < 2500
+    || exactSharedLength < 2500
+    || Math.abs(exactSharedLength - sharedLength) > 0.01
+    || Math.abs(exactSharedLength - expectedSharedMeters) / expectedSharedMeters > 0.005) {
+    error(
+      `${firstId} / ${secondId}: 奉贤批次共享边必须使用完全相同的坐标序列`
+      + `（实际 ${exactSharedLength.toFixed(2)} m，研究基线 ${expectedSharedMeters.toFixed(2)} m）`,
+    );
+  }
+}
+const xiduCandidate = candidateById.get("sector_xidu");
+const nanqiaoCandidate = candidateById.get("sector_nanqiao");
+const xiduNanqiaoShared = xiduCandidate && nanqiaoCandidate
+  ? exactSharedBoundaryLengthMeters(
+    xiduCandidate.geometry,
+    nanqiaoCandidate.geometry,
+  )
+  : 0;
+if (xiduNanqiaoShared > 1) {
+  error("sector_xidu / sector_nanqiao: 固定快照仅点接触，不得虚构线状共享边");
+}
+const fengxianJinhui = candidateById.get("sector_fengxianjinhui");
+const xinchang = candidateById.get("sector_xinchang");
+const jinhuiXinchangShared = fengxianJinhui && xinchang
+  ? exactSharedBoundaryLengthMeters(
+    fengxianJinhui.geometry,
+    xinchang.geometry,
+  )
+  : 0;
+if (jinhuiXinchangShared < 1700
+  || Math.abs(jinhuiXinchangShared - 1774.74) / 1774.74 > 0.01) {
+  error(
+    "sector_fengxianjinhui / sector_xinchang: 跨区共享边必须吸附到既有新场候选且保持零正面积重叠",
+  );
 }
 
 const expectedHongkouYangpuSevenRelations = new Map([
