@@ -145,21 +145,21 @@
       "aliases": ["三林镇"],
       "districtNames": ["浦东新区"],
       "kind": "market_sector",
-      "reviewStatus": "draft-low",
-      "definitionStatus": "admin_proxy_candidate",
-      "definitionCandidate": "待决定是否采用三林镇行政范围作为参考；前滩等功能片区与三林市场板块的拆分规则需要先确定。",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "user_decided_market_scope",
+      "definitionCandidate": "楼市三林采用三林镇外轮廓作为定位骨架，明确包含东明路街道；与已单列的杨思前滩重叠部分从三林扣除，其余相邻板块共享边继续逐段核验。",
       "definitionSourceIds": ["official-sanlin-profile-2023", "official-shanghai-town-list-2025"],
       "boundaryEvidenceIds": ["sanlin-north", "sanlin-east", "sanlin-south", "sanlin-west"],
       "geometry": {
-        "status": "admin-reference",
+        "status": "draft",
         "confidence": "medium",
         "coordinateSystem": "WGS84",
         "coordinateSystemVerified": true,
-        "version": "osm-shanghai-260721-admin-reference-v1",
+        "version": "market-dongming-included-2026-07",
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": ["official-sanlin-profile-2023", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "地图以蓝色虚线独立叠加三林镇行政参考面（33.9924 平方公里），灰色楼市演示面仍保留；参考面与官方 34.19 平方公里及天地图形状接近，前滩、东明路街道和市场三林仍需另行拆分。"
+        "note": "用户已裁定东明路街道划入楼市三林。候选面填平三林镇行政参考面的东明路内洞，并扣除已单列的杨思前滩；原行政参考面仍保留内洞，仅作行政事实核对。"
       }
     },
     {

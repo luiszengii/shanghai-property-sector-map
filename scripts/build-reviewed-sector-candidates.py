@@ -279,6 +279,39 @@ def build_osm_admin_candidate(gpkg: Path, definition: dict[str, Any], working_cr
     return geometry, float(projected.area), {"adminRelations": [relation_id]}
 
 
+def build_market_admin_outer_shell(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+    sector_geometry_by_id: dict[str, Any],
+):
+    geometry, _, osm_refs = build_osm_admin_candidate(gpkg, definition, working_crs)
+    shells = [Polygon(part.exterior.coords) for part in polygons(geometry)]
+    market_geometry = shells[0] if len(shells) == 1 else MultiPolygon(shells)
+    subtract_ids = definition.get("subtractSectorIds", [])
+    missing_ids = [sector_id for sector_id in subtract_ids if sector_id not in sector_geometry_by_id]
+    if missing_ids:
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到需要扣除的主板块：{', '.join(missing_ids)}"
+        )
+    if subtract_ids:
+        market_geometry = market_geometry.difference(
+            unary_union([sector_geometry_by_id[sector_id] for sector_id in subtract_ids])
+        )
+    inside_point = Point(*definition["insidePoint"])
+    containing = [part for part in polygons(make_valid(market_geometry)) if part.contains(inside_point)]
+    if len(containing) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 必须唯一包含市场裁定点，实际找到 {len(containing)} 个"
+        )
+    market_geometry = normalize_polygonal(containing[0])
+    projected = project_geometry(market_geometry, output_crs, working_crs)
+    osm_refs["subtractedSectorIds"] = subtract_ids
+    osm_refs["includedMarketAreas"] = definition.get("includedMarketAreas", [])
+    return market_geometry, float(projected.area), osm_refs
+
+
 def build_feature(
     definition: dict[str, Any],
     geometry,
@@ -322,6 +355,9 @@ def build_feature(
             "method": definition["method"],
             "geometryRule": definition["geometryRule"],
             "definitionSourceIds": definition["definitionSourceIds"],
+            **({
+                "includedMarketAreas": definition["includedMarketAreas"],
+            } if definition.get("includedMarketAreas") else {}),
             **({
                 "boundaryAnchors": [{
                     "side": anchor["side"],
@@ -398,6 +434,14 @@ def main() -> None:
                 args.gpkg,
                 definition,
                 definitions["workingCrs"],
+            )
+        elif definition["method"] == "market_admin_outer_shell_minus_market_candidates":
+            geometry, area, osm_refs = build_market_admin_outer_shell(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+                sector_geometry_by_id,
             )
         else:
             raise ValueError(f"未知构建方法：{definition['method']}")

@@ -772,8 +772,8 @@ const adminReferenceRegistryIds = registry
 if (normalizedStringSet(candidateIds) !== normalizedJson(candidateRegistryIds)) {
   error("候选面必须且只能对应 registry 中的 draft/reviewed/published 几何");
 }
-if (normalizedStringSet(adminReferenceIds) !== normalizedJson(adminReferenceRegistryIds)) {
-  error("行政参考面必须且只能对应 registry 中的 admin-reference 几何");
+if (adminReferenceRegistryIds.some((id) => !adminReferenceIds.includes(id))) {
+  error("registry 中的 admin-reference 几何必须存在对应行政参考面");
 }
 if (normalizedStringSet(candidateManifestIds) !== normalizedStringSet(candidateIds)) {
   error("候选面 manifest 必须与候选几何一一对应");
@@ -876,6 +876,21 @@ validateLockedOsmCollection(subscopeData, candidateManifest, "板块子范围", 
 
 const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
 const candidateById = new Map(candidates.map((feature) => [feature.properties?.id, feature]));
+const sanlinMarketCandidate = candidateById.get("sector_sanlin");
+const dongmingMarketPoint = [121.5127542, 31.1454076];
+if (!sanlinMarketCandidate) {
+  error("sector_sanlin: 用户已裁定楼市三林包含东明路街道，必须提供连续候选面");
+} else if (!pointInGeometryStrict(dongmingMarketPoint, sanlinMarketCandidate.geometry)) {
+  error("sector_sanlin: 楼市候选面必须包含东明路街道中心测试点");
+} else {
+  const sanlinPolygons = polygonGroupsForGeometry(sanlinMarketCandidate.geometry);
+  if (sanlinPolygons.length !== 1 || sanlinPolygons[0].length !== 1) {
+    error("sector_sanlin: 楼市三林必须是填平东明路行政内洞后的单一连续面");
+  }
+  if (!sanlinMarketCandidate.properties?.includedMarketAreas?.includes("东明路街道")) {
+    error("sector_sanlin: 候选面必须显式记录东明路街道的市场归属");
+  }
+}
 for (const candidate of candidates) {
   const id = candidate.properties?.id ?? "unknown-candidate";
   const record = registryById.get(id);
@@ -1038,7 +1053,9 @@ for (const reference of adminReferences) {
     error(`${id}: 行政参考面缺少 definition`);
     continue;
   }
-  if (record.geometry.status !== "admin-reference") error(`${id}: 行政参考面 registry 状态必须是 admin-reference`);
+  if (record.geometry.status !== "admin-reference" && !candidateById.has(id)) {
+    error(`${id}: 行政参考面 registry 状态必须是 admin-reference，或同时存在市场候选面`);
+  }
   if (properties.status !== "administrative-reference") error(`${id}: 行政参考面 status 必须是 administrative-reference`);
   if (properties.name !== record.canonicalName) error(`${id}: 行政参考面名称与 registry 不一致`);
   if (definition.canonicalName !== record.canonicalName) error(`${id}: definition canonicalName 与 registry 不一致`);
@@ -1207,6 +1224,7 @@ const allowedReferenceVerdicts = new Set([
 const allowedGeometryDecisions = new Set([
   "keep_official_scope_candidate",
   "keep_market_candidate_with_subscope",
+  "keep_market_candidate_with_admin_reference",
   "keep_demo_until_scope_selected",
   "show_admin_reference_without_replacing_market_definition",
   "show_post_adjustment_admin_reference",
@@ -1304,7 +1322,7 @@ for (const check of referenceChecks) {
       error(`${id}: reference-check comparableAdminName 与行政参考面不一致`);
     }
     if (!comparison) error(`${id}: 行政参考面缺少旧演示面差异指标`);
-    else if (comparison.reference !== `osm-admin-relation-${adminManifest.osmRelationId}`) {
+    else if (!candidate && comparison.reference !== `osm-admin-relation-${adminManifest.osmRelationId}`) {
       error(`${id}: 差异指标引用的 OSM relation 与行政参考 manifest 不一致`);
     }
     const adminVerificationSourceIds = Array.isArray(adminReference.properties.verificationSourceIds)

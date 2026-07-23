@@ -70,6 +70,20 @@
       "areaToleranceRatio": 0.08,
       "definitionSourceIds": ["official-beiwaitan-scope-2024"],
       "geometryRule": "固定快照中的 OSM 北外滩街道 relation；其边界须与官方东大连路、南黄浦江—苏州河、西河南北路、北海宁路—周家嘴路四至逐边复核。"
+    },
+    {
+      "id": "sector_sanlin",
+      "canonicalName": "三林",
+      "scopeVersion": "market-dongming-included-2026-07",
+      "method": "market_admin_outer_shell_minus_market_candidates",
+      "osmAdminRelationId": "14179226",
+      "expectedOsmName": "三林镇",
+      "insidePoint": [121.5127542, 31.1454076],
+      "includedMarketAreas": ["东明路街道"],
+      "subtractSectorIds": ["sector_qiantan"],
+      "areaRangeSquareKilometers": [25, 27],
+      "definitionSourceIds": ["official-sanlin-profile-2023"],
+      "geometryRule": "用户裁定楼市三林包含位于三林镇外轮廓内部的东明路街道；候选面以固定 OSM 三林镇 relation 的外轮廓为骨架，填平东明路行政内洞，并扣除已单列的杨思前滩主板块，保留包含东明路市场裁定点的连续主面。行政参考面继续保留原内洞，不改变行政事实。"
     }
   ],
   "subscopes": [

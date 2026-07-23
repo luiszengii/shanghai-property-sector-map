@@ -204,8 +204,8 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
       }
       overlaysRef.current = overlays;
 
-      const researchPathRequestById = new Map(researchGeometries.map((feature) => [
-        feature.properties.id,
+      const researchPathRequestByKey = new Map(researchGeometries.map((feature) => [
+        `${feature.properties.status}:${feature.properties.id}`,
         wgs84GeometryToDisplayPath(amapApi, feature.geometry),
       ]));
 
@@ -233,7 +233,9 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           ? "reviewed-market-candidate"
           : "administrative-reference";
         try {
-          const pathRequest = researchPathRequestById.get(id);
+          const pathRequest = researchPathRequestByKey.get(
+            `${researchGeometry.properties.status}:${id}`,
+          );
           if (!pathRequest) throw new Error(`${id} 缺少研究几何显示路径`);
           const path: DisplayPath = await pathRequest;
           if (cancelled) return;

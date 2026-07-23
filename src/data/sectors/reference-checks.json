@@ -163,7 +163,7 @@
       "sectorId": "sector_sanlin",
       "comparisonRole": "admin_proxy",
       "verdict": "consistent",
-      "geometryDecision": "show_admin_reference",
+      "geometryDecision": "keep_market_candidate_with_admin_reference",
       "comparableAdminName": "三林镇",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
@@ -175,13 +175,13 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-14179226",
-        "intersectionOverUnion": 0.47,
-        "referenceCoveredPercent": 73.5,
-        "legacyAreaRatio": 1.3,
-        "centroidDistanceKilometers": 1.15
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.387,
+        "referenceCoveredPercent": 75.8,
+        "legacyAreaRatio": 1.72,
+        "centroidDistanceKilometers": 1.4
       },
-      "summary": "行政参考面与天地图形状、三林镇 34.19 平方公里面积和主要邻接关系一致；统一坐标后，旧演示面仍大 30%，且质心偏约 1.15 公里。"
+      "summary": "用户裁定东明路街道划入楼市三林；市场候选面填平行政内洞并扣除杨思前滩，同时保留原三林镇行政参考面用于核对。"
     },
     {
       "sectorId": "sector_beicai",
