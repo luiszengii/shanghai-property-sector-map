@@ -6,6 +6,7 @@ export type DraftPosition = [number, number];
 export interface SectorBoundaryDraft {
   id: string;
   sourceSectorId?: string;
+  sourceGeometryFingerprint?: string;
   name: string;
   district: string;
   boundaryBasis: string;
@@ -32,6 +33,7 @@ export interface SectorDraftFeatureCollection {
     properties: {
       id: string;
       sourceSectorId?: string;
+      sourceGeometryFingerprint?: string;
       name: string;
       district: string;
       boundaryBasis: string;
@@ -131,6 +133,8 @@ export interface ExistingSectorDraftTemplate {
   boundaryBasis: string;
   note: string;
   geometryStatus: "missing" | "demo" | "candidate";
+  geometryFingerprint: string;
+  previousGeometryFingerprints?: string[];
   ring: DraftPosition[];
 }
 
@@ -141,6 +145,7 @@ export function createDraftFromExistingSector(
   return {
     id: template.id,
     sourceSectorId: template.id,
+    sourceGeometryFingerprint: template.geometryFingerprint,
     name: template.name,
     district: template.district,
     boundaryBasis: template.boundaryBasis,
@@ -174,6 +179,7 @@ export function parseSectorEditorState(serialized: string): SectorBoundaryDraft[
     return {
       id,
       sourceSectorId: stringProperty(draft.sourceSectorId) || undefined,
+      sourceGeometryFingerprint: stringProperty(draft.sourceGeometryFingerprint) || undefined,
       name: stringProperty(draft.name) || "未命名板块",
       district: stringProperty(draft.district),
       boundaryBasis: stringProperty(draft.boundaryBasis),
@@ -204,6 +210,7 @@ export function buildSectorDraftFeatureCollection(
       properties: {
         id: draft.id,
         sourceSectorId: draft.sourceSectorId,
+        sourceGeometryFingerprint: draft.sourceGeometryFingerprint,
         name: draft.name.trim(),
         district: draft.district.trim(),
         boundaryBasis: draft.boundaryBasis.trim(),
@@ -283,6 +290,7 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
     return {
       id,
       sourceSectorId: stringProperty(properties.sourceSectorId) || undefined,
+      sourceGeometryFingerprint: stringProperty(properties.sourceGeometryFingerprint) || undefined,
       name,
       district: stringProperty(properties.district),
       boundaryBasis: stringProperty(properties.boundaryBasis),
@@ -295,6 +303,58 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
   });
 
   return drafts;
+}
+
+export function syncUntouchedDraftsToCurrentTemplates(
+  drafts: SectorBoundaryDraft[],
+  templates: ExistingSectorDraftTemplate[],
+) {
+  const templateById = new Map(templates.map((template) => [template.id, template]));
+  const updatedSourceIds: string[] = [];
+  const preservedModifiedSourceIds: string[] = [];
+  const syncedDrafts = drafts.map((draft) => {
+    if (!draft.sourceSectorId) return draft;
+    const template = templateById.get(draft.sourceSectorId);
+    if (!template || template.ring.length < 3
+      || draft.sourceGeometryFingerprint === template.geometryFingerprint) return draft;
+    const draftGeometryFingerprint = fingerprintDraftRing(draft.ring);
+    if (draftGeometryFingerprint === template.geometryFingerprint) {
+      return {
+        ...draft,
+        sourceGeometryFingerprint: template.geometryFingerprint,
+      };
+    }
+    const matchesKnownOldGeometry = Boolean(
+      template.previousGeometryFingerprints?.includes(draftGeometryFingerprint),
+    );
+    if (!matchesKnownOldGeometry) {
+      preservedModifiedSourceIds.push(draft.sourceSectorId);
+      return draft;
+    }
+    updatedSourceIds.push(draft.sourceSectorId);
+    return {
+      ...draft,
+      ring: normalizeDraftRing(template.ring),
+      sourceGeometryFingerprint: template.geometryFingerprint,
+    };
+  });
+
+  return {
+    drafts: syncedDrafts,
+    updatedSourceIds,
+    preservedModifiedSourceIds,
+  };
+}
+
+export function fingerprintDraftRing(ring: DraftPosition[]) {
+  let hash = 2166136261;
+  const normalized = normalizeDraftRing(ring);
+  const serialized = JSON.stringify(normalized);
+  for (let index = 0; index < serialized.length; index += 1) {
+    hash ^= serialized.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `ring-${normalized.length}-${(hash >>> 0).toString(16)}`;
 }
 
 export function formatSectorDraftFilename(date = new Date()) {

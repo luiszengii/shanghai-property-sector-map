@@ -4,11 +4,13 @@ import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
   createSectorDraft,
+  fingerprintDraftRing,
   isCompleteSectorDraft,
   normalizeAmapPolygonRing,
   parseSectorEditorState,
   parseSectorDraftFeatureCollection,
   serializeSectorEditorState,
+  syncUntouchedDraftsToCurrentTemplates,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./sector-editor-drafts.ts";
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
@@ -115,6 +117,7 @@ test("an existing sector becomes an editable copy without changing its identity"
     boundaryBasis: "沿主要道路与水系",
     note: "从当前地图载入",
     geometryStatus: "candidate",
+    geometryFingerprint: "candidate-v1",
     ring: [[121.4, 31.1], [121.5, 31.1], [121.5, 31.2]],
   }, "2026-07-23T10:00:00.000Z");
 
@@ -129,4 +132,44 @@ test("an existing sector becomes an editable copy without changing its identity"
     buildSectorDraftFeatureCollection(restored).features[0].properties.sourceSectorId,
     "sector-qiantan",
   );
+});
+
+test("an untouched local copy follows a newer high-precision source without overwriting user edits", () => {
+  const oldDraft = {
+    ...createDraftFromExistingSector({
+      id: "sector-gumei",
+      name: "古美",
+      district: "闵行区",
+      boundaryBasis: "旧演示面",
+      note: "旧边界",
+      geometryStatus: "demo",
+      geometryFingerprint: "old-demo",
+      ring: [[121.3, 31.1], [121.4, 31.1], [121.4, 31.2]],
+    }, "2026-07-23T10:00:00.000Z"),
+    sourceGeometryFingerprint: undefined,
+  };
+  const currentTemplate = {
+    id: "sector-gumei",
+    name: "古美",
+    district: "闵行区",
+    boundaryBasis: "高精度行政参考面",
+    note: "当前边界",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: "admin-reference-v2",
+    previousGeometryFingerprints: [fingerprintDraftRing(oldDraft.ring)],
+    ring: [[121.35, 31.15], [121.45, 31.15], [121.45, 31.25]] as [number, number][],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([oldDraft], [currentTemplate]);
+  assert.deepEqual(synced.drafts[0].ring, currentTemplate.ring);
+  assert.equal(synced.drafts[0].sourceGeometryFingerprint, "admin-reference-v2");
+  assert.deepEqual(synced.preservedModifiedSourceIds, []);
+
+  const editedDraft = {
+    ...oldDraft,
+    ring: [[121.31, 31.11], [121.41, 31.11], [121.41, 31.21]] as [number, number][],
+  };
+  const preserved = syncUntouchedDraftsToCurrentTemplates([editedDraft], [currentTemplate]);
+  assert.deepEqual(preserved.drafts[0].ring, editedDraft.ring);
+  assert.deepEqual(preserved.preservedModifiedSourceIds, ["sector-gumei"]);
 });

@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  buildSectorEditorTemplates,
+  selectPreferredEditorGeometry,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
-import { buildSectorEditorTemplates } from "./sector-editor-catalog.ts";
+} from "./sector-editor-catalog.ts";
 
 const registry = [
   {
@@ -41,5 +44,33 @@ test("the editor lists registry identities even when geometry is missing", () =>
       { id: "sector-with-geometry", geometryStatus: "candidate", pointCount: 3 },
       { id: "sector-without-geometry", geometryStatus: "missing", pointCount: 0 },
     ],
+  );
+});
+
+test("the editor prefers the same high-precision reference shown on the main map over a legacy demo", () => {
+  const legacyDemo = {
+    kind: "market-demo" as const,
+    coordinateSystem: "GCJ-02-assumed" as const,
+    geometry: {
+      type: "Polygon" as const,
+      coordinates: [[[121.3, 31.1], [121.4, 31.1], [121.4, 31.2], [121.3, 31.1]]],
+    },
+  };
+  const administrativeReference = {
+    kind: "administrative-reference" as const,
+    coordinateSystem: "WGS84" as const,
+    geometry: {
+      type: "Polygon" as const,
+      coordinates: [[[121.35, 31.15], [121.45, 31.15], [121.45, 31.25], [121.35, 31.15]]],
+    },
+  };
+
+  assert.equal(
+    selectPreferredEditorGeometry({
+      reviewedCandidate: undefined,
+      administrativeReference,
+      legacyDemo,
+    }),
+    administrativeReference,
   );
 });

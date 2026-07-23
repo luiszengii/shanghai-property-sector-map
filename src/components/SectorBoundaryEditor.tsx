@@ -19,7 +19,10 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
-import { buildSectorEditorTemplates } from "@/src/lib/sector-editor-catalog";
+import {
+  buildSectorEditorTemplates,
+  buildSubscopeEditorTemplates,
+} from "@/src/lib/sector-editor-catalog";
 import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
@@ -31,6 +34,7 @@ import {
   parseSectorEditorState,
   SECTOR_EDITOR_STORAGE_KEY,
   serializeSectorEditorState,
+  syncUntouchedDraftsToCurrentTemplates,
   type DraftPosition,
   type ExistingSectorDraftTemplate,
   type SectorBoundaryDraft,
@@ -56,10 +60,23 @@ type SidebarSectorItem =
     draft: SectorBoundaryDraft;
   };
 
-const existingSectorTemplates: ExistingSectorDraftTemplate[] = buildSectorEditorTemplates(
+const primarySectorTemplates = buildSectorEditorTemplates(
   sectorCatalog.registry,
-  sectorCatalog.resolveActiveGeometry,
+  sectorCatalog.resolveEditorGeometry,
   coordinateToDisplayPosition,
+  (id) => sectorCatalog.resolveActiveGeometry(id, true),
+);
+const subscopeTemplates = buildSubscopeEditorTemplates(
+  sectorCatalog.subscopes,
+  sectorCatalog.getRecord,
+  coordinateToDisplayPosition,
+);
+const existingSectorTemplates: ExistingSectorDraftTemplate[] = [
+  ...primarySectorTemplates,
+  ...subscopeTemplates,
+];
+const existingSectorTemplateById = new Map(
+  existingSectorTemplates.map((template) => [template.id, template]),
 );
 
 function createDraftId() {
@@ -121,6 +138,17 @@ export function SectorBoundaryEditor() {
   );
   const customDrafts = useMemo(
     () => drafts.filter((draft) => !draft.sourceSectorId),
+    [drafts],
+  );
+  const outdatedSourceIds = useMemo(
+    () => new Set(drafts.flatMap((draft) => {
+      if (!draft.sourceSectorId) return [];
+      const template = existingSectorTemplateById.get(draft.sourceSectorId);
+      return template?.ring.length
+        && draft.sourceGeometryFingerprint !== template.geometryFingerprint
+        ? [draft.sourceSectorId]
+        : [];
+    })),
     [drafts],
   );
   const sidebarItems = useMemo<SidebarSectorItem[]>(() => [
@@ -203,8 +231,20 @@ export function SectorBoundaryEditor() {
         const stored = localStorage.getItem(SECTOR_EDITOR_STORAGE_KEY);
         if (stored) {
           const restored = parseSectorEditorState(stored);
-          setDrafts(restored);
-          setActiveId(restored[0]?.id ?? null);
+          const synced = syncUntouchedDraftsToCurrentTemplates(restored, existingSectorTemplates);
+          setDrafts(synced.drafts);
+          setActiveId(synced.drafts[0]?.id ?? null);
+          if (synced.preservedModifiedSourceIds.length) {
+            setNotice({
+              tone: "warning",
+              message: `${synced.preservedModifiedSourceIds.length} 个手工修改草稿仍基于旧源边界，已保留；放弃该副本后可重新载入当前高精度边界。`,
+            });
+          } else if (synced.updatedSourceIds.length) {
+            setNotice({
+              tone: "success",
+              message: `已将 ${synced.updatedSourceIds.length} 个未修改副本同步到主页当前高精度边界。`,
+            });
+          }
         }
       } catch (error) {
         console.warn("板块草稿恢复失败", error);
@@ -598,8 +638,8 @@ export function SectorBoundaryEditor() {
             <div>
               <span>已有板块与草稿</span>
               <strong>
-                {existingSectorTemplates.length} 个已登记 · {" "}
-                {existingSectorTemplates.filter((template) => template.geometryStatus === "missing").length} 个待绘制 · {" "}
+                {sectorCatalog.registry.length} 个板块 · {subscopeTemplates.length} 个参考范围 · {" "}
+                {primarySectorTemplates.filter((template) => template.geometryStatus === "missing").length} 个待绘制 · {" "}
                 {customDrafts.length} 个自建
               </strong>
             </div>
@@ -662,7 +702,9 @@ export function SectorBoundaryEditor() {
                     <small>
                       {displayDistrict}
                       {isExistingSector
-                        ? template?.geometryStatus === "missing"
+                        ? outdatedSourceIds.has(template?.id ?? "")
+                          ? " · 源边界有更新"
+                          : template?.geometryStatus === "missing"
                           ? ` · ${draft?.ring.length ? `${draft.ring.length} 个边界点` : "待绘制"}`
                           : ` · ${draft ? "编辑副本" : "点击编辑"}`
                         : isComplete ? ` · ${draft?.ring.length ?? 0} 个边界点` : " · 待完善"}

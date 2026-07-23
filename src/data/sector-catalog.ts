@@ -6,6 +6,7 @@ import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
+import { selectPreferredEditorGeometry } from "@/src/lib/sector-editor-catalog";
 import type {
   SectorBoundaryEvidence,
   SectorCollection,
@@ -39,7 +40,7 @@ export interface SectorSubscopeFeature {
 }
 
 export interface SectorActiveGeometry {
-  kind: "market-demo" | "reviewed-market-candidate";
+  kind: "market-demo" | "reviewed-market-candidate" | "administrative-reference";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
   geometry: SectorGeometry;
   center: [number, number];
@@ -151,6 +152,38 @@ function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActive
   };
 }
 
+function resolveEditorGeometry(id: string): SectorActiveGeometry | undefined {
+  const feature = featureById.get(id);
+  const reviewedCandidate = reviewedCandidateById.get(id);
+  const administrativeReference = administrativeReferenceById.get(id);
+  return selectPreferredEditorGeometry({
+    reviewedCandidate: reviewedCandidate
+      ? {
+        kind: "reviewed-market-candidate" as const,
+        coordinateSystem: "WGS84" as const,
+        geometry: reviewedCandidate.geometry,
+        center: reviewedCandidate.properties.labelPoint,
+      }
+      : undefined,
+    administrativeReference: administrativeReference
+      ? {
+        kind: "administrative-reference" as const,
+        coordinateSystem: "WGS84" as const,
+        geometry: administrativeReference.geometry,
+        center: administrativeReference.properties.labelPoint,
+      }
+      : undefined,
+    legacyDemo: feature
+      ? {
+        kind: "market-demo" as const,
+        coordinateSystem: "GCJ-02-assumed" as const,
+        geometry: feature.geometry,
+        center: feature.properties.center,
+      }
+      : undefined,
+  });
+}
+
 export const sectorCatalog = {
   features,
   registry,
@@ -167,6 +200,7 @@ export const sectorCatalog = {
   getFeature: (id: string) => featureById.get(id),
   getRecord: (id: string) => recordById.get(id),
   resolveActiveGeometry,
+  resolveEditorGeometry,
   getReviewedCandidate: (id: string) => reviewedCandidateById.get(id),
   getAdministrativeReference: (id: string) => administrativeReferenceById.get(id),
   getSubscopesForSector: (id: string) => (
