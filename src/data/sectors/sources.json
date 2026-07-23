@@ -677,6 +677,28 @@
       "note": "确认长宁区现辖 9 个街道、1 个镇及其自西向东顺序；只用于身份和邻接核对，不提供楼市板块定义或可再分发边界。"
     },
     {
+      "id": "official-changning-gubei-new-district-scope-2024",
+      "title": "“古北新区”的前世今生",
+      "publisher": "上海市长宁区人民政府",
+      "url": "https://www.shcn.gov.cn/col7343/20241008/1269131.html",
+      "sourceType": "official_functional_area_history",
+      "publishedAt": "2024-10-08",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "引用《古北新区开发规划》，明确古北新区东姚虹路、西虹许路、北虹桥路和延安西路西段、南古羊路，总占地 136.6 公顷；只引用文字四至和面积，不复制页面或规划图坐标。"
+    },
+    {
+      "id": "official-changning-hongqiao-subdistrict-gubei-scope-2025",
+      "title": "虹桥街道简介",
+      "publisher": "上海市长宁区人民政府",
+      "url": "https://www.shcn.gov.cn/col7342/20241008/1269128.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025-04-03",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "官方简介直接确认虹桥街道辖区内有古北新区；用于证明古北应从虹桥街道骨架中独立扣除，不代表官方把剩余街道面命名为楼市虹桥。"
+    },
+    {
       "id": "official-qingpu-master-plan-2035",
       "title": "上海市青浦区总体规划暨土地利用总体规划（2017-2035）",
       "publisher": "上海市规划和自然资源局",

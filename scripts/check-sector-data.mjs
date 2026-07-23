@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -388,6 +389,55 @@ function exactSharedBoundaryLengthMeters(firstGeometry, secondGeometry) {
     if (secondSegments.has(key)) total += length;
   }
   return total;
+}
+
+function exactSharedBoundaryLengthMetersIncludingHoles(firstGeometry, secondGeometry) {
+  const segmentMap = (geometry) => {
+    const segments = new Map();
+    for (const polygon of polygonGroupsForGeometry(geometry)) {
+      for (const ring of polygon) {
+        for (let index = 0; index < ring.length - 1; index += 1) {
+          const start = ring[index];
+          const end = ring[index + 1];
+          const startKey = JSON.stringify(start);
+          const endKey = JSON.stringify(end);
+          const key = startKey < endKey
+            ? `${startKey}/${endKey}`
+            : `${endKey}/${startKey}`;
+          const projectedStart = projectWgs84ToComparisonPlane(start);
+          const projectedEnd = projectWgs84ToComparisonPlane(end);
+          segments.set(key, Math.hypot(
+            projectedEnd[0] - projectedStart[0],
+            projectedEnd[1] - projectedStart[1],
+          ));
+        }
+      }
+    }
+    return segments;
+  };
+  const firstSegments = segmentMap(firstGeometry);
+  const secondSegments = segmentMap(secondGeometry);
+  let total = 0;
+  for (const [key, length] of firstSegments) {
+    if (secondSegments.has(key)) total += length;
+  }
+  return total;
+}
+
+function ringLengthMeters(ring) {
+  let total = 0;
+  for (let index = 0; index < ring.length - 1; index += 1) {
+    const start = projectWgs84ToComparisonPlane(ring[index]);
+    const end = projectWgs84ToComparisonPlane(ring[index + 1]);
+    total += Math.hypot(end[0] - start[0], end[1] - start[1]);
+  }
+  return total;
+}
+
+function geometrySha256(geometry) {
+  return createHash("sha256")
+    .update(JSON.stringify(geometry))
+    .digest("hex");
 }
 
 const comparisonMetricMethod = {
@@ -1566,7 +1616,7 @@ if (changningFourSharedPairs.size !== 2
   || !changningFourSharedPairs.has("sector_tianshan/sector_xianxia")) {
   error("长宁直接同名街道批次必须保持新华路—天山—仙霞两组固定共享边");
 }
-for (const forbiddenName of ["中山公园", "虹桥", "古北", "西郊"]) {
+for (const forbiddenName of ["中山公园", "西郊"]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -1618,6 +1668,89 @@ for (const pair of changningFourSharedPairs) {
     || Math.abs(exactSharedLength - sharedLength) > 0.01) {
     error(`${firstId} / ${secondId}: 长宁批次共享边必须使用完全相同的坐标序列`);
   }
+}
+
+const gubeiDefinition = candidateDefinitionById.get("sector_gubei");
+const changningHongqiaoDefinition = candidateDefinitionById.get(
+  "sector_changning_hongqiao",
+);
+const gubeiCandidate = candidateById.get("sector_gubei");
+const changningHongqiaoCandidate = candidateById.get(
+  "sector_changning_hongqiao",
+);
+const gubeiRegistry = registryById.get("sector_gubei");
+const changningHongqiaoRegistry = registryById.get(
+  "sector_changning_hongqiao",
+);
+const gubeiManifest = manifestById.get("sector_gubei");
+const changningHongqiaoManifest = manifestById.get(
+  "sector_changning_hongqiao",
+);
+if (gubeiDefinition?.method !== "market_four_sides_osm_linear_component"
+  || gubeiDefinition?.officialAreaSquareKilometers !== 1.366
+  || gubeiCandidate?.properties?.confidence !== "medium"
+  || gubeiRegistry?.reviewStatus !== "draft-medium"
+  || gubeiRegistry?.geometry?.publicationPolicy !== "internal_review") {
+  error("sector_gubei: 必须保持官方四至重建的 medium / draft-medium 内部候选");
+}
+for (const anchor of gubeiDefinition?.boundaryAnchors ?? []) {
+  const manifestAnchor = gubeiManifest?.osmRefs?.boundaryAnchors?.find(
+    (item) => item.side === anchor.side,
+  );
+  if (!manifestAnchor
+    || manifestAnchor.identityStatus !== "verified-by-osm-name"
+    || manifestAnchor.centerlineToleranceMeters !== 15
+    || manifestAnchor.boundaryCoverageWithinToleranceMeters
+      < anchor.minimumBoundaryCoverageMeters) {
+    error(`sector_gubei: ${anchor.side} 侧必须达到声明的命名道路覆盖长度`);
+  }
+}
+if (changningHongqiaoDefinition?.method
+    !== "market_admin_candidate_with_shared_topology"
+  || String(changningHongqiaoDefinition?.osmAdminRelationId) !== "13469352"
+  || !(changningHongqiaoDefinition?.subtractSectorIds ?? [])
+    .includes("sector_gubei")
+  || !(changningHongqiaoManifest?.osmRefs?.subtractedSectorIds ?? [])
+    .includes("sector_gubei")
+  || changningHongqiaoCandidate?.properties?.confidence !== "low"
+  || changningHongqiaoRegistry?.reviewStatus !== "draft-low"
+  || changningHongqiaoRegistry?.geometry?.publicationPolicy !== "internal_review") {
+  error("sector_changning_hongqiao: 必须保持虹桥街道减古北的 low / draft-low 推导候选");
+}
+const gubeiPolygonGroups = gubeiCandidate
+  ? polygonGroupsForGeometry(gubeiCandidate.geometry)
+  : [];
+const changningHongqiaoPolygonGroups = changningHongqiaoCandidate
+  ? polygonGroupsForGeometry(changningHongqiaoCandidate.geometry)
+  : [];
+if (gubeiPolygonGroups.length !== 1 || gubeiPolygonGroups[0]?.length !== 1) {
+  error("sector_gubei: 古北必须是无数值内洞的单一 Polygon");
+}
+if (changningHongqiaoPolygonGroups.length !== 1
+  || changningHongqiaoPolygonGroups[0]?.length !== 2) {
+  error("sector_changning_hongqiao: 住宅虹桥必须以单一 Polygon 内洞完整扣除古北");
+}
+const exactGubeiHongqiaoSharedLength = gubeiCandidate && changningHongqiaoCandidate
+  ? exactSharedBoundaryLengthMetersIncludingHoles(
+    gubeiCandidate.geometry,
+    changningHongqiaoCandidate.geometry,
+  )
+  : 0;
+const gubeiOuterBoundaryLength = gubeiPolygonGroups[0]?.[0]
+  ? ringLengthMeters(gubeiPolygonGroups[0][0])
+  : 0;
+if (gubeiOuterBoundaryLength <= 0
+  || Math.abs(exactGubeiHongqiaoSharedLength - gubeiOuterBoundaryLength) > 0.01) {
+  error("sector_gubei / sector_changning_hongqiao: 古北扣除边必须保持完整精确共边");
+}
+if (protectedHongqiaoBusinessCandidate?.properties?.scopeVersion
+    !== "market-core-function-corridor-2026-07"
+  || protectedHongqiaoBusinessCandidate?.properties?.areaSquareKilometers
+    !== 16.8075
+  // Baseline is the exact pre-batch geometry from commit 2c057ca.
+  || geometrySha256(protectedHongqiaoBusinessCandidate?.geometry)
+    !== "1ec7da5352ca8d8002828437b1eccb176dc64f53db67d98db3b120be4985396b") {
+  error("sector_hongqiao: 长宁住宅虹桥批次不得改写虹桥商务区候选");
 }
 
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");

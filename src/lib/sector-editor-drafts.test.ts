@@ -4,9 +4,12 @@ import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
   createSectorDraft,
+  draftHoles,
   draftParts,
+  fingerprintDraftParts,
   fingerprintDraftRing,
   isCompleteSectorDraft,
+  normalizeAmapPolygonGeometry,
   normalizeAmapPolygonRing,
   normalizeAmapPolygonParts,
   parseSectorEditorState,
@@ -80,6 +83,52 @@ test("multi-part drafts export and import without dropping detached polygons", (
   assert.deepEqual(draftParts(restored), draftParts(draft));
 });
 
+test("polygon holes survive editor export and import", () => {
+  const draft = {
+    ...createSectorDraft("sector-with-hole"),
+    name: "带扣除区板块",
+    ring: [[121.1, 31.1], [121.3, 31.1], [121.3, 31.3], [121.1, 31.3]] as [number, number][],
+    holes: [
+      [[121.15, 31.15], [121.15, 31.2], [121.2, 31.2], [121.2, 31.15]],
+    ] as [number, number][][],
+  };
+
+  const collection = buildSectorDraftFeatureCollection([draft]);
+  assert.equal(collection.features[0].geometry.type, "Polygon");
+  assert.equal(collection.features[0].geometry.coordinates.length, 2);
+
+  const [restored] = parseSectorDraftFeatureCollection(collection);
+  assert.deepEqual(restored.ring, draft.ring);
+  assert.deepEqual(draftHoles(restored), draft.holes);
+});
+
+test("holes in every multi-polygon part survive editor export and import", () => {
+  const draft = {
+    ...createSectorDraft("sector-multipart-with-holes"),
+    name: "多分片带扣除区",
+    ring: [[121.1, 31.1], [121.3, 31.1], [121.3, 31.3]] as [number, number][],
+    additionalRings: [
+      [[121.4, 31.4], [121.7, 31.4], [121.7, 31.7]],
+    ] as [number, number][][],
+    additionalHoles: [
+      [
+        [[121.5, 31.5], [121.6, 31.5], [121.6, 31.6]],
+      ],
+    ] as [number, number][][][],
+  };
+
+  const collection = buildSectorDraftFeatureCollection([draft]);
+  assert.equal(collection.features[0].geometry.type, "MultiPolygon");
+  assert.equal(collection.features[0].geometry.coordinates[1].length, 2);
+
+  const [restored] = parseSectorDraftFeatureCollection(collection);
+  assert.deepEqual(restored.additionalHoles, draft.additionalHoles);
+  assert.deepEqual(
+    buildSectorDraftFeatureCollection([restored]).features[0].geometry,
+    collection.features[0].geometry,
+  );
+});
+
 test("import rejects files without an explicit GCJ-02 coordinate system", () => {
   assert.throws(
     () => parseSectorDraftFeatureCollection({
@@ -119,6 +168,34 @@ test("AMap multi-polygon paths preserve every exterior part", () => {
   ]);
   assert.equal(parts.length, 2);
   assert.deepEqual(parts[1][0], [121.3, 31.3]);
+});
+
+test("AMap polygon paths preserve interior holes separately from detached parts", () => {
+  const geometry = normalizeAmapPolygonGeometry([
+    [[121.1, 31.1], [121.3, 31.1], [121.3, 31.3]],
+    [[121.15, 31.15], [121.2, 31.15], [121.2, 31.2]],
+  ]);
+
+  assert.equal(geometry.ring.length, 3);
+  assert.equal(geometry.holes?.length, 1);
+  assert.deepEqual(geometry.holes?.[0][0], [121.15, 31.15]);
+  assert.deepEqual(geometry.additionalRings, []);
+});
+
+test("AMap multi-polygon paths preserve holes for detached parts", () => {
+  const geometry = normalizeAmapPolygonGeometry([
+    [
+      [[121.1, 31.1], [121.3, 31.1], [121.3, 31.3]],
+    ],
+    [
+      [[121.4, 31.4], [121.7, 31.4], [121.7, 31.7]],
+      [[121.5, 31.5], [121.6, 31.5], [121.6, 31.6]],
+    ],
+  ]);
+
+  assert.equal(geometry.additionalRings?.length, 1);
+  assert.equal(geometry.additionalHoles?.[0]?.length, 1);
+  assert.deepEqual(geometry.additionalHoles?.[0]?.[0]?.[0], [121.5, 31.5]);
 });
 
 test("a drawn polygon still needs a real sector name before export", () => {
@@ -203,6 +280,52 @@ test("an untouched local copy follows a newer high-precision source without over
   const preserved = syncUntouchedDraftsToCurrentTemplates([editedDraft], [currentTemplate]);
   assert.deepEqual(preserved.drafts[0].ring, editedDraft.ring);
   assert.deepEqual(preserved.preservedModifiedSourceIds, ["sector-gumei"]);
+});
+
+test("an untouched exterior-only copy upgrades when the source gains a protected hole", () => {
+  const outerRing = [
+    [121.1, 31.1],
+    [121.3, 31.1],
+    [121.3, 31.3],
+    [121.1, 31.3],
+  ] as [number, number][];
+  const hole = [
+    [121.15, 31.15],
+    [121.15, 31.2],
+    [121.2, 31.2],
+    [121.2, 31.15],
+  ] as [number, number][];
+  const exteriorFingerprint = fingerprintDraftParts([outerRing]);
+  const draft = createDraftFromExistingSector({
+    id: "sector-hongqiao-residential",
+    name: "虹桥",
+    district: "长宁区",
+    boundaryBasis: "旧外环",
+    note: "旧副本",
+    geometryStatus: "candidate",
+    geometryFingerprint: exteriorFingerprint,
+    ring: outerRing,
+  });
+  const template = {
+    id: "sector-hongqiao-residential",
+    name: "虹桥",
+    district: "长宁区",
+    boundaryBasis: "虹桥街道扣除古北",
+    note: "当前候选",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: fingerprintDraftParts([outerRing, hole]),
+    previousGeometryFingerprints: [exteriorFingerprint],
+    ring: outerRing,
+    holes: [hole],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([draft], [template]);
+  assert.deepEqual(draftHoles(synced.drafts[0]), [hole]);
+  assert.equal(
+    synced.drafts[0].sourceGeometryFingerprint,
+    template.geometryFingerprint,
+  );
+  assert.deepEqual(synced.updatedSourceIds, ["sector-hongqiao-residential"]);
 });
 
 test("only an untouched retired Yangsi Qiantan default resets to the independent Qiantan template", () => {

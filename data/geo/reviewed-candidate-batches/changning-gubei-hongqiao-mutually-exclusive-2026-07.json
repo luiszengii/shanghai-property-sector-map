@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "changning-gubei-hongqiao-mutually-exclusive-2026-07",
+  "topologyGroups": [],
+  "sectors": [
+    {
+      "id": "sector_gubei",
+      "canonicalName": "古北",
+      "districtName": "长宁区",
+      "scopeVersion": "gubei-new-district-four-sides-2026-07",
+      "confidence": "medium",
+      "method": "market_four_sides_osm_linear_component",
+      "bbox": [121.378, 31.182, 121.412, 31.204],
+      "insidePoint": [121.397, 31.196],
+      "boundaryAnchors": [
+        {
+          "side": "east",
+          "featureType": "road",
+          "expectedIdentity": "姚虹路",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["姚虹路"] },
+          "verificationSourceIds": ["official-changning-gubei-new-district-scope-2024", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 500
+        },
+        {
+          "side": "west",
+          "featureType": "road",
+          "expectedIdentity": "虹许路",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["虹许路"] },
+          "verificationSourceIds": ["official-changning-gubei-new-district-scope-2024", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 300
+        },
+        {
+          "side": "north",
+          "featureType": "composite-linear",
+          "expectedIdentity": "虹桥路—延安西路西段",
+          "identityStatus": "verified-by-osm-name",
+          "components": [
+            {
+              "featureType": "road",
+              "expectedIdentity": "虹桥路",
+              "match": { "names": ["虹桥路"] }
+            },
+            {
+              "featureType": "road",
+              "expectedIdentity": "延安西路",
+              "match": { "names": ["延安西路"] }
+            }
+          ],
+          "verificationSourceIds": ["official-changning-gubei-new-district-scope-2024", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 2000
+        },
+        {
+          "side": "south",
+          "featureType": "road",
+          "expectedIdentity": "古羊路",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["古羊路"] },
+          "verificationSourceIds": ["official-changning-gubei-new-district-scope-2024", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1500
+        }
+      ],
+      "cutBufferMeters": 4,
+      "centerlineToleranceMeters": 15,
+      "minimumBboxClearanceMeters": 30,
+      "fillHolesBelowSquareMeters": 1,
+      "officialAreaSquareKilometers": 1.366,
+      "areaToleranceRatio": 0.05,
+      "preserveTopologyPrecision": true,
+      "sharedEdgeSectorIds": ["sector_changning_hongqiao"],
+      "snapDependencySectorIds": [],
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-changning-gubei-new-district-scope-2024"],
+      "geometryVerificationSourceIds": ["official-changning-gubei-new-district-scope-2024", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "古北按官方《古北新区开发规划》文字四至独立重建：东姚虹路、西虹许路、北虹桥路与延安西路西段、南古羊路。固定 OSM 道路线只用于在锁定快照上复算内部候选；136.6 公顷用于面积量级校验，不把后来的居委治理范围或虹桥—古北功能区混入一级市场面。"
+    },
+    {
+      "id": "sector_changning_hongqiao",
+      "canonicalName": "虹桥",
+      "districtName": "长宁区",
+      "scopeVersion": "hongqiao-subdistrict-minus-gubei-derived-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "13469352",
+      "expectedOsmName": "虹桥街道",
+      "insidePoint": [121.4079162, 31.2003651],
+      "subtractSectorIds": ["sector_gubei"],
+      "minimumRetainedPartSquareMeters": 100,
+      "sharedEdgeSectorIds": ["sector_gubei"],
+      "sharedEdgeSnapDistanceMeters": 0.1,
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [2.6, 2.8],
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-changning-admin-divisions-2025", "official-changning-hongqiao-subdistrict-gubei-scope-2025", "official-changning-gubei-new-district-scope-2024"],
+      "geometryVerificationSourceIds": ["official-tianditu-shanghai-standard-maps-2025", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "长宁住宅虹桥采用独立 ID，暂以固定 OSM 虹桥街道 relation 扣除已重建古北新区形成互斥低置信候选。该差集是项目推导，不是官方发布的虹桥住宅边界；街道北部与天山、仙霞的完整小区归属仍待人工精修，且不得复用既有虹桥商务区 sector_hongqiao。"
+    }
+  ]
+}

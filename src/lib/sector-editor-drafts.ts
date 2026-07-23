@@ -13,7 +13,9 @@ export interface SectorBoundaryDraft {
   note: string;
   coordinateSystem: "GCJ-02";
   ring: DraftPosition[];
+  holes?: DraftPosition[][];
   additionalRings?: DraftPosition[][];
+  additionalHoles?: DraftPosition[][][];
   createdAt: string;
   updatedAt: string;
 }
@@ -115,8 +117,86 @@ export function draftParts(draft: Pick<SectorBoundaryDraft, "ring" | "additional
   ].filter((ring) => ring.length >= 3);
 }
 
+export function draftHoles(draft: Pick<SectorBoundaryDraft, "holes">) {
+  return normalizeDraftRings(draft.holes);
+}
+
+export function draftAdditionalHoles(
+  draft: Pick<SectorBoundaryDraft, "additionalHoles">,
+) {
+  if (!Array.isArray(draft.additionalHoles)) return [];
+  return draft.additionalHoles.map(normalizeDraftRings);
+}
+
+export function draftFingerprintRings(
+  draft: Pick<
+    SectorBoundaryDraft,
+    "ring" | "holes" | "additionalRings" | "additionalHoles"
+  >,
+) {
+  const parts = draftParts(draft);
+  const additionalHoles = draftAdditionalHoles(draft);
+  return [
+    parts[0] ?? [],
+    ...draftHoles(draft),
+    ...parts.slice(1).flatMap((ring, index) => [
+      ring,
+      ...(additionalHoles[index] ?? []),
+    ]),
+  ].filter((ring) => ring.length >= 3);
+}
+
+export function normalizeAmapPolygonGeometry(value: unknown): Pick<
+  SectorBoundaryDraft,
+  "ring" | "holes" | "additionalRings" | "additionalHoles"
+> {
+  if (!Array.isArray(value) || value.length === 0) {
+    return { ring: [], holes: [], additionalRings: [], additionalHoles: [] };
+  }
+  const firstValue = value[0];
+  if (isAmapPosition(firstValue)) {
+    return {
+      ring: normalizeAmapRing(value),
+      holes: [],
+      additionalRings: [],
+      additionalHoles: [],
+    };
+  }
+  if (!Array.isArray(firstValue) || firstValue.length === 0) {
+    return { ring: [], holes: [], additionalRings: [], additionalHoles: [] };
+  }
+  if (isAmapPosition(firstValue[0])) {
+    const [ring = [], ...holes] = value
+      .map((candidate) => (
+        Array.isArray(candidate) ? normalizeAmapRing(candidate) : []
+      ))
+      .filter((candidate) => candidate.length >= 3);
+    return { ring, holes, additionalRings: [], additionalHoles: [] };
+  }
+  const polygons = value.flatMap((polygon): DraftPosition[][][] => {
+    if (!Array.isArray(polygon)) return [];
+    const rings = polygon
+      .map((candidate) => (
+        Array.isArray(candidate) ? normalizeAmapRing(candidate) : []
+      ))
+      .filter((candidate) => candidate.length >= 3);
+    return rings.length ? [rings] : [];
+  });
+  const [primary = [], ...additionalPolygons] = polygons;
+  return {
+    ring: primary[0] ?? [],
+    holes: primary.slice(1),
+    additionalRings: additionalPolygons
+      .map((polygon) => polygon[0])
+      .filter((ring): ring is DraftPosition[] => Boolean(ring)),
+    additionalHoles: additionalPolygons
+      .filter((polygon) => Boolean(polygon[0]))
+      .map((polygon) => polygon.slice(1)),
+  };
+}
+
 export function normalizeAmapPolygonRing(value: unknown): DraftPosition[] {
-  return normalizeAmapPolygonParts(value)[0] ?? [];
+  return normalizeAmapPolygonGeometry(value).ring;
 }
 
 export function normalizeAmapPolygonParts(value: unknown): DraftPosition[][] {
@@ -179,7 +259,9 @@ export function createSectorDraft(id: string, timestamp = new Date().toISOString
     note: "",
     coordinateSystem: "GCJ-02",
     ring: [],
+    holes: [],
     additionalRings: [],
+    additionalHoles: [],
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -195,7 +277,9 @@ export interface ExistingSectorDraftTemplate {
   geometryFingerprint: string;
   previousGeometryFingerprints?: string[];
   ring: DraftPosition[];
+  holes?: DraftPosition[][];
   additionalRings?: DraftPosition[][];
+  additionalHoles?: DraftPosition[][][];
 }
 
 export function createDraftFromExistingSector(
@@ -212,7 +296,9 @@ export function createDraftFromExistingSector(
     note: template.note,
     coordinateSystem: "GCJ-02",
     ring: normalizeDraftRing(template.ring),
+    holes: normalizeDraftRings(template.holes),
     additionalRings: normalizeDraftRings(template.additionalRings),
+    additionalHoles: draftAdditionalHoles(template),
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -247,7 +333,9 @@ export function parseSectorEditorState(serialized: string): SectorBoundaryDraft[
       note: stringProperty(draft.note),
       coordinateSystem: "GCJ-02",
       ring: normalizeDraftRing(draft.ring),
+      holes: normalizeDraftRings(draft.holes),
       additionalRings: normalizeDraftRings(draft.additionalRings),
+      additionalHoles: draftAdditionalHoles(draft),
       createdAt: stringProperty(draft.createdAt) || now,
       updatedAt: stringProperty(draft.updatedAt) || now,
     };
@@ -268,6 +356,12 @@ export function buildSectorDraftFeatureCollection(
     .filter(isCompleteSectorDraft)
     .map((draft): SectorDraftFeatureCollection["features"][number] => {
       const parts = draftParts(draft);
+      const holes = draftHoles(draft);
+      const additionalHoles = draftAdditionalHoles(draft);
+      const primaryPolygon = [
+        closeRing(parts[0]),
+        ...holes.map(closeRing),
+      ];
       return {
         type: "Feature",
         id: draft.id,
@@ -288,11 +382,17 @@ export function buildSectorDraftFeatureCollection(
         geometry: parts.length > 1
           ? {
             type: "MultiPolygon",
-            coordinates: parts.map((ring) => [closeRing(ring)]),
+            coordinates: [
+              primaryPolygon,
+              ...parts.slice(1).map((ring, index) => [
+                closeRing(ring),
+                ...(additionalHoles[index] ?? []).map(closeRing),
+              ]),
+            ],
           }
           : {
             type: "Polygon",
-            coordinates: [closeRing(parts[0])],
+            coordinates: primaryPolygon,
           },
       };
     });
@@ -345,14 +445,21 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
       || !Array.isArray(feature.geometry.coordinates)) {
       throw new Error(`第 ${index + 1} 个板块不是 Polygon 或 MultiPolygon`);
     }
-    const parts = feature.geometry.type === "MultiPolygon"
-      ? feature.geometry.coordinates.flatMap((polygon): DraftPosition[][] => (
-        Array.isArray(polygon) && Array.isArray(polygon[0])
-          ? [normalizeDraftRing(polygon[0])]
-          : []
-      ))
-      : [normalizeDraftRing(feature.geometry.coordinates[0])];
-    const [ring = [], ...additionalRings] = parts.filter((part) => part.length >= 3);
+    const polygons = feature.geometry.type === "MultiPolygon"
+      ? feature.geometry.coordinates.flatMap((polygon): DraftPosition[][][] => {
+        if (!Array.isArray(polygon)) return [];
+        const rings = normalizeDraftRings(polygon);
+        return rings.length ? [rings] : [];
+      })
+      : [normalizeDraftRings(feature.geometry.coordinates)];
+    const [primaryPolygon = [], ...additionalPolygons] = polygons;
+    const [ring = [], ...holes] = primaryPolygon;
+    const additionalRings = additionalPolygons
+      .map((polygon) => polygon[0])
+      .filter((candidate): candidate is DraftPosition[] => Boolean(candidate));
+    const additionalHoles = additionalPolygons
+      .filter((polygon) => Boolean(polygon[0]))
+      .map((polygon) => polygon.slice(1));
     if (ring.length < 3) {
       throw new Error(`第 ${index + 1} 个板块少于 3 个边界点`);
     }
@@ -374,7 +481,9 @@ export function parseSectorDraftFeatureCollection(value: unknown): SectorBoundar
       note: stringProperty(properties.note),
       coordinateSystem: "GCJ-02" as const,
       ring,
+      holes,
       additionalRings,
+      additionalHoles,
       createdAt: stringProperty(properties.createdAt) || importedAt,
       updatedAt: stringProperty(properties.updatedAt) || importedAt,
     };
@@ -395,7 +504,9 @@ export function syncUntouchedDraftsToCurrentTemplates(
     const template = templateById.get(draft.sourceSectorId);
     if (!template) return draft;
     const retiredSource = retiredDraftSourcesBySourceId.get(draft.sourceSectorId);
-    const draftGeometryFingerprint = fingerprintDraftParts(draftParts(draft));
+    const draftGeometryFingerprint = fingerprintDraftParts(
+      draftFingerprintRings(draft),
+    );
     const hasRetiredIdentity = Boolean(
       retiredSource?.names.has(draft.name)
       || (
@@ -442,7 +553,9 @@ export function syncUntouchedDraftsToCurrentTemplates(
     return {
       ...migratedDraft,
       ring: normalizeDraftRing(template.ring),
+      holes: normalizeDraftRings(template.holes),
       additionalRings: normalizeDraftRings(template.additionalRings),
+      additionalHoles: draftAdditionalHoles(template),
       sourceGeometryFingerprint: template.geometryFingerprint,
     };
   });

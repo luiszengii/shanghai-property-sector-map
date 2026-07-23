@@ -36,27 +36,93 @@ export function buildSectorEditorTemplates(
 ): ExistingSectorDraftTemplate[] {
   return registry.map((record) => {
     const activeGeometry = resolveActiveGeometry(record.id);
-    const rings = activeGeometry
-      ? geometryExteriorRings(activeGeometry.geometry).map((sourceRing) => (
+    const activeDraftGeometry = activeGeometry
+      ? geometryDraftRings(activeGeometry.geometry)
+      : { ring: [], holes: [], additionalRings: [], additionalHoles: [] };
+    const convertRing = (
+      sourceRing: number[][],
+      coordinateSystem: EditorActiveGeometry["coordinateSystem"],
+    ) => (
         normalizeRing(sourceRing.map(([longitude, latitude]) => (
-          convertPosition([longitude, latitude], activeGeometry.coordinateSystem)
+          convertPosition([longitude, latitude], coordinateSystem)
         )))
-      )).filter((sourceRing) => sourceRing.length >= 3)
+      );
+    const ring = activeGeometry
+      ? convertRing(activeDraftGeometry.ring, activeGeometry.coordinateSystem)
       : [];
-    const [ring = [], ...additionalRings] = rings;
+    const holes = activeGeometry
+      ? activeDraftGeometry.holes
+        .map((item) => convertRing(item, activeGeometry.coordinateSystem))
+        .filter((item) => item.length >= 3)
+      : [];
+    const additionalRings = activeGeometry
+      ? activeDraftGeometry.additionalRings
+        .map((item) => convertRing(item, activeGeometry.coordinateSystem))
+        .filter((item) => item.length >= 3)
+      : [];
+    const additionalHoles = activeGeometry
+      ? activeDraftGeometry.additionalHoles.map((polygonHoles) => (
+        polygonHoles
+          .map((item) => convertRing(item, activeGeometry.coordinateSystem))
+          .filter((item) => item.length >= 3)
+      ))
+      : [];
     const geometryStatus = !activeGeometry
       ? "missing"
       : activeGeometry.kind === "market-demo" ? "demo" : "candidate";
     const legacyGeometry = resolveLegacyGeometry?.(record.id);
-    const legacyRings = legacyGeometry
-      ? geometryExteriorRings(legacyGeometry.geometry).map((sourceRing) => (
+    const legacyDraftGeometry = legacyGeometry
+      ? geometryDraftRings(legacyGeometry.geometry)
+      : { ring: [], holes: [], additionalRings: [], additionalHoles: [] };
+    const convertLegacyRing = (
+      sourceRing: number[][],
+      coordinateSystem: EditorActiveGeometry["coordinateSystem"],
+    ) => (
         normalizeRing(sourceRing.map(([longitude, latitude]) => (
-          convertPosition([longitude, latitude], legacyGeometry.coordinateSystem)
+          convertPosition([longitude, latitude], coordinateSystem)
         )))
-      )).filter((sourceRing) => sourceRing.length >= 3)
+      );
+    const legacyRings = legacyGeometry
+      ? [
+        convertLegacyRing(
+          legacyDraftGeometry.ring,
+          legacyGeometry.coordinateSystem,
+        ),
+        ...legacyDraftGeometry.holes.map(
+          (item) => convertLegacyRing(item, legacyGeometry.coordinateSystem),
+        ),
+        ...legacyDraftGeometry.additionalRings.map(
+          (item) => convertLegacyRing(item, legacyGeometry.coordinateSystem),
+        ),
+        ...legacyDraftGeometry.additionalHoles.flatMap((polygonHoles) => (
+          polygonHoles.map(
+            (item) => convertLegacyRing(item, legacyGeometry.coordinateSystem),
+          )
+        )),
+      ].filter((item) => item.length >= 3)
       : [];
-    const geometryFingerprint = fingerprintDraftParts(rings);
+    const geometryRings = [
+      ring,
+      ...holes,
+      ...additionalRings.flatMap((additionalRing, index) => [
+        additionalRing,
+        ...(additionalHoles[index] ?? []),
+      ]),
+    ].filter((item) => item.length >= 3);
+    const geometryFingerprint = fingerprintDraftParts(geometryRings);
+    const exteriorOnlyFingerprint = fingerprintDraftParts(
+      [ring, ...additionalRings].filter((item) => item.length >= 3),
+    );
     const legacyGeometryFingerprint = fingerprintDraftParts(legacyRings);
+    const previousGeometryFingerprints = [
+      ...(legacyRings.length && legacyGeometryFingerprint !== geometryFingerprint
+        ? [legacyGeometryFingerprint]
+        : []),
+      ...((holes.length || additionalHoles.some((polygonHoles) => polygonHoles.length))
+        && exteriorOnlyFingerprint !== geometryFingerprint
+        ? [exteriorOnlyFingerprint]
+        : []),
+    ];
 
     return {
       id: record.id,
@@ -72,20 +138,35 @@ export function buildSectorEditorTemplates(
           : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
       geometryStatus,
       geometryFingerprint,
-      previousGeometryFingerprints: legacyRings.length
-        && legacyGeometryFingerprint !== geometryFingerprint
-        ? [legacyGeometryFingerprint]
-        : [],
+      previousGeometryFingerprints: [...new Set(previousGeometryFingerprints)],
       ring,
+      holes,
       additionalRings,
+      additionalHoles,
     };
   });
 }
 
-function geometryExteriorRings(geometry: EditorActiveGeometry["geometry"]) {
-  return geometry.type === "Polygon"
-    ? geometry.coordinates[0] ? [geometry.coordinates[0]] : []
-    : geometry.coordinates.flatMap((polygon) => polygon[0] ? [polygon[0]] : []);
+function geometryDraftRings(geometry: EditorActiveGeometry["geometry"]) {
+  if (geometry.type === "Polygon") {
+    return {
+      ring: geometry.coordinates[0] ?? [],
+      holes: geometry.coordinates.slice(1),
+      additionalRings: [],
+      additionalHoles: [],
+    };
+  }
+  const [primary = [], ...additionalPolygons] = geometry.coordinates;
+  return {
+    ring: primary[0] ?? [],
+    holes: primary.slice(1),
+    additionalRings: additionalPolygons.flatMap(
+      (polygon) => polygon[0] ? [polygon[0]] : [],
+    ),
+    additionalHoles: additionalPolygons
+      .filter((polygon) => Boolean(polygon[0]))
+      .map((polygon) => polygon.slice(1)),
+  };
 }
 
 export function selectPreferredEditorGeometry<Candidate, Reference, Demo>({

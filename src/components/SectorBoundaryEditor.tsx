@@ -27,16 +27,18 @@ import {
   buildSectorDraftFeatureCollection,
   createDraftFromExistingSector,
   createSectorDraft,
+  draftFingerprintRings,
+  draftAdditionalHoles,
+  draftHoles,
   draftParts,
   formatSectorDraftFilename,
   isCompleteSectorDraft,
-  normalizeAmapPolygonParts,
+  normalizeAmapPolygonGeometry,
   parseSectorDraftFeatureCollection,
   parseSectorEditorState,
   SECTOR_EDITOR_STORAGE_KEY,
   serializeSectorEditorState,
   syncUntouchedDraftsToCurrentTemplates,
-  type DraftPosition,
   type ExistingSectorDraftTemplate,
   type SectorBoundaryDraft,
 } from "@/src/lib/sector-editor-drafts";
@@ -88,16 +90,38 @@ function createDraftId() {
   return `sector-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
-function polygonToParts(polygon: AMap.Polygon): DraftPosition[][] {
-  return normalizeAmapPolygonParts(polygon.getPath());
+function polygonToDraftGeometry(polygon: AMap.Polygon) {
+  return normalizeAmapPolygonGeometry(polygon.getPath());
 }
 
-function polygonPath(parts: DraftPosition[][]) {
-  return parts.length > 1 ? parts.map((ring) => [ring]) : (parts[0] ?? []);
+function polygonPath(
+  draft: Pick<
+    SectorBoundaryDraft,
+    "ring" | "holes" | "additionalRings" | "additionalHoles"
+  >,
+) {
+  const parts = draftParts(draft);
+  const primaryPolygon = [parts[0], ...draftHoles(draft)].filter(Boolean);
+  const additionalHoles = draftAdditionalHoles(draft);
+  return parts.length > 1
+    ? [
+      primaryPolygon,
+      ...parts.slice(1).map((ring, index) => [
+        ring,
+        ...(additionalHoles[index] ?? []),
+      ]),
+    ]
+    : primaryPolygon.length > 1 ? primaryPolygon : (primaryPolygon[0] ?? []);
 }
 
-function draftPointCount(draft: Pick<SectorBoundaryDraft, "ring" | "additionalRings">) {
-  return draftParts(draft).reduce((total, ring) => total + ring.length, 0);
+function draftPointCount(
+  draft: Pick<
+    SectorBoundaryDraft,
+    "ring" | "holes" | "additionalRings" | "additionalHoles"
+  >,
+) {
+  return draftFingerprintRings(draft)
+    .reduce((total, ring) => total + ring.length, 0);
 }
 
 function formatArea(area: number) {
@@ -185,7 +209,7 @@ export function SectorBoundaryEditor() {
   const inactiveGeometrySignature = useMemo(
     () => drafts
       .filter((draft) => draft.id !== activeId)
-      .map((draft) => `${draft.id}:${JSON.stringify(draftParts(draft))}`)
+      .map((draft) => `${draft.id}:${JSON.stringify(draftFingerprintRings(draft))}`)
       .join("|"),
     [activeId, drafts],
   );
@@ -203,9 +227,14 @@ export function SectorBoundaryEditor() {
   const syncPolygonToDraft = useCallback((polygon: AMap.Polygon) => {
     const id = activeIdRef.current;
     if (!id) return;
-    const [ring, ...additionalRings] = polygonToParts(polygon);
+    const {
+      ring,
+      holes,
+      additionalRings,
+      additionalHoles,
+    } = polygonToDraftGeometry(polygon);
     if (!ring || ring.length < 3) return;
-    updateDraft(id, { ring, additionalRings });
+    updateDraft(id, { ring, holes, additionalRings, additionalHoles });
     setArea(polygon.getArea());
   }, [updateDraft]);
 
@@ -365,7 +394,7 @@ export function SectorBoundaryEditor() {
 
     const polygon = new api.Polygon();
     polygon.setOptions({
-      path: polygonPath(draftParts(draft)),
+      path: polygonPath(draft),
       strokeColor: "#e46f32",
       strokeWeight: 3,
       strokeOpacity: 1,
@@ -422,7 +451,7 @@ export function SectorBoundaryEditor() {
       .map((draft) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
-          path: polygonPath(draftParts(draft)),
+          path: polygonPath(draft),
           strokeColor: "#0f766e",
           strokeWeight: 1.4,
           strokeOpacity: 0.74,
@@ -448,10 +477,7 @@ export function SectorBoundaryEditor() {
       .map((template) => {
         const polygon = new api.Polygon();
         polygon.setOptions({
-          path: polygonPath([
-            template.ring,
-            ...(template.additionalRings ?? []),
-          ]),
+          path: polygonPath(template),
           strokeColor: "#64748b",
           strokeWeight: 1.4,
           strokeOpacity: 0.72,
@@ -513,7 +539,7 @@ export function SectorBoundaryEditor() {
     setNotice({ tone: "neutral", message: "在地图上逐点点击，双击最后一个点完成；随后可拖动圆点精修。" });
 
     const handleDraw = (event: MouseToolDrawEvent) => {
-      const [ring] = polygonToParts(event.obj);
+      const { ring } = polygonToDraftGeometry(event.obj);
       mouseTool.close(false);
       mouseTool.off("draw", handleDraw);
       map.remove(event.obj);
@@ -524,7 +550,12 @@ export function SectorBoundaryEditor() {
       }
       const id = activeIdRef.current;
       if (!id) return;
-      updateDraft(id, { ring, additionalRings: [] });
+      updateDraft(id, {
+        ring,
+        holes: [],
+        additionalRings: [],
+        additionalHoles: [],
+      });
       setGeometryRevision((value) => value + 1);
       setNotice({ tone: "success", message: "边界已自动保存。拖动橙色圆点可继续精修。" });
     };

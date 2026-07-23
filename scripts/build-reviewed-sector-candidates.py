@@ -236,6 +236,11 @@ def build_market_linear_component(
             f"{definition['canonicalName']} 回扩后的闭合面应唯一，实际找到 {len(restored_parts)} 个"
         )
     restored = normalize_polygonal(restored_parts[0])
+    if definition.get("fillHolesBelowSquareMeters") is not None:
+        restored = normalize_polygonal(fill_small_holes(
+            restored,
+            float(definition["fillHolesBelowSquareMeters"]),
+        ))
     bbox_clearance = restored.boundary.distance(rectangle.boundary)
     if bbox_clearance < float(definition["minimumBboxClearanceMeters"]):
         raise ValueError(
@@ -483,6 +488,22 @@ def build_market_admin_candidate_with_shared_topology(
         projected_geometry = normalize_polygonal(
             projected_geometry.difference(projected_protected)
         )
+        minimum_part_area = float(
+            definition.get("minimumRetainedPartSquareMeters", 0)
+        )
+        if minimum_part_area > 0:
+            retained_parts = [
+                part
+                for part in polygons(make_valid(projected_geometry))
+                if part.area >= minimum_part_area
+            ]
+            if not retained_parts:
+                raise ValueError(
+                    f"{definition['canonicalName']} 扣除既有市场候选后没有可保留面"
+                )
+            projected_geometry = normalize_polygonal(
+                unary_union(retained_parts)
+            )
         geometry = normalize_polygonal(
             project_geometry(projected_geometry, working_crs, output_crs)
         )

@@ -154,6 +154,13 @@ const batchPolicies = new Map([
       长宁区: 4,
     },
   }],
+  ["changning-gubei-hongqiao-mutually-exclusive-2026-07", {
+    expectedSectorCount: 2,
+    districtCounts: {
+      长宁区: 2,
+    },
+    catalogMode: "changning-gubei-hongqiao",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -188,6 +195,47 @@ if (batch.sectors.some(({ districtName }) => !expectedDistrictCounts.has(distric
 
 const registryRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "changning-gubei-hongqiao") {
+    const isGubei = definition.id === "sector_gubei";
+    const boundaryEvidenceIds = isGubei
+      ? definition.boundaryAnchors.map(
+        ({ side }) => `${definition.id.replace(/^sector_/, "")}-${side}`,
+      )
+      : [
+        "changning-hongqiao-north",
+        "changning-hongqiao-east",
+        "changning-hongqiao-south",
+        "changning-hongqiao-west",
+      ];
+    registryRecords.push({
+      id: definition.id,
+      canonicalName: definition.canonicalName,
+      aliases: isGubei ? ["古北新区"] : ["虹桥（长宁住宅）"],
+      districtNames: [definition.districtName],
+      kind: "market_sector",
+      reviewStatus: isGubei ? "draft-medium" : "draft-low",
+      definitionStatus: isGubei
+        ? "official_scope_market_candidate"
+        : "market_scope_candidate",
+      definitionCandidate: definition.geometryRule,
+      definitionSourceIds: definition.definitionSourceIds,
+      boundaryEvidenceIds,
+      geometry: {
+        status: "draft",
+        confidence: isGubei ? "medium" : "low",
+        coordinateSystem: "WGS84",
+        coordinateSystemVerified: true,
+        version: definition.scopeVersion,
+        sourceIds: ["osm-geofabrik-shanghai-260721"],
+        verificationSourceIds: definition.geometryVerificationSourceIds,
+        publicationPolicy: "internal_review",
+        note: isGubei
+          ? "按官方古北新区四至和固定 OSM 道路线重建约 1.3388 平方公里，较官方 1.366 平方公里小约 1.99%；道路中心线候选仍需在编辑器中按完整小区归属精修。"
+          : "约 2.7072 平方公里候选严格取虹桥街道开放行政骨架扣除古北；该差集是低置信项目推导，不是官方虹桥住宅边界，且与虹桥商务区使用不同 ID。",
+      },
+    });
+    continue;
+  }
   const boundaryEvidenceIds = sides.map(
     ([side]) => `${definition.id.replace(/^sector_/, "")}-${side}`,
   );
@@ -231,6 +279,43 @@ upsertJsonArrayItems({
 
 const evidenceRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "changning-gubei-hongqiao") {
+    if (definition.id === "sector_gubei") {
+      for (const anchor of definition.boundaryAnchors) {
+        evidenceRecords.push({
+          id: `gubei-${anchor.side}`,
+          sectorId: definition.id,
+          side: anchor.side,
+          basisType: "official_scope_text",
+          featureName: anchor.expectedIdentity,
+          status: "candidate_scope_confirmed",
+          confidence: "medium",
+          sourceId: "official-changning-gubei-new-district-scope-2024",
+          supportingSourceIds: ["osm-geofabrik-shanghai-260721"],
+          note: "官方文字四至用于确认边界身份；固定 OSM 道路线用于生成内部可复算候选坐标，不宣称复刻法定规划坐标。",
+        });
+      }
+    } else {
+      for (const [side, sideLabel] of sides) {
+        evidenceRecords.push({
+          id: `changning-hongqiao-${side}`,
+          sectorId: definition.id,
+          side,
+          basisType: "market_candidate_from_admin_backbone",
+          featureName: `虹桥住宅候选外框${sideLabel}段`,
+          status: "adjacent_review_required",
+          confidence: "low",
+          sourceId: "osm-geofabrik-shanghai-260721",
+          supportingSourceIds: [
+            "official-changning-admin-divisions-2025",
+            "official-changning-hongqiao-subdistrict-gubei-scope-2025",
+          ],
+          note: "固定虹桥街道 relation 扣除古北后只形成低置信市场候选；外框仍需按天山、仙霞及沿线完整小区归属精修。",
+        });
+      }
+    }
+    continue;
+  }
   const sourceLabel = definition.expectedOsmName;
   const supportingSourceIds = [
     ...new Set([
@@ -271,4 +356,4 @@ upsertJsonArrayItems({
   compact: true,
 });
 
-console.log(`同步 ${batch.sectors.length} 个 registry 记录和 ${batch.sectors.length * 4} 条逐边证据`);
+console.log(`同步 ${registryRecords.length} 个 registry 记录和 ${evidenceRecords.length} 条逐边证据`);

@@ -80,6 +80,34 @@ test("the editor prefers the same high-precision reference shown on the main map
   );
 });
 
+test("the editor catalog preserves holes on every multi-polygon part", () => {
+  const [template] = buildSectorEditorTemplates(
+    [registry[0]],
+    () => ({
+      kind: "reviewed-market-candidate",
+      coordinateSystem: "WGS84",
+      geometry: {
+        type: "MultiPolygon",
+        coordinates: [
+          [
+            [[121.1, 31.1], [121.3, 31.1], [121.3, 31.3], [121.1, 31.1]],
+          ],
+          [
+            [[121.4, 31.4], [121.7, 31.4], [121.7, 31.7], [121.4, 31.4]],
+            [[121.5, 31.5], [121.6, 31.5], [121.6, 31.6], [121.5, 31.5]],
+          ],
+        ],
+      },
+    }),
+    (position) => position,
+  );
+
+  assert.equal(template.additionalRings?.length, 1);
+  assert.equal(template.additionalHoles?.[0]?.length, 1);
+  assert.deepEqual(template.additionalHoles?.[0]?.[0]?.[0], [121.5, 31.5]);
+  assert.equal(template.previousGeometryFingerprints?.length, 1);
+});
+
 test("a reviewed candidate without a legacy demo becomes a main-map sector entry", () => {
   const record = {
     id: "sector-new",
@@ -284,7 +312,7 @@ test("the Changning direct batch exposes four candidates without inventing custo
   assert.equal(registryData.sectors.filter(
     (record: { id: string }) => batchIdSet.has(record.id),
   ).length, 4);
-  for (const forbiddenName of ["中山公园", "虹桥", "古北", "西郊"]) {
+  for (const forbiddenName of ["中山公园", "西郊"]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
     ));
@@ -300,5 +328,80 @@ test("the Changning direct batch exposes four candidates without inventing custo
       (feature: { properties: { id: string } }) => feature.properties.id === "sector_hongqiao",
     )?.properties?.name,
     "虹桥商务区",
+  );
+});
+
+test("the Gubei and Changning residential Hongqiao batch stays mutually exclusive and distinct from Hongqiao CBD", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/changning-gubei-hongqiao-mutually-exclusive-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+
+  assert.deepEqual(
+    [...batchIds].sort(),
+    ["sector_changning_hongqiao", "sector_gubei"],
+  );
+  assert.equal(
+    registryData.sectors.find(
+      (record: { id: string }) => record.id === "sector_gubei",
+    )?.canonicalName,
+    "古北",
+  );
+  assert.equal(
+    registryData.sectors.find(
+      (record: { id: string }) => record.id === "sector_changning_hongqiao",
+    )?.canonicalName,
+    "虹桥",
+  );
+  assert.equal(
+    registryData.sectors.find(
+      (record: { id: string }) => record.id === "sector_hongqiao",
+    )?.canonicalName,
+    "虹桥商务区",
+  );
+  const residentialHongqiao = candidateData.features.find(
+    (feature: { properties: { id: string } }) => (
+      feature.properties.id === "sector_changning_hongqiao"
+    ),
+  );
+  assert.equal(residentialHongqiao?.geometry.type, "Polygon");
+  assert.equal(residentialHongqiao?.geometry.coordinates.length, 2);
+  const templates = buildSectorEditorTemplates(
+    registryData.sectors.filter(
+      (record: { id: string }) => batchIds.includes(record.id),
+    ),
+    (id) => {
+      const candidate = candidateData.features.find(
+        (feature: { properties: { id: string } }) => feature.properties.id === id,
+      );
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+  const residentialHongqiaoTemplate = templates.find(
+    (template) => template.id === "sector_changning_hongqiao",
+  );
+  assert.equal(residentialHongqiaoTemplate?.holes?.length, 1);
+  assert.ok(
+    residentialHongqiaoTemplate?.previousGeometryFingerprints?.length,
+    "外环-only旧副本必须可自动迁移到带古北扣除洞的当前模板",
   );
 });
