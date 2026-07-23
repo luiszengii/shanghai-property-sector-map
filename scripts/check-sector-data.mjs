@@ -15,6 +15,7 @@ const sourceData = readJson("src/data/sectors/sources.json");
 const evidenceData = readJson("src/data/sectors/boundary-evidence.json");
 const candidateData = readJson("src/data/sectors/reviewed-candidates.wgs84.json");
 const candidateManifest = readJson("src/data/sectors/reviewed-candidates.manifest.json");
+const subscopeData = readJson("src/data/sectors/subscopes.wgs84.json");
 const adminReferenceData = readJson("src/data/sectors/admin-references.wgs84.json");
 const adminReferenceManifest = readJson("src/data/sectors/admin-references.manifest.json");
 const adminReferenceDefinitionsData = readJson("data/geo/admin-reference-definitions.json");
@@ -708,6 +709,10 @@ const candidates = candidateData.features ?? [];
 const candidateIds = candidates.map((feature) => feature.properties?.id);
 const candidateManifestEntries = candidateManifest.sectors ?? [];
 const candidateManifestIds = candidateManifestEntries.map((entry) => entry.id);
+const subscopes = subscopeData.features ?? [];
+const subscopeIds = subscopes.map((feature) => feature.properties?.id);
+const subscopeManifestEntries = candidateManifest.subscopes ?? [];
+const subscopeManifestIds = subscopeManifestEntries.map((entry) => entry.id);
 const adminReferences = adminReferenceData.features ?? [];
 const adminReferenceIds = adminReferences.map((feature) => feature.properties?.id);
 const adminReferenceManifestEntries = adminReferenceManifest.sectors ?? [];
@@ -724,6 +729,8 @@ for (const [label, ids] of [
   ["边界证据", edgeIds],
   ["候选面", candidateIds],
   ["候选面 manifest", candidateManifestIds],
+  ["板块子范围", subscopeIds],
+  ["板块子范围 manifest", subscopeManifestIds],
   ["行政参考面", adminReferenceIds],
   ["行政参考面 manifest", adminReferenceManifestIds],
   ["行政参考面 definition", adminReferenceDefinitionIds],
@@ -770,6 +777,9 @@ if (normalizedStringSet(adminReferenceIds) !== normalizedJson(adminReferenceRegi
 }
 if (normalizedStringSet(candidateManifestIds) !== normalizedStringSet(candidateIds)) {
   error("候选面 manifest 必须与候选几何一一对应");
+}
+if (normalizedStringSet(subscopeManifestIds) !== normalizedStringSet(subscopeIds)) {
+  error("板块子范围 manifest 必须与子范围几何一一对应");
 }
 if (normalizedStringSet(adminReferenceManifestIds) !== normalizedStringSet(adminReferenceIds)) {
   error("行政参考面 manifest 必须与行政参考几何一一对应");
@@ -862,6 +872,7 @@ else if (osmGeometrySource.licenseStatus !== "ODbL-1.0"
 }
 
 validateLockedOsmCollection(candidateData, candidateManifest, "候选几何", "internal-review");
+validateLockedOsmCollection(subscopeData, candidateManifest, "板块子范围", "internal-reference");
 
 const manifestById = new Map(candidateManifestEntries.map((item) => [item.id, item]));
 const candidateById = new Map(candidates.map((feature) => [feature.properties?.id, feature]));
@@ -879,6 +890,33 @@ for (const candidate of candidates) {
   if (!manifestById.has(id)) error(`${id}: 候选几何缺少 OSM 对象 manifest`);
   if (!isFinitePositive(candidate.properties.areaSquareKilometers)) error(`${id}: 候选面积无效`);
   validateWgs84PolygonalGeometry(candidate, `${id}: 候选面`, candidate.properties.labelPoint);
+}
+
+const subscopeManifestById = new Map(subscopeManifestEntries.map((item) => [item.id, item]));
+for (const subscope of subscopes) {
+  const id = subscope.properties?.id ?? "unknown-subscope";
+  const properties = subscope.properties ?? {};
+  const manifest = subscopeManifestById.get(id);
+  const parent = candidateById.get(properties.parentSectorId);
+  if (!manifest) error(`${id}: 子范围缺少 manifest`);
+  if (!parent) error(`${id}: 子范围缺少候选主板块 ${properties.parentSectorId}`);
+  if (properties.status !== "official-reference-subscope") {
+    error(`${id}: 子范围 status 必须是 official-reference-subscope`);
+  }
+  if (properties.coordinateSystem !== "WGS84") error(`${id}: 子范围必须保存为 WGS84`);
+  if (properties.geometrySourceSnapshotId !== osmSourceLock.id) error(`${id}: 子范围来源快照不匹配`);
+  if (manifest?.parentSectorId !== properties.parentSectorId) error(`${id}: 子范围 parentSectorId 与 manifest 不一致`);
+  if (!isFinitePositive(properties.areaSquareKilometers)) error(`${id}: 子范围面积无效`);
+  if (!isFinitePositive(properties.officialAreaSquareKilometers)) error(`${id}: 子范围官方参考面积无效`);
+  if (!Number.isFinite(manifest?.outsideParentAreaRatio)
+    || manifest.outsideParentAreaRatio < 0
+    || manifest.outsideParentAreaRatio > 0.001) {
+    error(`${id}: 子范围超出主板块比例无效`);
+  }
+  validateWgs84PolygonalGeometry(subscope, `${id}: 子范围`, properties.labelPoint);
+  if (parent && !pointInGeometryStrict(properties.labelPoint, parent.geometry)) {
+    error(`${id}: 子范围标签点不在主板块内`);
+  }
 }
 
 validateLockedOsmCollection(
@@ -1092,6 +1130,7 @@ const allowedReferenceVerdicts = new Set([
 ]);
 const allowedGeometryDecisions = new Set([
   "keep_official_scope_candidate",
+  "keep_market_candidate_with_subscope",
   "keep_demo_until_scope_selected",
   "show_admin_reference_without_replacing_market_definition",
   "show_post_adjustment_admin_reference",
@@ -1149,7 +1188,7 @@ for (const check of referenceChecks) {
       error(`${id}: centroidDistanceKilometers 必须大于或等于 0`);
     }
     const legacyFeature = legacyFeatureById.get(id);
-    const referenceFeature = comparison.reference === "official-scope-candidate"
+    const referenceFeature = comparison.reference === "reviewed-candidate"
       ? candidateById.get(id)
       : adminReferenceById.get(id);
     if (!legacyFeature) error(`${id}: 差异指标缺少旧演示面`);
@@ -1177,8 +1216,8 @@ for (const check of referenceChecks) {
   const candidate = candidateById.get(id);
   if (candidate) {
     if (!comparison) error(`${id}: 候选面缺少旧演示面差异指标`);
-    else if (comparison.reference !== "official-scope-candidate") {
-      error(`${id}: 候选面差异指标必须引用 official-scope-candidate`);
+    else if (comparison.reference !== "reviewed-candidate") {
+      error(`${id}: 候选面差异指标必须引用 reviewed-candidate`);
     }
   }
 
@@ -1260,7 +1299,7 @@ for (const record of registry) {
 const geometryCategorySummary = knownGeometryStatuses
   .map((status) => `${status}=${geometryStatusCounts.get(status)}`)
   .join("，");
-console.log(`板块数据检查：${features.length} 个入口面底稿，${candidates.length} 个候选面，${adminReferences.length} 个行政参考面，${referenceChecks.length} 条逐板块参考检查，${registry.length} 条注册记录，${edges.length} 条边界证据，${sources.length} 个来源。`);
+console.log(`板块数据检查：${features.length} 个入口面底稿，${candidates.length} 个候选面，${subscopes.length} 个内部子范围，${adminReferences.length} 个行政参考面，${referenceChecks.length} 条逐板块参考检查，${registry.length} 条注册记录，${edges.length} 条边界证据，${sources.length} 个来源。`);
 console.log(`几何分类：${geometryCategorySummary}。`);
 for (const message of warnings) console.warn(`WARN ${message}`);
 if (errors.length > 0) {

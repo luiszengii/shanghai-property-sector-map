@@ -13,10 +13,12 @@ import {
 
 const sectors = sectorCatalog.features;
 type SectorGeometryKind =
-  | "official-scope-candidate"
+  | "reviewed-market-candidate"
+  | "official-subscope-reference"
   | "administrative-reference"
   | "demo";
 const reviewedCandidates = sectorCatalog.reviewedCandidates;
+const subscopes = sectorCatalog.subscopes;
 const adminReferences = sectorCatalog.administrativeReferences;
 const researchGeometries = [...reviewedCandidates, ...adminReferences];
 const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
@@ -27,7 +29,8 @@ const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
 
 function strokeColor(kind: SectorGeometryKind) {
-  if (kind === "official-scope-candidate") return "#0f766e";
+  if (kind === "reviewed-market-candidate") return "#0f766e";
+  if (kind === "official-subscope-reference") return "#d97706";
   if (kind === "administrative-reference") return "#2563eb";
   return "#64748b";
 }
@@ -39,13 +42,15 @@ function geometryFillOpacity(kind: SectorGeometryKind, zoom: number, selected = 
       ? Math.max(0.05, 0.23 - (zoom - 12) * 0.09)
       : Math.min(0.34, 0.18 + (12 - zoom) * 0.08);
   if (selected) return Math.max(base, 0.2);
+  if (kind === "official-subscope-reference") return base * 0.3;
   if (kind === "administrative-reference") return base * 0.38;
   if (kind === "demo") return base * 0.65;
   return base;
 }
 
 function geometryStrokeWeight(kind: SectorGeometryKind, zoom: number) {
-  if (kind === "official-scope-candidate") return zoom >= 13 ? 1.5 : 2.4;
+  if (kind === "reviewed-market-candidate") return zoom >= 13 ? 1.5 : 2.4;
+  if (kind === "official-subscope-reference") return zoom >= 13 ? 1.4 : 2;
   if (kind === "administrative-reference") return zoom >= 13 ? 1.2 : 1.8;
   return zoom >= 13 ? 1 : 1.5;
 }
@@ -54,7 +59,7 @@ function labelStyle(kind: SectorGeometryKind) {
   return {
     padding: "5px 9px",
     borderRadius: "999px",
-    border: `1px solid ${kind === "official-scope-candidate"
+    border: `1px solid ${kind === "reviewed-market-candidate"
       ? "rgba(15, 118, 110, .25)"
       : kind === "administrative-reference"
         ? "rgba(37, 99, 235, .25)"
@@ -89,11 +94,15 @@ function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = fals
   polygon.setOptions({
     fillColor: baseColor,
     fillOpacity: geometryFillOpacity(geometryKind, zoom, selected),
-    strokeColor: selected ? "#0f172a" : strokeColor(geometryKind),
-    strokeStyle: geometryKind === "official-scope-candidate" ? "solid" : "dashed",
+    strokeColor: selected && geometryKind !== "official-subscope-reference"
+      ? "#0f172a"
+      : strokeColor(geometryKind),
+    strokeStyle: geometryKind === "reviewed-market-candidate" ? "solid" : "dashed",
     strokeWeight: selected ? 3.2 : geometryStrokeWeight(geometryKind, zoom),
     strokeOpacity: zoom >= 14 ? 0.55 : geometryKind === "demo" ? 0.7 : 0.95,
-    zIndex: geometryKind === "official-scope-candidate"
+    zIndex: geometryKind === "official-subscope-reference"
+      ? 23
+      : geometryKind === "reviewed-market-candidate"
       ? 22
       : geometryKind === "administrative-reference"
         ? 21
@@ -215,7 +224,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
         const researchGeometry = reviewedCandidate ?? adminReference;
         if (!researchGeometry) continue;
         const geometryKind: SectorGeometryKind = reviewedCandidate
-          ? "official-scope-candidate"
+          ? "reviewed-market-candidate"
           : "administrative-reference";
         try {
           const pathRequest = researchPathRequestById.get(id);
@@ -262,6 +271,38 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           setSectorGeometryFallback(id, true);
           const layerName = reviewedCandidate ? "候选面" : "行政参考层";
           console.warn(`${marketOverlay.sector.properties.name}${layerName}坐标转换失败，已保留灰色虚线演示面`, error);
+        }
+      }
+
+      for (const subscope of subscopes) {
+        const parentSector = sectorCatalog.getFeature(subscope.properties.parentSectorId);
+        if (!parentSector) {
+          console.warn(`子范围 ${subscope.properties.id} 缺少主板块 ${subscope.properties.parentSectorId}`);
+          continue;
+        }
+        try {
+          const path = await wgs84GeometryToDisplayPath(amapApi, subscope.geometry);
+          if (cancelled) return;
+          const polygon = new amapApi.Polygon();
+          polygon.setOptions({ path, cursor: "pointer" });
+          const overlay: SectorOverlay = {
+            polygon,
+            label: null,
+            baseColor: "#f59e0b",
+            sector: parentSector,
+            geometryKind: "official-subscope-reference",
+          };
+          applyOverlayStyle(
+            overlay,
+            zoomRef.current,
+            selectedSectorIdRef.current === parentSector.properties.id,
+          );
+          bindOverlayInteractions(overlay);
+          map.add(polygon);
+          overlays.push(overlay);
+        } catch (error) {
+          if (cancelled) return;
+          console.warn(`${subscope.properties.name}子范围坐标转换失败`, error);
         }
       }
     };

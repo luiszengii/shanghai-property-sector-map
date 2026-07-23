@@ -68,8 +68,8 @@ const existingSectorTemplates: ExistingSectorDraftTemplate[] = sectorCatalog.fea
     name: feature.properties.name,
     district: feature.properties.district,
     boundaryBasis: feature.properties.boundaryBasis ?? record?.definitionCandidate ?? "",
-    note: activeGeometry.kind === "official-scope-candidate"
-      ? "从当前地图的官方四至候选面载入；修改后仍需逐边核验。"
+    note: activeGeometry.kind === "reviewed-market-candidate"
+      ? "从当前地图的研究候选面载入；修改后仍需逐边核验。"
       : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
     ring: normalizeAmapPolygonRing(firstRing.map(([lng, lat]) => (
       coordinateToDisplayPosition([lng, lat], activeGeometry.coordinateSystem)

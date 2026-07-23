@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "checkedAt": "2026-07-22",
+  "checkedAt": "2026-07-23",
   "sources": [
     {
       "id": "internal-legacy-demo-v1",
@@ -22,6 +22,37 @@
       "licenseStatus": "reference_only",
       "allowedUse": "boundary_definition_only",
       "note": "用于引用正式规划四至；页面未授予规划图矢量复制或再分发权。"
+    },
+    {
+      "id": "seller-lianjia-yangsi-qiantan",
+      "title": "链家上海小区榜单：杨思前滩",
+      "publisher": "链家",
+      "url": "https://m.lianjia.com/sh/bangdan/yangsiqiantan/ibd5/",
+      "sourceType": "seller_sector_taxonomy",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "用于确认主流卖方存在“杨思前滩”这一板块身份；不复制其清单、坐标或边界。"
+    },
+    {
+      "id": "seller-anjuke-yangsi-scope",
+      "title": "杨思板块实地分析",
+      "publisher": "安居客",
+      "url": "https://m.anjuke.com/sh/youliao/detail/275958/",
+      "sourceType": "seller_market_scope_article",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "文章给出市场杨思板块北川杨河、东春塘河、南中环路、西黄浦江的文字四至；仅作定义证据，不复制页面几何。"
+    },
+    {
+      "id": "official-pudong-chuntang-river",
+      "title": "北蔡镇河道管理范围公告附件",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/016023005/20211210/39082/42b4df018f1a4f78a24f525feb1ffa53.pdf",
+      "sourceType": "official_river_record",
+      "publishedAt": "2021-12-10",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于确认春塘河是北蔡范围内连续管理河道及其长度量级；不从 PDF 提取或复制坐标。"
     },
     {
       "id": "official-huangpu-riverside-13th-plan",

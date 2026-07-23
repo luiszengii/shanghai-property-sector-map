@@ -8,7 +8,7 @@
 # ]
 # ///
 
-"""Build the two reviewed Shanghai sector geometry candidates.
+"""Build reviewed Shanghai sector candidates and their reference subscopes.
 
 The script never downloads data and never calls a live map API. Pass the fixed
 Geofabrik GeoPackage named in data/geo/sources/osm-shanghai-260721.json.
@@ -34,6 +34,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DEFINITIONS = REPO_ROOT / "data/geo/reviewed-candidate-definitions.json"
 DEFAULT_OUTPUT = REPO_ROOT / "src/data/sectors/reviewed-candidates.wgs84.json"
 DEFAULT_MANIFEST = REPO_ROOT / "src/data/sectors/reviewed-candidates.manifest.json"
+DEFAULT_SUBSCOPES_OUTPUT = REPO_ROOT / "src/data/sectors/subscopes.wgs84.json"
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -145,6 +146,66 @@ def build_qiantan(gpkg: Path, definition: dict[str, Any], working_crs: str, outp
     return output_geometry, float(restored.area), osm_refs
 
 
+def build_market_linear_component(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+):
+    bbox_value = tuple(definition["bbox"])
+    roads = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_roads_free",
+        bbox=bbox_value,
+        where=sql_names(definition["roadNames"]),
+    ).to_crs(working_crs)
+    waterways = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_waterways_free",
+        bbox=bbox_value,
+    ).to_crs(working_crs)
+    waterway_names = set(definition.get("waterwayNames", []))
+    waterway_ids = {str(value) for value in definition.get("waterwayOsmIds", [])}
+    waterways = waterways[
+        waterways["name"].isin(waterway_names)
+        | waterways["osm_id"].astype(str).isin(waterway_ids)
+    ]
+    if roads.empty or waterways.empty:
+        raise ValueError(f"{definition['canonicalName']} 构建所需的道路或水系图层为空")
+
+    rectangle = project_geometry(box(*bbox_value), output_crs, working_crs)
+    inside_point = project_geometry(Point(*definition["insidePoint"]), output_crs, working_crs)
+    boundary_lines = unary_union([*roads.geometry, *waterways.geometry])
+    cut_buffer = float(definition["cutBufferMeters"])
+    cut = rectangle.difference(boundary_lines.buffer(cut_buffer))
+    containing = [part for part in polygons(cut) if part.contains(inside_point)]
+    if len(containing) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 闭合面应唯一，实际找到 {len(containing)} 个"
+        )
+
+    restored = containing[0].buffer(cut_buffer, join_style="mitre").intersection(rectangle)
+    restored_parts = [part for part in polygons(make_valid(restored)) if part.contains(inside_point)]
+    if len(restored_parts) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 回扩后的闭合面应唯一，实际找到 {len(restored_parts)} 个"
+        )
+    restored = normalize_polygonal(restored_parts[0])
+    bbox_clearance = restored.boundary.distance(rectangle.boundary)
+    if bbox_clearance < float(definition["minimumBboxClearanceMeters"]):
+        raise ValueError(
+            f"{definition['canonicalName']} 候选边界仍接触临时裁剪框，最小间距仅 "
+            f"{bbox_clearance:.2f} 米"
+        )
+
+    output_geometry = project_geometry(restored, working_crs, output_crs)
+    osm_refs = {
+        "roads": sorted({str(value) for value in roads.osm_id}),
+        "waterways": sorted({str(value) for value in waterways.osm_id}),
+    }
+    return output_geometry, float(restored.area), osm_refs
+
+
 def build_osm_admin_candidate(gpkg: Path, definition: dict[str, Any], working_crs: str):
     relation_id = str(definition["osmAdminRelationId"])
     frame = pyogrio.read_dataframe(
@@ -168,18 +229,31 @@ def build_feature(
     area_square_meters: float,
     snapshot_id: str,
 ):
-    official_area = float(definition["officialAreaSquareKilometers"])
     area_km2 = area_square_meters / 1_000_000
-    delta_ratio = abs(area_km2 - official_area) / official_area
-    if delta_ratio > definition["areaToleranceRatio"]:
-        raise ValueError(
-            f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² 超出容差，"
-            f"官方参考 {official_area:.4f} km²"
-        )
+    official_area = definition.get("officialAreaSquareKilometers")
+    area_range = definition.get("areaRangeSquareKilometers")
+    delta_ratio = None
+    if official_area is not None:
+        official_area = float(official_area)
+        delta_ratio = abs(area_km2 - official_area) / official_area
+        if delta_ratio > definition["areaToleranceRatio"]:
+            raise ValueError(
+                f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² 超出容差，"
+                f"官方参考 {official_area:.4f} km²"
+            )
+    elif area_range is not None:
+        minimum_area, maximum_area = map(float, area_range)
+        if not minimum_area <= area_km2 <= maximum_area:
+            raise ValueError(
+                f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² "
+                f"超出安全范围 {minimum_area:.4f}–{maximum_area:.4f} km²"
+            )
+    else:
+        raise ValueError(f"{definition['canonicalName']} 缺少面积安全检查")
     representative = geometry.representative_point()
     geometry_mapping = mapping(geometry)
     geometry_mapping["coordinates"] = round_coordinates(geometry_mapping["coordinates"])
-    return {
+    feature = {
         "type": "Feature",
         "properties": {
             "id": definition["id"],
@@ -193,12 +267,30 @@ def build_feature(
             "geometryRule": definition["geometryRule"],
             "definitionSourceIds": definition["definitionSourceIds"],
             "areaSquareKilometers": round(area_km2, 4),
-            "officialAreaSquareKilometers": official_area,
-            "areaDeltaPercent": round(delta_ratio * 100, 2),
             "labelPoint": [round(representative.x, 7), round(representative.y, 7)],
         },
         "geometry": geometry_mapping,
     }
+    if official_area is not None and delta_ratio is not None:
+        feature["properties"]["officialAreaSquareKilometers"] = official_area
+        feature["properties"]["areaDeltaPercent"] = round(delta_ratio * 100, 2)
+    if area_range is not None:
+        feature["properties"]["areaSafetyRangeSquareKilometers"] = area_range
+    return feature
+
+
+def build_subscope_feature(
+    definition: dict[str, Any],
+    geometry,
+    area_square_meters: float,
+    snapshot_id: str,
+):
+    feature = build_feature(definition, geometry, area_square_meters, snapshot_id)
+    feature["properties"].update({
+        "parentSectorId": definition["parentSectorId"],
+        "status": "official-reference-subscope",
+    })
+    return feature
 
 
 def main() -> None:
@@ -207,6 +299,7 @@ def main() -> None:
     parser.add_argument("--definitions", type=Path, default=DEFAULT_DEFINITIONS)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--subscopes-output", type=Path, default=DEFAULT_SUBSCOPES_OUTPUT)
     args = parser.parse_args()
 
     definitions = read_json(args.definitions)
@@ -218,8 +311,16 @@ def main() -> None:
 
     features = []
     manifest_sectors = []
+    sector_geometry_by_id = {}
     for definition in definitions["sectors"]:
-        if definition["method"] == "official_four_sides_osm_land_component":
+        if definition["method"] == "market_four_sides_osm_linear_component":
+            geometry, area, osm_refs = build_market_linear_component(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+            )
+        elif definition["method"] == "official_four_sides_osm_land_component":
             geometry, area, osm_refs = build_qiantan(
                 args.gpkg,
                 definition,
@@ -235,11 +336,55 @@ def main() -> None:
         else:
             raise ValueError(f"未知构建方法：{definition['method']}")
         features.append(build_feature(definition, geometry, area, source_lock["id"]))
+        sector_geometry_by_id[definition["id"]] = geometry
         manifest_sectors.append({
             "id": definition["id"],
             "scopeVersion": definition["scopeVersion"],
             "method": definition["method"],
             "osmRefs": osm_refs,
+        })
+
+    subscope_features = []
+    manifest_subscopes = []
+    for definition in definitions.get("subscopes", []):
+        if definition["method"] != "official_four_sides_osm_land_component":
+            raise ValueError(f"未知子范围构建方法：{definition['method']}")
+        geometry, area, osm_refs = build_qiantan(
+            args.gpkg,
+            definition,
+            definitions["workingCrs"],
+            definitions["outputCrs"],
+        )
+        parent_geometry = sector_geometry_by_id.get(definition["parentSectorId"])
+        if parent_geometry is None:
+            raise ValueError(
+                f"{definition['canonicalName']} 找不到主板块 {definition['parentSectorId']}"
+            )
+        projected_subscope = project_geometry(
+            geometry,
+            definitions["outputCrs"],
+            definitions["workingCrs"],
+        )
+        projected_parent = project_geometry(
+            parent_geometry,
+            definitions["outputCrs"],
+            definitions["workingCrs"],
+        )
+        outside_ratio = projected_subscope.difference(projected_parent).area / projected_subscope.area
+        if outside_ratio > float(definition["maximumOutsideParentRatio"]):
+            raise ValueError(
+                f"{definition['canonicalName']} 超出主板块的面积比例为 {outside_ratio:.6%}"
+            )
+        subscope_features.append(
+            build_subscope_feature(definition, geometry, area, source_lock["id"])
+        )
+        manifest_subscopes.append({
+            "id": definition["id"],
+            "parentSectorId": definition["parentSectorId"],
+            "scopeVersion": definition["scopeVersion"],
+            "method": definition["method"],
+            "osmRefs": osm_refs,
+            "outsideParentAreaRatio": round(outside_ratio, 8),
         })
 
     collection = {
@@ -262,11 +407,30 @@ def main() -> None:
         "workingCrs": definitions["workingCrs"],
         "outputCrs": definitions["outputCrs"],
         "sectors": manifest_sectors,
+        "subscopes": manifest_subscopes,
+    }
+    subscopes_collection = {
+        "type": "FeatureCollection",
+        "name": "sector-subscopes-wgs84",
+        "schemaVersion": "1.0.0",
+        "status": "internal-reference",
+        "notice": "主楼市板块内部参考子范围；不参与主板块互斥分区，不创建新的主板块身份。",
+        "license": source_lock["license"],
+        "attribution": source_lock["attribution"],
+        "sourceSnapshotId": source_lock["id"],
+        "features": subscope_features,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(collection, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     args.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"生成 {len(features)} 个候选面：{args.output.relative_to(REPO_ROOT)}")
+    args.subscopes_output.write_text(
+        json.dumps(subscopes_collection, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        f"生成 {len(features)} 个候选面和 {len(subscope_features)} 个子范围："
+        f"{args.output.relative_to(REPO_ROOT)}"
+    )
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import adminReferencesData from "@/src/data/sectors/admin-references.wgs84.json"
 import referenceChecksData from "@/src/data/sectors/reference-checks.json";
 import registryData from "@/src/data/sectors/registry.json";
 import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84.json";
+import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
 import type {
@@ -25,8 +26,20 @@ export interface SectorResearchGeometryFeature {
   geometry: SectorGeometry;
 }
 
+export interface SectorSubscopeFeature {
+  properties: {
+    id: string;
+    parentSectorId: string;
+    name: string;
+    coordinateSystem: "WGS84";
+    status: "official-reference-subscope";
+    labelPoint: [number, number];
+  };
+  geometry: SectorGeometry;
+}
+
 export interface SectorActiveGeometry {
-  kind: "market-demo" | "official-scope-candidate";
+  kind: "market-demo" | "reviewed-market-candidate";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
   geometry: SectorGeometry;
   center: [number, number];
@@ -38,6 +51,7 @@ const sources = sourcesData.sources as SectorSourceRecord[];
 const boundaryEvidence = boundaryEvidenceData.edges as SectorBoundaryEvidence[];
 const referenceChecks = referenceChecksData.checks as SectorReferenceCheck[];
 const reviewedCandidates = reviewedCandidatesData.features as unknown as SectorResearchGeometryFeature[];
+const subscopes = subscopesData.features as unknown as SectorSubscopeFeature[];
 const administrativeReferences = adminReferencesData.features as unknown as SectorResearchGeometryFeature[];
 
 const featureById = new Map(features.map((feature) => [feature.properties.id, feature]));
@@ -55,7 +69,7 @@ const administrativeReferenceById = new Map(
 const researchGeometryRecords = registry.filter(
   (record) => record.geometry.status !== "demo",
 );
-const officialScopeGeometryRecords = registry.filter(
+const candidateGeometryRecords = registry.filter(
   (record) => record.geometry.status !== "demo" && record.geometry.status !== "admin-reference",
 );
 const administrativeReferenceRecords = registry.filter(
@@ -119,7 +133,7 @@ function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActive
   const reviewedCandidate = reviewedCandidateById.get(id);
   if (reviewedCandidate && !fallbackToDemo) {
     return {
-      kind: "official-scope-candidate",
+      kind: "reviewed-market-candidate",
       coordinateSystem: "WGS84",
       geometry: reviewedCandidate.geometry,
       center: reviewedCandidate.properties.labelPoint,
@@ -139,9 +153,10 @@ export const sectorCatalog = {
   features,
   registry,
   reviewedCandidates,
+  subscopes,
   administrativeReferences,
   researchGeometryRecords,
-  officialScopeGeometryRecords,
+  candidateGeometryRecords,
   administrativeReferenceRecords,
   marketDemoSources,
   sources,
@@ -152,6 +167,9 @@ export const sectorCatalog = {
   resolveActiveGeometry,
   getReviewedCandidate: (id: string) => reviewedCandidateById.get(id),
   getAdministrativeReference: (id: string) => administrativeReferenceById.get(id),
+  getSubscopesForSector: (id: string) => (
+    subscopes.filter((feature) => feature.properties.parentSectorId === id)
+  ),
   hasResearchGeometry: (id: string) => {
     const status = recordById.get(id)?.geometry.status;
     return status !== undefined && status !== "demo";

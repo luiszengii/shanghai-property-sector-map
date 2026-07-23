@@ -1,28 +1,29 @@
 {
   "schemaVersion": "1.0.0",
-  "updatedAt": "2026-07-22",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。前滩、北外滩为内部复核候选面；大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
+  "updatedAt": "2026-07-23",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
-      "canonicalName": "前滩",
-      "aliases": ["前滩地区", "上海前滩"],
+      "canonicalName": "杨思前滩",
+      "aliases": ["前滩", "杨思前滩板块"],
       "districtNames": ["浦东新区"],
-      "kind": "market_sector_with_official_scope_candidate",
-      "reviewStatus": "reviewed-high",
-      "definitionStatus": "official_scope_available",
-      "definitionCandidate": "黄浦江南延伸段前滩地区（Z000801 单元）：北起川杨河、南至中环线（华夏路）、东起济阳路、西至黄浦江。",
-      "definitionSourceIds": ["official-qiantan-z000801-2012", "official-huangpu-riverside-13th-plan"],
-      "boundaryEvidenceIds": ["qiantan-north", "qiantan-east", "qiantan-south", "qiantan-west"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "market_scope_candidate",
+      "definitionCandidate": "杨思前滩主板块：北至川杨河、东至春塘河、南至中环路—华夏西路、西至黄浦江；官方前滩 Z000801 / ES4 作为内部子范围，不替代主板块。",
+      "definitionSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
+      "boundaryEvidenceIds": ["yangsi-qiantan-north", "yangsi-qiantan-east", "yangsi-qiantan-south", "yangsi-qiantan-west"],
       "geometry": {
         "status": "draft",
         "confidence": "medium",
         "coordinateSystem": "WGS84",
         "coordinateSystemVerified": true,
-        "version": "osm-shanghai-260721-candidate-v1",
+        "version": "osm-shanghai-260721-market-baseline-v1",
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
         "publicationPolicy": "internal_review",
-        "note": "已按官方四至和固定日期 OSM 道路、水面独立重建候选面；面积 2.9314 平方公里，较官方 2.8317 平方公里高 3.52%，仍需人工逐边复核。"
+        "note": "已按市场四至和固定日期 OSM 道路、河流中心线独立重建 16.2209 平方公里候选面；临时裁剪框不参与边界。当前仅有一个卖方来源给出完整四至，因此仍是待第二来源与沿线项目核验的内部候选。官方前滩 2.9314 平方公里重建面作为内部子范围另行显示。"
       }
     },
     {

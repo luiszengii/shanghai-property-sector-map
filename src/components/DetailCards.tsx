@@ -120,6 +120,7 @@ export function DetailCard() {
   const geometryVerificationSources = sectorCatalog.getGeometryVerificationSources(sector.properties.id);
   const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
   const referenceCheck = sectorCatalog.getReferenceCheck(sector.properties.id);
+  const subscopes = sectorCatalog.getSubscopesForSector(sector.properties.id);
   const isRuntimeLoading = Boolean(sectorGeometryLoading[sector.properties.id]);
   const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
   const geometryStatus = sectorRecord?.geometry.status;
@@ -127,7 +128,7 @@ export function DetailCard() {
   const isAdministrativeReference = usesAdministrativeReference
     && !isRuntimeLoading
     && !isRuntimeFallback;
-  const isOfficialScopeCandidate = geometryStatus !== undefined
+  const isReviewedCandidate = geometryStatus !== undefined
     && ["draft", "reviewed", "published"].includes(geometryStatus)
     && !isRuntimeLoading
     && !isRuntimeFallback;
@@ -152,8 +153,8 @@ export function DetailCard() {
       ? usesAdministrativeReference
         ? "行政参考层转换失败 · 楼市演示面可见"
         : "演示几何 · 候选面转换失败"
-      : isOfficialScopeCandidate
-        ? "官方四至候选面"
+      : isReviewedCandidate
+        ? "楼市研究候选面"
         : isAdministrativeReference
           ? "楼市演示面 + 行政参考层"
           : "演示几何";
@@ -171,8 +172,8 @@ export function DetailCard() {
         ? "口径待选择"
         : "定义草案 · 暂不发布";
   const baseDescription = sector.properties.description.replace(/演示范围。?$/, "");
-  const description = isOfficialScopeCandidate
-    ? `${baseDescription}；当前显示按官方文字四至重建的研究候选面。`
+  const description = isReviewedCandidate
+    ? `${baseDescription}；当前显示按可追溯文字四至与开放地物独立重建的研究候选面。`
     : isAdministrativeReference
       ? `${baseDescription}；灰色面仍是待定楼市演示口径，蓝色虚线另行叠加${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层。`
       : sector.properties.description;
@@ -194,6 +195,12 @@ export function DetailCard() {
             <dd>{boundaryEvidence.map((edge, index) => <span key={edge.id}>{index > 0 && "；"}{boundarySideLabels[edge.side]}：{edge.featureName}（{evidenceStatusLabels[edge.status]}）</span>)}</dd>
           </div>
         )}
+        {subscopes.length > 0 && (
+          <div>
+            <dt><Route size={15} /> 内部子范围</dt>
+            <dd>{subscopes.map((subscope) => subscope.properties.name).join("、")}（橙色虚线，不参与主板块互斥分区）</dd>
+          </div>
+        )}
         <div>
           <dt><MapPin size={15} /> 当前几何</dt>
           <dd>{isRuntimeLoading
@@ -206,7 +213,7 @@ export function DetailCard() {
                 : "本次候选面坐标转换失败，地图已安全回退到虚线演示面；WGS84 研究数据仍保留，可稍后刷新重试。"
               : sectorRecord?.geometry.note ?? sector.properties.sourceName}</dd>
         </div>
-        {(isOfficialScopeCandidate || isAdministrativeReference) && (
+        {(isReviewedCandidate || isAdministrativeReference) && (
           <div>
             <dt><MapPin size={15} /> 显示坐标</dt>
             <dd>地图显示采用本地 WGS84→GCJ-02 近似转换；WGS84 研究主几何保持不变。</dd>

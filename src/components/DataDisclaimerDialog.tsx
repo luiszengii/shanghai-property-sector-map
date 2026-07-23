@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
 
-const officialScopeSectors = sectorCatalog.officialScopeGeometryRecords;
+const candidateSectors = sectorCatalog.candidateGeometryRecords;
 const administrativeReferenceSectors = sectorCatalog.administrativeReferenceRecords;
-const officialScopeSectorNames = officialScopeSectors.map((record) => record.canonicalName).join("、");
+const candidateSectorNames = candidateSectors.map((record) => record.canonicalName).join("、");
 const administrativeReferenceSectorNames = administrativeReferenceSectors.map((record) => record.canonicalName).join("、");
-const demoSectorCount = sectorCatalog.registry.length - officialScopeSectors.length - administrativeReferenceSectors.length;
+const demoSectorCount = sectorCatalog.registry.length - candidateSectors.length - administrativeReferenceSectors.length;
 
 export function DataDisclaimerDialog() {
   const { disclaimerOpen, setDisclaimerOpen } = useMapStore();
@@ -33,7 +33,8 @@ export function DataDisclaimerDialog() {
           <li>500–800 万新盘清单由用户提供；均价、优劣势、教育与推荐指数尚未独立核验，仅作为看盘线索。</li>
           <li>46 个新盘点位已于 2026-07-22 按项目 POI、公开地址逐项核对并固定，不再使用板块近似点。</li>
           <li>多期或多组团项目采用主地块/整体代表点，详情卡会单独标注；中等置信点位建议看房前再次确认具体入口。</li>
-          <li>{officialScopeSectorNames}共 {officialScopeSectors.length} 个板块，已按官方文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线候选面。</li>
+          <li>{candidateSectorNames}共 {candidateSectors.length} 个板块，已按可追溯文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线研究候选面。</li>
+          <li>杨思前滩内部另以橙色虚线显示官方前滩 Z000801 / ES4 子范围；子范围不创建新的主板块，也不参与主板块互斥分区。</li>
           <li>{administrativeReferenceSectorNames}共 {administrativeReferenceSectors.length} 个板块，保留灰色楼市演示面，并独立叠加蓝色虚线街镇行政参考层；两种范围不会自动等同。</li>
           <li>上海天地图 2025 年 7 月标准地图只用于逐块视觉核对形状、面积量级和邻接关系，不从图件复制坐标；浦东 2025 年 11 月已调整的边界段以后续公告为准。</li>
           <li>另有 {demoSectorCount} 个板块只有灰色虚线演示面，须先确定功能区或市场口径后再绘制。</li>

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "checkedAt": "2026-07-22",
+  "checkedAt": "2026-07-23",
   "notice": "天地图标准图只做人工视觉核对，不产生本文件中的坐标或米级指标。数值差异把仓库旧演示面按登记口径由 GCJ-02 反解至 WGS84，再与固定 OSM 快照或规划四至候选面在同一上海本地平面中计算。",
   "comparisonMetricMethod": {
     "version": "legacy-gcj02-assumed-to-wgs84-local-plane-v1",
@@ -28,7 +28,7 @@
       "sectorId": "sector_qiantan",
       "comparisonRole": "functional_scope_not_admin",
       "verdict": "not_directly_comparable",
-      "geometryDecision": "keep_official_scope_candidate",
+      "geometryDecision": "keep_market_candidate_with_subscope",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
         {
@@ -39,13 +39,13 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "official-scope-candidate",
-        "intersectionOverUnion": 0.139,
-        "referenceCoveredPercent": 93.7,
-        "legacyAreaRatio": 6.66,
-        "centroidDistanceKilometers": 0.85
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.259,
+        "referenceCoveredPercent": 45.3,
+        "legacyAreaRatio": 1.2,
+        "centroidDistanceKilometers": 2.46
       },
-      "summary": "前滩不是独立街镇，不能套用浦东街镇界；统一坐标后，旧演示面约为官方四至候选面的 6.66 倍，现继续采用前滩控规四至候选面。"
+      "summary": "杨思前滩是市场主板块，不应套用浦东街镇界；主范围按川杨河、春塘河、中环路—华夏西路、黄浦江独立重建，官方前滩 Z000801 / ES4 仅作为内部子范围。"
     },
     {
       "sectorId": "sector_xuhuibinjiang",
@@ -103,7 +103,7 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "official-scope-candidate",
+        "reference": "reviewed-candidate",
         "intersectionOverUnion": 0.201,
         "referenceCoveredPercent": 83.7,
         "legacyAreaRatio": 3.99,
