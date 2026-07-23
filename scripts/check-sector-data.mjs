@@ -1711,7 +1711,8 @@ for (const definition of jinganPutuoElevenDefinitions) {
 }
 for (const forbiddenName of [
   "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-  "不夜城", "苏河湾", "阳城—永和", "武宁", "真光", "光新", "甘泉宜川",
+  "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
+  "武宁", "真光", "光新", "甘泉宜川", "中远两湾城",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
@@ -1733,6 +1734,169 @@ if (normalizedStringSet(taopuDefinition?.riskFlags ?? [])
       "unresolved_baoshan_interface",
     ])) {
   error("sector_taopu: 必须保留过宽/非住宅混合风险和真如、长征、万里、宝山接口复核门槛");
+}
+
+const expectedHongkouYangpuSevenRelations = new Map([
+  ["sector_sichuanbeilu", "13462869"],
+  ["sector_quyang", "13466001"],
+  ["sector_liangcheng", "13466134"],
+  ["sector_jiangwanzhen", "13466137"],
+  ["sector_kongjianglu", "13466004"],
+  ["sector_wujiaochang", "13466003"],
+  ["sector_xinjiangwancheng", "13466494"],
+]);
+const expectedHongkouYangpuOfficialAreas = new Map([
+  ["sector_sichuanbeilu", 1.78],
+  ["sector_quyang", 3.05],
+  ["sector_liangcheng", 3.24],
+  ["sector_jiangwanzhen", 4.17],
+  ["sector_kongjianglu", 2.15],
+  ["sector_wujiaochang", 7.66],
+  ["sector_xinjiangwancheng", 8.67],
+]);
+const hongkouYangpuSevenDefinitions = candidateDefinitions.filter(
+  (definition) => expectedHongkouYangpuSevenRelations.has(definition.id),
+);
+if (normalizedStringSet(hongkouYangpuSevenDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedHongkouYangpuSevenRelations.keys())) {
+  error("虹口—杨浦直接行政骨架批次必须恰好包含研究确认的 7 个市场候选");
+}
+const hongkouYangpuSevenIds = new Set(
+  expectedHongkouYangpuSevenRelations.keys(),
+);
+const hongkouDirectAdminBackboneIds = new Set([
+  "sector_sichuanbeilu",
+  "sector_quyang",
+  "sector_liangcheng",
+  "sector_jiangwanzhen",
+]);
+const hongkouYangpuSharedPairs = new Set(hongkouYangpuSevenDefinitions.flatMap(
+  (definition) => (definition.sharedEdgeSectorIds ?? [])
+    .filter((neighborId) => hongkouYangpuSevenIds.has(neighborId))
+    .map((neighborId) => [definition.id, neighborId].sort().join("/")),
+));
+const expectedHongkouYangpuSharedPairs = new Set([
+  "sector_jiangwanzhen/sector_quyang",
+  "sector_quyang/sector_wujiaochang",
+  "sector_jiangwanzhen/sector_liangcheng",
+  "sector_jiangwanzhen/sector_wujiaochang",
+  "sector_kongjianglu/sector_wujiaochang",
+  "sector_wujiaochang/sector_xinjiangwancheng",
+]);
+if (normalizedStringSet(hongkouYangpuSharedPairs)
+  !== normalizedStringSet(expectedHongkouYangpuSharedPairs)) {
+  error("虹口—杨浦七板块批次必须保留研究确认的 6 组固定行政共享边");
+}
+for (const definition of hongkouYangpuSevenDefinitions) {
+  const expectedRelation = expectedHongkouYangpuSevenRelations.get(definition.id);
+  const expectedDistrict = hongkouDirectAdminBackboneIds.has(definition.id)
+    ? "虹口区"
+    : "杨浦区";
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 虹口—杨浦批次没有锁定研究确认的 OSM 行政关系`);
+  }
+  if (definition.districtName !== expectedDistrict
+    || normalizedStringSet(registryRecord?.districtNames ?? [])
+      !== normalizedStringSet([expectedDistrict])) {
+    error(`${definition.id}: 虹口—杨浦批次行政归属错误`);
+  }
+  if (definition.officialAreaSquareKilometers
+      !== expectedHongkouYangpuOfficialAreas.get(definition.id)) {
+    error(`${definition.id}: 缺少研究确认的官方面积参考`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+    error(`${definition.id}: 虹口—杨浦行政骨架必须保持 low / draft-low / internal_review`);
+  }
+}
+for (const pair of expectedHongkouYangpuSharedPairs) {
+  const [firstId, secondId] = pair.split("/");
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  const exactSharedLength = first && second
+    ? exactSharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < 500
+    || exactSharedLength < 500
+    || Math.abs(exactSharedLength - sharedLength) > 0.01) {
+    error(`${firstId} / ${secondId}: 虹口—杨浦批次共享边必须使用完全相同的坐标序列`);
+  }
+}
+const hongkouYangpuCandidateAreaTotal = [...hongkouYangpuSevenIds].reduce(
+  (sum, id) => sum + Number(candidateById.get(id)?.properties?.areaSquareKilometers ?? 0),
+  0,
+);
+if (!nearlyEqual(hongkouYangpuCandidateAreaTotal, 30.5907, 0.001)) {
+  error("虹口—杨浦七板块固定 OSM 候选总面积必须保持约 30.5907 平方公里");
+}
+if (normalizedStringSet(
+  candidateDefinitionById.get("sector_sichuanbeilu")?.riskFlags ?? [],
+) !== normalizedStringSet(["post_2018_north_bund_reorganization_review"])) {
+  error("sector_sichuanbeilu: 必须保留 2018 北外滩区划调整复核门槛");
+}
+if (normalizedStringSet(
+  registryById.get("sector_sichuanbeilu")?.riskFlags ?? [],
+) !== normalizedStringSet(["post_2018_north_bund_reorganization_review"])
+  || normalizedStringSet(
+    candidateById.get("sector_sichuanbeilu")?.properties?.riskFlags ?? [],
+  ) !== normalizedStringSet(["post_2018_north_bund_reorganization_review"])) {
+  error("sector_sichuanbeilu: 2018 北外滩区划风险必须同步到运行时注册表和候选面");
+}
+if (normalizedStringSet(
+  candidateDefinitionById.get("sector_wujiaochang")?.riskFlags ?? [],
+) !== normalizedStringSet([
+  "area_mismatch_review_required",
+  "mixed_non_residential_scope",
+])) {
+  error("sector_wujiaochang: 必须保留面积漂移和非住宅混合风险");
+}
+if (normalizedStringSet(
+  registryById.get("sector_wujiaochang")?.riskFlags ?? [],
+) !== normalizedStringSet([
+  "area_mismatch_review_required",
+  "mixed_non_residential_scope",
+])
+  || normalizedStringSet(
+    candidateById.get("sector_wujiaochang")?.properties?.riskFlags ?? [],
+  ) !== normalizedStringSet([
+    "area_mismatch_review_required",
+    "mixed_non_residential_scope",
+  ])) {
+  error("sector_wujiaochang: 面积漂移和非住宅风险必须同步到运行时注册表和候选面");
+}
+if (normalizedStringSet(
+  candidateDefinitionById.get("sector_xinjiangwancheng")?.riskFlags ?? [],
+) !== normalizedStringSet(["mixed_water_green_campus_scope"])) {
+  error("sector_xinjiangwancheng: 必须保留水绿、校园和非住宅混合风险");
+}
+if (normalizedStringSet(
+  registryById.get("sector_xinjiangwancheng")?.riskFlags ?? [],
+) !== normalizedStringSet(["mixed_water_green_campus_scope"])
+  || normalizedStringSet(
+    candidateById.get("sector_xinjiangwancheng")?.properties?.riskFlags ?? [],
+  ) !== normalizedStringSet(["mixed_water_green_campus_scope"])) {
+  error("sector_xinjiangwancheng: 水绿、校园和非住宅风险必须同步到运行时注册表和候选面");
+}
+for (const unresolvedName of [
+  "瑞虹新城", "鲁迅公园", "东外滩", "鞍山", "定海路", "黄兴公园", "中原",
+]) {
+  if ([...registryById.values()].some(
+    (record) => record.canonicalName === unresolvedName,
+  )) {
+    error(`虹口—杨浦直接骨架批次不得在独立研究前自动注册 ${unresolvedName}`);
+  }
 }
 
 const gubeiDefinition = candidateDefinitionById.get("sector_gubei");

@@ -1119,6 +1119,9 @@ def build_feature(
             "geometryRule": definition["geometryRule"],
             "definitionSourceIds": definition["definitionSourceIds"],
             **({
+                "riskFlags": definition["riskFlags"],
+            } if definition.get("riskFlags") else {}),
+            **({
                 "geometryVerificationSourceIds": definition[
                     "geometryVerificationSourceIds"
                 ],

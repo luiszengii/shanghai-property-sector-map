@@ -6,6 +6,7 @@ import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
+import { formatSectorRiskFlags } from "@/src/lib/sector-risk-flags";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
@@ -185,6 +186,7 @@ export function DetailCard() {
     : isAdministrativeReference
       ? `${baseDescription}；当前只显示蓝色虚线${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层，不把旧演示面当作楼市主板块。`
       : sector.properties.description;
+  const riskReview = formatSectorRiskFlags(sectorRecord?.riskFlags);
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
       <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
@@ -197,6 +199,7 @@ export function DetailCard() {
         {sectorRecord && sectorRecord.aliases.length > 0 && <div><dt><Building2 size={15} /> 常用别名</dt><dd>{sectorRecord.aliases.join("、")}</dd></div>}
         <div><dt><CalendarClock size={15} /> 核验状态</dt><dd>{reviewLabel}</dd></div>
         {sectorRecord?.definitionCandidate && <div><dt><Route size={15} /> 候选定义</dt><dd>{sectorRecord.definitionCandidate}</dd></div>}
+        {riskReview && <div><dt><Route size={15} /> 重点复核</dt><dd>{riskReview}</dd></div>}
         {boundaryEvidence.length > 0 && (
           <div>
             <dt><Route size={15} /> 逐边证据</dt>

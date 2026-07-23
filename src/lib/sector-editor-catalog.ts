@@ -5,12 +5,15 @@ import {
   type ExistingSectorDraftTemplate,
 // @ts-expect-error Node 22 executes the catalog tests directly and requires the source extension.
 } from "./sector-editor-drafts.ts";
+// @ts-expect-error Node 22 executes the catalog tests directly and requires the source extension.
+import { formatSectorRiskFlags } from "./sector-risk-flags.ts";
 
 interface EditorSectorRecord {
   id: string;
   canonicalName: string;
   districtNames: string[];
   definitionCandidate: string;
+  riskFlags?: string[];
 }
 
 interface EditorActiveGeometry {
@@ -124,18 +127,22 @@ export function buildSectorEditorTemplates(
         : []),
     ];
 
+    const riskReview = formatSectorRiskFlags(record.riskFlags);
+    const baseNote = geometryStatus === "missing"
+      ? "板块身份与定义已登记，尚未绘制边界；请在地图上人工绘制并逐边核验。"
+      : activeGeometry?.kind === "administrative-reference"
+        ? "从主页当前显示的高精度行政参考面载入；它不是楼市板块定稿，修改后仍需逐边核验。"
+        : geometryStatus === "candidate"
+          ? "从主页当前显示的研究候选面载入；修改后仍需逐边核验。"
+          : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。";
     return {
       id: record.id,
       name: record.canonicalName,
       district: record.districtNames.join("、"),
       boundaryBasis: record.definitionCandidate,
-      note: geometryStatus === "missing"
-        ? "板块身份与定义已登记，尚未绘制边界；请在地图上人工绘制并逐边核验。"
-        : activeGeometry?.kind === "administrative-reference"
-          ? "从主页当前显示的高精度行政参考面载入；它不是楼市板块定稿，修改后仍需逐边核验。"
-          : geometryStatus === "candidate"
-            ? "从主页当前显示的研究候选面载入；修改后仍需逐边核验。"
-          : "从当前地图的楼市板块演示面载入；修改后仍需逐边核验。",
+      note: riskReview
+        ? `${baseNote} 重点复核：${riskReview}。`
+        : baseNote,
       geometryStatus,
       geometryFingerprint,
       previousGeometryFingerprints: [...new Set(previousGeometryFingerprints)],

@@ -150,6 +150,7 @@ export interface SectorRegistryEntry {
   id: string;
   canonicalName: string;
   aliases: string[];
+  riskFlags?: string[];
   districtNames: string[];
   kind: SectorKind;
   reviewStatus: SectorReviewStatus;

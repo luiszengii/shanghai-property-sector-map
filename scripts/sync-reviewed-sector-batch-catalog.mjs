@@ -175,6 +175,13 @@ const batchPolicies = new Map([
       普陀区: 7,
     },
   }],
+  ["hongkou-yangpu-seven-direct-admin-aligned-2026-07", {
+    expectedSectorCount: 7,
+    districtCounts: {
+      虹口区: 4,
+      杨浦区: 3,
+    },
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -190,6 +197,13 @@ const aliasesBySectorId = new Map([
   ["sector_changfeng", ["长风新村街道"]],
   ["sector_changzheng", ["长征镇"]],
   ["sector_taopu", ["桃浦镇"]],
+  ["sector_sichuanbeilu", ["四川北路街道"]],
+  ["sector_quyang", ["曲阳路", "曲阳路街道"]],
+  ["sector_liangcheng", ["凉城新村", "凉城新村街道"]],
+  ["sector_jiangwanzhen", ["江湾镇街道"]],
+  ["sector_kongjianglu", ["控江路街道"]],
+  ["sector_wujiaochang", ["五角场街道"]],
+  ["sector_xinjiangwancheng", ["新江湾城街道"]],
 ]);
 const sides = [
   ["north", "北"],
@@ -219,6 +233,7 @@ for (const definition of batch.sectors) {
       id: definition.id,
       canonicalName: definition.canonicalName,
       aliases: ["中山公园核心候选"],
+      riskFlags: definition.riskFlags ?? [],
       districtNames: [definition.districtName],
       kind: "market_sector",
       reviewStatus: "draft-medium",
@@ -258,6 +273,7 @@ for (const definition of batch.sectors) {
       id: definition.id,
       canonicalName: definition.canonicalName,
       aliases: isGubei ? ["古北新区"] : ["虹桥（长宁住宅）"],
+      riskFlags: definition.riskFlags ?? [],
       districtNames: [definition.districtName],
       kind: "market_sector",
       reviewStatus: isGubei ? "draft-medium" : "draft-low",
@@ -293,6 +309,7 @@ for (const definition of batch.sectors) {
     id: definition.id,
     canonicalName: definition.canonicalName,
     aliases: aliasesBySectorId.get(definition.id) ?? [],
+    riskFlags: definition.riskFlags ?? [],
     districtNames: [definition.districtName],
     kind: isJinshanNewCity ? "ambiguous_market_sector" : "market_sector",
     reviewStatus: "draft-low",

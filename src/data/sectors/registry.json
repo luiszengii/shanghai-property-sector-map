@@ -3179,5 +3179,301 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
+    },
+    {
+      "id": "sector_sichuanbeilu",
+      "canonicalName": "四川北路",
+      "aliases": [
+        "四川北路街道"
+      ],
+      "riskFlags": [
+        "post_2018_north_bund_reorganization_review"
+      ],
+      "districtNames": [
+        "虹口区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场四川北路暂以同名四川北路街道固定行政关系作为低置信、可编辑骨架；商业街语义可能跨越街道边界，鲁迅公园、北外滩和苏河湾接口仍待完整项目归属精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-hongkou-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "sichuanbeilu-north",
+        "sichuanbeilu-east",
+        "sichuanbeilu-south",
+        "sichuanbeilu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_quyang",
+      "canonicalName": "曲阳",
+      "aliases": [
+        "曲阳路",
+        "曲阳路街道"
+      ],
+      "riskFlags": [],
+      "districtNames": [
+        "虹口区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "卖方市场曲阳暂以同名曲阳路街道固定行政关系作为低置信、可编辑骨架；曲阳只是市场简称，鲁迅公园及五角场接口不据此视为最终边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-hongkou-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "quyang-north",
+        "quyang-east",
+        "quyang-south",
+        "quyang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_liangcheng",
+      "canonicalName": "凉城",
+      "aliases": [
+        "凉城新村",
+        "凉城新村街道"
+      ],
+      "riskFlags": [],
+      "districtNames": [
+        "虹口区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "卖方市场凉城暂以同名凉城新村街道固定行政关系作为低置信、可编辑骨架；北侧宝山、东侧江湾镇以及南侧鲁迅公园市场接口仍待逐项目复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-hongkou-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "liangcheng-north",
+        "liangcheng-east",
+        "liangcheng-south",
+        "liangcheng-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jiangwanzhen",
+      "canonicalName": "江湾镇",
+      "aliases": [
+        "江湾镇街道"
+      ],
+      "riskFlags": [],
+      "districtNames": [
+        "虹口区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场江湾镇暂以同名江湾镇街道固定行政关系作为低置信、可编辑骨架；它与杨浦五角场、虹口凉城和曲阳的行政共边可复现，但市场项目归属仍需逐边精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-hongkou-admin-divisions-2026"
+      ],
+      "boundaryEvidenceIds": [
+        "jiangwanzhen-north",
+        "jiangwanzhen-east",
+        "jiangwanzhen-south",
+        "jiangwanzhen-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_kongjianglu",
+      "canonicalName": "控江路",
+      "aliases": [
+        "控江路街道"
+      ],
+      "riskFlags": [],
+      "districtNames": [
+        "杨浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场控江路暂以同名控江路街道固定行政关系作为低置信、可编辑骨架；鞍山、黄兴公园及东外滩方向的市场边界仍需完整项目归属验证。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-yangpu-kongjiang-subdistrict-profile-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "kongjianglu-north",
+        "kongjianglu-east",
+        "kongjianglu-south",
+        "kongjianglu-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_wujiaochang",
+      "canonicalName": "五角场",
+      "aliases": [
+        "五角场街道"
+      ],
+      "riskFlags": [
+        "area_mismatch_review_required",
+        "mixed_non_residential_scope"
+      ],
+      "districtNames": [
+        "杨浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场五角场暂以同名五角场街道固定行政关系作为低置信、可编辑骨架；完整街道同时包含高校、商业和住宅功能，不等同五角场商圈或统一住宅市场范围。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-yangpu-wujiaochang-subdistrict-profile-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "wujiaochang-north",
+        "wujiaochang-east",
+        "wujiaochang-south",
+        "wujiaochang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_xinjiangwancheng",
+      "canonicalName": "新江湾城",
+      "aliases": [
+        "新江湾城街道"
+      ],
+      "riskFlags": [
+        "mixed_water_green_campus_scope"
+      ],
+      "districtNames": [
+        "杨浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场新江湾城暂以同名新江湾城街道固定行政关系作为低置信、可编辑骨架；生态、校园和非住宅范围可能使行政面宽于住宅市场，后续按完整项目归属精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-yangpu-xinjiangwancheng-subdistrict-profile-2025"
+      ],
+      "boundaryEvidenceIds": [
+        "xinjiangwancheng-north",
+        "xinjiangwancheng-east",
+        "xinjiangwancheng-south",
+        "xinjiangwancheng-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }

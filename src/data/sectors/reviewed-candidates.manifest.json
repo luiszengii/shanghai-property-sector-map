@@ -2394,6 +2394,108 @@
       }
     },
     {
+      "id": "sector_sichuanbeilu",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13462869"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_quyang",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466001"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jiangwanzhen",
+          "sector_wujiaochang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_liangcheng",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466134"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jiangwanzhen"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_jiangwanzhen",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466137"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_quyang",
+          "sector_liangcheng",
+          "sector_wujiaochang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_kongjianglu",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466004"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_wujiaochang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_wujiaochang",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466003"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_quyang",
+          "sector_jiangwanzhen",
+          "sector_kongjianglu",
+          "sector_xinjiangwancheng"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_xinjiangwancheng",
+      "scopeVersion": "hongkou-yangpu-direct-admin-aligned-market-candidate-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "13466494"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_wujiaochang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
       "id": "sector_xinhualu",
       "scopeVersion": "changning-direct-admin-aligned-market-candidate-2026-07",
       "method": "market_admin_candidate_with_shared_topology",

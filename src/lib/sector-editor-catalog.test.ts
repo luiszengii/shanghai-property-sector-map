@@ -408,10 +408,123 @@ test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbone
   );
   for (const forbiddenName of [
     "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-    "不夜城", "苏河湾", "阳城—永和", "武宁", "真光", "光新", "甘泉宜川",
+    "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
+    "武宁", "真光", "光新", "甘泉宜川", "中远两湾城",
   ]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
+    ));
+  }
+});
+
+test("the Hongkou Yangpu direct batch exposes seven editable low-confidence backbones without inventing adjacent markets", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/hongkou-yangpu-seven-direct-admin-aligned-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.deepEqual(batchIds, [
+    "sector_sichuanbeilu",
+    "sector_quyang",
+    "sector_liangcheng",
+    "sector_jiangwanzhen",
+    "sector_kongjianglu",
+    "sector_wujiaochang",
+    "sector_xinjiangwancheng",
+  ]);
+  assert.equal(batchIdSet.size, 7);
+  assert.equal(records.length, 7);
+  assert.ok(records.every((record: {
+    reviewStatus: string;
+    geometry: { confidence: string; publicationPolicy: string };
+  }) => (
+    record.reviewStatus === "draft-low"
+      && record.geometry.confidence === "low"
+      && record.geometry.publicationPolicy === "internal_review"
+  )));
+  assert.ok(batchIds.every((id: string) => candidateById.has(id)));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+  assert.equal(templates.length, 7);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate" && template.ring.length >= 3
+  )));
+
+  assert.deepEqual(
+    records.find((record: { id: string }) => record.id === "sector_quyang")?.aliases,
+    ["曲阳路", "曲阳路街道"],
+  );
+  assert.deepEqual(
+    records.find((record: { id: string }) => record.id === "sector_liangcheng")?.aliases,
+    ["凉城新村", "凉城新村街道"],
+  );
+  assert.deepEqual(
+    records.find(
+      (record: { id: string; riskFlags?: string[] }) => record.id === "sector_sichuanbeilu",
+    )?.riskFlags,
+    ["post_2018_north_bund_reorganization_review"],
+  );
+  assert.deepEqual(
+    records.find(
+      (record: { id: string; riskFlags?: string[] }) => record.id === "sector_wujiaochang",
+    )?.riskFlags,
+    ["area_mismatch_review_required", "mixed_non_residential_scope"],
+  );
+  assert.deepEqual(
+    (candidateById.get("sector_xinjiangwancheng") as {
+      properties?: { riskFlags?: string[] };
+    })?.properties?.riskFlags,
+    ["mixed_water_green_campus_scope"],
+  );
+  assert.match(
+    templates.find((template) => template.id === "sector_sichuanbeilu")?.note ?? "",
+    /重点复核.*2018 年北外滩区划调整/,
+  );
+  assert.match(
+    templates.find((template) => template.id === "sector_wujiaochang")?.note ?? "",
+    /重点复核.*官方面积.*高校、园区、商业/,
+  );
+  for (const unresolvedName of [
+    "瑞虹新城", "鲁迅公园", "东外滩", "鞍山", "定海路", "黄兴公园", "中原",
+  ]) {
+    assert.ok(!registryData.sectors.some(
+      (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
     ));
   }
 });

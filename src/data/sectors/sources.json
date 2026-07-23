@@ -51,7 +51,7 @@
       "sourceType": "seller_sector_taxonomy",
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
-      "note": "仅用于核对链家公开使用的楼市板块名称，包括静安、普陀本批 11 个市场身份；不复制网站清单、坐标、房源或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
+      "note": "仅用于核对链家公开使用的楼市板块名称，包括静安—普陀 11 个候选及虹口—杨浦 7 个候选的市场身份；不复制网站清单、坐标、房源或边界。“上南”由用户按本项目一级板块口径裁定，不据此来源声称为链家板块。"
     },
     {
       "id": "seller-anjuke-yangsi-scope",
@@ -718,6 +718,49 @@
       "licenseStatus": "reference_only",
       "allowedUse": "name_verification_only",
       "note": "官方页面列出普陀区 10 个街道镇；并与 2025 年街镇职责事项清单交叉核对。用于同名低置信市场骨架的行政身份和面积量级核验，不替代市场边界研究。"
+    },
+    {
+      "id": "official-hongkou-admin-divisions-2026",
+      "title": "虹口区单元规划草案与街道行政范围",
+      "publisher": "上海市虹口区人民政府",
+      "url": "https://www.shhk.gov.cn/shhk/bda40f0a-3863-42e6-b16e-6f4acf177378/f8afa875-7806-45f3-903d-9e7215dfac34/%E6%96%87%E6%9C%AC.pdf",
+      "sourceType": "official_district_unit_plan",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方规划草案列出四川北路、曲阳路、凉城新村、江湾镇街道，并说明单元边界与街道行政辖区界线保持一致；结合各街道官方面积资料做人工作量级复核，不从 PDF 提取或再分发坐标。"
+    },
+    {
+      "id": "official-yangpu-kongjiang-subdistrict-profile-2025",
+      "title": "控江路街道简介",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/kj-jgjj/2025/271/c09513489edeb21eb1060db7c98ac44b.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出控江路街道四至与约 2.15 平方公里面积；只用于行政身份和面积量级核验，不替代楼市市场边界。"
+    },
+    {
+      "id": "official-yangpu-wujiaochang-subdistrict-profile-2025",
+      "title": "五角场街道简介",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/wjc-jgjj/2025/219/4d994f483ef829edffebe16c6b9282a3.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面确认五角场街道身份及约 7.66 平方公里面积；完整街道混合高校、园区、商业和住宅，不据此宣称行政面等于住宅市场。"
+    },
+    {
+      "id": "official-yangpu-xinjiangwancheng-subdistrict-profile-2025",
+      "title": "新江湾城街道概况与正式答复",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/xjwc-bmgw/2025/220/448b149017596c240c7dc305ed99edd8.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方资料确认新江湾城街道约 8.67 平方公里，并披露大量水绿和校园空间；用于行政身份、面积和过宽风险核验，不替代住宅市场边界。"
     },
     {
       "id": "official-shanghai-zhongshan-park-landscape-scope-2022",
