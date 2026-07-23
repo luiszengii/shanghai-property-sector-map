@@ -437,6 +437,12 @@ for (const definition of batch.sectors) {
     ...("adminAreaVersionMismatch" in definition
       ? { adminAreaVersionMismatch: definition.adminAreaVersionMismatch }
       : {}),
+    ...("officialCurrentAreaKm2" in definition
+      ? { officialCurrentAreaKm2: definition.officialCurrentAreaKm2 }
+      : {}),
+    ...("legacyOfficialAreaKm2" in definition
+      ? { legacyOfficialAreaKm2: definition.legacyOfficialAreaKm2 }
+      : {}),
     ...(definition.excludedArea
       ? { excludedArea: definition.excludedArea }
       : {}),

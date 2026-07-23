@@ -2073,14 +2073,14 @@ for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) 
 }
 
 const expectedJiadingEight = new Map([
-  ["sector_jiangqiao", { relation: "17000636", osmName: "江桥镇", historicalArea: 42.4 }],
-  ["sector_nanxiang", { relation: "17000640", osmName: "南翔镇", historicalArea: 33.8 }],
-  ["sector_malu", { relation: "17000641", osmName: "马陆镇", historicalArea: 57.09 }],
-  ["sector_xuhang", { relation: "17000637", osmName: "徐行镇", historicalArea: 39.95 }],
-  ["sector_waigang", { relation: "17000639", osmName: "外冈镇", historicalArea: 50.92 }],
-  ["sector_anting", { relation: "17000634", osmName: "安亭镇", historicalArea: 89.02 }],
-  ["sector_huating", { relation: "17000638", osmName: "华亭镇", historicalArea: 39.55 }],
-  ["sector_juyuanxinqu", { relation: "17000643", osmName: "菊园街道", historicalArea: 18.61 }],
+  ["sector_jiangqiao", { relation: "17000636", osmName: "江桥镇", currentOfficialArea: 42.4 }],
+  ["sector_nanxiang", { relation: "17000640", osmName: "南翔镇", currentOfficialArea: 33.8 }],
+  ["sector_malu", { relation: "17000641", osmName: "马陆镇", legacyOfficialArea: 57.09 }],
+  ["sector_xuhang", { relation: "17000637", osmName: "徐行镇", legacyOfficialArea: 39.95 }],
+  ["sector_waigang", { relation: "17000639", osmName: "外冈镇", currentOfficialArea: 50.92 }],
+  ["sector_anting", { relation: "17000634", osmName: "安亭镇", currentOfficialArea: 89.02 }],
+  ["sector_huating", { relation: "17000638", osmName: "华亭镇", currentOfficialArea: 39.55 }],
+  ["sector_juyuanxinqu", { relation: "17000643", osmName: "菊园街道", legacyOfficialArea: 18.61 }],
 ]);
 const jiadingEightDefinitions = candidateDefinitions.filter(
   (definition) => expectedJiadingEight.has(definition.id),
@@ -2105,9 +2105,8 @@ for (const definition of jiadingEightDefinitions) {
     || candidate?.properties?.confidence !== "low"
     || candidate?.properties?.marketAdminAlignmentUnverified !== true
     || registryRecord?.marketAdminAlignmentUnverified !== true
-    || definition.adminAreaVersionMismatch !== true
-    || candidate?.properties?.adminAreaVersionMismatch !== true
-    || registryRecord?.adminAreaVersionMismatch !== true
+    || definition.preserveMultiPolygonSemantics !== true
+    || candidate?.geometry?.type !== "MultiPolygon"
     || registryRecord?.geometry?.confidence !== "low"
     || registryRecord?.reviewStatus !== "draft-low"
     || registryRecord?.geometry?.publicationPolicy !== "internal_review"
@@ -2116,17 +2115,45 @@ for (const definition of jiadingEightDefinitions) {
       !== normalizedStringSet(definition.requiredAdjacencyReviewIds ?? [])
     || normalizedStringSet(registryRecord?.linkedTopologySectorIds ?? [])
       !== normalizedStringSet(definition.sharedEdgeSectorIds ?? [])) {
-    error(`${definition.id}: 嘉定行政代理必须保持 low / draft-low / internal_review 及版本风险`);
+    error(`${definition.id}: 嘉定行政代理必须保持低置信、内部发布策略和完整 MultiPolygon 语义`);
   }
-  if (definition.historicalReferenceAreaSquareKilometers !== expected.historicalArea
+  if (expected.currentOfficialArea !== undefined) {
+    if (definition.officialAreaSquareKilometers !== expected.currentOfficialArea
+      || candidate?.properties?.officialAreaSquareKilometers
+        !== expected.currentOfficialArea
+      || definition.adminAreaVersionMismatch !== undefined
+      || candidate?.properties?.adminAreaVersionMismatch !== undefined
+      || registryRecord?.adminAreaVersionMismatch !== undefined
+      || definition.riskFlags?.includes("admin_area_version_mismatch")) {
+      error(`${definition.id}: 未受 2026 调整的官方面积不得误标成行政版本错位`);
+    }
+  } else if (definition.historicalReferenceAreaSquareKilometers
+      !== expected.legacyOfficialArea
     || candidate?.properties?.historicalReferenceAreaSquareKilometers
-      !== expected.historicalArea
+      !== expected.legacyOfficialArea
     || candidate?.properties?.historicalReferenceAreaAsOf
       !== definition.historicalReferenceAreaAsOf
+    || definition.officialCurrentAreaKm2 !== null
+    || candidate?.properties?.officialCurrentAreaKm2 !== null
+    || registryRecord?.officialCurrentAreaKm2 !== null
+    || definition.legacyOfficialAreaKm2 !== expected.legacyOfficialArea
+    || candidate?.properties?.legacyOfficialAreaKm2
+      !== expected.legacyOfficialArea
+    || registryRecord?.legacyOfficialAreaKm2 !== expected.legacyOfficialArea
+    || definition.adminAreaVersionMismatch !== true
+    || candidate?.properties?.adminAreaVersionMismatch !== true
+    || registryRecord?.adminAreaVersionMismatch !== true
+    || !definition.riskFlags?.includes("admin_area_version_mismatch")
     || "officialAreaSquareKilometers" in definition
     || "officialAreaSquareKilometers" in (candidate?.properties ?? {})) {
-    error(`${definition.id}: 2024 面积只能保存为历史参考，不得冒充 2026 当前官方面积`);
+    error(`${definition.id}: 调整前面积必须保留为 legacy，当前官方面积必须显式为 null`);
   }
+}
+if (!candidateDefinitionById.get("sector_nanxiang")?.requiredAdjacencyReviewIds
+  ?.includes("unresolved_dachang")
+  || candidateDefinitionById.get("sector_nanxiang")?.requiredAdjacencyReviewIds
+    ?.includes("unresolved_dahua")) {
+  error("sector_nanxiang: 必须保留大场镇接口，不得错误改写为大华市场接口");
 }
 const juyuanDefinition = candidateDefinitionById.get("sector_juyuanxinqu");
 const juyuanCandidate = candidateById.get("sector_juyuanxinqu");

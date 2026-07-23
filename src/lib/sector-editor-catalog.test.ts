@@ -628,7 +628,7 @@ test("the Jiading current-admin batch exposes eight editable proxies while prese
     records,
     (id) => {
       const candidate = candidateById.get(id) as {
-        geometry: { type: "Polygon"; coordinates: number[][][] };
+        geometry: { type: "MultiPolygon"; coordinates: number[][][][] };
       } | undefined;
       return candidate
         ? {
@@ -649,16 +649,43 @@ test("the Jiading current-admin batch exposes eight editable proxies while prese
   assert.ok(records.every((record: {
     reviewStatus: string;
     marketAdminAlignmentUnverified: boolean;
-    adminAreaVersionMismatch: boolean;
     geometry: { confidence: string; publicationPolicy: string };
     riskFlags: string[];
   }) => (
     record.reviewStatus === "draft-low"
       && record.marketAdminAlignmentUnverified === true
-      && record.adminAreaVersionMismatch === true
       && record.geometry.confidence === "low"
       && record.geometry.publicationPolicy === "internal_review"
       && record.riskFlags.includes("market_boundary_not_official")
+  )));
+  assert.ok(batchIds.every((id: string) => (
+    (candidateById.get(id) as { geometry: { type: string } }).geometry.type
+      === "MultiPolygon"
+  )));
+  const changedAdminIds = new Set([
+    "sector_malu",
+    "sector_xuhang",
+    "sector_juyuanxinqu",
+  ]);
+  assert.equal(records.filter((record: {
+    id: string;
+    adminAreaVersionMismatch?: boolean;
+    officialCurrentAreaKm2?: number | null;
+    legacyOfficialAreaKm2?: number;
+  }) => (
+    changedAdminIds.has(record.id)
+      && record.adminAreaVersionMismatch === true
+      && record.officialCurrentAreaKm2 === null
+      && typeof record.legacyOfficialAreaKm2 === "number"
+  )).length, 3);
+  assert.ok(records.filter((record: { id: string }) => (
+    !changedAdminIds.has(record.id)
+  )).every((record: {
+    adminAreaVersionMismatch?: boolean;
+    officialCurrentAreaKm2?: number | null;
+  }) => (
+    record.adminAreaVersionMismatch === undefined
+      && record.officialCurrentAreaKm2 === undefined
   )));
   const juyuan = records.find(
     (record: { id: string }) => record.id === "sector_juyuanxinqu",

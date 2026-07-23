@@ -4161,7 +4161,6 @@
       ],
       "riskFlags": [
         "overwide_admin_proxy",
-        "admin_area_version_mismatch",
         "mixed_rural_industrial_non_residential",
         "market_boundary_not_official"
       ],
@@ -4171,14 +4170,13 @@
       "kind": "market_sector",
       "reviewStatus": "draft-low",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场江桥暂以 2026 年现行江桥镇固定 OSM relation 作为低置信、可编辑行政起画代理。旧版约 42.4 平方公里面积只作历史量级参考；完整镇域包含村庄、产业及北虹桥协同空间，丰庄、华漕、真新和新泾接口必须另行按完整项目核验。",
+      "definitionCandidate": "市场江桥暂以 2026 年现行江桥镇固定 OSM relation 作为低置信、可编辑行政起画代理。2026 调整未涉及江桥，官方约 42.4 平方公里面积用于量级校验；完整镇域包含村庄、产业及北虹桥协同空间，丰庄、华漕、真新和新泾接口必须另行按完整项目核验。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-jiading-admin-divisions-2026",
         "official-jiading-admin-divisions-2024-historical"
       ],
       "marketAdminAlignmentUnverified": true,
-      "adminAreaVersionMismatch": true,
       "requiredAdjacencyReviewIds": [
         "sector_huaxin",
         "sector_taopu",
@@ -4222,7 +4220,6 @@
       ],
       "riskFlags": [
         "overwide_admin_proxy",
-        "admin_area_version_mismatch",
         "mixed_rural_non_residential",
         "market_boundary_not_official"
       ],
@@ -4232,18 +4229,17 @@
       "kind": "market_sector",
       "reviewStatus": "draft-low",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场南翔暂以 2026 年现行南翔镇固定 OSM relation 作为低置信、可编辑行政起画代理。完整镇域明显大于站点周边连续住宅市场，旧版面积只作历史参考；保留现有真实小红书南翔样本，但不把观点样本当边界证据。",
+      "definitionCandidate": "市场南翔暂以 2026 年现行南翔镇固定 OSM relation 作为低置信、可编辑行政起画代理。2026 调整未涉及南翔，官方材料 33.1–33.8 平方公里口径用于量级校验；完整镇域明显大于站点周边连续住宅市场。保留现有真实小红书南翔样本，但不把观点样本当边界证据。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-jiading-admin-divisions-2026",
         "official-jiading-admin-divisions-2024-historical"
       ],
       "marketAdminAlignmentUnverified": true,
-      "adminAreaVersionMismatch": true,
       "requiredAdjacencyReviewIds": [
         "sector_taopu",
         "sector_gucun",
-        "unresolved_dahua",
+        "unresolved_dachang",
         "unresolved_fengzhuang"
       ],
       "linkedTopologySectorIds": [
@@ -4302,6 +4298,8 @@
       ],
       "marketAdminAlignmentUnverified": true,
       "adminAreaVersionMismatch": true,
+      "officialCurrentAreaKm2": null,
+      "legacyOfficialAreaKm2": 57.09,
       "requiredAdjacencyReviewIds": [
         "sector_gucun",
         "sector_luodian",
@@ -4366,6 +4364,8 @@
       ],
       "marketAdminAlignmentUnverified": true,
       "adminAreaVersionMismatch": true,
+      "officialCurrentAreaKm2": null,
+      "legacyOfficialAreaKm2": 39.95,
       "requiredAdjacencyReviewIds": [
         "sector_luodian",
         "sector_luojing",
@@ -4408,7 +4408,6 @@
       ],
       "riskFlags": [
         "overwide_admin_proxy",
-        "admin_area_version_mismatch",
         "mixed_rural_agricultural_industrial",
         "market_boundary_not_official"
       ],
@@ -4418,7 +4417,7 @@
       "kind": "market_sector",
       "reviewStatus": "draft-low",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场外冈暂以 2026 年现行外冈镇 relation 作为低置信、可编辑行政起画代理。约 51 平方公里完整镇域混合产业园、万亩良田、农业和住宅空间；娄塘接口保持未解决。",
+      "definitionCandidate": "市场外冈暂以 2026 年现行外冈镇 relation 作为低置信、可编辑行政起画代理。2026 调整未改变外冈自身范围，官方约 50.92 平方公里面积用于量级校验；完整镇域混合产业园、万亩良田、农业和住宅空间，娄塘接口保持未解决。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-jiading-admin-divisions-2026",
@@ -4426,7 +4425,6 @@
         "official-jiading-waigang-14th-plan"
       ],
       "marketAdminAlignmentUnverified": true,
-      "adminAreaVersionMismatch": true,
       "requiredAdjacencyReviewIds": [
         "unresolved_loutang"
       ],
@@ -4465,7 +4463,6 @@
       ],
       "riskFlags": [
         "overwide_admin_proxy",
-        "admin_area_version_mismatch",
         "mixed_auto_industry_rural_non_residential",
         "market_boundary_not_official"
       ],
@@ -4482,7 +4479,6 @@
         "official-jiading-admin-divisions-2024-historical"
       ],
       "marketAdminAlignmentUnverified": true,
-      "adminAreaVersionMismatch": true,
       "requiredAdjacencyReviewIds": [
         "sector_huaxin",
         "sector_baihe"
@@ -4525,7 +4521,6 @@
       ],
       "riskFlags": [
         "overwide_admin_proxy",
-        "admin_area_version_mismatch",
         "mixed_rural_agricultural_ecological",
         "market_boundary_not_official"
       ],
@@ -4543,7 +4538,6 @@
         "official-jiading-huating-flood-plan-2025"
       ],
       "marketAdminAlignmentUnverified": true,
-      "adminAreaVersionMismatch": true,
       "requiredAdjacencyReviewIds": [
         "sector_luojing",
         "unresolved_loutang"
@@ -4602,6 +4596,8 @@
       "adminProxyName": "菊园街道",
       "marketAdminAlignmentUnverified": true,
       "adminAreaVersionMismatch": true,
+      "officialCurrentAreaKm2": null,
+      "legacyOfficialAreaKm2": 18.61,
       "requiredAdjacencyReviewIds": [
         "unresolved_loutang",
         "unresolved_jiadingxincheng",

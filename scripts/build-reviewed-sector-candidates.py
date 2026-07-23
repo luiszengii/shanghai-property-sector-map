@@ -95,6 +95,15 @@ def normalize_polygonal(geometry):
     return parts[0] if len(parts) == 1 else MultiPolygon(parts)
 
 
+def geometry_for_serialization(definition: dict[str, Any], geometry):
+    if (
+        definition.get("preserveMultiPolygonSemantics")
+        and isinstance(geometry, Polygon)
+    ):
+        return MultiPolygon([geometry])
+    return geometry
+
+
 def round_coordinates(value: Any, digits: int = 7):
     if isinstance(value, (float, int)):
         return round(float(value), digits)
@@ -1213,7 +1222,9 @@ def finalize_topology_group(
             round(representative.x, 7),
             round(representative.y, 7),
         ]
-        feature["geometry"] = mapping(output_geometry)
+        feature["geometry"] = mapping(
+            geometry_for_serialization(definition, output_geometry)
+        )
         finalized[sector_id] = output_geometry
     return finalized
 
@@ -1301,6 +1312,7 @@ def insert_polygon_boundary_vertices(
 def canonicalize_topology_group_output_vertices(
     feature_by_id: dict[str, dict[str, Any]],
     geometry_by_id: dict[str, Any],
+    definition_by_id: dict[str, dict[str, Any]],
     group: dict[str, Any],
 ):
     """Give both sides of every output-CRS shared edge the same split vertices."""
@@ -1326,8 +1338,11 @@ def canonicalize_topology_group_output_vertices(
                 int(group["roundOutputCoordinatesDigits"]),
             )
         feature = feature_by_id[sector_id]
+        definition = definition_by_id[sector_id]
         representative = geometry.representative_point()
-        feature["geometry"] = mapping(geometry)
+        feature["geometry"] = mapping(
+            geometry_for_serialization(definition, geometry)
+        )
         feature["properties"]["labelPoint"] = [
             round(representative.x, 7),
             round(representative.y, 7),
@@ -1511,7 +1526,9 @@ def build_feature(
     else:
         raise ValueError(f"{definition['canonicalName']} 缺少面积安全检查")
     representative = geometry.representative_point()
-    geometry_mapping = mapping(geometry)
+    geometry_mapping = mapping(
+        geometry_for_serialization(definition, geometry)
+    )
     if not definition.get("preserveTopologyPrecision"):
         geometry_mapping["coordinates"] = round_coordinates(
             geometry_mapping["coordinates"],
@@ -1555,6 +1572,16 @@ def build_feature(
                     definition["adminAreaVersionMismatch"]
                 ),
             } if "adminAreaVersionMismatch" in definition else {}),
+            **({
+                "officialCurrentAreaKm2": definition[
+                    "officialCurrentAreaKm2"
+                ],
+            } if "officialCurrentAreaKm2" in definition else {}),
+            **({
+                "legacyOfficialAreaKm2": float(
+                    definition["legacyOfficialAreaKm2"]
+                ),
+            } if "legacyOfficialAreaKm2" in definition else {}),
             **({
                 "excludedArea": definition["excludedArea"],
             } if definition.get("excludedArea") else {}),
@@ -1835,7 +1862,9 @@ def main() -> None:
             )
         feature = feature_by_id[definition["id"]]
         representative = corrected.representative_point()
-        feature["geometry"] = mapping(corrected)
+        feature["geometry"] = mapping(
+            geometry_for_serialization(definition, corrected)
+        )
         feature["properties"]["areaSquareKilometers"] = round(
             projected.area / 1_000_000,
             4,
@@ -1856,6 +1885,7 @@ def main() -> None:
         finalized_group = canonicalize_topology_group_output_vertices(
             feature_by_id,
             topology_geometry_by_id,
+            definition_by_id,
             group,
         )
         topology_geometry_by_id.update(finalized_group)
