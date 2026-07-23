@@ -66,7 +66,6 @@ const exportWarning = "用户在高德地图上人工绘制的市场板块草稿
 const retiredDraftSourcesBySourceId = new Map<string, {
   names: Set<string>;
   geometryFingerprints: Set<string>;
-  resetWhenSourceFingerprintMissing: boolean;
 }>([
   ["sector_qiantan", {
     names: new Set(["杨思前滩"]),
@@ -77,7 +76,6 @@ const retiredDraftSourcesBySourceId = new Map<string, {
       "ring-172-4b120fed",
       "ring-19-37ff99c",
     ]),
-    resetWhenSourceFingerprintMissing: true,
   }],
 ]);
 
@@ -397,16 +395,23 @@ export function syncUntouchedDraftsToCurrentTemplates(
     const template = templateById.get(draft.sourceSectorId);
     if (!template) return draft;
     const retiredSource = retiredDraftSourcesBySourceId.get(draft.sourceSectorId);
-    const mustResetToCurrentTemplate = Boolean(
+    const draftGeometryFingerprint = fingerprintDraftParts(draftParts(draft));
+    const hasRetiredIdentity = Boolean(
       retiredSource?.names.has(draft.name)
       || (
         draft.sourceGeometryFingerprint
         && retiredSource?.geometryFingerprints.has(draft.sourceGeometryFingerprint)
-      )
-      || (
-        !draft.sourceGeometryFingerprint
-        && retiredSource?.resetWhenSourceFingerprintMissing
       ),
+    );
+    const matchesRetiredDefaultGeometry = Boolean(
+      retiredSource?.geometryFingerprints.has(draftGeometryFingerprint)
+      || (
+        draft.sourceGeometryFingerprint
+        && draft.sourceGeometryFingerprint === draftGeometryFingerprint
+      ),
+    );
+    const mustResetToCurrentTemplate = Boolean(
+      hasRetiredIdentity && matchesRetiredDefaultGeometry,
     );
     if (mustResetToCurrentTemplate) {
       updatedSourceIds.push(draft.sourceSectorId);
@@ -420,7 +425,6 @@ export function syncUntouchedDraftsToCurrentTemplates(
       || migratedDraft.sourceGeometryFingerprint === template.geometryFingerprint) {
       return migratedDraft;
     }
-    const draftGeometryFingerprint = fingerprintDraftParts(draftParts(migratedDraft));
     if (draftGeometryFingerprint === template.geometryFingerprint) {
       return {
         ...migratedDraft,

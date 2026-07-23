@@ -205,7 +205,23 @@ test("an untouched local copy follows a newer high-precision source without over
   assert.deepEqual(preserved.preservedModifiedSourceIds, ["sector-gumei"]);
 });
 
-test("a retired combined Yangsi Qiantan draft resets after an older release already renamed it", () => {
+test("only an untouched retired Yangsi Qiantan default resets to the independent Qiantan template", () => {
+  const legacyDefaultRing = [
+    [121.4, 31.1],
+    [121.5, 31.1],
+    [121.5, 31.2],
+  ] as [number, number][];
+  const legacyDefaultFingerprint = fingerprintDraftRing(legacyDefaultRing);
+  const untouchedLegacyDraft = createDraftFromExistingSector({
+    id: "sector_qiantan",
+    name: "杨思前滩",
+    district: "浦东新区",
+    boundaryBasis: "旧合并口径",
+    note: "旧默认边界",
+    geometryStatus: "candidate",
+    geometryFingerprint: legacyDefaultFingerprint,
+    ring: legacyDefaultRing,
+  });
   const editedLegacyDraft = {
     ...createDraftFromExistingSector({
       id: "sector_qiantan",
@@ -232,7 +248,7 @@ test("a retired combined Yangsi Qiantan draft resets after an older release alre
   };
 
   const synced = syncUntouchedDraftsToCurrentTemplates(
-    [editedLegacyDraft],
+    [untouchedLegacyDraft],
     [currentTemplate],
   );
 
@@ -243,6 +259,15 @@ test("a retired combined Yangsi Qiantan draft resets after an older release alre
   assert.deepEqual(synced.updatedSourceIds, ["sector_qiantan"]);
   assert.deepEqual(synced.preservedModifiedSourceIds, []);
 
+  const editedSynced = syncUntouchedDraftsToCurrentTemplates(
+    [editedLegacyDraft],
+    [currentTemplate],
+  );
+  assert.deepEqual(editedSynced.drafts[0].ring, editedLegacyDraft.ring);
+  assert.equal(editedSynced.drafts[0].note, "用户已经拖动过边界");
+  assert.deepEqual(editedSynced.updatedSourceIds, []);
+  assert.deepEqual(editedSynced.preservedModifiedSourceIds, ["sector_qiantan"]);
+
   const fingerprintlessLegacyDraft = {
     ...editedLegacyDraft,
     sourceGeometryFingerprint: undefined,
@@ -251,7 +276,8 @@ test("a retired combined Yangsi Qiantan draft resets after an older release alre
     [fingerprintlessLegacyDraft],
     [currentTemplate],
   );
-  assert.deepEqual(fingerprintlessSynced.drafts[0].ring, currentTemplate.ring);
-  assert.equal(fingerprintlessSynced.drafts[0].sourceGeometryFingerprint, "current-source");
-  assert.deepEqual(fingerprintlessSynced.updatedSourceIds, ["sector_qiantan"]);
+  assert.deepEqual(fingerprintlessSynced.drafts[0].ring, fingerprintlessLegacyDraft.ring);
+  assert.equal(fingerprintlessSynced.drafts[0].note, "用户已经拖动过边界");
+  assert.deepEqual(fingerprintlessSynced.updatedSourceIds, []);
+  assert.deepEqual(fingerprintlessSynced.preservedModifiedSourceIds, ["sector_qiantan"]);
 });
