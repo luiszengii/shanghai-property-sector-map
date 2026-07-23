@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  clusterMapPoints,
+  zoomToSeparatePoints,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
-import { clusterMapPoints } from "./project-marker-clustering.ts";
+} from "./project-marker-clustering.ts";
 
 test("groups nearby screen points and keeps distant points separate", () => {
   const clusters = clusterMapPoints([
@@ -32,4 +35,16 @@ test("updates the centroid as points join a cluster", () => {
 
   assert.deepEqual(clusters.map((cluster) => cluster.items), [["a", "b", "c"]]);
   assert.equal(clusters[0].center.x, 35);
+});
+
+test("calculates a zoom where the closest cluster members separate", () => {
+  const targetZoom = zoomToSeparatePoints([
+    { x: 0, y: 0 },
+    { x: 18, y: 0 },
+    { x: 80, y: 0 },
+  ], 72, 10);
+  const scale = 2 ** (targetZoom - 10);
+
+  assert.ok(18 * scale > 72);
+  assert.ok(targetZoom <= 20);
 });

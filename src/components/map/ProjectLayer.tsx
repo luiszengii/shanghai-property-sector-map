@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { projects } from "@/src/content/project-leads";
-import { clusterMapPoints } from "@/src/lib/project-marker-clustering";
+import {
+  clusterMapPoints,
+  zoomToSeparatePoints,
+} from "@/src/lib/project-marker-clustering";
 import type { PropertyProject } from "@/src/types/map";
 
 interface ProjectLayerProps {
@@ -75,7 +78,12 @@ export function ProjectLayer({
           zIndex: 150,
         });
         marker.on("click", () => {
-          map.setZoomAndCenter(Math.min(20, zoom + 1.5), position, false, 400);
+          const targetZoom = zoomToSeparatePoints(
+            cluster.items.map((project) => projectWorldPoint(project, zoom)),
+            clusterRadius,
+            zoom,
+          );
+          map.setZoomAndCenter(targetZoom, position, false, 400);
         });
         map.add(marker);
         return marker;

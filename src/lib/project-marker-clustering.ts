@@ -9,6 +9,34 @@ export interface MapPointCluster<T> {
   center: { x: number; y: number };
 }
 
+export function zoomToSeparatePoints(
+  points: Array<{ x: number; y: number }>,
+  radius: number,
+  currentZoom: number,
+  maxZoom = 20,
+) {
+  if (points.length < 2 || radius <= 0) return currentZoom;
+
+  let minimumDistance = Number.POSITIVE_INFINITY;
+  for (let first = 0; first < points.length; first += 1) {
+    for (let second = first + 1; second < points.length; second += 1) {
+      minimumDistance = Math.min(
+        minimumDistance,
+        Math.hypot(
+          points[first].x - points[second].x,
+          points[first].y - points[second].y,
+        ),
+      );
+    }
+  }
+
+  if (minimumDistance <= 1) return maxZoom;
+  const separationZoom = currentZoom
+    + Math.log2(radius / minimumDistance)
+    + 0.25;
+  return Math.min(maxZoom, Math.max(currentZoom + 1, separationZoom));
+}
+
 export function clusterMapPoints<T>(
   points: MapPoint<T>[],
   radius: number,
