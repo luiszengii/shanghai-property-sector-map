@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "changning-zhongshan-park-core-2026-07",
+  "topologyGroups": [],
+  "sectors": [
+    {
+      "id": "sector_zhongshangongyuan",
+      "canonicalName": "中山公园",
+      "districtName": "长宁区",
+      "scopeVersion": "official-landscape-core-four-sides-2026-07",
+      "confidence": "medium",
+      "method": "market_four_sides_osm_linear_component",
+      "bbox": [121.402, 31.207, 121.434, 31.236],
+      "insidePoint": [121.4165, 31.2225],
+      "boundaryAnchors": [
+        {
+          "side": "east",
+          "featureType": "composite-linear",
+          "expectedIdentity": "华阳路—安西路",
+          "identityStatus": "verified-by-osm-name",
+          "components": [
+            {
+              "featureType": "road",
+              "expectedIdentity": "华阳路",
+              "match": { "names": ["华阳路"] }
+            },
+            {
+              "featureType": "road",
+              "expectedIdentity": "安西路",
+              "match": { "names": ["安西路"] }
+            }
+          ],
+          "verificationSourceIds": ["official-shanghai-zhongshan-park-landscape-scope-2022", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 500
+        },
+        {
+          "side": "south",
+          "featureType": "road",
+          "expectedIdentity": "安化路",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["安化路"] },
+          "verificationSourceIds": ["official-shanghai-zhongshan-park-landscape-scope-2022", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 875
+        },
+        {
+          "side": "north",
+          "featureType": "road",
+          "expectedIdentity": "万航渡路",
+          "identityStatus": "verified-by-osm-name",
+          "match": { "names": ["万航渡路"] },
+          "verificationSourceIds": ["official-shanghai-zhongshan-park-landscape-scope-2022", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1000
+        },
+        {
+          "side": "west",
+          "featureType": "composite-linear",
+          "expectedIdentity": "中山西路—长宁路—凯旋路",
+          "identityStatus": "verified-by-osm-name",
+          "components": [
+            {
+              "featureType": "road",
+              "expectedIdentity": "中山西路",
+              "match": { "names": ["中山西路"] }
+            },
+            {
+              "featureType": "road",
+              "expectedIdentity": "长宁路",
+              "match": { "osmIds": ["653427062"] }
+            },
+            {
+              "featureType": "road",
+              "expectedIdentity": "凯旋路",
+              "match": { "osmIds": ["1119184694", "1119184693", "1270386721"] }
+            }
+          ],
+          "verificationSourceIds": ["official-shanghai-zhongshan-park-landscape-scope-2022", "osm-geofabrik-shanghai-260721"],
+          "minimumBoundaryCoverageMeters": 1490
+        }
+      ],
+      "cutBufferMeters": 30,
+      "centerlineToleranceMeters": 15,
+      "minimumBboxClearanceMeters": 50,
+      "fillHolesBelowSquareMeters": 5,
+      "areaRangeSquareKilometers": [0.7, 1.5],
+      "preserveTopologyPrecision": true,
+      "sharedEdgeSectorIds": [],
+      "snapDependencySectorIds": [],
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-zhongshan-park-landscape-scope-2022"],
+      "geometryVerificationSourceIds": ["official-shanghai-zhongshan-park-landscape-scope-2022", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "中山公园采用 2022 年上海市级文件给出的景观区域道路围合作为可审计核心候选：东华阳路与安西路、南安化路、北万航渡路、西中山西路—长宁路—凯旋路。该范围只代表精确核心锚点，不把江苏路、华阳路或周家桥街道的其余区域静默并入，也不宣称等于完整楼市板块。"
+    }
+  ]
+}

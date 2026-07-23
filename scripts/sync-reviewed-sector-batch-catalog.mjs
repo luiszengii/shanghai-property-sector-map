@@ -161,6 +161,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "changning-gubei-hongqiao",
   }],
+  ["changning-zhongshan-park-core-2026-07", {
+    expectedSectorCount: 1,
+    districtCounts: {
+      长宁区: 1,
+    },
+    catalogMode: "changning-zhongshan-park-core",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -195,6 +202,34 @@ if (batch.sectors.some(({ districtName }) => !expectedDistrictCounts.has(distric
 
 const registryRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "changning-zhongshan-park-core") {
+    registryRecords.push({
+      id: definition.id,
+      canonicalName: definition.canonicalName,
+      aliases: ["中山公园核心候选"],
+      districtNames: [definition.districtName],
+      kind: "market_sector",
+      reviewStatus: "draft-medium",
+      definitionStatus: "official_scope_market_candidate",
+      definitionCandidate: definition.geometryRule,
+      definitionSourceIds: definition.definitionSourceIds,
+      boundaryEvidenceIds: definition.boundaryAnchors.map(
+        ({ side }) => `zhongshangongyuan-${side}`,
+      ),
+      geometry: {
+        status: "draft",
+        confidence: "medium",
+        coordinateSystem: "WGS84",
+        coordinateSystemVerified: true,
+        version: definition.scopeVersion,
+        sourceIds: ["osm-geofabrik-shanghai-260721"],
+        verificationSourceIds: definition.geometryVerificationSourceIds,
+        publicationPolicy: "internal_review",
+        note: "约 1.0727 平方公里的道路围合核心候选；市级文件确认四至，但它不代表完整楼市板块，江苏路、华阳路、周家桥剩余区域继续明确留白。",
+      },
+    });
+    continue;
+  }
   if (batchPolicy.catalogMode === "changning-gubei-hongqiao") {
     const isGubei = definition.id === "sector_gubei";
     const boundaryEvidenceIds = isGubei
@@ -279,6 +314,23 @@ upsertJsonArrayItems({
 
 const evidenceRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "changning-zhongshan-park-core") {
+    for (const anchor of definition.boundaryAnchors) {
+      evidenceRecords.push({
+        id: `zhongshangongyuan-${anchor.side}`,
+        sectorId: definition.id,
+        side: anchor.side,
+        basisType: "official_scope_text",
+        featureName: anchor.expectedIdentity,
+        status: "candidate_scope_confirmed",
+        confidence: "medium",
+        sourceId: "official-shanghai-zhongshan-park-landscape-scope-2022",
+        supportingSourceIds: ["osm-geofabrik-shanghai-260721"],
+        note: "2022 年市级文件确认中山公园地区道路围合身份；固定 OSM 道路线用于生成可复算核心候选，不把该核心扩称完整楼市边界。",
+      });
+    }
+    continue;
+  }
   if (batchPolicy.catalogMode === "changning-gubei-hongqiao") {
     if (definition.id === "sector_gubei") {
       for (const anchor of definition.boundaryAnchors) {

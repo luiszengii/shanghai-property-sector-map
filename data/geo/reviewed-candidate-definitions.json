@@ -7,7 +7,8 @@
     "data/geo/reviewed-candidate-batches/qingpu-songjiang-jinshan-thirty-2026-07.json",
     "data/geo/reviewed-candidate-batches/xuhui-twelve-admin-aligned-2026-07.json",
     "data/geo/reviewed-candidate-batches/changning-four-direct-admin-aligned-2026-07.json",
-    "data/geo/reviewed-candidate-batches/changning-gubei-hongqiao-mutually-exclusive-2026-07.json"
+    "data/geo/reviewed-candidate-batches/changning-gubei-hongqiao-mutually-exclusive-2026-07.json",
+    "data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {

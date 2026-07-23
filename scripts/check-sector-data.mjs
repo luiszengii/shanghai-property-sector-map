@@ -1616,7 +1616,7 @@ if (changningFourSharedPairs.size !== 2
   || !changningFourSharedPairs.has("sector_tianshan/sector_xianxia")) {
   error("长宁直接同名街道批次必须保持新华路—天山—仙霞两组固定共享边");
 }
-for (const forbiddenName of ["中山公园", "西郊"]) {
+for (const forbiddenName of ["西郊"]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -1751,6 +1751,40 @@ if (protectedHongqiaoBusinessCandidate?.properties?.scopeVersion
   || geometrySha256(protectedHongqiaoBusinessCandidate?.geometry)
     !== "1ec7da5352ca8d8002828437b1eccb176dc64f53db67d98db3b120be4985396b") {
   error("sector_hongqiao: 长宁住宅虹桥批次不得改写虹桥商务区候选");
+}
+
+const zhongshanParkDefinition = candidateDefinitionById.get(
+  "sector_zhongshangongyuan",
+);
+const zhongshanParkCandidate = candidateById.get("sector_zhongshangongyuan");
+const zhongshanParkRegistry = registryById.get("sector_zhongshangongyuan");
+const zhongshanParkManifest = manifestById.get("sector_zhongshangongyuan");
+if (zhongshanParkDefinition?.method !== "market_four_sides_osm_linear_component"
+  || zhongshanParkCandidate?.properties?.areaSquareKilometers !== 1.0727
+  || zhongshanParkCandidate?.properties?.confidence !== "medium"
+  || zhongshanParkRegistry?.reviewStatus !== "draft-medium"
+  || zhongshanParkRegistry?.geometry?.publicationPolicy !== "internal_review") {
+  error("sector_zhongshangongyuan: 必须保持官方道路围合的 medium 内部核心候选");
+}
+if (zhongshanParkDefinition?.boundaryAnchors?.length !== 4) {
+  error("sector_zhongshangongyuan: 必须完整登记四侧官方道路锚点");
+}
+for (const anchor of zhongshanParkDefinition?.boundaryAnchors ?? []) {
+  const manifestAnchor = zhongshanParkManifest?.osmRefs?.boundaryAnchors?.find(
+    (item) => item.side === anchor.side,
+  );
+  if (!manifestAnchor
+    || manifestAnchor.identityStatus !== "verified-by-osm-name"
+    || manifestAnchor.centerlineToleranceMeters !== 15
+    || manifestAnchor.boundaryCoverageWithinToleranceMeters
+      < anchor.minimumBoundaryCoverageMeters) {
+    error(`sector_zhongshangongyuan: ${anchor.side} 侧必须达到声明的官方命名道路覆盖长度`);
+  }
+}
+if ([...registryById.values()].some(
+  (record) => record.canonicalName === "西郊",
+)) {
+  error("sector_zhongshangongyuan: 中山公园核心批次不得在联合裁定前自动注册西郊");
 }
 
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");

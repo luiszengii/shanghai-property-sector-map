@@ -699,6 +699,17 @@
       "note": "官方简介直接确认虹桥街道辖区内有古北新区；用于证明古北应从虹桥街道骨架中独立扣除，不代表官方把剩余街道面命名为楼市虹桥。"
     },
     {
+      "id": "official-shanghai-zhongshan-park-landscape-scope-2022",
+      "title": "关于印发《上海市主要道路（河道）和景观区域范围界定》的函",
+      "publisher": "上海市绿化和市容管理局",
+      "url": "https://www.shanghai.gov.cn/gwk/search/content/cf46474f-4259-4087-ada5-105e2ec94971",
+      "sourceType": "official_scope_text",
+      "publishedAt": "2022-06-17",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "沪绿容〔2022〕104号明确中山公园地区东华阳路、安西路，南安化路，北万航渡路，西中山西路—长宁路—凯旋路；仅以文字四至配合固定 OSM 道路线独立重建核心候选，不复制官方图件坐标。"
+    },
+    {
       "id": "official-qingpu-master-plan-2035",
       "title": "上海市青浦区总体规划暨土地利用总体规划（2017-2035）",
       "publisher": "上海市规划和自然资源局",

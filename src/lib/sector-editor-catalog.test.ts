@@ -312,7 +312,7 @@ test("the Changning direct batch exposes four candidates without inventing custo
   assert.equal(registryData.sectors.filter(
     (record: { id: string }) => batchIdSet.has(record.id),
   ).length, 4);
-  for (const forbiddenName of ["中山公园", "西郊"]) {
+  for (const forbiddenName of ["西郊"]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
     ));
@@ -329,6 +329,40 @@ test("the Changning direct batch exposes four candidates without inventing custo
     )?.properties?.name,
     "虹桥商务区",
   );
+});
+
+test("the Zhongshan Park official core is editable without inventing a full West Suburb sector", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const definition = batch.sectors[0];
+  const record = registryData.sectors.find(
+    (item: { id: string }) => item.id === definition.id,
+  );
+  const candidate = candidateData.features.find(
+    (item: { properties: { id: string } }) => item.properties.id === definition.id,
+  );
+
+  assert.equal(definition.id, "sector_zhongshangongyuan");
+  assert.equal(record?.canonicalName, "中山公园");
+  assert.equal(record?.reviewStatus, "draft-medium");
+  assert.equal(candidate?.properties?.areaSquareKilometers, 1.0727);
+  assert.equal(candidate?.geometry.type, "Polygon");
+  assert.ok(!registryData.sectors.some(
+    (item: { canonicalName: string }) => item.canonicalName === "西郊",
+  ));
 });
 
 test("the Gubei and Changning residential Hongqiao batch stays mutually exclusive and distinct from Hongqiao CBD", () => {

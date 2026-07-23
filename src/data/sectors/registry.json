@@ -2711,5 +2711,45 @@
         "publicationPolicy": "internal_review",
         "note": "约 2.7072 平方公里候选严格取虹桥街道开放行政骨架扣除古北；该差集是低置信项目推导，不是官方虹桥住宅边界，且与虹桥商务区使用不同 ID。"
       }
+    },
+    {
+      "id": "sector_zhongshangongyuan",
+      "canonicalName": "中山公园",
+      "aliases": [
+        "中山公园核心候选"
+      ],
+      "districtNames": [
+        "长宁区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "official_scope_market_candidate",
+      "definitionCandidate": "中山公园采用 2022 年上海市级文件给出的景观区域道路围合作为可审计核心候选：东华阳路与安西路、南安化路、北万航渡路、西中山西路—长宁路—凯旋路。该范围只代表精确核心锚点，不把江苏路、华阳路或周家桥街道的其余区域静默并入，也不宣称等于完整楼市板块。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-zhongshan-park-landscape-scope-2022"
+      ],
+      "boundaryEvidenceIds": [
+        "zhongshangongyuan-east",
+        "zhongshangongyuan-south",
+        "zhongshangongyuan-north",
+        "zhongshangongyuan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "medium",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "official-landscape-core-four-sides-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-shanghai-zhongshan-park-landscape-scope-2022",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "约 1.0727 平方公里的道路围合核心候选；市级文件确认四至，但它不代表完整楼市板块，江苏路、华阳路、周家桥剩余区域继续明确留白。"
+      }
     }]
 }
