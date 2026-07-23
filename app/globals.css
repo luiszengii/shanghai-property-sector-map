@@ -65,6 +65,21 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-filter { background: #fff7ed; border: 1px solid rgba(234,88,12,.12); }
 .project-filter:hover { background: #ffedd5; }
 .project-category-icon { background: linear-gradient(145deg, #f97316, #ea580c); }
+.project-display-settings { margin-top: 7px; color: #64748b; background: rgba(255,247,237,.62); border: 1px solid rgba(234,88,12,.1); border-radius: 10px; }
+.project-display-settings summary { min-height: 35px; display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 6px; padding: 0 9px; cursor: pointer; list-style: none; font-size: 11px; font-weight: 700; }
+.project-display-settings summary::-webkit-details-marker { display: none; }
+.project-display-settings summary small { color: #b08a72; font-size: 9px; font-weight: 500; text-align: right; }
+.project-settings-body { display: grid; gap: 11px; padding: 10px; border-top: 1px solid rgba(234,88,12,.1); }
+.project-setting-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0; color: #64748b; background: transparent; border: 0; font-size: 11px; cursor: pointer; }
+.project-setting-toggle.is-active { color: #431407; font-weight: 700; }
+.project-setting-toggle.is-active .toggle { background: #f97316; }
+.project-setting-toggle.is-active .toggle span { transform: translateX(12px); }
+.project-settings-body label { display: grid; gap: 5px; color: #64748b; font-size: 10px; }
+.project-settings-body label > span { display: flex; justify-content: space-between; gap: 8px; }
+.project-settings-body output { color: #c2410c; font: 700 9px var(--font-geist-mono), monospace; }
+.project-settings-body input[type="range"] { width: 100%; accent-color: #f97316; cursor: pointer; }
+.project-settings-body input[type="range"]:disabled { cursor: not-allowed; opacity: .4; }
+.project-settings-body p { margin: 0; color: #9a7b67; font-size: 9px; line-height: 1.45; }
 .filter-group + .filter-group { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
 .group-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .group-title strong { font-size: 13px; }
@@ -146,6 +161,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-label b { color: #431407; font-size: 11px; }
 .project-label small { color: #c2410c; font-size: 9px; }
 .project-marker:hover .project-pin, .project-marker.is-selected .project-pin { transform: rotate(-45deg) scale(1.18); box-shadow: 0 0 0 4px rgba(249,115,22,.18); }
+.project-cluster-marker { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; color: #fff; background: radial-gradient(circle at 35% 28%, #fdba74, #f97316 52%, #c2410c); border: 3px solid rgba(255,255,255,.96); border-radius: 50%; box-shadow: 0 7px 18px rgba(154,52,18,.3), 0 0 0 5px rgba(249,115,22,.13); cursor: zoom-in; transition: transform .18s ease, box-shadow .18s ease; }
+.project-cluster-marker span { font-size: 12px; font-weight: 900; letter-spacing: -.03em; }
+.project-cluster-marker:hover { transform: scale(1.12); box-shadow: 0 9px 23px rgba(154,52,18,.38), 0 0 0 7px rgba(249,115,22,.15); }
 .amap-logo, .amap-copyright { opacity: .72; }
 
 .dialog-backdrop { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(15,23,42,.42); backdrop-filter: blur(7px); animation: fade-in .2s ease both; }

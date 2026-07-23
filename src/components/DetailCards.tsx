@@ -37,6 +37,8 @@ export function DetailCard() {
     selectedSectorId,
     selectedPlaceId,
     selectedProjectId,
+    zoom,
+    projectDetailMinZoom,
     center,
     closeDetail,
     requestFocus,
@@ -51,6 +53,7 @@ export function DetailCard() {
   if (!place && !project && !sector) return null;
 
   if (project) {
+    if (zoom < projectDetailMinZoom) return null;
     const displayName = project.officialName ?? project.name;
     return (
       <article className="detail-card project-detail-card glass-panel" aria-label={displayName + "详情"}>

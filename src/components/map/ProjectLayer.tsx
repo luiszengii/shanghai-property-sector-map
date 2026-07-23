@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { projects } from "@/src/content/project-leads";
+import { clusterMapPoints } from "@/src/lib/project-marker-clustering";
 import type { PropertyProject } from "@/src/types/map";
 
 interface ProjectLayerProps {
@@ -9,6 +10,9 @@ interface ProjectLayerProps {
   map: AMap.Map;
   zoom: number;
   visible: boolean;
+  clusterEnabled: boolean;
+  clusterRadius: number;
+  detailMinZoom: number;
   selectedProjectId: string | null;
   onSelect: (project: PropertyProject) => void;
 }
@@ -19,7 +23,28 @@ function escapeHtml(value: string) {
   })[character] ?? character);
 }
 
-export function ProjectLayer({ amapApi, map, zoom, visible, selectedProjectId, onSelect }: ProjectLayerProps) {
+function projectWorldPoint(project: PropertyProject, zoom: number) {
+  const [longitude, latitude] = project.position;
+  const scale = 256 * 2 ** zoom;
+  const latitudeRadians = latitude * Math.PI / 180;
+  return {
+    item: project,
+    x: (longitude + 180) / 360 * scale,
+    y: (1 - Math.log(Math.tan(latitudeRadians) + 1 / Math.cos(latitudeRadians)) / Math.PI) / 2 * scale,
+  };
+}
+
+export function ProjectLayer({
+  amapApi,
+  map,
+  zoom,
+  visible,
+  clusterEnabled,
+  clusterRadius,
+  detailMinZoom,
+  selectedProjectId,
+  onSelect,
+}: ProjectLayerProps) {
   const markersRef = useRef<AMap.Marker[]>([]);
   const onSelectRef = useRef(onSelect);
 
@@ -32,7 +57,31 @@ export function ProjectLayer({ amapApi, map, zoom, visible, selectedProjectId, o
     markersRef.current = [];
     if (!visible || zoom < 9.4) return;
 
-    const markers = projects.map((project) => {
+    const clusters = clusterMapPoints(
+      projects.map((project) => projectWorldPoint(project, zoom)),
+      clusterEnabled ? clusterRadius : 0,
+    );
+    const markers = clusters.map((cluster) => {
+      if (cluster.items.length > 1) {
+        const position: [number, number] = [
+          cluster.items.reduce((total, project) => total + project.position[0], 0) / cluster.items.length,
+          cluster.items.reduce((total, project) => total + project.position[1], 0) / cluster.items.length,
+        ];
+        const content = `<button class="project-cluster-marker" aria-label="${cluster.items.length} 个新房项目"><span>+${cluster.items.length}</span></button>`;
+        const marker = new amapApi.Marker({
+          position,
+          content,
+          anchor: "center",
+          zIndex: 150,
+        });
+        marker.on("click", () => {
+          map.setZoomAndCenter(Math.min(20, zoom + 1.5), position, false, 400);
+        });
+        map.add(marker);
+        return marker;
+      }
+
+      const project = cluster.items[0];
       const selected = project.id === selectedProjectId;
       const displayName = project.officialName ?? project.name;
       const price = project.averagePrice.toFixed(project.averagePrice % 1 ? 2 : 0).replace(/0$/, "") + "万";
@@ -43,7 +92,7 @@ export function ProjectLayer({ amapApi, map, zoom, visible, selectedProjectId, o
       const marker = new amapApi.Marker({ position: project.position, content, anchor: "bottom-center", zIndex: selected ? 210 : 145 });
       marker.on("click", () => {
         onSelectRef.current(project);
-        map.setZoomAndCenter(Math.max(zoom, 14.2), project.position, false, 450);
+        map.setZoomAndCenter(Math.max(zoom, detailMinZoom), project.position, false, 450);
       });
       map.add(marker);
       return marker;
@@ -53,7 +102,16 @@ export function ProjectLayer({ amapApi, map, zoom, visible, selectedProjectId, o
     return () => {
       markers.forEach((marker) => map.remove(marker));
     };
-  }, [amapApi, map, selectedProjectId, visible, zoom]);
+  }, [
+    amapApi,
+    clusterEnabled,
+    clusterRadius,
+    detailMinZoom,
+    map,
+    selectedProjectId,
+    visible,
+    zoom,
+  ]);
 
   return null;
 }

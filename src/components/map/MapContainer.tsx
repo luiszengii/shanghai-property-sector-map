@@ -32,6 +32,9 @@ export function MapContainer() {
     selectedPlaceId,
     selectedProjectId,
     showProjects,
+    projectClusterEnabled,
+    projectClusterRadius,
+    projectDetailMinZoom,
     focusRequest,
     sectorGeometryFallbacks,
     setZoom,
@@ -203,7 +206,15 @@ export function MapContainer() {
       if (place) map.setZoomAndCenter(15.2, [place.longitude, place.latitude], false, 650);
     } else {
       const project = projects.find((item) => item.id === focusRequest.id);
-      if (project) map.setZoomAndCenter(13.8, project.position, false, 650);
+      if (project) {
+        const detailMinZoom = useMapStore.getState().projectDetailMinZoom;
+        map.setZoomAndCenter(
+          Math.max(13.8, detailMinZoom),
+          project.position,
+          false,
+          650,
+        );
+      }
     }
   }, [focusRequest, sectorGeometryFallbacks]);
 
@@ -280,7 +291,17 @@ export function MapContainer() {
         <>
           <SectorLayer amapApi={amapApi} map={mapInstance} zoom={zoom} selectedSectorId={selectedSectorId} onSelect={handleSectorSelect} />
           <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
-          <ProjectLayer amapApi={amapApi} map={mapInstance} zoom={zoom} visible={showProjects} selectedProjectId={selectedProjectId} onSelect={handleProjectSelect} />
+          <ProjectLayer
+            amapApi={amapApi}
+            map={mapInstance}
+            zoom={zoom}
+            visible={showProjects}
+            clusterEnabled={projectClusterEnabled}
+            clusterRadius={projectClusterRadius}
+            detailMinZoom={projectDetailMinZoom}
+            selectedProjectId={selectedProjectId}
+            onSelect={handleProjectSelect}
+          />
         </>
       )}
     </div>

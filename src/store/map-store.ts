@@ -19,6 +19,9 @@ interface MapState {
   selectedPlaceId: string | null;
   selectedProjectId: string | null;
   showProjects: boolean;
+  projectClusterEnabled: boolean;
+  projectClusterRadius: number;
+  projectDetailMinZoom: number;
   zoom: number;
   center: [number, number];
   mobileFiltersOpen: boolean;
@@ -34,6 +37,9 @@ interface MapState {
   selectPlace: (id: string | null) => void;
   selectProject: (id: string | null) => void;
   toggleProjects: () => void;
+  setProjectClusterEnabled: (enabled: boolean) => void;
+  setProjectClusterRadius: (radius: number) => void;
+  setProjectDetailMinZoom: (zoom: number) => void;
   setZoom: (zoom: number) => void;
   setCenter: (center: [number, number]) => void;
   setMobileFiltersOpen: (open: boolean) => void;
@@ -53,6 +59,9 @@ export const useMapStore = create<MapState>()(
       selectedPlaceId: null,
       selectedProjectId: null,
       showProjects: true,
+      projectClusterEnabled: true,
+      projectClusterRadius: 72,
+      projectDetailMinZoom: 13.8,
       zoom: 10.6,
       center: [121.4737, 31.2304],
       mobileFiltersOpen: false,
@@ -73,6 +82,9 @@ export const useMapStore = create<MapState>()(
       selectPlace: (id) => set({ selectedPlaceId: id, selectedProjectId: null }),
       selectProject: (id) => set({ selectedProjectId: id, selectedPlaceId: null }),
       toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
+      setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
+      setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
+      setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
       setZoom: (zoom) => set({ zoom }),
       setCenter: (center) => set({ center }),
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
@@ -101,7 +113,13 @@ export const useMapStore = create<MapState>()(
     {
       name: "shanghai-sector-map-session",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ enabledCategories: state.enabledCategories, showProjects: state.showProjects }),
+      partialize: (state) => ({
+        enabledCategories: state.enabledCategories,
+        showProjects: state.showProjects,
+        projectClusterEnabled: state.projectClusterEnabled,
+        projectClusterRadius: state.projectClusterRadius,
+        projectDetailMinZoom: state.projectDetailMinZoom,
+      }),
     },
   ),
 );
