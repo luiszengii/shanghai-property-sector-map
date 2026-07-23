@@ -27,7 +27,7 @@ import geopandas as gpd
 import pyogrio
 from shapely.geometry import MultiPolygon, Point, Polygon, box, mapping, shape
 from shapely.geometry.polygon import orient
-from shapely.ops import polygonize, unary_union
+from shapely.ops import nearest_points, polygonize, unary_union
 from shapely.validation import make_valid
 
 
@@ -514,6 +514,190 @@ def build_market_admin_candidate_with_shared_topology(
         definition["sharedEdgeSnapDistanceMeters"]
     )
     return geometry, area, osm_refs
+
+
+def build_official_residential_subarea_proxy(
+    gpkg: Path,
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+):
+    admin_geometry, _, osm_refs = build_osm_admin_candidate(
+        gpkg,
+        definition,
+        working_crs,
+    )
+    road_ids = {str(value) for value in definition["cutRoadOsmIds"]}
+    roads = pyogrio.read_dataframe(
+        gpkg,
+        layer="gis_osm_roads_free",
+        bbox=admin_geometry.bounds,
+    )
+    roads = roads[roads["osm_id"].astype(str).isin(road_ids)]
+    actual_ids = {str(value) for value in roads["osm_id"]}
+    if actual_ids != road_ids:
+        missing_ids = sorted(road_ids - actual_ids)
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到锁定的道路对象："
+            f"{', '.join(missing_ids)}"
+        )
+    unexpected_names = sorted({
+        str(value)
+        for value in roads["name"]
+        if value != definition["expectedCutRoadName"]
+    })
+    if unexpected_names:
+        raise ValueError(
+            f"{definition['canonicalName']} 裁切道路名称漂移："
+            f"{', '.join(unexpected_names)}"
+        )
+
+    projected_admin = project_geometry(
+        admin_geometry,
+        output_crs,
+        working_crs,
+    )
+    projected_roads = roads.to_crs(working_crs)
+    road_union = unary_union(projected_roads.geometry)
+    cut_buffer = float(definition["cutRoadBufferMeters"])
+    cut = projected_admin.difference(road_union.buffer(cut_buffer))
+    inside_point = project_geometry(
+        Point(*definition["insidePoint"]),
+        output_crs,
+        working_crs,
+    )
+    cut_parts = polygons(make_valid(cut))
+    containing = [
+        part
+        for part in cut_parts
+        if part.contains(inside_point)
+    ]
+    if len(containing) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 道路裁切后应唯一包含住宅裁定点，"
+            f"实际找到 {len(containing)} 个"
+        )
+    selected_side = definition["selectedSide"]
+    if selected_side != "west":
+        raise ValueError(
+            f"{definition['canonicalName']} 暂只支持可验证的 west 道路裁切"
+        )
+    excluded_parts = [
+        part
+        for part in cut_parts
+        if part is not containing[0]
+        and part.area >= float(
+            definition["minimumExcludedSideAreaSquareMeters"]
+        )
+    ]
+    if len(excluded_parts) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 应唯一识别道路东侧主排除面，"
+            f"实际找到 {len(excluded_parts)} 个"
+        )
+    excluded_part = excluded_parts[0]
+    nearest_road_point = nearest_points(inside_point, road_union)[1]
+    selected_representative = containing[0].representative_point()
+    excluded_representative = excluded_part.representative_point()
+    if (
+        inside_point.x >= nearest_road_point.x
+        or selected_representative.x >= excluded_representative.x
+    ):
+        raise ValueError(
+            f"{definition['canonicalName']} 裁定点或候选面未通过军工路西侧验证"
+        )
+
+    restored = containing[0].buffer(
+        cut_buffer,
+        join_style="mitre",
+    ).intersection(projected_admin)
+    restored_parts = [
+        part
+        for part in polygons(make_valid(restored))
+        if part.contains(inside_point)
+    ]
+    if len(restored_parts) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} 回扩道路中心线后应唯一包含住宅裁定点，"
+            f"实际找到 {len(restored_parts)} 个"
+        )
+    projected = normalize_polygonal(restored_parts[0])
+    protected_admin_relations = []
+    for protected_definition in definition.get(
+        "protectedAdminRelations",
+        [],
+    ):
+        protected_geometry, _, _ = build_osm_admin_candidate(
+            gpkg,
+            protected_definition,
+            working_crs,
+        )
+        projected_protected = project_geometry(
+            protected_geometry,
+            output_crs,
+            working_crs,
+        )
+        overlap = projected.intersection(projected_protected).area
+        maximum_overlap = float(
+            protected_definition["maximumOverlapSquareMeters"]
+        )
+        if overlap > maximum_overlap:
+            raise ValueError(
+                f"{definition['canonicalName']} 与保护行政包络 "
+                f"{protected_definition['expectedOsmName']} 重叠 "
+                f"{overlap:.4f} 平方米"
+            )
+        protected_admin_relations.append({
+            "osmAdminRelationId": str(
+                protected_definition["osmAdminRelationId"]
+            ),
+            "expectedOsmName": protected_definition["expectedOsmName"],
+            "overlapSquareMeters": round(overlap, 6),
+            "maximumOverlapSquareMeters": maximum_overlap,
+        })
+    boundary_coverage = projected.boundary.intersection(
+        road_union.buffer(float(definition["roadBoundaryToleranceMeters"]))
+    ).length
+    minimum_coverage = float(
+        definition["minimumRoadBoundaryCoverageMeters"]
+    )
+    if boundary_coverage < minimum_coverage:
+        raise ValueError(
+            f"{definition['canonicalName']} 沿 {definition['expectedCutRoadName']} "
+            f"边界只覆盖 {boundary_coverage:.1f} 米，低于 {minimum_coverage:.1f} 米"
+        )
+
+    geometry = normalize_polygonal(
+        project_geometry(projected, working_crs, output_crs)
+    )
+    osm_refs.update({
+        "cutRoadName": definition["expectedCutRoadName"],
+        "cutRoadOsmRefs": sorted(road_ids),
+        "cutRoadBufferMeters": cut_buffer,
+        "roadBoundaryCoverageWithinToleranceMeters": round(
+            boundary_coverage,
+            1,
+        ),
+        "roadBoundaryToleranceMeters": float(
+            definition["roadBoundaryToleranceMeters"]
+        ),
+        "selectedSide": selected_side,
+        "selectedSideVerified": True,
+        "selectedRepresentativeEasting": round(
+            selected_representative.x,
+            2,
+        ),
+        "excludedRepresentativeEasting": round(
+            excluded_representative.x,
+            2,
+        ),
+        "fullAdminRelationRejected": bool(
+            definition["fullAdminRelationRejected"]
+        ),
+        "excludedArea": definition["excludedArea"],
+        "protectedAdminRelations": protected_admin_relations,
+    })
+    return geometry, float(projected.area), osm_refs
 
 
 def build_selected_workpack_candidate(
@@ -1122,6 +1306,35 @@ def build_feature(
                 "riskFlags": definition["riskFlags"],
             } if definition.get("riskFlags") else {}),
             **({
+                "adminProxyName": definition["adminProxyName"],
+            } if definition.get("adminProxyName") else {}),
+            **({
+                "marketAdminAlignmentUnverified": bool(
+                    definition["marketAdminAlignmentUnverified"]
+                ),
+            } if "marketAdminAlignmentUnverified" in definition else {}),
+            **({
+                "fullAdminRelationRejected": bool(
+                    definition["fullAdminRelationRejected"]
+                ),
+            } if "fullAdminRelationRejected" in definition else {}),
+            **({
+                "adminAreaVersionMismatch": bool(
+                    definition["adminAreaVersionMismatch"]
+                ),
+            } if "adminAreaVersionMismatch" in definition else {}),
+            **({
+                "excludedArea": definition["excludedArea"],
+            } if definition.get("excludedArea") else {}),
+            **({
+                "sharedEdgeReview": definition["sharedEdgeReview"],
+            } if definition.get("sharedEdgeReview") else {}),
+            **({
+                "protectedAdminRelations": definition[
+                    "protectedAdminRelations"
+                ],
+            } if definition.get("protectedAdminRelations") else {}),
+            **({
                 "geometryVerificationSourceIds": definition[
                     "geometryVerificationSourceIds"
                 ],
@@ -1262,13 +1475,23 @@ def main() -> None:
                 definitions["outputCrs"],
                 topology_geometry_by_id,
             )
-        elif definition["method"] == "market_admin_candidate_with_shared_topology":
+        elif definition["method"] in {
+            "market_admin_candidate_with_shared_topology",
+            "non_same_name_admin_proxy",
+        }:
             geometry, area, osm_refs = build_market_admin_candidate_with_shared_topology(
                 args.gpkg,
                 definition,
                 definitions["workingCrs"],
                 definitions["outputCrs"],
                 topology_geometry_by_id,
+            )
+        elif definition["method"] == "official_residential_subarea_proxy":
+            geometry, area, osm_refs = build_official_residential_subarea_proxy(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
             )
         elif definition["method"] == "selected_workpack_candidate_with_shared_topology":
             geometry, area, osm_refs = build_selected_workpack_candidate(

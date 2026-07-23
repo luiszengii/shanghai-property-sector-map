@@ -2459,7 +2459,8 @@
           "13466004"
         ],
         "sharedEdgeSectorIds": [
-          "sector_wujiaochang"
+          "sector_wujiaochang",
+          "sector_anshan"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
@@ -2476,7 +2477,8 @@
           "sector_quyang",
           "sector_jiangwanzhen",
           "sector_kongjianglu",
-          "sector_xinjiangwancheng"
+          "sector_xinjiangwancheng",
+          "sector_anshan"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
@@ -2490,9 +2492,86 @@
           "13466494"
         ],
         "sharedEdgeSectorIds": [
+          "sector_wujiaochang",
+          "sector_zhongyuan"
+        ],
+        "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_anshan",
+      "scopeVersion": "anshan-fourping-admin-proxy-2026-07",
+      "method": "non_same_name_admin_proxy",
+      "osmRefs": {
+        "adminRelations": [
+          "13466002"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_kongjianglu",
           "sector_wujiaochang"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_zhongyuan",
+      "scopeVersion": "zhongyuan-yinhang-west-of-jungong-road-proxy-2026-07",
+      "method": "official_residential_subarea_proxy",
+      "osmRefs": {
+        "adminRelations": [
+          "13466582"
+        ],
+        "cutRoadName": "军工路",
+        "cutRoadOsmRefs": [
+          "1322916764",
+          "1322916768",
+          "1322916769",
+          "1327290525",
+          "154255205",
+          "154255206",
+          "154255207",
+          "154255213",
+          "154255214",
+          "154255215",
+          "154255216",
+          "154255217",
+          "154255218",
+          "154391278",
+          "154391288",
+          "154391293",
+          "154400513",
+          "154400514",
+          "226014634",
+          "226014635",
+          "226014637",
+          "226015595",
+          "226015597",
+          "226153317",
+          "441742703",
+          "47457169",
+          "74444895",
+          "74506379"
+        ],
+        "cutRoadBufferMeters": 10.0,
+        "roadBoundaryCoverageWithinToleranceMeters": 4598.2,
+        "roadBoundaryToleranceMeters": 2.0,
+        "selectedSide": "west",
+        "selectedSideVerified": true,
+        "selectedRepresentativeEasting": 360274.51,
+        "excludedRepresentativeEasting": 361740.27,
+        "fullAdminRelationRejected": true,
+        "excludedArea": "军工路以东企事业单位集聚区",
+        "protectedAdminRelations": [
+          {
+            "osmAdminRelationId": "13466408",
+            "expectedOsmName": "长海路街道",
+            "overlapSquareMeters": 0.0,
+            "maximumOverlapSquareMeters": 0.01
+          }
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xinjiangwancheng"
+        ]
       }
     },
     {

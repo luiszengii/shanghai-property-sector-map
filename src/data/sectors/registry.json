@@ -2007,8 +2007,7 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
-    }
-  ,
+    },
     {
       "id": "sector_xujiahui",
       "canonicalName": "徐家汇",
@@ -3475,5 +3474,111 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
-    }]
+    },
+    {
+      "id": "sector_anshan",
+      "canonicalName": "鞍山",
+      "aliases": [
+        "四平路街道"
+      ],
+      "riskFlags": [
+        "market_name_admin_proxy_requires_validation",
+        "mixed_campus_non_residential_scope"
+      ],
+      "districtNames": [
+        "杨浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "公开卖方鞍山正例高度集中在四平路街道，第一版以固定四平路街道 relation 作为异名、低置信可编辑代理；它不是同名行政映射，且同济周边校园和非住宅范围可能使行政面宽于住宅市场。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-yangpu-fourping-subdistrict-profile-2025"
+      ],
+      "adminProxyName": "四平路街道",
+      "marketAdminAlignmentUnverified": true,
+      "sharedEdgeReview": [
+        "控江路",
+        "五角场",
+        "东外滩",
+        "曲阳"
+      ],
+      "boundaryEvidenceIds": [
+        "anshan-north",
+        "anshan-east",
+        "anshan-south",
+        "anshan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "anshan-fourping-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "约 2.6433 平方公里候选使用四平路街道完整行政面；卖方鞍山正例支持在此起画，但不能证明鞍山市场覆盖整个街道，尤其需复核同济校园与江浦路、控江路接口。"
+      }
+    },
+    {
+      "id": "sector_zhongyuan",
+      "canonicalName": "中原",
+      "aliases": [
+        "殷行街道"
+      ],
+      "riskFlags": [
+        "market_name_admin_proxy_requires_validation",
+        "mixed_industrial_rail_non_residential"
+      ],
+      "districtNames": [
+        "杨浦区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "杨浦区政府明确把殷行街道所在区域称为中原地区，并区分军工路以西住宅区与以东企事业单位集聚区；第一版以固定殷行街道 relation 裁到锁定 OSM 军工路中心线西侧，明确拒绝使用完整街道。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-yangpu-yinhang-subdistrict-profile-2025"
+      ],
+      "adminProxyName": "殷行街道军工路以西住宅区",
+      "fullAdminRelationRejected": true,
+      "adminAreaVersionMismatch": true,
+      "excludedArea": "军工路以东企事业单位集聚区",
+      "sharedEdgeReview": [
+        "新江湾城",
+        "黄兴公园",
+        "五角场"
+      ],
+      "boundaryEvidenceIds": [
+        "zhongyuan-north",
+        "zhongyuan-east",
+        "zhongyuan-south",
+        "zhongyuan-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "zhongyuan-yinhang-west-of-jungong-road-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-tianditu-shanghai-standard-maps-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "约 4.6819 平方公里候选取固定殷行街道 relation 内军工路以西住宅连续区；军工路以东企事业单位集聚区已排除，西侧内部仍需按完整小区与卖方项目归属精修。"
+      }
+    }
+  ]
 }

@@ -1028,6 +1028,7 @@ const knownBoundaryBasisTypes = new Set([
   "market_candidate_from_admin_backbone",
   "named_road_market_candidate",
   "osm_admin_relation_market_backbone",
+  "official_function_divide_osm_road_cut",
   "project_integrity_market_candidate",
   "user_decided_market_shared_edge",
 ]);
@@ -1543,7 +1544,7 @@ for (const definition of xuhuiTwelveDefinitions) {
     || candidate?.properties?.confidence !== "low"
     || registryRecord?.geometry?.confidence !== "low"
     || registryRecord?.reviewStatus !== "draft-low"
-    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+  || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
     error(`${definition.id}: 徐汇行政骨架必须保持 low / draft-low / internal_review`);
   }
   for (const neighborId of definition.sharedEdgeSectorIds ?? []) {
@@ -1889,13 +1890,184 @@ if (normalizedStringSet(
   ) !== normalizedStringSet(["mixed_water_green_campus_scope"])) {
   error("sector_xinjiangwancheng: 水绿、校园和非住宅风险必须同步到运行时注册表和候选面");
 }
+const expectedHongkouYangpuProxyRelations = new Map([
+  ["sector_anshan", "13466002"],
+  ["sector_zhongyuan", "13466582"],
+]);
+const expectedHongkouYangpuProxyRisks = new Map([
+  ["sector_anshan", [
+    "market_name_admin_proxy_requires_validation",
+    "mixed_campus_non_residential_scope",
+  ]],
+  ["sector_zhongyuan", [
+    "market_name_admin_proxy_requires_validation",
+    "mixed_industrial_rail_non_residential",
+  ]],
+]);
+const hongkouYangpuProxyDefinitions = candidateDefinitions.filter(
+  (definition) => expectedHongkouYangpuProxyRelations.has(definition.id),
+);
+if (normalizedStringSet(hongkouYangpuProxyDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedHongkouYangpuProxyRelations.keys())) {
+  error("虹口—杨浦第二批必须恰好包含研究通过的鞍山、中原两个行政代理");
+}
+for (const definition of hongkouYangpuProxyDefinitions) {
+  const expectedRelation = expectedHongkouYangpuProxyRelations.get(definition.id);
+  const expectedRisks = expectedHongkouYangpuProxyRisks.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  const expectedMethod = definition.id === "sector_zhongyuan"
+    ? "official_residential_subarea_proxy"
+    : "non_same_name_admin_proxy";
+  if (definition.method !== expectedMethod
+    || String(definition.osmAdminRelationId) !== expectedRelation
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expectedRelation])) {
+    error(`${definition.id}: 没有锁定研究确认的行政代理 relation 与构建方法`);
+  }
+  if (definition.districtName !== "杨浦区"
+    || normalizedStringSet(registryRecord?.districtNames ?? [])
+      !== normalizedStringSet(["杨浦区"])) {
+    error(`${definition.id}: 鞍山、中原代理的行政归属必须为杨浦区`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review") {
+    error(`${definition.id}: 行政代理必须保持 low / draft-low / internal_review`);
+  }
+  if (normalizedStringSet(definition.riskFlags ?? [])
+      !== normalizedStringSet(expectedRisks)
+    || normalizedStringSet(registryRecord?.riskFlags ?? [])
+      !== normalizedStringSet(expectedRisks)
+    || normalizedStringSet(candidate?.properties?.riskFlags ?? [])
+      !== normalizedStringSet(expectedRisks)) {
+    error(`${definition.id}: 行政代理风险必须同步到定义、注册表和候选面`);
+  }
+}
+const anshanDefinition = candidateDefinitionById.get("sector_anshan");
+const anshanCandidate = candidateById.get("sector_anshan");
+if (anshanDefinition?.adminProxyName !== "四平路街道"
+  || anshanDefinition?.marketAdminAlignmentUnverified !== true
+  || normalizedStringSet(anshanDefinition?.sharedEdgeReview ?? [])
+    !== normalizedStringSet(["控江路", "五角场", "东外滩", "曲阳"])
+  || anshanCandidate?.properties?.adminProxyName !== "四平路街道"
+  || anshanCandidate?.properties?.marketAdminAlignmentUnverified !== true
+  || normalizedStringSet(anshanCandidate?.properties?.sharedEdgeReview ?? [])
+    !== normalizedStringSet(["控江路", "五角场", "东外滩", "曲阳"])
+  || registryById.get("sector_anshan")?.adminProxyName !== "四平路街道"
+  || registryById.get("sector_anshan")?.marketAdminAlignmentUnverified !== true
+  || normalizedStringSet(
+    registryById.get("sector_anshan")?.sharedEdgeReview ?? [],
+  ) !== normalizedStringSet(["控江路", "五角场", "东外滩", "曲阳"])) {
+  error("sector_anshan: 必须显式保留异名行政代理和四向共享边复核字段");
+}
+if (!nearlyEqual(
+  Number(candidateById.get("sector_anshan")?.properties?.areaSquareKilometers),
+  2.6433,
+  0.001,
+)) {
+  error("sector_anshan: 四平路街道固定行政代理面积必须保持约 2.6433 平方公里");
+}
+if (!nearlyEqual(
+  Number(candidateById.get("sector_zhongyuan")?.properties?.areaSquareKilometers),
+  4.6819,
+  0.001,
+)) {
+  error("sector_zhongyuan: 殷行街道军工路以西候选面积必须保持约 4.6819 平方公里");
+}
+const zhongyuanDefinition = candidateDefinitionById.get("sector_zhongyuan");
+const zhongyuanManifest = manifestById.get("sector_zhongyuan");
+if (zhongyuanDefinition?.fullAdminRelationRejected !== true
+  || zhongyuanDefinition?.adminProxyName !== "殷行街道军工路以西住宅区"
+  || zhongyuanDefinition?.selectedSide !== "west"
+  || zhongyuanDefinition?.expectedCutRoadName !== "军工路"
+  || zhongyuanDefinition?.excludedArea !== "军工路以东企事业单位集聚区"
+  || zhongyuanDefinition?.adminAreaVersionMismatch !== true
+  || normalizedStringSet(zhongyuanDefinition?.sharedEdgeReview ?? [])
+    !== normalizedStringSet(["新江湾城", "黄兴公园", "五角场"])
+  || candidateById.get("sector_zhongyuan")?.properties?.adminProxyName
+    !== "殷行街道军工路以西住宅区"
+  || candidateById.get("sector_zhongyuan")?.properties?.fullAdminRelationRejected
+    !== true
+  || candidateById.get("sector_zhongyuan")?.properties?.adminAreaVersionMismatch
+    !== true
+  || candidateById.get("sector_zhongyuan")?.properties?.excludedArea
+    !== "军工路以东企事业单位集聚区"
+  || normalizedStringSet(
+    candidateById.get("sector_zhongyuan")?.properties?.sharedEdgeReview ?? [],
+  ) !== normalizedStringSet(["新江湾城", "黄兴公园", "五角场"])
+  || zhongyuanDefinition?.protectedAdminRelations?.length !== 1
+  || String(
+    zhongyuanDefinition?.protectedAdminRelations?.[0]?.osmAdminRelationId,
+  ) !== "13466408"
+  || zhongyuanDefinition?.protectedAdminRelations?.[0]?.expectedOsmName
+    !== "长海路街道"
+  || candidateById.get("sector_zhongyuan")?.properties
+    ?.protectedAdminRelations?.length !== 1
+  || registryById.get("sector_zhongyuan")?.adminProxyName
+    !== "殷行街道军工路以西住宅区"
+  || registryById.get("sector_zhongyuan")?.fullAdminRelationRejected !== true
+  || registryById.get("sector_zhongyuan")?.adminAreaVersionMismatch !== true
+  || registryById.get("sector_zhongyuan")?.excludedArea
+    !== "军工路以东企事业单位集聚区"
+  || normalizedStringSet(
+    registryById.get("sector_zhongyuan")?.sharedEdgeReview ?? [],
+  ) !== normalizedStringSet(["新江湾城", "黄兴公园", "五角场"])
+  || zhongyuanManifest?.osmRefs?.fullAdminRelationRejected !== true
+  || zhongyuanManifest?.osmRefs?.selectedSide !== "west"
+  || zhongyuanManifest?.osmRefs?.selectedSideVerified !== true
+  || zhongyuanManifest?.osmRefs?.cutRoadName !== "军工路"
+  || zhongyuanManifest?.osmRefs?.excludedArea !== "军工路以东企事业单位集聚区"
+  || normalizedStringSet(zhongyuanManifest?.osmRefs?.cutRoadOsmRefs ?? [])
+    !== normalizedStringSet(zhongyuanDefinition?.cutRoadOsmIds ?? [])
+  || Number(
+    zhongyuanManifest?.osmRefs?.roadBoundaryCoverageWithinToleranceMeters,
+  ) < 3900) {
+  error("sector_zhongyuan: 必须锁定军工路对象并明确拒绝完整殷行街道、排除道路以东企事业区");
+}
+const zhongyuanProtectedAdminRelation = (
+  zhongyuanManifest?.osmRefs?.protectedAdminRelations ?? []
+).find(({ osmAdminRelationId }) => osmAdminRelationId === "13466408");
+if (zhongyuanProtectedAdminRelation?.expectedOsmName !== "长海路街道"
+  || Number(zhongyuanProtectedAdminRelation?.overlapSquareMeters) > 0.01
+  || Number(
+    zhongyuanProtectedAdminRelation?.maximumOverlapSquareMeters,
+  ) !== 0.01) {
+  error("sector_zhongyuan: 必须锁定长海路街道 relation 13466408 并保持正面积重叠为零");
+}
+const zhongyuanEastEvidence = edgeById.get("zhongyuan-east");
+if (zhongyuanEastEvidence?.basisType
+    !== "official_function_divide_osm_road_cut"
+  || zhongyuanEastEvidence?.sourceId
+    !== "official-yangpu-yinhang-subdistrict-profile-2025"
+  || normalizedStringSet(zhongyuanEastEvidence?.osmRefs ?? [])
+    !== normalizedStringSet(zhongyuanDefinition?.cutRoadOsmIds ?? [])) {
+  error("sector_zhongyuan: 东侧军工路裁切边必须单独记录官方功能分区与锁定道路对象来源");
+}
+for (const [firstId, secondId, minimumSharedLengthMeters] of [
+  ["sector_anshan", "sector_kongjianglu", 700],
+  ["sector_anshan", "sector_wujiaochang", 800],
+  ["sector_zhongyuan", "sector_xinjiangwancheng", 1000],
+]) {
+  const first = candidateById.get(firstId);
+  const second = candidateById.get(secondId);
+  const sharedLength = first && second
+    ? sharedBoundaryLengthMeters(first.geometry, second.geometry)
+    : 0;
+  if (sharedLength < minimumSharedLengthMeters) {
+    error(`${firstId} / ${secondId}: 研究要求的行政共享边未通过无缝复核`);
+  }
+}
 for (const unresolvedName of [
-  "瑞虹新城", "鲁迅公园", "东外滩", "鞍山", "定海路", "黄兴公园", "中原",
+  "瑞虹新城", "鲁迅公园", "东外滩", "定海路", "黄兴公园",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === unresolvedName,
   )) {
-    error(`虹口—杨浦直接骨架批次不得在独立研究前自动注册 ${unresolvedName}`);
+    error(`虹口—杨浦第二批证据不足，不得自动注册 ${unresolvedName}`);
   }
 }
 

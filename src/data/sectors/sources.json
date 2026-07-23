@@ -763,6 +763,28 @@
       "note": "官方资料确认新江湾城街道约 8.67 平方公里，并披露大量水绿和校园空间；用于行政身份、面积和过宽风险核验，不替代住宅市场边界。"
     },
     {
+      "id": "official-yangpu-fourping-subdistrict-profile-2025",
+      "title": "四平路街道简介",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/shypq/yqyw-jd-sp-sqzc-sqjj/20250312/475901.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025-03-12",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面给出四平路街道四至、约 2.75 平方公里面积，并列出鞍山路等内部道路；用于鞍山异名代理的行政范围和过宽风险核验，不证明同义。"
+    },
+    {
+      "id": "official-yangpu-yinhang-subdistrict-profile-2025",
+      "title": "殷行街道办事处简介",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/yh-jgjj/2025/219/985ad7d4ef14fd6ddb7379dff2a156b9.html",
+      "sourceType": "official_subdistrict_profile",
+      "publishedAt": "2025-07-01",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "官方页面明确把殷行街道所在区域称为中原地区，并区分军工路以西住宅区与以东企事业单位集聚区；同时给出四至与约 7.98 平方公里面积，用于身份映射、裁切方向和面积版本风险核验，不替代楼市边界。"
+    },
+    {
       "id": "official-shanghai-zhongshan-park-landscape-scope-2022",
       "title": "关于印发《上海市主要道路（河道）和景观区域范围界定》的函",
       "publisher": "上海市绿化和市容管理局",

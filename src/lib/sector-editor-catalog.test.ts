@@ -520,8 +520,90 @@ test("the Hongkou Yangpu direct batch exposes seven editable low-confidence back
     templates.find((template) => template.id === "sector_wujiaochang")?.note ?? "",
     /重点复核.*官方面积.*高校、园区、商业/,
   );
+});
+
+test("the Hongkou Yangpu evidence-backed batch exposes only Anshan and clipped Zhongyuan", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/hongkou-yangpu-two-evidence-backed-admin-proxies-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url),
+    "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
+    "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const batchIdSet = new Set(batchIds);
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => batchIdSet.has(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+
+  assert.deepEqual(batchIds, [
+    "sector_anshan",
+    "sector_zhongyuan",
+  ]);
+  assert.equal(records.length, 2);
+  assert.ok(records.every((record: {
+    reviewStatus: string;
+    riskFlags?: string[];
+    geometry: { confidence: string; publicationPolicy: string };
+  }) => (
+    record.reviewStatus === "draft-low"
+      && record.geometry.confidence === "low"
+      && record.geometry.publicationPolicy === "internal_review"
+      && (record.riskFlags?.length ?? 0) > 0
+  )));
+  assert.ok(batchIds.every((id: string) => candidateById.has(id)));
+
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry:
+          | { type: "Polygon"; coordinates: number[][][] }
+          | { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+  assert.equal(templates.length, 2);
+  assert.ok(templates.every((template) => (
+    template.geometryStatus === "candidate"
+      && template.ring.length >= 3
+      && /重点复核/.test(template.note)
+  )));
+  assert.deepEqual(
+    records.find(
+      (record: { id: string }) => record.id === "sector_anshan",
+    )?.aliases,
+    ["四平路街道"],
+  );
+  assert.match(
+    records.find(
+      (record: { id: string; geometry?: { note?: string } }) => (
+        record.id === "sector_zhongyuan"
+      ),
+    )?.geometry?.note ?? "",
+    /军工路以西.*军工路以东/,
+  );
   for (const unresolvedName of [
-    "瑞虹新城", "鲁迅公园", "东外滩", "鞍山", "定海路", "黄兴公园", "中原",
+    "瑞虹新城", "鲁迅公园", "东外滩", "定海路", "黄兴公园",
   ]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === unresolvedName,

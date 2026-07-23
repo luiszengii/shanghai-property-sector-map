@@ -5,6 +5,8 @@ const sectorRiskFlagLabels: Record<string, string> = {
   mixed_water_green_campus_scope: "排查水绿、校园和非住宅范围",
   overwide_admin_proxy: "行政代理明显过宽",
   mixed_industrial_rail_non_residential: "排查产业、铁路和非住宅范围",
+  market_name_admin_proxy_requires_validation: "市场名与行政名不同，需逐项目验证",
+  mixed_campus_non_residential_scope: "排查校园和其他非住宅范围",
 };
 
 export function formatSectorRiskFlags(riskFlags: string[] | undefined) {
