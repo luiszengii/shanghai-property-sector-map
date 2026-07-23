@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "updatedAt": "2026-07-23",
-  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、世博、上南、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。大宁等 8 个板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
+  "notice": "房地产市场研究板块，非行政区划、非规划法定界线。杨思前滩、世博、上南、北蔡、御桥、北外滩为内部复核候选面；官方前滩范围作为杨思前滩内部子范围保留。大宁等板块保留楼市演示面并独立叠加行政参考层；徐汇滨江、虹桥商务区只有演示面。正式定义证据与几何发布状态分开管理。",
   "sectors": [
     {
       "id": "sector_qiantan",
@@ -168,21 +168,45 @@
       "aliases": ["北蔡镇"],
       "districtNames": ["浦东新区"],
       "kind": "market_sector",
-      "reviewStatus": "draft-low",
-      "definitionStatus": "admin_proxy_candidate",
-      "definitionCandidate": "待决定是否采用北蔡镇行政范围作为参考，并明确与张江、三林、花木等市场板块的拆分规则。",
-      "definitionSourceIds": ["official-pudong-boundary-adjustment-2025", "official-beicai-industry-scope-2026", "official-shanghai-town-list-2025"],
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "user_decided_market_scope",
+      "definitionCandidate": "北蔡、御桥拆成两个互斥一级市场板块；北蔡采用北蔡镇开放行政外壳作为非最终骨架，取华夏西路—华夏中路候选共享线北侧，莲溪、大华只作北蔡内部片区。东侧张江边仍待相邻板块复核。",
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-beicai-dahua-eleven", "seller-anjuke-beicai-lianxi-one", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-boundary-adjustment-2025"],
       "boundaryEvidenceIds": ["beicai-north", "beicai-east", "beicai-south", "beicai-west"],
       "geometry": {
-        "status": "admin-reference",
-        "confidence": "medium",
+        "status": "draft",
+        "confidence": "low",
         "coordinateSystem": "WGS84",
         "coordinateSystemVerified": true,
-        "version": "osm-shanghai-260721-admin-reference-v1",
+        "version": "market-split-candidate-2026-07",
         "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "marketGeometryVerificationSourceIds": ["official-shanghai-beicai-wedge-green-2024"],
         "verificationSourceIds": ["official-beicai-town-area-2023", "official-pudong-boundary-adjustment-2025", "official-tianditu-shanghai-standard-maps-2025"],
         "publicationPolicy": "internal_review",
-        "note": "地图以蓝色虚线独立叠加北蔡镇行政参考面（23.1165 平方公里），灰色楼市演示面仍保留；标准图早于 2025 年北蔡—张江、北蔡—康桥调整，调整段以后续公告优先，不代表市场北蔡。"
+        "note": "用户已裁定北蔡与御桥拆分。候选面约 15.02 平方公里，以固定 OSM 北蔡镇外壳和华夏西路—华夏中路派生中线独立重建，并与杨思前滩、三林统一拓扑；东侧张江边尚未冻结。行政参考面继续单独叠加，不代表市场边界。"
+      }
+    },
+    {
+      "id": "sector_yuqiao",
+      "canonicalName": "御桥",
+      "aliases": ["御桥板块"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "draft-medium",
+      "definitionStatus": "user_decided_market_scope",
+      "definitionCandidate": "北蔡、御桥拆成两个互斥一级市场板块；御桥采用北蔡镇开放行政外壳作为非最终骨架，取华夏西路—华夏中路候选共享线南侧。东侧张江、南侧康桥边仍待相邻板块复核。",
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-yuqiao-renhe", "seller-anjuke-yuqiao-baige", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-yuqiao-industry-eia-2022", "official-pudong-boundary-adjustment-2025"],
+      "boundaryEvidenceIds": ["yuqiao-north", "yuqiao-east", "yuqiao-south", "yuqiao-west"],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "market-split-candidate-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
+        "verificationSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-yuqiao-renhe", "seller-anjuke-yuqiao-baige", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-yuqiao-industry-eia-2022"],
+        "publicationPolicy": "internal_review",
+        "note": "用户已裁定御桥为独立一级板块。候选面约 5.00 平方公里，以固定 OSM 北蔡镇外壳和华夏西路—华夏中路派生中线独立重建，并与北蔡、三林统一拓扑；东侧张江、南侧康桥边尚未冻结。"
       }
     },
     {

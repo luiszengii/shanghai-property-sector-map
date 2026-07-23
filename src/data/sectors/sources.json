@@ -328,6 +328,79 @@
       "note": "给出调整前北蔡镇 23.71 平方公里面积；2025 年 11 月调整段必须以后续公告为准。"
     },
     {
+      "id": "official-pudong-yuqiao-z000901-z000902-2010",
+      "title": "浦东新区政府公报 2010 年第 3 期：御桥社区 Z000901 / Z000902",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/assets/zfgb-pdf/2010%E7%AC%AC%E4%B8%89%E6%9C%9F%60.pdf",
+      "sourceType": "official_planning_scope_text",
+      "publishedAt": "2010",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "只使用两个御桥社区编制单元的文字四至，确认华夏西路是连续规划锚点；不从 PDF 提取坐标，也不把规划社区等同市场御桥。"
+    },
+    {
+      "id": "official-pudong-yuqiao-industry-eia-2022",
+      "title": "浦东新区御桥产业社区规划环境影响报告书（简本）",
+      "publisher": "上海市浦东新区北蔡镇人民政府",
+      "url": "https://www.pudong.gov.cn/016023005/20220124/657190/4254579beb8b42d1b48a0bf767793041.pdf",
+      "sourceType": "official_environmental_scope_report",
+      "publishedAt": "2022",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "只使用东沪南路、南康花河—区界河、西意康路、北临御路的文字四至；约 112.5 公顷产业社区不替代市场御桥。"
+    },
+    {
+      "id": "official-shanghai-beicai-wedge-green-2024",
+      "title": "北蔡楔形绿地总体控制性指标调整及生态空间实施方案审核意见",
+      "publisher": "上海市绿化和市容管理局",
+      "url": "https://lhsr.sh.gov.cn/lhgl/20240618/c10c00c5-e029-44aa-a509-558cdc8431bc.html",
+      "sourceType": "official_ecological_space_review",
+      "publishedAt": "2024-06-18",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_verification_only",
+      "note": "文字事实确认华夏西路以南、锦绣路以东、罗山路以西、大浦港以北存在约 171.38 公顷连续生态空间；不从图面提取坐标。"
+    },
+    {
+      "id": "seller-lianjia-beicai-dahua-eleven",
+      "title": "大华锦绣华城（十一街区）小区页",
+      "publisher": "链家",
+      "url": "https://sh.lianjia.com/xiaoqu/5011000003007/",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面把代表项目归为浦东—北蔡；只核对名称归属，不复制房源清单或商圈几何。"
+    },
+    {
+      "id": "seller-anjuke-beicai-lianxi-one",
+      "title": "莲溪一村小区页",
+      "publisher": "安居客",
+      "url": "https://shanghai.anjuke.com/community/view/147244",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面把北中路 354 弄代表项目归为浦东—北蔡；只核对名称归属，不复制商圈几何。"
+    },
+    {
+      "id": "seller-lianjia-yuqiao-renhe",
+      "title": "仁和都市花园小区页",
+      "publisher": "链家",
+      "url": "https://sh.lianjia.com/xiaoqu/5011000019155",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面把御水路 555 弄代表项目归为浦东—御桥；只核对名称归属，不复制商圈几何。"
+    },
+    {
+      "id": "seller-anjuke-yuqiao-baige",
+      "title": "百舸馨苑小区页",
+      "publisher": "安居客",
+      "url": "https://shanghai.anjuke.com/community/view/7707",
+      "sourceType": "seller_project_classification",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "公开页面把沪南路 2518 弄代表项目归为浦东—御桥；只核对名称归属，不复制商圈几何。"
+    },
+    {
       "id": "official-gumei-street-scope-2024",
       "title": "上海市水务局关于闵行区古美街道雨水排水及污水处理系统规划（2023-2035年）行业意见的通知",
       "publisher": "上海市水务局",

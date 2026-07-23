@@ -359,6 +359,68 @@ def build_market_admin_candidate_with_shared_topology(
     return geometry, area, osm_refs
 
 
+def build_selected_workpack_candidate(
+    definition: dict[str, Any],
+    working_crs: str,
+    output_crs: str,
+):
+    source_path = (REPO_ROOT / definition["sourceGeojson"]).resolve()
+    if not source_path.is_relative_to(REPO_ROOT):
+        raise ValueError(
+            f"{definition['canonicalName']} workpack 路径必须位于仓库内"
+        )
+    if not source_path.is_file():
+        raise ValueError(
+            f"{definition['canonicalName']} 找不到 workpack 候选：{source_path}"
+        )
+    actual_hash = sha256(source_path)
+    expected_hash = definition["sourceGeojsonSha256"]
+    if actual_hash != expected_hash:
+        raise ValueError(
+            f"{definition['canonicalName']} workpack SHA-256 不匹配：{actual_hash}"
+        )
+
+    source = read_json(source_path)
+    matches = [
+        feature for feature in source.get("features", [])
+        if feature.get("properties", {}).get("id") == definition["sourceFeatureId"]
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            f"{definition['canonicalName']} workpack Feature 应唯一，实际找到 {len(matches)} 个"
+        )
+    source_feature = matches[0]
+    source_properties = source_feature.get("properties", {})
+    if source_properties.get("workpackId") != definition["expectedWorkpackId"]:
+        raise ValueError(f"{definition['canonicalName']} workpackId 不匹配")
+    if source_properties.get("selectedForAssembly") is not True:
+        raise ValueError(f"{definition['canonicalName']} workpack 候选尚未获准总装")
+    if source_properties.get("coordinateSystem") != "WGS84":
+        raise ValueError(f"{definition['canonicalName']} workpack 坐标系不是 WGS84")
+
+    geometry = normalize_polygonal(shape(source_feature["geometry"]))
+    inside_point = Point(*definition["insidePoint"])
+    if not geometry.contains(inside_point):
+        raise ValueError(f"{definition['canonicalName']} workpack 不包含市场裁定点")
+    projected = project_geometry(geometry, output_crs, working_crs)
+    workpack_refs = {
+        "workpackId": definition["expectedWorkpackId"],
+        "sourceGeojson": definition["sourceGeojson"],
+        "sourceGeojsonSha256": actual_hash,
+        "sourceFeatureId": definition["sourceFeatureId"],
+        "sourceAdminRelationId": source_properties.get("sourceAdminRelationId"),
+        "splitEdgeId": source_properties.get("splitEdgeId"),
+        "splitRoadOsmRefs": source_properties.get("splitRoadOsmRefs", []),
+        "assemblyReadiness": source_properties.get("assemblyReadiness"),
+        "projectIntegrityStatus": source_properties.get("projectIntegrityStatus"),
+        "unfrozenAdjacentSectorIds": source_properties.get(
+            "unfrozenAdjacentSectorIds",
+            [],
+        ),
+    }
+    return geometry, float(projected.area), workpack_refs
+
+
 def finalize_topology_group(
     feature_by_id: dict[str, dict[str, Any]],
     geometry_by_id: dict[str, Any],
@@ -765,6 +827,11 @@ def build_feature(
             "geometryRule": definition["geometryRule"],
             "definitionSourceIds": definition["definitionSourceIds"],
             **({
+                "geometryVerificationSourceIds": definition[
+                    "geometryVerificationSourceIds"
+                ],
+            } if definition.get("geometryVerificationSourceIds") else {}),
+            **({
                 "includedMarketAreas": definition["includedMarketAreas"],
             } if definition.get("includedMarketAreas") else {}),
             **({
@@ -894,6 +961,12 @@ def main() -> None:
                 args.gpkg,
                 definition,
                 definitions["workingCrs"],
+            )
+        elif definition["method"] == "selected_workpack_candidate_with_shared_topology":
+            geometry, area, osm_refs = build_selected_workpack_candidate(
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
             )
         else:
             raise ValueError(f"未知构建方法：{definition['method']}")

@@ -12,6 +12,15 @@
         "sector_shibo",
         "sector_sanlin"
       ]
+    },
+    {
+      "snapDistanceMeters": 1,
+      "prioritySectorIds": [
+        "sector_qiantan",
+        "sector_sanlin",
+        "sector_beicai",
+        "sector_yuqiao"
+      ]
     }
   ],
   "sectors": [
@@ -67,7 +76,7 @@
       "centerlineToleranceMeters": 15,
       "minimumBboxClearanceMeters": 100,
       "preserveTopologyPrecision": true,
-      "sharedEdgeSectorIds": ["sector_shangnan", "sector_shibo", "sector_sanlin"],
+      "sharedEdgeSectorIds": ["sector_shangnan", "sector_shibo", "sector_sanlin", "sector_beicai"],
       "snapDependencySectorIds": [],
       "areaRangeSquareKilometers": [15, 18],
       "definitionSourceIds": ["seller-lianjia-yangsi-qiantan", "seller-anjuke-yangsi-scope", "official-pudong-chuntang-river"],
@@ -184,12 +193,49 @@
       "insidePoint": [121.5127542, 31.1454076],
       "includedMarketAreas": ["东明路街道"],
       "subtractSectorIds": ["sector_qiantan"],
-      "sharedEdgeSectorIds": ["sector_qiantan"],
+      "sharedEdgeSectorIds": ["sector_qiantan", "sector_beicai", "sector_yuqiao"],
       "snapDependencySectorIds": ["sector_qiantan"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [25, 27],
       "definitionSourceIds": ["official-sanlin-profile-2023"],
       "geometryRule": "用户裁定楼市三林包含位于三林镇外轮廓内部的东明路街道；候选面以固定 OSM 三林镇 relation 的外轮廓为骨架，填平东明路行政内洞，并扣除已单列的杨思前滩主板块，保留包含东明路市场裁定点的连续主面。行政参考面继续保留原内洞，不改变行政事实。"
+    },
+    {
+      "id": "sector_beicai",
+      "canonicalName": "北蔡",
+      "scopeVersion": "market-split-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+      "sourceFeatureId": "sector_beicai",
+      "expectedWorkpackId": "beicai-yuqiao",
+      "insidePoint": [121.5487544, 31.1792249],
+      "sharedEdgeSectorIds": ["sector_yuqiao", "sector_qiantan", "sector_sanlin"],
+      "snapDependencySectorIds": ["sector_qiantan", "sector_sanlin"],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [14.8, 15.3],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-beicai-dahua-eleven", "seller-anjuke-beicai-lianxi-one", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-boundary-adjustment-2025"],
+      "geometryVerificationSourceIds": ["official-shanghai-beicai-wedge-green-2024"],
+      "geometryRule": "用户裁定北蔡与御桥拆成两个互斥一级市场板块，莲溪、大华只作北蔡内部片区。固定 OSM 北蔡镇 relation 仅作起画外壳；北蔡取华夏西路—华夏中路派生道路中线北侧，并在 1 米总装容差内服从既有杨思前滩、三林共享边。东侧张江边仍保持待相邻板块复核。"
+    },
+    {
+      "id": "sector_yuqiao",
+      "canonicalName": "御桥",
+      "scopeVersion": "market-split-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+      "sourceFeatureId": "sector_yuqiao",
+      "expectedWorkpackId": "beicai-yuqiao",
+      "insidePoint": [121.5678422, 31.1631883],
+      "sharedEdgeSectorIds": ["sector_beicai", "sector_sanlin"],
+      "snapDependencySectorIds": ["sector_beicai", "sector_sanlin"],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [4.8, 5.2],
+      "definitionSourceIds": ["internal-user-sector-scope-decision-2026-07-23", "seller-lianjia-shanghai-sector-sitemap", "seller-lianjia-yuqiao-renhe", "seller-anjuke-yuqiao-baige", "official-pudong-yuqiao-z000901-z000902-2010", "official-pudong-yuqiao-industry-eia-2022", "official-pudong-boundary-adjustment-2025"],
+      "geometryRule": "用户裁定御桥为与北蔡互斥的一级市场板块。固定 OSM 北蔡镇 relation 仅作起画外壳；御桥取华夏西路—华夏中路派生道路中线南侧，并在 1 米总装容差内服从既有三林和北蔡共享边。东侧张江、南侧康桥边仍保持待相邻板块复核。"
     }
   ],
   "subscopes": [

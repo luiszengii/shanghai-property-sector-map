@@ -298,7 +298,8 @@
         "sharedEdgeSectorIds": [
           "sector_shangnan",
           "sector_shibo",
-          "sector_sanlin"
+          "sector_sanlin",
+          "sector_beicai"
         ],
         "snapDependencySectorIds": []
       }
@@ -725,10 +726,108 @@
           "东明路街道"
         ],
         "sharedEdgeSectorIds": [
-          "sector_qiantan"
+          "sector_qiantan",
+          "sector_beicai",
+          "sector_yuqiao"
         ],
         "snapDependencySectorIds": [
           "sector_qiantan"
+        ]
+      }
+    },
+    {
+      "id": "sector_beicai",
+      "scopeVersion": "market-split-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "beicai-yuqiao",
+        "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+        "sourceFeatureId": "sector_beicai",
+        "sourceAdminRelationId": "14179101",
+        "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+        "splitRoadOsmRefs": [
+          "1118850763",
+          "1118850767",
+          "1206772269",
+          "1210496329",
+          "1218221798",
+          "1228277328",
+          "1233777182",
+          "1332905234",
+          "153242411",
+          "160615400",
+          "239293651",
+          "239295889",
+          "239295892",
+          "239298152",
+          "239298161",
+          "239298164",
+          "239298897",
+          "239298898",
+          "949762631"
+        ],
+        "assemblyReadiness": "conditional-ready",
+        "projectIntegrityStatus": "passed-with-open-data-coverage-limitations",
+        "unfrozenAdjacentSectorIds": [
+          "sector_zhangjiang"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_yuqiao",
+          "sector_qiantan",
+          "sector_sanlin"
+        ],
+        "snapDependencySectorIds": [
+          "sector_qiantan",
+          "sector_sanlin"
+        ]
+      }
+    },
+    {
+      "id": "sector_yuqiao",
+      "scopeVersion": "market-split-candidate-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "beicai-yuqiao",
+        "sourceGeojson": "data/geo/workpacks/beicai-yuqiao/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "a4523c9c4cb96f7e08fd1bd1c16c4d100cf1072f2d09d252390db22b3066af1a",
+        "sourceFeatureId": "sector_yuqiao",
+        "sourceAdminRelationId": "14179101",
+        "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+        "splitRoadOsmRefs": [
+          "1118850763",
+          "1118850767",
+          "1206772269",
+          "1210496329",
+          "1218221798",
+          "1228277328",
+          "1233777182",
+          "1332905234",
+          "153242411",
+          "160615400",
+          "239293651",
+          "239295889",
+          "239295892",
+          "239298152",
+          "239298161",
+          "239298164",
+          "239298897",
+          "239298898",
+          "949762631"
+        ],
+        "assemblyReadiness": "conditional-ready",
+        "projectIntegrityStatus": "passed-with-open-data-coverage-limitations",
+        "unfrozenAdjacentSectorIds": [
+          "sector_zhangjiang",
+          "sector_kangqiao"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_beicai",
+          "sector_sanlin"
+        ],
+        "snapDependencySectorIds": [
+          "sector_beicai",
+          "sector_sanlin"
         ]
       }
     }

@@ -220,7 +220,7 @@
       "sectorId": "sector_beicai",
       "comparisonRole": "admin_proxy",
       "verdict": "standard_map_superseded_in_segments",
-      "geometryDecision": "show_post_adjustment_admin_reference",
+      "geometryDecision": "keep_market_candidate_with_admin_reference",
       "comparableAdminName": "北蔡镇",
       "standardMapSourceId": "official-tianditu-shanghai-standard-maps-2025",
       "standardMapDocuments": [
@@ -232,13 +232,13 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-14179101",
-        "intersectionOverUnion": 0.441,
-        "referenceCoveredPercent": 77.8,
-        "legacyAreaRatio": 1.54,
-        "centroidDistanceKilometers": 1.52
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.331,
+        "referenceCoveredPercent": 83.8,
+        "legacyAreaRatio": 2.37,
+        "centroidDistanceKilometers": 0.92
       },
-      "summary": "旧演示面约为北蔡镇行政参考面的 1.54 倍；2025 年 7 月标准图早于北蔡—张江、北蔡—康桥调整，调整段以后续公告为准。"
+      "summary": "用户裁定北蔡与御桥拆成两个互斥一级市场板块；北蔡镇行政参考面继续单独显示，2025 年 7 月标准图早于北蔡—张江、北蔡—康桥调整，调整段以后续公告为准。"
     },
     {
       "sectorId": "sector_gumei",

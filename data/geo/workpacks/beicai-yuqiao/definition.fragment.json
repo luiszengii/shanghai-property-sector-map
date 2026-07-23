@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0-workpack",
+  "workpackId": "beicai-yuqiao",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "decisionStatus": "user-decided",
+  "mergeEligibility": "conditional-ready-for-candidate-assembly",
+  "priorityClipSectorIds": [
+    "sector_qiantan",
+    "sector_shangnan",
+    "sector_sanlin"
+  ],
+  "selectedCandidate": {
+    "id": "S1-split-beicai-yuqiao",
+    "recommended": true,
+    "selectedByUser": true,
+    "selectedAt": "2026-07-23",
+    "secondaryIdentityDecision": "莲溪、大华均作为北蔡内部片区和边界核验样本，不单列一级面。",
+    "decisionRequired": "北蔡、御桥是否拆成两个互斥一级板块",
+    "topologyGroups": [
+      {
+        "prioritySectorIds": [
+          "sector_qiantan",
+          "sector_shangnan",
+          "sector_sanlin",
+          "sector_beicai",
+          "sector_yuqiao"
+        ],
+        "sharedEdgeOwner": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+        "sharedEdgeOwnerScope": "北蔡—御桥内部边 only",
+        "assemblySnapRequiredSectorIds": [
+          "sector_qiantan",
+          "sector_sanlin"
+        ],
+        "assemblySnapToleranceMeters": 1,
+        "maximumObservedProjectedSliverSquareMeters": 4.135,
+        "status": "selected-project-integrity-checked-pending-adjacent-snap-and-review"
+      }
+    ],
+    "sectors": [
+      {
+        "id": "sector_beicai",
+        "canonicalName": "北蔡",
+        "scopeVersion": "market-split-candidate-2026-07",
+        "method": "osm_admin_outer_shell_split_by_osm_road_corridor_then_priority_clip",
+        "osmAdminRelationId": "14179101",
+        "expectedOsmName": "北蔡镇",
+        "splitSide": "north",
+        "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+        "splitRoadNames": [
+          "华夏西路",
+          "华夏中路"
+        ],
+        "splitLineMethod": "20m easting samples of median intersections across named OSM carriageways",
+        "sharedEdgeSectorIds": [
+          "sector_yuqiao",
+          "sector_qiantan",
+          "sector_sanlin"
+        ],
+        "adjacentReviewRequiredSectorIds": [
+          "sector_zhangjiang"
+        ],
+        "identityStatus": "user-decided-primary-sector",
+        "geometryStatus": "selected-workpack-candidate",
+        "definitionSourceIds": [
+          "seller-lianjia-shanghai-sector-sitemap",
+          "seller-lianjia-beicai-dahua-eleven",
+          "seller-anjuke-beicai-lianxi-one",
+          "official-pudong-yuqiao-z000901-z000902-2010",
+          "official-pudong-boundary-adjustment-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以固定 OSM 北蔡镇 relation 作为非最终起画外壳，取华夏西路—华夏中路道路走廊派生中线北侧，并扣除已裁定的杨思前滩、上南、三林候选。行政外壳及道路线均只作候选骨架。",
+        "assemblyReadiness": "conditional-ready",
+        "projectIntegrityStatus": "passed-with-open-data-coverage-limitations"
+      },
+      {
+        "id": "sector_yuqiao",
+        "canonicalName": "御桥",
+        "scopeVersion": "market-split-candidate-2026-07",
+        "method": "osm_admin_outer_shell_split_by_osm_road_corridor_then_priority_clip",
+        "osmAdminRelationId": "14179101",
+        "expectedOsmName": "北蔡镇",
+        "splitSide": "south",
+        "splitEdgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+        "splitRoadNames": [
+          "华夏西路",
+          "华夏中路"
+        ],
+        "splitLineMethod": "20m easting samples of median intersections across named OSM carriageways",
+        "sharedEdgeSectorIds": [
+          "sector_beicai",
+          "sector_sanlin"
+        ],
+        "adjacentReviewRequiredSectorIds": [
+          "sector_kangqiao",
+          "sector_zhangjiang"
+        ],
+        "identityStatus": "user-decided-primary-sector",
+        "geometryStatus": "selected-workpack-candidate",
+        "definitionSourceIds": [
+          "seller-lianjia-shanghai-sector-sitemap",
+          "seller-lianjia-yuqiao-renhe",
+          "seller-anjuke-yuqiao-baige",
+          "official-pudong-yuqiao-z000901-z000902-2010",
+          "official-pudong-yuqiao-industry-eia-2022",
+          "official-pudong-boundary-adjustment-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以固定 OSM 北蔡镇 relation 作为非最终起画外壳，取华夏西路—华夏中路道路走廊派生中线南侧，并扣除已裁定的杨思前滩、上南、三林候选。南侧康桥界和东侧张江界只作待相邻板块复核边。",
+        "assemblyReadiness": "conditional-ready",
+        "projectIntegrityStatus": "passed-with-open-data-coverage-limitations"
+      }
+    ],
+    "secondaryIdentities": [
+      {
+        "name": "莲溪",
+        "parentSectorId": "sector_beicai",
+        "status": "locality-and-validation-sample-no-geometry"
+      },
+      {
+        "name": "大华",
+        "parentSectorId": "sector_beicai",
+        "status": "locality-and-validation-sample-no-geometry"
+      }
+    ],
+    "selectionStatus": "selected-by-user",
+    "assemblyReadiness": "conditional-ready-for-candidate-assembly",
+    "projectIntegrityStatus": "passed-with-open-data-coverage-limitations"
+  },
+  "auditOnlyRejectedScenarios": [
+    {
+      "id": "S2-beicai-primary-yuqiao-subscope",
+      "selectedByUser": false,
+      "mustNotMerge": true,
+      "geometryIncluded": false,
+      "rejectionReason": "用户选择北蔡、御桥拆成两个互斥一级板块；本方案仅保留为决策审计记录。",
+      "auditSummary": "北蔡一级、御桥为内部子范围的合并方案已被用户排除；旧 S2 geometry 不再保留。"
+    }
+  ]
+}

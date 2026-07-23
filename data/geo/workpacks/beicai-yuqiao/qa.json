@@ -1,0 +1,174 @@
+{
+  "schemaVersion": "1.0.0-workpack",
+  "workpackId": "beicai-yuqiao",
+  "generatedAt": "2026-07-23",
+  "decisionStatus": "user-decided",
+  "sourceChecks": {
+    "osmArchiveSha256MatchesLock": true,
+    "osmGpkgSha256MatchesLock": true,
+    "sourceAdminRelationId": "14179101",
+    "sourceAdminRelationName": "北蔡镇",
+    "workingCrs": "EPSG:32651",
+    "outputCrs": "OGC:CRS84"
+  },
+  "splitEdge": {
+    "edgeId": "edge_beicai_yuqiao_huaxia_corridor_candidate",
+    "roadNames": [
+      "华夏西路",
+      "华夏中路"
+    ],
+    "sampleIntervalMeters": 20,
+    "sampleCount": 453,
+    "rawSharedBoundaryLengthMeters": 4642.665,
+    "status": "selected-project-integrity-checked",
+    "projectIntegrityAudit": "passed-with-open-data-coverage-limitations",
+    "selectedSharedBoundaryLengthMeters": 4610.529,
+    "corridorCenterlineDistanceToNamedCarriagewaysMeters": {
+      "sampleCount": 1001,
+      "p25": 14.378,
+      "median": 16.008,
+      "p75": 18.408,
+      "p95": 23.12,
+      "maximum": 25.304
+    }
+  },
+  "explicitFindings": {
+    "sanlin": "No material overlap was found, but serialized/reprojected edges are not fully identical: 北蔡 has 22.696 m within 1 m of 三林 and 0.000 m exact shared edge; 御桥 has a 0.004 m² projected sliver, 455.135 m within 1 m, and 176.977 m exact shared edge. Assembly must snap to 三林 as the single edge owner.",
+    "shangnan": "No area overlap and no direct shared edge. The S1 北蔡 candidate is 226.086 m from 上南 at the closest points; the shortest connector is fully uncovered, so the corridor remains unassigned rather than being filled without evidence.",
+    "qiantan": "Selected 北蔡 has a 4.135 m² projected sliver against 杨思前滩 after WGS84 serialization/reprojection; 6,276.819 m of its boundary lies within 1 m and 738.300 m is exactly shared. Assembly must snap to 杨思前滩 as the single edge owner. The edge also inherits 杨思前滩 east-edge identity uncertainty.",
+    "eastAndSouth": "北蔡—张江、御桥—张江 and 御桥—康桥 edges remain adjacent-review-required and are not frozen."
+  },
+  "selectedCandidateId": "S1-split-beicai-yuqiao",
+  "assemblyReadiness": "conditional-ready-for-candidate-assembly",
+  "assemblySnapAudit": {
+    "required": true,
+    "edgeOwnerSectorIds": [
+      "sector_qiantan",
+      "sector_sanlin"
+    ],
+    "snapToleranceMeters": 1,
+    "maximumObservedProjectedSliverSquareMeters": 4.135,
+    "acceptanceChecks": [
+      "zero-area-overlap-after-snap",
+      "single-shared-edge-owner",
+      "no-new-gap-along-snapped-corridor"
+    ]
+  },
+  "projectIntegrityAudit": {
+    "status": "passed-with-open-data-coverage-limitations",
+    "osmSearchBufferMeters": 100,
+    "landusePolygonsWithinBuffer": 22,
+    "landusePolygonsCrossingSharedEdge": 0,
+    "residentialLandusePolygonsWithinBuffer": 1,
+    "residentialLandusePolygonsCrossingSharedEdge": 0,
+    "buildingPolygonsWithinBuffer": 9,
+    "buildingPolygonsCrossingSharedEdge": 0,
+    "officialSouthSideEcologicalSpace": {
+      "segment": "锦绣路—罗山路、华夏西路以南",
+      "plannedAreaSquareKilometers": 1.7138,
+      "sourceId": "official-shanghai-beicai-wedge-green-2024"
+    },
+    "sellerSampleVerdict": "Two independent seller families support north-side 北蔡 and south-side 御桥 samples; no same complete project was found on both sides.",
+    "limitation": "OSM and public seller pages are not a cadastral or exhaustive project polygon dataset."
+  },
+  "selectedCandidate": {
+    "scenarioId": "S1-split-beicai-yuqiao",
+    "featureCount": 2,
+    "allGeometriesValid": true,
+    "withinScenarioOverlapAreaSquareMeters": 0.0,
+    "withinScenarioSharedBoundaryLengthMeters": 4610.529,
+    "features": [
+      {
+        "areaSquareKilometers": 15.022453,
+        "isValid": true,
+        "isEmpty": false,
+        "boundaryIsSimple": true,
+        "polygonPartCount": 1,
+        "interiorRingCount": 0,
+        "selfOverlapAreaSquareMeters": 0,
+        "removedByPriorityClipSquareMeters": 3097395.372,
+        "adjacency": [
+          {
+            "adjacentSectorId": "sector_sanlin",
+            "overlapAreaSquareMeters": 0.0,
+            "sharedBoundaryLengthMeters": 0.0,
+            "minimumGeometryDistanceMeters": 0.0,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 22.696,
+            "topologyVerdict": "conditional-snap-to-sanlin-edge-owner",
+            "shortestConnectorLengthMeters": 0.0,
+            "shortestConnectorUncoveredLengthMeters": 0.0
+          },
+          {
+            "adjacentSectorId": "sector_shangnan",
+            "overlapAreaSquareMeters": 0.0,
+            "sharedBoundaryLengthMeters": 0.0,
+            "minimumGeometryDistanceMeters": 226.086,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 0.0,
+            "topologyVerdict": "disjoint-no-shared-edge",
+            "shortestConnectorLengthMeters": 226.086,
+            "shortestConnectorUncoveredLengthMeters": 226.086
+          },
+          {
+            "adjacentSectorId": "sector_qiantan",
+            "overlapAreaSquareMeters": 4.135,
+            "sharedBoundaryLengthMeters": 738.3,
+            "minimumGeometryDistanceMeters": 0.0,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 6276.819,
+            "topologyVerdict": "conditional-snap-required-projected-sliver"
+          }
+        ],
+        "sectorId": "sector_beicai"
+      },
+      {
+        "areaSquareKilometers": 4.996303,
+        "isValid": true,
+        "isEmpty": false,
+        "boundaryIsSimple": true,
+        "polygonPartCount": 1,
+        "interiorRingCount": 0,
+        "selfOverlapAreaSquareMeters": 0,
+        "removedByPriorityClipSquareMeters": 309.515,
+        "adjacency": [
+          {
+            "adjacentSectorId": "sector_sanlin",
+            "overlapAreaSquareMeters": 0.004,
+            "sharedBoundaryLengthMeters": 176.977,
+            "minimumGeometryDistanceMeters": 0.0,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 455.135,
+            "topologyVerdict": "conditional-snap-to-sanlin-edge-owner"
+          },
+          {
+            "adjacentSectorId": "sector_shangnan",
+            "overlapAreaSquareMeters": 0.0,
+            "sharedBoundaryLengthMeters": 0.0,
+            "minimumGeometryDistanceMeters": 3236.721,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 0.0,
+            "topologyVerdict": "disjoint-no-shared-edge",
+            "shortestConnectorLengthMeters": 3236.721,
+            "shortestConnectorUncoveredLengthMeters": 0.0
+          },
+          {
+            "adjacentSectorId": "sector_qiantan",
+            "overlapAreaSquareMeters": 0.0,
+            "sharedBoundaryLengthMeters": 0.0,
+            "minimumGeometryDistanceMeters": 17.148,
+            "candidateBoundaryWithin1mOfAdjacentMeters": 0.0,
+            "topologyVerdict": "disjoint-no-shared-edge",
+            "shortestConnectorLengthMeters": 17.148,
+            "shortestConnectorUncoveredLengthMeters": 17.148
+          }
+        ],
+        "sectorId": "sector_yuqiao"
+      }
+    ],
+    "selectionStatus": "selected-by-user",
+    "assemblyReadiness": "conditional-ready"
+  },
+  "auditOnlyRejectedScenarios": [
+    {
+      "id": "S2-beicai-primary-yuqiao-subscope",
+      "mustNotMerge": true,
+      "geometryIncludedInCandidate": false
+    }
+  ]
+}
