@@ -9,6 +9,7 @@ import {
   Focus,
   LoaderCircle,
   MapPinned,
+  Minus,
   PencilLine,
   Plus,
   Search,
@@ -29,6 +30,7 @@ import {
   type DraftPosition,
   type SectorBoundaryDraft,
 } from "@/src/lib/sector-editor-drafts";
+import { mapZoomDeltaForShortcut } from "@/src/lib/map-keyboard-shortcuts";
 import styles from "./SectorBoundaryEditor.module.css";
 
 type LoadStatus = "loading" | "ready" | "missing-key" | "error";
@@ -77,6 +79,7 @@ export function SectorBoundaryEditor() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [geometryRevision, setGeometryRevision] = useState(0);
   const [area, setArea] = useState(0);
+  const [mapZoom, setMapZoom] = useState(10.8);
   const [notice, setNotice] = useState<Notice>({
     tone: "neutral",
     message: "草稿只保存在当前浏览器，建议随时导出备份。",
@@ -125,6 +128,13 @@ export function SectorBoundaryEditor() {
     setArea(polygon.getArea());
   }, [updateDraft]);
 
+  const changeMapZoom = useCallback((delta: -1 | 1) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const nextZoom = Math.max(3, Math.min(20, map.getZoom() + delta));
+    map.setZoomAndCenter(nextZoom, map.getCenter(), true);
+  }, []);
+
   useEffect(() => {
     queueMicrotask(() => {
       try {
@@ -172,6 +182,7 @@ export function SectorBoundaryEditor() {
     if (!key) return;
 
     let cancelled = false;
+    let removeKeyboardZoom = () => {};
     if (securityJsCode) {
       (window as Window & { _AMapSecurityConfig?: { securityJsCode: string } })._AMapSecurityConfig = {
         securityJsCode,
@@ -194,7 +205,25 @@ export function SectorBoundaryEditor() {
           showLabel: true,
           doubleClickZoom: false,
           scrollWheel: true,
+          keyboardEnable: true,
         });
+        const syncZoom = () => setMapZoom(map.getZoom());
+        const handleZoomShortcut = (event: KeyboardEvent) => {
+          if (event.isComposing) return;
+          const delta = mapZoomDeltaForShortcut(event);
+          if (delta === null) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const nextZoom = Math.max(3, Math.min(20, map.getZoom() + delta));
+          map.setZoomAndCenter(nextZoom, map.getCenter(), true);
+        };
+        map.on("zoomchange", syncZoom);
+        window.addEventListener("keydown", handleZoomShortcut, { capture: true });
+        syncZoom();
+        removeKeyboardZoom = () => {
+          map.off("zoomchange", syncZoom);
+          window.removeEventListener("keydown", handleZoomShortcut, true);
+        };
         amapApiRef.current = api;
         mapRef.current = map;
         setStatus("ready");
@@ -207,6 +236,7 @@ export function SectorBoundaryEditor() {
 
     return () => {
       cancelled = true;
+      removeKeyboardZoom();
       polygonEditorRef.current?.close();
       mouseToolRef.current?.close(false);
       const map = mapRef.current;
@@ -572,31 +602,44 @@ export function SectorBoundaryEditor() {
           )}
         </aside>
 
-        <div className={styles.mapPanel}>
+        <div className={styles.mapPanel} data-map-zoom={mapZoom.toFixed(1)}>
           <div ref={mapHostRef} className={styles.mapHost} aria-label="板块边界绘制地图" />
 
-          {status === "ready" && activeDraft && (
+          {status === "ready" && (
             <div className={styles.mapToolbar}>
-              {isDrawing ? (
-                <button type="button" className={styles.stopButton} onClick={stopDrawing}>
-                  取消本次绘制
-                </button>
-              ) : (
-                <button type="button" className={styles.drawButton} onClick={startDrawing}>
-                  <PencilLine size={17} />
-                  {activeDraft.ring.length >= 3 ? "重画边界" : "开始画边界"}
-                </button>
+              {activeDraft && (
+                <>
+                  {isDrawing ? (
+                    <button type="button" className={styles.stopButton} onClick={stopDrawing}>
+                      取消本次绘制
+                    </button>
+                  ) : (
+                    <button type="button" className={styles.drawButton} onClick={startDrawing}>
+                      <PencilLine size={17} />
+                      {activeDraft.ring.length >= 3 ? "重画边界" : "开始画边界"}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.iconButton}
+                    onClick={focusActiveDraft}
+                    disabled={activeDraft.ring.length < 3}
+                    aria-label="定位当前板块"
+                    title="定位当前板块"
+                  >
+                    <Focus size={17} />
+                  </button>
+                </>
               )}
-              <button
-                type="button"
-                className={styles.iconButton}
-                onClick={focusActiveDraft}
-                disabled={activeDraft.ring.length < 3}
-                aria-label="定位当前板块"
-                title="定位当前板块"
-              >
-                <Focus size={17} />
-              </button>
+              <div className={styles.zoomControls} role="group" aria-label="地图缩放控制">
+                <button type="button" onClick={() => changeMapZoom(1)} aria-label="放大地图" title="放大地图（Control/Command + =）">
+                  <Plus size={16} />
+                </button>
+                <span aria-live="polite">Z {mapZoom.toFixed(1)}</span>
+                <button type="button" onClick={() => changeMapZoom(-1)} aria-label="缩小地图" title="缩小地图（Control/Command + -）">
+                  <Minus size={16} />
+                </button>
+              </div>
             </div>
           )}
 

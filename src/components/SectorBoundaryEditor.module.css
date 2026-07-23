@@ -482,6 +482,43 @@
   cursor: not-allowed;
 }
 
+.zoomControls {
+  min-height: 45px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  color: #244942;
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid rgba(255, 255, 255, .95);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(15, 55, 50, .14);
+}
+
+.zoomControls button {
+  width: 39px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #244942;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.zoomControls button:hover {
+  color: #0f766e;
+  background: #edf8f5;
+}
+
+.zoomControls span {
+  min-width: 49px;
+  display: grid;
+  place-items: center;
+  color: #66807b;
+  border-inline: 1px solid rgba(15, 118, 110, .1);
+  font: 650 9px var(--font-geist-mono), monospace;
+}
+
 .notice {
   position: absolute;
   z-index: 100;

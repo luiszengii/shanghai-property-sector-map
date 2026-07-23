@@ -10,6 +10,8 @@ import {
   serializeSectorEditorState,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./sector-editor-drafts.ts";
+// @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
+import { mapZoomDeltaForShortcut } from "./map-keyboard-shortcuts.ts";
 
 test("exported sector drafts are closed GCJ-02 polygons with an explicit warning", () => {
   const draft = {
@@ -93,4 +95,13 @@ test("a drawn polygon still needs a real sector name before export", () => {
 
   assert.equal(isCompleteSectorDraft(draft), false);
   assert.equal(buildSectorDraftFeatureCollection([draft]).features.length, 0);
+});
+
+test("Control or Command plus/minus maps to one map zoom step", () => {
+  assert.equal(mapZoomDeltaForShortcut({ key: "=", ctrlKey: true }), 1);
+  assert.equal(mapZoomDeltaForShortcut({ key: "+", ctrlKey: true }), 1);
+  assert.equal(mapZoomDeltaForShortcut({ key: "-", ctrlKey: true }), -1);
+  assert.equal(mapZoomDeltaForShortcut({ key: "_", metaKey: true }), -1);
+  assert.equal(mapZoomDeltaForShortcut({ key: "=", ctrlKey: false, metaKey: false }), null);
+  assert.equal(mapZoomDeltaForShortcut({ key: "-", ctrlKey: true, altKey: true }), null);
 });
