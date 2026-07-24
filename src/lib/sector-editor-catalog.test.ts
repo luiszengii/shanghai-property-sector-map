@@ -1049,9 +1049,9 @@ test("the Hongkou Yangpu evidence-backed batch exposes only Anshan and clipped Z
   for (const unresolvedName of [
     "瑞虹新城", "鲁迅公园", "东外滩", "定海路", "黄兴公园",
   ]) {
-    assert.ok(!registryData.sectors.some(
+    assert.equal(registryData.sectors.find(
       (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
-    ));
+    )?.geometry?.status, "missing");
   }
 });
 

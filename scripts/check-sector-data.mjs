@@ -2852,10 +2852,11 @@ for (const [firstId, secondId, minimumSharedLengthMeters] of [
 for (const unresolvedName of [
   "瑞虹新城", "鲁迅公园", "东外滩", "定海路", "黄兴公园",
 ]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === unresolvedName,
-  )) {
-    error(`虹口—杨浦第二批证据不足，不得自动注册 ${unresolvedName}`);
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`虹口—杨浦第二批只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 
