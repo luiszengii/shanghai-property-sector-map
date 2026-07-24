@@ -160,6 +160,8 @@
       "allowedUse": "boundary_definition_only",
       "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江、川沙—祝桥和北蔡—康桥等部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
     },
+    {"id":"official-xuhui-shanghai-south-station-context-2026","title":"徐汇区漕河泾街道年鉴与上海综合客运交通枢纽布局规划","publisher":"徐汇区人民政府、上海市人民政府","url":"https://www.xuhui.gov.cn/xhda/xhda/xhbl/xhnj/2021/01/26/9f8086927641192c01773dbbcf3b33f9.html","sourceType":"official_facility_context","licenseStatus":"reference_only","allowedUse":"name_verification_only","note":"确认铁路上海南站位于漕河泾街道、并属交通枢纽语境；不提供楼市板块边界。"},
+    {"id":"official-changning-xijiao-park-city-2024","title":"长宁区公园城市规划（2024—2035年）","publisher":"上海市长宁区人民政府","url":"https://zwgk.shcn.gov.cn/xxgk/zdxzjc-2024/2024/92/72630/733d05ebd722401ba49e609c2939df0f.pdf","sourceType":"official_functional_area_plan","publishedAt":"2024-01-01","licenseStatus":"reference_only","allowedUse":"spatial_relationship_only","note":"西郊样板区是公园城市功能对象，不等同楼市西郊边界。"},
     {
       "id": "official-shanghai-biyun-international-community-scope-2024",
       "title": "2023年上海市高标准保洁区域清单",

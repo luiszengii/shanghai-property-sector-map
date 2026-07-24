@@ -1552,7 +1552,7 @@ assertConnectedSharedEdgeBatch({
   expectedPairCount: 21,
   label: "徐汇同名街镇批次",
 });
-for (const forbiddenName of ["虹梅路", "上海南站"]) {
+for (const forbiddenName of ["虹梅路"]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -1652,7 +1652,7 @@ if (changningFourSharedPairs.size !== 2
   || !changningFourSharedPairs.has("sector_tianshan/sector_xianxia")) {
   error("长宁直接同名街道批次必须保持新华路—天山—仙霞两组固定共享边");
 }
-for (const forbiddenName of ["西郊"]) {
+for (const forbiddenName of []) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -2953,10 +2953,18 @@ for (const anchor of zhongshanParkDefinition?.boundaryAnchors ?? []) {
     error(`sector_zhongshangongyuan: ${anchor.side} 侧必须达到声明的官方命名道路覆盖长度`);
   }
 }
-if ([...registryById.values()].some(
-  (record) => record.canonicalName === "西郊",
-)) {
+if (candidateById.has("sector_xijiao")) {
   error("sector_zhongshangongyuan: 中山公园核心批次不得在联合裁定前自动注册西郊");
+}
+for (const id of ["sector_shanghainan_zhan", "sector_xijiao"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.length
+    || !record?.geometry?.verificationSourceIds?.length) {
+    error(`${id}: 已核验但未冻结市场四至的身份必须只在编辑器中以缺失几何出现，不得自动发布候选面`);
+  }
 }
 
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
