@@ -1052,7 +1052,9 @@
         "projectIntegrityStatus": null,
         "unfrozenAdjacentSectorIds": [],
         "sharedEdgeSectorIds": [
-          "sector_xinzhuang"
+          "sector_xinzhuang",
+          "sector_qibao",
+          "sector_meilong"
         ]
       }
     },
@@ -1077,7 +1079,10 @@
         "sharedEdgeSectorIds": [
           "sector_gumei",
           "sector_chunshen",
-          "sector_xinqiao"
+          "sector_xinqiao",
+          "sector_qibao",
+          "sector_meilong",
+          "sector_zhuanqiao"
         ],
         "snapDependencySectorIds": [
           "sector_gumei"
@@ -1103,7 +1108,9 @@
         "projectIntegrityStatus": null,
         "unfrozenAdjacentSectorIds": [],
         "sharedEdgeSectorIds": [
-          "sector_xinzhuang"
+          "sector_xinzhuang",
+          "sector_meilong",
+          "sector_zhuanqiao"
         ],
         "snapDependencySectorIds": [
           "sector_xinzhuang"
@@ -2159,7 +2166,8 @@
         "sharedEdgeSectorIds": [
           "sector_lingyunlu",
           "sector_tianlin",
-          "sector_caohejing"
+          "sector_caohejing",
+          "sector_meilong"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1,
         "protectedSubtractionStage": "post-topology-output-crs"
@@ -2176,7 +2184,8 @@
         "sharedEdgeSectorIds": [
           "sector_changqiao",
           "sector_caohejing",
-          "sector_kangjian"
+          "sector_kangjian",
+          "sector_meilong"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
@@ -2197,7 +2206,8 @@
           "sector_lingyunlu",
           "sector_longhua",
           "sector_caohejing",
-          "sector_huajing"
+          "sector_huajing",
+          "sector_meilong"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1,
         "protectedSubtractionStage": "post-topology-output-crs"
@@ -2212,7 +2222,8 @@
           "13470658"
         ],
         "sharedEdgeSectorIds": [
-          "sector_changqiao"
+          "sector_changqiao",
+          "sector_meilong"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
       }
@@ -3724,6 +3735,95 @@
           "sector_zhelin"
         ],
         "sharedEdgeSnapDistanceMeters": 0.1
+      }
+    },
+    {
+      "id": "sector_qibao",
+      "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187987"
+        ],
+        "subtractedSectorIds": [
+          "sector_gumei",
+          "sector_xinzhuang"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_gumei",
+          "sector_xinzhuang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 10.0,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_meilong",
+      "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187983"
+        ],
+        "subtractedSectorIds": [
+          "sector_gumei",
+          "sector_xinzhuang",
+          "sector_chunshen",
+          "sector_qibao",
+          "sector_kangjian",
+          "sector_lingyunlu",
+          "sector_changqiao",
+          "sector_huajing"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_gumei",
+          "sector_xinzhuang",
+          "sector_chunshen",
+          "sector_zhuanqiao",
+          "sector_kangjian",
+          "sector_lingyunlu",
+          "sector_changqiao",
+          "sector_huajing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 10.0,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_zhuanqiao",
+      "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187986"
+        ],
+        "subtractedSectorIds": [
+          "sector_chunshen",
+          "sector_xinzhuang",
+          "sector_meilong"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_chunshen",
+          "sector_xinzhuang",
+          "sector_meilong",
+          "sector_maqiao"
+        ],
+        "sharedEdgeSnapDistanceMeters": 10.0,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_maqiao",
+      "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187981"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_zhuanqiao"
+        ],
+        "sharedEdgeSnapDistanceMeters": 10.0
       }
     }
   ],

@@ -5179,5 +5179,538 @@
         "publicationPolicy": "internal_review",
         "note": "固定OSM relation 17885593约109.8578平方公里，仍覆盖已析出的38.4平方公里头桥地区；在取得头桥现行矢量或可复算差集前保持缺失，并允许用户在编辑器人工起画。"
       }
+    },
+    {
+      "id": "sector_qibao",
+      "canonicalName": "七宝",
+      "aliases": [
+        "七宝镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_commercial_transport_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场七宝暂以现行七宝镇固定 OSM relation 作为低置信、可编辑行政代理。镇域可能混入静安新城、航华及商业交通空间；它不等于精确卖方七宝边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026",
+        "official-minhang-government-agencies-2026"
+      ],
+      "adminProxyName": "七宝镇",
+      "adminBoundaryVersion": "2022-12-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_jing'an_new_city",
+        "unresolved_longbai",
+        "unresolved_hanghua",
+        "unresolved_jinhui_minhang",
+        "unresolved_jinhongqiao"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_gumei",
+        "sector_xinzhuang"
+      ],
+      "boundaryEvidenceIds": [
+        "qibao-north",
+        "qibao-east",
+        "qibao-south",
+        "qibao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "official-minhang-government-agencies-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_huacao",
+      "canonicalName": "华漕",
+      "aliases": [
+        "华漕镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_overlap_exceeds_snap_tolerance",
+        "overlaps_existing_xujing_candidate",
+        "cross_district_hongqiao_cbd_interface",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "市场华漕身份与现行华漕镇名称均已核验，但固定华漕镇 relation 与既有徐泾市场候选重叠约1.98平方公里；在保护徐泾后需要超过1.15公里的非局部位移，不能把残余行政面冒充市场代理。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026"
+      ],
+      "adminProxyName": "华漕镇（待与徐泾重建接口）",
+      "adminBoundaryVersion": "2022-12-or-later-required",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_hongqiao",
+        "unresolved_hanghua",
+        "unresolved_jinhongqiao"
+      ],
+      "legacyOsmAdminRelationId": "14187985",
+      "legacyLockedGeometryAreaKm2": 28.1633,
+      "boundaryEvidenceIds": [
+        "huacao-north",
+        "huacao-east",
+        "huacao-south",
+        "huacao-west"
+      ],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "xujing-interface-rebuild-required-2026-07",
+        "sourceIds": [],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定华漕镇 relation 14187985 与既有徐泾候选重叠约1.98平方公里；保护既有面时需要约1.15公里位移，远超10米拓扑容差。禁止发布旧镇面或大幅吸附后的残余面，允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_meilong",
+      "canonicalName": "梅陇",
+      "aliases": [
+        "梅陇镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "existing_chunshen_market_preserved",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场梅陇暂以现行梅陇镇固定 OSM relation 起画，并在拓扑总装中保护既有春申、莘庄、古美候选。完整镇域含非住宅和跨市场空间，不得称为精确市场边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026",
+        "official-minhang-government-agencies-2026"
+      ],
+      "adminProxyName": "梅陇镇",
+      "adminBoundaryVersion": "2022-12-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_jing'an_new_city",
+        "unresolved_jinhui_minhang"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_gumei",
+        "sector_xinzhuang",
+        "sector_chunshen",
+        "sector_zhuanqiao",
+        "sector_kangjian",
+        "sector_lingyunlu",
+        "sector_changqiao",
+        "sector_huajing"
+      ],
+      "boundaryEvidenceIds": [
+        "meilong-north",
+        "meilong-east",
+        "meilong-south",
+        "meilong-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "official-minhang-government-agencies-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_zhuanqiao",
+      "canonicalName": "颛桥",
+      "aliases": [
+        "颛桥镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场颛桥暂以现行颛桥镇固定 OSM relation 作为低置信可编辑骨架；既有春申、莘庄市场候选优先保留，老闵行接口不自动分配。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026",
+        "official-minhang-government-agencies-2026"
+      ],
+      "adminProxyName": "颛桥镇",
+      "adminBoundaryVersion": "2022-12-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_laominhang",
+        "unresolved_jing'an_new_city"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_chunshen",
+        "sector_xinzhuang",
+        "sector_meilong",
+        "sector_maqiao"
+      ],
+      "boundaryEvidenceIds": [
+        "zhuanqiao-north",
+        "zhuanqiao-east",
+        "zhuanqiao-south",
+        "zhuanqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "official-minhang-government-agencies-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_maqiao",
+      "canonicalName": "马桥",
+      "aliases": [
+        "马桥镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场马桥暂以现行马桥镇固定 OSM relation 作为低置信可编辑骨架；完整镇域包含乡村、产业和非连续住宅空间，老闵行方向保持待精修。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026",
+        "official-minhang-government-agencies-2026"
+      ],
+      "adminProxyName": "马桥镇",
+      "adminBoundaryVersion": "2022-12-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_laominhang",
+        "unresolved_xinzhuang_industrial_area"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_zhuanqiao"
+      ],
+      "boundaryEvidenceIds": [
+        "maqiao-north",
+        "maqiao-east",
+        "maqiao-south",
+        "maqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "official-minhang-government-agencies-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_wujing",
+      "canonicalName": "吴泾",
+      "aliases": [
+        "吴泾镇"
+      ],
+      "riskFlags": [
+        "admin_proxy_subtraction_creates_self_intersection",
+        "cross_district_existing_candidate_overlap",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "市场吴泾身份与现行吴泾镇名称已核验，但保护既有梅陇、颛桥、华泾候选后的行政差集产生自相交，不能自动发布。保留为可人工起画的待绘制身份，老闵行不得被吴泾镇替代。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026"
+      ],
+      "adminProxyName": "吴泾镇（待跨区接口重建）",
+      "adminBoundaryVersion": "2022-12-or-later-required",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_laominhang",
+        "unresolved_jinhui_minhang"
+      ],
+      "legacyOsmAdminRelationId": "14187982",
+      "legacyLockedGeometryAreaKm2": 37.5441,
+      "boundaryEvidenceIds": [
+        "wujing-north",
+        "wujing-east",
+        "wujing-south",
+        "wujing-west"
+      ],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "cross-district-interface-rebuild-required-2026-07",
+        "sourceIds": [],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定吴泾镇 relation 14187982 与既有梅陇、颛桥、华泾候选的保护性差集会产生自相交。禁止发布旧镇面或自动差集面，允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_pujiangzhen",
+      "canonicalName": "浦江镇",
+      "aliases": [
+        "浦江"
+      ],
+      "riskFlags": [
+        "overwide_admin_proxy",
+        "cross_district_existing_candidate_overlap",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "闵行区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "市场浦江镇与现行浦江镇名称一致，但完整镇域同时与既有三林、康桥、周浦、航头和奉贤金汇候选发生跨区交叠；没有项目归属证据时不得用多次差集生成残余面。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-minhang-current-admin-units-2026"
+      ],
+      "adminProxyName": "浦江镇（待跨区接口重建）",
+      "adminBoundaryVersion": "2022-12-or-later-required",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_hangtou",
+        "sector_xinchang",
+        "unresolved_pujiang_residential_core"
+      ],
+      "legacyOsmAdminRelationId": "14187979",
+      "legacyLockedGeometryAreaKm2": 78.8526,
+      "boundaryEvidenceIds": [
+        "pujiangzhen-north",
+        "pujiangzhen-east",
+        "pujiangzhen-south",
+        "pujiangzhen-west"
+      ],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "cross-district-interface-rebuild-required-2026-07",
+        "sourceIds": [],
+        "verificationSourceIds": [
+          "official-minhang-current-admin-units-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定浦江镇 relation 14187979跨越既有三林、康桥、周浦、航头和奉贤金汇候选。没有经核验的市场成员边界时禁止发布镇域或残余面，允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_jinganxincheng",
+      "canonicalName": "静安新城",
+      "aliases": ["静安新城板块"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "inside_qibao_admin_proxy"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "静安新城已由七宝镇官方规划作为板块称谓核验，但不是同名现行行政单位；不得用完整七宝镇或其中任意残余面替代其独立市场范围。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-jingan-new-city-plan"],
+      "adminProxyName": "七宝镇内独立市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_qibao", "sector_meilong", "unresolved_hanghua"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-jingan-new-city-plan"], "publicationPolicy": "internal_review",
+        "note": "官方材料确认的是板块称谓与镇内定位，不提供市场闭合边界。禁止发布七宝镇全域、残余面或推测性外框；允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_minhangjinhui",
+      "canonicalName": "闵行金汇",
+      "aliases": ["金汇", "金汇华光城"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "must_not_merge_with_fengxian_jinhui", "inside_hongqiao_town"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "闵行金汇与已登记的奉贤金汇必须严格消歧。官方材料只将金汇华光城等成员定位于虹桥镇内，不能把完整虹桥镇或奉贤金汇边界替代为闵行金汇市场范围。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-hongqiao-jinhui-and-jinhongqiao"],
+      "adminProxyName": "虹桥镇内独立市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_hongqiao", "sector_fengxianjinhui", "unresolved_jinhongqiao", "unresolved_longbai"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-hongqiao-jinhui-and-jinhongqiao"], "publicationPolicy": "internal_review",
+        "note": "官方材料只提供成员定位。禁止复用奉贤金汇、完整虹桥镇或行政残余面；允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_longbai",
+      "canonicalName": "龙柏",
+      "aliases": ["龙柏新村", "龙柏二村"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "inside_hongqiao_town"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "龙柏作为市场身份已核验，官方规划只证明龙柏相关社区位于虹桥镇内；社区定位不能推导完整楼市板块外框。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-longbai-planning"],
+      "adminProxyName": "虹桥镇内独立市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_hongqiao", "unresolved_jinhongqiao", "unresolved_jinhui_minhang"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-longbai-planning"], "publicationPolicy": "internal_review",
+        "note": "官方材料只确认镇内社区定位。禁止将完整虹桥镇、社区点位缓冲或推测性残余面发布为龙柏边界；允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_hanghua",
+      "canonicalName": "航华",
+      "aliases": ["原航华地区", "航华新村"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "crosses_qibao_and_xinhong"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "航华是独立市场身份；官方文件显示原航华地区同时涉及七宝镇与新虹街道，不能把七宝镇单面、任一行政残余面或单点社区范围当作航华边界。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-hanghua-cross-admin"],
+      "adminProxyName": "跨七宝镇与新虹街道的独立市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_qibao", "sector_huacao", "unresolved_jing'an_new_city"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-hanghua-cross-admin"], "publicationPolicy": "internal_review",
+        "note": "航华跨当前行政管理单元，不能采用单一镇街代理。禁止发布七宝镇全域、行政残余面或推测性外框；允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_jinhongqiao",
+      "canonicalName": "金虹桥",
+      "aliases": ["金虹桥板块", "金虹桥社区"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "inside_hongqiao_town"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "金虹桥作为独立市场身份已核验。官方虹桥镇材料只提供金虹相关居委和金汇相关成员定位，不提供市场外框；不得用完整虹桥镇替代。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-hongqiao-jinhui-and-jinhongqiao"],
+      "adminProxyName": "虹桥镇内独立市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_hongqiao", "unresolved_longbai", "unresolved_jinhui_minhang"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-hongqiao-jinhui-and-jinhongqiao"], "publicationPolicy": "internal_review",
+        "note": "官方材料只确认成员定位，未定义市场闭合边界。禁止把完整虹桥镇或推测性残余面发布为金虹桥边界；允许用户在编辑器人工起画。"
+      }
+    },
+    {
+      "id": "sector_laominhang",
+      "canonicalName": "老闵行",
+      "aliases": ["老闵行板块", "闵行老城"],
+      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "historical_market_identity"],
+      "districtNames": ["闵行区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "老闵行是历史／市场身份，而非同名现行行政单位。官方材料按江川路街道、吴泾镇等单位记录相关设施，不能自动选择其中一个镇街或把吴泾镇替代为老闵行。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-laominhang-education"],
+      "adminProxyName": "江川路街道、吴泾镇等之间的历史市场身份（待定义）",
+      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": ["sector_wujing", "sector_zhuanqiao", "sector_maqiao"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-minhang-laominhang-education"], "publicationPolicy": "internal_review",
+        "note": "现有官方材料不提供老闵行的市场边界，也不支持以吴泾镇或江川路街道替代。禁止发布行政残余面；允许用户在编辑器人工起画。"
+      }
     }]
 }

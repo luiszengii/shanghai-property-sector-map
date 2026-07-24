@@ -15,7 +15,8 @@
     "data/geo/reviewed-candidate-batches/putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07.json",
     "data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json",
     "data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json",
-    "data/geo/reviewed-candidate-batches/fengxian-eight-current-admin-proxies-2026-07.json"
+    "data/geo/reviewed-candidate-batches/fengxian-eight-current-admin-proxies-2026-07.json",
+    "data/geo/reviewed-candidate-batches/minhang-four-current-town-proxies-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {
@@ -407,7 +408,7 @@
         "publishableAsReviewedMarketSector": false
       },
       "insidePoint": [121.3905002, 31.1461914],
-      "sharedEdgeSectorIds": ["sector_xinzhuang"],
+      "sharedEdgeSectorIds": ["sector_xinzhuang", "sector_qibao", "sector_meilong"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [6, 6.3],
       "includedMarketAreas": ["东兰小区", "华一新城", "同济华城"],
@@ -428,7 +429,7 @@
         "publishableAsReviewedMarketSector": false
       },
       "insidePoint": [121.3682958, 31.1171342],
-      "sharedEdgeSectorIds": ["sector_gumei", "sector_chunshen", "sector_xinqiao"],
+      "sharedEdgeSectorIds": ["sector_gumei", "sector_chunshen", "sector_xinqiao", "sector_qibao", "sector_meilong", "sector_zhuanqiao"],
       "snapDependencySectorIds": ["sector_gumei"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [16.8, 17.4],
@@ -450,7 +451,7 @@
         "publishableAsReviewedMarketSector": false
       },
       "insidePoint": [121.4062333, 31.1097249],
-      "sharedEdgeSectorIds": ["sector_xinzhuang"],
+      "sharedEdgeSectorIds": ["sector_xinzhuang", "sector_meilong", "sector_zhuanqiao"],
       "snapDependencySectorIds": ["sector_xinzhuang"],
       "preserveTopologyPrecision": true,
       "areaRangeSquareKilometers": [7.2, 7.6],

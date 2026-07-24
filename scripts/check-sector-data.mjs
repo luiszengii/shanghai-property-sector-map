@@ -2424,6 +2424,90 @@ if (jinhuiXinchangShared < 1700
   );
 }
 
+const expectedMinhangFour = new Map([
+  ["sector_qibao", { relation: "14187987", osmName: "七宝镇" }],
+  ["sector_meilong", { relation: "14187983", osmName: "梅陇镇" }],
+  ["sector_zhuanqiao", { relation: "14187986", osmName: "颛桥镇" }],
+  ["sector_maqiao", { relation: "14187981", osmName: "马桥镇" }],
+]);
+const minhangFourDefinitions = candidateDefinitions.filter(
+  (definition) => expectedMinhangFour.has(definition.id),
+);
+if (normalizedStringSet(minhangFourDefinitions.map(({ id }) => id))
+  !== normalizedStringSet(expectedMinhangFour.keys())) {
+  error("闵行现行镇代理批次必须恰好包含 4 个可放行候选，不得把已核验但范围未定义的市场身份自动发布为行政残余面");
+}
+for (const definition of minhangFourDefinitions) {
+  const expected = expectedMinhangFour.get(definition.id);
+  const candidate = candidateById.get(definition.id);
+  const registryRecord = registryById.get(definition.id);
+  const manifest = manifestById.get(definition.id);
+  if (definition.method !== "market_admin_candidate_with_shared_topology"
+    || String(definition.osmAdminRelationId) !== expected.relation
+    || definition.expectedOsmName !== expected.osmName
+    || definition.adminProxyName !== expected.osmName
+    || candidate?.properties?.adminProxyName !== expected.osmName
+    || registryRecord?.adminProxyName !== expected.osmName
+    || normalizedStringSet(manifest?.osmRefs?.adminRelations ?? [])
+      !== normalizedStringSet([expected.relation])) {
+    error(`${definition.id}: 闵行批次没有锁定研究确认的现行镇关系、名称和代理身份`);
+  }
+  if (definition.confidence !== "low"
+    || candidate?.properties?.confidence !== "low"
+    || candidate?.properties?.marketAdminAlignmentUnverified !== true
+    || registryRecord?.marketAdminAlignmentUnverified !== true
+    || definition.preserveMultiPolygonSemantics !== true
+    || candidate?.geometry?.type !== "MultiPolygon"
+    || definition.adminBoundaryVersion !== "2022-12-or-later"
+    || candidate?.properties?.adminBoundaryVersion !== "2022-12-or-later"
+    || registryRecord?.adminBoundaryVersion !== "2022-12-or-later"
+    || registryRecord?.geometry?.confidence !== "low"
+    || registryRecord?.reviewStatus !== "draft-low"
+    || registryRecord?.geometry?.publicationPolicy !== "internal_review"
+    || !definition.riskFlags?.includes("market_boundary_not_official")
+    || normalizedStringSet(registryRecord?.requiredAdjacencyReviewIds ?? [])
+      !== normalizedStringSet(definition.requiredAdjacencyReviewIds ?? [])
+    || normalizedStringSet(registryRecord?.linkedTopologySectorIds ?? [])
+      !== normalizedStringSet(definition.sharedEdgeSectorIds ?? [])) {
+    error(`${definition.id}: 闵行行政代理必须保持低置信、现行版本门槛、内部策略和完整 MultiPolygon 语义`);
+  }
+}
+for (const [id, relation, requiredRiskFlag] of [
+  ["sector_huacao", "14187985", "overlaps_existing_xujing_candidate"],
+  ["sector_wujing", "14187982", "admin_proxy_subtraction_creates_self_intersection"],
+  ["sector_pujiangzhen", "14187979", "cross_district_existing_candidate_overlap"],
+]) {
+  const record = registryById.get(id);
+  if (candidateDefinitionById.has(id)
+    || candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus
+      !== "market_identity_verified_geometry_blocked"
+    || record?.legacyOsmAdminRelationId !== relation
+    || !record?.riskFlags?.includes(requiredRiskFlag)) {
+    error(`${id}: 与既有候选发生版本或非局部拓扑冲突时必须保持已登记但几何缺失，不得发布行政残余面`);
+  }
+}
+for (const id of [
+  "sector_jinganxincheng",
+  "sector_minhangjinhui",
+  "sector_longbai",
+  "sector_hanghua",
+  "sector_jinhongqiao",
+  "sector_laominhang",
+]) {
+  const record = registryById.get(id);
+  if (candidateDefinitionById.has(id)
+    || candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.riskFlags?.includes("independent_market_scope_required")
+    || !record?.definitionSourceIds?.length
+    || !record?.geometry?.verificationSourceIds?.length) {
+    error(`${id}: 已核验的独立市场身份必须在编辑器可见但保持几何缺失，不得以行政面、残余面或推测面自动发布`);
+  }
+}
+
 const expectedHongkouYangpuSevenRelations = new Map([
   ["sector_sichuanbeilu", "13462869"],
   ["sector_quyang", "13466001"],

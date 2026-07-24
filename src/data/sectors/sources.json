@@ -234,6 +234,77 @@
       "note": "确认古美、莘庄等位于同一规划板块；未授予从 PDF 描摹矢量并再发布的权利。"
     },
     {
+      "id": "official-minhang-current-admin-units-2026",
+      "title": "上海市2022年末行政区划",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw12344/20230105/6c75c59dad84431a8ad49a9c8f2ca8cb.html",
+      "sourceType": "official_administrative_directory",
+      "publishedAt": "2023-01-05",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "核验闵行区九镇名称和镇级层级；仅用于同名行政代理的名称与版本语义，不能证明楼市板块精确边界。"
+    },
+    {
+      "id": "official-minhang-government-agencies-2026",
+      "title": "闵行区政府机构设置目录",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/qzfjgsz/List/index.htm",
+      "sourceType": "official_administrative_directory",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_relationship_only",
+      "note": "用于当前闵行镇政府机构口径的交叉核验；不能证明楼市板块精确边界。"
+    },
+    {
+      "id": "official-minhang-jingan-new-city-plan",
+      "title": "七宝镇静安新城板块相关规划材料",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/fzgh_zxxd/content/45623240-3697-11ED-B279-3419E796FF77.htm",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "确认静安新城作为七宝镇内规划板块称谓；没有给出可发布的楼市市场闭合边界。"
+    },
+    {
+      "id": "official-minhang-hongqiao-jinhui-and-jinhongqiao",
+      "title": "虹桥镇金汇、金虹桥相关社区材料",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/xxgk_hqz_bmwj_bbmf/content/4DD826EF-3697-11ED-A9A6-C676A819F59E.htm",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "确认闵行金汇、金虹桥相关成员位于虹桥镇；不能把完整虹桥镇替代为任一市场板块边界。"
+    },
+    {
+      "id": "official-minhang-longbai-planning",
+      "title": "龙柏二村相关规划公示",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/xxgk_ghj_ywxx_ghglgs/content/e6f639bc-9d09-419d-9592-f9e03b849b6e.htm",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "确认龙柏相关社区位于虹桥镇内；不能由社区定位推导完整市场边界。"
+    },
+    {
+      "id": "official-minhang-hanghua-cross-admin",
+      "title": "原航华地区跨七宝镇、新虹街道的闵行区文件",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/qzfgfxwj/content/59260ec9-e847-4d43-a2d0-612b4ba0d4b4.htm",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "确认航华涉及七宝镇与新虹街道的原航华地区，不能取任一完整行政面为市场代理。"
+    },
+    {
+      "id": "official-minhang-laominhang-education",
+      "title": "江川路街道、吴泾镇相关教育材料",
+      "publisher": "上海市闵行区人民政府",
+      "url": "https://zwgk.shmh.gov.cn/mh-xxgk-cms/website/mh_xxgk/xxgk_jyj_ywxx_8_02/content/2c95daa4-5294-42f7-bccd-2eed35ecacd8.htm",
+      "sourceType": "official_plan_text",
+      "licenseStatus": "reference_only",
+      "allowedUse": "market_identity_verification_only",
+      "note": "确认老闵行不是同名现行行政单位，相关设施按江川路街道、吴泾镇等单位记录；不能自动选取单一行政面。"
+    },
+    {
       "id": "official-xinzhuang-transport-plan-2024",
       "title": "莘庄镇综合交通规划（2023—2035年）",
       "publisher": "上海市闵行区人民政府",

@@ -787,6 +787,84 @@ test("the Fengxian batch exposes eight current proxies and keeps stale Fengcheng
   assert.equal(jinhui?.adminProxyName, "金汇镇");
 });
 
+test("the Minhang batch exposes four editable town proxies and keeps independent identities drawable", () => {
+  const batch = JSON.parse(readFileSync(
+    new URL(
+      "../../data/geo/reviewed-candidate-batches/minhang-four-current-town-proxies-2026-07.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ));
+  const registryData = JSON.parse(readFileSync(
+    new URL("../data/sectors/registry.json", import.meta.url), "utf8",
+  ));
+  const candidateData = JSON.parse(readFileSync(
+    new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url), "utf8",
+  ));
+  const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
+  const blockedIds = [
+    "sector_huacao", "sector_wujing", "sector_pujiangzhen", "sector_jinganxincheng",
+    "sector_minhangjinhui", "sector_longbai", "sector_hanghua", "sector_jinhongqiao", "sector_laominhang",
+  ];
+  const records = registryData.sectors.filter(
+    (record: { id: string }) => [...batchIds, ...blockedIds].includes(record.id),
+  );
+  const candidateById = new Map(candidateData.features.map(
+    (feature: { properties: { id: string } }) => [feature.properties.id, feature],
+  ));
+  const templates = buildSectorEditorTemplates(
+    records,
+    (id) => {
+      const candidate = candidateById.get(id) as {
+        geometry: { type: "MultiPolygon"; coordinates: number[][][][] };
+      } | undefined;
+      return candidate
+        ? {
+          kind: "reviewed-market-candidate" as const,
+          coordinateSystem: "WGS84" as const,
+          geometry: candidate.geometry,
+        }
+        : undefined;
+    },
+    (position) => position,
+  );
+
+  assert.deepEqual(batchIds, [
+    "sector_qibao",
+    "sector_meilong",
+    "sector_zhuanqiao",
+    "sector_maqiao",
+  ]);
+  assert.equal(records.length, 13);
+  assert.ok(batchIds.every((id: string) => (
+    (candidateById.get(id) as { geometry: { type: string } }).geometry.type
+      === "MultiPolygon"
+  )));
+  assert.ok(templates.filter((template) => !blockedIds.includes(template.id)).every(
+    (template) => template.geometryStatus === "candidate" && template.ring.length >= 3,
+  ));
+  for (const [id, relation] of [["sector_huacao", "14187985"], ["sector_wujing", "14187982"], ["sector_pujiangzhen", "14187979"]]) {
+    const record = records.find((item: { id: string }) => item.id === id);
+    const template = templates.find((item) => item.id === id);
+    assert.equal(record?.geometry.status, "missing");
+    assert.equal(record?.definitionStatus, "market_identity_verified_geometry_blocked");
+    assert.equal(record?.legacyOsmAdminRelationId, relation);
+    assert.equal(template?.geometryStatus, "missing");
+    assert.equal(template?.ring.length, 0);
+    assert.ok(!candidateById.has(id));
+  }
+  for (const id of blockedIds.slice(3)) {
+    const record = records.find((item: { id: string }) => item.id === id);
+    const template = templates.find((item) => item.id === id);
+    assert.equal(record?.geometry.status, "missing");
+    assert.equal(record?.definitionStatus, "market_identity_verified_geometry_blocked");
+    assert.ok(record?.riskFlags.includes("independent_market_scope_required"));
+    assert.equal(template?.geometryStatus, "missing");
+    assert.equal(template?.ring.length, 0);
+    assert.ok(!candidateById.has(id));
+  }
+});
+
 test("the Hongkou Yangpu direct batch exposes seven editable low-confidence backbones without inventing adjacent markets", () => {
   const batch = JSON.parse(readFileSync(
     new URL(

@@ -216,6 +216,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "linked-admin-batch",
   }],
+  ["minhang-four-current-town-proxies-2026-07", {
+    expectedSectorCount: 4,
+    districtCounts: {
+      闵行区: 4,
+    },
+    catalogMode: "linked-admin-batch",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -266,6 +273,13 @@ const aliasesBySectorId = new Map([
   ["sector_situan", ["四团镇"]],
   ["sector_qingcun", ["青村镇"]],
   ["sector_zhuanghang", ["庄行镇"]],
+  ["sector_qibao", ["七宝镇"]],
+  ["sector_huacao", ["华漕镇"]],
+  ["sector_meilong", ["梅陇镇"]],
+  ["sector_zhuanqiao", ["颛桥镇"]],
+  ["sector_maqiao", ["马桥镇"]],
+  ["sector_wujing", ["吴泾镇"]],
+  ["sector_pujiangzhen", ["浦江"]],
 ]);
 const sides = [
   ["north", "北"],
