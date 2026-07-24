@@ -3936,6 +3936,81 @@
         "sharedEdgeSnapDistanceMeters": 10.0,
         "protectedSubtractionStage": "post-topology-output-crs"
       }
+    },
+    {
+      "id": "sector_lujiazui",
+      "scopeVersion": "pudong-inner-street-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "12867312"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_yangjing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
+      "id": "sector_yangjing",
+      "scopeVersion": "pudong-inner-street-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "5325929"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_lujiazui",
+          "sector_jinyang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
+      "id": "sector_tangqiao",
+      "scopeVersion": "pudong-inner-street-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "12867313"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_nanmatou"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
+      "id": "sector_jinyang",
+      "scopeVersion": "pudong-inner-street-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14178830"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_yangjing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
+      "id": "sector_nanmatou",
+      "scopeVersion": "pudong-inner-street-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14178760"
+        ],
+        "subtractedSectorIds": [
+          "sector_shangnan"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_tangqiao"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0,
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
     }
   ],
   "subscopes": []

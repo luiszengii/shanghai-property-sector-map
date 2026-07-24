@@ -230,6 +230,7 @@ const batchPolicies = new Map([
     },
     catalogMode: "linked-admin-batch",
   }],
+  ["pudong-inner-five-street-proxies-2026-07", { expectedSectorCount: 5, districtCounts: { 浦东新区: 5 }, catalogMode: "linked-admin-batch" }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -295,6 +296,7 @@ const aliasesBySectorId = new Map([
   ["sector_shuyuan", ["书院镇"]],
   ["sector_wanxiang", ["万祥镇"]],
   ["sector_laogang", ["老港镇"]],
+  ["sector_lujiazui", ["陆家嘴街道"]], ["sector_yangjing", ["洋泾街道"]], ["sector_tangqiao", ["塘桥街道"]], ["sector_jinyang", ["金杨新村街道"]], ["sector_nanmatou", ["南码头路街道"]],
 ]);
 const sides = [
   ["north", "北"],

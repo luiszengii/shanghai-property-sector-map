@@ -6175,5 +6175,286 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
+    },
+    {
+      "id": "sector_lujiazui",
+      "canonicalName": "陆家嘴",
+      "aliases": [
+        "陆家嘴街道"
+      ],
+      "riskFlags": [
+        "mixed_financial_commercial_residential",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场陆家嘴暂以陆家嘴街道作为低置信可编辑行政代理；金融商办和梅园、源深等内部市场语义不得被视为已完成的住宅市场边界。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "adminProxyName": "陆家嘴街道",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_meiyuan",
+        "unresolved_yuanshen"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_yangjing"
+      ],
+      "boundaryEvidenceIds": [
+        "lujiazui-north",
+        "lujiazui-east",
+        "lujiazui-south",
+        "lujiazui-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-inner-street-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-pudong-current-admin-directory-2026",
+          "official-pudong-administrative-map-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_yangjing",
+      "canonicalName": "洋泾",
+      "aliases": [
+        "洋泾街道"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场洋泾暂以洋泾街道作为低置信可编辑行政代理，花木接口保持版本待复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "adminProxyName": "洋泾街道",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_huamu_boundary_version"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_lujiazui",
+        "sector_jinyang"
+      ],
+      "boundaryEvidenceIds": [
+        "yangjing-north",
+        "yangjing-east",
+        "yangjing-south",
+        "yangjing-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-inner-street-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-pudong-current-admin-directory-2026",
+          "official-pudong-administrative-map-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_tangqiao",
+      "canonicalName": "塘桥",
+      "aliases": [
+        "塘桥街道"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场塘桥暂以塘桥街道作为低置信可编辑行政代理；潍坊和花木接口不自动补齐。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "adminProxyName": "塘桥街道",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "unresolved_weifang_boundary_version",
+        "unresolved_huamu_boundary_version"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_nanmatou"
+      ],
+      "boundaryEvidenceIds": [
+        "tangqiao-north",
+        "tangqiao-east",
+        "tangqiao-south",
+        "tangqiao-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-inner-street-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-pudong-current-admin-directory-2026",
+          "official-pudong-administrative-map-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_jinyang",
+      "canonicalName": "金杨",
+      "aliases": [
+        "金杨新村街道"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理；碧云、花木及金桥的独立市场语义不自动并入。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "adminProxyName": "金杨新村街道",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_jinqiao",
+        "unresolved_huamu_boundary_version"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_yangjing"
+      ],
+      "boundaryEvidenceIds": [
+        "jinyang-north",
+        "jinyang-east",
+        "jinyang-south",
+        "jinyang-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-inner-street-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-pudong-current-admin-directory-2026",
+          "official-pudong-administrative-map-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
+    },
+    {
+      "id": "sector_nanmatou",
+      "canonicalName": "南码头",
+      "aliases": [
+        "南码头路街道"
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场南码头暂以南码头路街道作为低置信可编辑行政代理；世博和花木接口保持独立复核。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "adminProxyName": "南码头路街道",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "marketAdminAlignmentUnverified": true,
+      "requiredAdjacencyReviewIds": [
+        "sector_shibo",
+        "unresolved_huamu_boundary_version"
+      ],
+      "linkedTopologySectorIds": [
+        "sector_tangqiao"
+      ],
+      "boundaryEvidenceIds": [
+        "nanmatou-north",
+        "nanmatou-east",
+        "nanmatou-south",
+        "nanmatou-west"
+      ],
+      "geometry": {
+        "status": "draft",
+        "confidence": "low",
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-inner-street-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "verificationSourceIds": [
+          "official-pudong-current-admin-directory-2026",
+          "official-pudong-administrative-map-2026",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
+      }
     }]
 }
