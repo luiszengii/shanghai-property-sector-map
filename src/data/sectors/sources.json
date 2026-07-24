@@ -1220,6 +1220,17 @@
       "note": "确认头桥街道现行四至；结合奉贤区政府挂牌报道的38.4平方公里析出面积，用于拒绝仍含头桥的旧奉城镇开放关系。"
     },
     {
+      "id": "official-jingan-suhewan-2017-functional-scope",
+      "title": "苏河湾地区国民经济和社会发展第十三个五年规划",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/govxxgk/JA0/2017-02-22/33511245-5172-48d2-aa93-1d48e76829c6.html",
+      "sourceType": "official_functional_area_plan",
+      "publishedAt": "2017-02-22",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "分别给出西部不夜城和东部苏河湾功能片区四至；是历史功能口径，不是法定或统一楼市边界。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",

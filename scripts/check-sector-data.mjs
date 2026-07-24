@@ -1747,13 +1747,22 @@ for (const definition of jinganPutuoElevenDefinitions) {
 }
 for (const forbiddenName of [
   "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-  "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
+  "阳城—永和", "阳城", "永和",
   "武宁", "真光", "光新",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
     error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+  }
+}
+for (const id of ["sector_buyecheng", "sector_suhewan"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.includes("official-jingan-suhewan-2017-functional-scope")) {
+    error(`${id}: 历史功能片区只可作为人工起画卡，联合道路段未冻结前不得自动发布市场候选面`);
   }
 }
 const liangwanchengDefinition = candidateDefinitionById.get(
