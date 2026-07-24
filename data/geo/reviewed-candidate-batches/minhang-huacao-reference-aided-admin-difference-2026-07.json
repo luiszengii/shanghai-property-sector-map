@@ -1,0 +1,12 @@
+{
+  "schemaVersion":"1.0.0", "batchId":"minhang-huacao-reference-aided-admin-difference-2026-07", "topologyGroups": [],
+  "sectors":[{
+    "id":"sector_huacao", "canonicalName":"华漕", "districtName":"闵行区", "scopeVersion":"minhang-current-town-admin-proxy-minus-xujing-2026-07", "confidence":"low", "method":"market_admin_candidate_with_shared_topology",
+    "osmAdminRelationId":"14187985", "expectedOsmName":"华漕镇", "adminProxyName":"华漕镇（扣除徐泾候选）", "adminBoundaryVersion":"2022-12-or-later", "insidePoint":[121.2805065,31.2288227],
+    "sharedEdgeSectorIds":["sector_huaxin","sector_jiangqiao","sector_xujing"], "subtractSectorIds":["sector_xujing"], "snapDependencySectorIds":["sector_huaxin","sector_jiangqiao","sector_xujing"], "sharedEdgeSnapDistanceMeters":1,
+    "requiredAdjacencyReviewIds":["unresolved_huacao_residential_core"], "preserveTopologyPrecision":true, "preserveMultiPolygonSemantics":true, "marketAdminAlignmentUnverified":true, "areaRangeSquareKilometers":[25,28],
+    "riskFlags":["admin_proxy_may_be_broader_than_residential_market","reference_aided_difference","market_boundary_not_official"],
+    "definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-minhang-current-admin-units-2026"], "geometryVerificationSourceIds":["official-minhang-current-admin-units-2026","official-tianditu-shanghai-standard-maps-2025","osm-geofabrik-shanghai-260721"],
+    "geometryRule":"市场华漕以现行华漕镇固定 OSM relation 为可编辑低置信骨架，并显式扣除已存在的徐泾候选，避免与参考市场命名的徐泾重复覆盖。该差集只解决当前一级图层拓扑，不证明华漕镇残余即完整住宅市场；华新、江桥接口继续沿锁定共享边复核。"
+  }], "subscopes":[]
+}

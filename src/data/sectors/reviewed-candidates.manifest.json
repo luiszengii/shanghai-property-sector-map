@@ -4003,6 +4003,31 @@
       }
     },
     {
+      "id": "sector_huacao",
+      "scopeVersion": "minhang-current-town-admin-proxy-minus-xujing-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187985"
+        ],
+        "subtractedSectorIds": [
+          "sector_xujing"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_huaxin",
+          "sector_jiangqiao",
+          "sector_xujing"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0,
+        "snapDependencySectorIds": [
+          "sector_huaxin",
+          "sector_jiangqiao",
+          "sector_xujing"
+        ],
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
       "id": "sector_biyun",
       "scopeVersion": "biyun-official-service-scope-four-sides-2026-07",
       "method": "market_four_sides_osm_linear_component",

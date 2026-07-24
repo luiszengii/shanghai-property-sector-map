@@ -5247,33 +5247,25 @@
       "aliases": [
         "华漕镇"
       ],
-      "riskFlags": [
-        "admin_proxy_overlap_exceeds_snap_tolerance",
-        "overlaps_existing_xujing_candidate",
-        "cross_district_hongqiao_cbd_interface",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["admin_proxy_may_be_broader_than_residential_market", "reference_aided_difference", "market_boundary_not_official"],
       "districtNames": [
         "闵行区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场华漕身份与现行华漕镇名称均已核验，但固定华漕镇 relation 与既有徐泾市场候选重叠约1.98平方公里；在保护徐泾后需要超过1.15公里的非局部位移，不能把残余行政面冒充市场代理。保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_reference_aided_admin_difference_candidate",
+      "definitionCandidate": "市场华漕身份与现行华漕镇名称均已核验；以固定华漕镇 relation 为低置信可编辑骨架，并显式扣除既有徐泾候选，避免参考市场命名的一级图层重复覆盖。该差集不等于完整住宅市场。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-minhang-current-admin-units-2026"
       ],
-      "adminProxyName": "华漕镇（待与徐泾重建接口）",
-      "adminBoundaryVersion": "2022-12-or-later-required",
+      "adminProxyName": "华漕镇（扣除徐泾候选）",
+      "adminBoundaryVersion": "2022-12-or-later",
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
-        "sector_hongqiao",
-        "unresolved_hanghua",
-        "unresolved_jinhongqiao"
+        "unresolved_huacao_residential_core"
       ],
-      "legacyOsmAdminRelationId": "14187985",
-      "legacyLockedGeometryAreaKm2": 28.1633,
+      "linkedTopologySectorIds": ["sector_xujing", "sector_huaxin", "sector_jiangqiao"],
       "boundaryEvidenceIds": [
         "huacao-north",
         "huacao-east",
@@ -5281,18 +5273,18 @@
         "huacao-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "xujing-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-minus-xujing-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-minhang-current-admin-units-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定华漕镇 relation 14187985 与既有徐泾候选重叠约1.98平方公里；保护既有面时需要约1.15公里位移，远超10米拓扑容差。禁止发布旧镇面或大幅吸附后的残余面，允许用户在编辑器人工起画。"
+        "note": "固定华漕镇 relation 14187985 扣除徐泾候选后作为可编辑低置信差集骨架；差集仅解决当前图层拓扑，不等于精确住宅市场。"
       }
     },
     {
