@@ -6498,5 +6498,50 @@
         "publicationPolicy": "internal_review",
         "note": "2025年官方公告已调整花木—潍坊新村界线；固定 OSM relation 12867438 仅可作人工起画参考，不能作为已复原的现行或市场候选面发布。"
       }
+    },
+    {
+      "id": "sector_biyun",
+      "canonicalName": "碧云",
+      "aliases": ["碧云国际社区"],
+      "riskFlags": [
+        "official_service_scope_not_market_legal_boundary",
+        "market_boundary_not_official"
+      ],
+      "districtNames": [
+        "浦东新区"
+      ],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "碧云国际社区四至已由2024年官方清单核验：北杨高中路、西云山路、南锦绣东路、东金桥路；但该服务范围与现有金杨行政代理面重叠，不能用粗代理裁切精确核心，保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-shanghai-biyun-international-community-scope-2024"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "sector_jinqiao",
+        "sector_jinyang",
+        "unresolved_lianyang"
+      ],
+      "boundaryEvidenceIds": [
+        "biyun-north",
+        "biyun-west",
+        "biyun-south",
+        "biyun-east"
+      ],
+      "geometry": {
+        "status": "missing",
+        "confidence": "low",
+        "coordinateSystem": "unknown",
+        "coordinateSystemVerified": false,
+        "version": "official-service-area-four-sides-2026-07",
+        "sourceIds": [],
+        "verificationSourceIds": [
+          "official-shanghai-biyun-international-community-scope-2024",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "publicationPolicy": "internal_review",
+        "note": "官方四至可作为人工起画卡；在金杨粗行政代理改为市场精修面前，不发布重叠候选。服务范围也不等于法定或统一楼市边界。"
+      }
     }]
 }

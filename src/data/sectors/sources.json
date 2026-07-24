@@ -161,6 +161,17 @@
       "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江、川沙—祝桥和北蔡—康桥等部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
     },
     {
+      "id": "official-shanghai-biyun-international-community-scope-2024",
+      "title": "2023年上海市高标准保洁区域清单",
+      "publisher": "上海市绿化和市容管理局",
+      "url": "https://lhsr.sh.gov.cn/cmsres/62/62601c43c05746eeaada3ca377658b6c/719f9dcd5ccfc7426dd4989e5bf9d4d2.pdf",
+      "sourceType": "official_service_area_scope",
+      "publishedAt": "2024-01-01",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "清单直接列出碧云国际社区四至：北杨高中路、西云山路、南锦绣东路、东金桥路。它是保洁服务范围而非楼市法定边界，只可生成低置信可编辑候选。"
+    },
+    {
       "id": "official-pudong-current-admin-directory-2026",
       "title": "浦东新区街道、镇现行目录",
       "publisher": "上海市浦东新区人民政府",
