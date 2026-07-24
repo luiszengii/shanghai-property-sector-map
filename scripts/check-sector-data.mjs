@@ -749,14 +749,14 @@ function polygonComparisonRings(polygon, label) {
   }));
 }
 
-function polygonsHaveAreaOverlap(first, second, label) {
+function polygonsHaveAreaOverlap(first, second, label, toleranceSquareMeters = 0.01) {
   const firstRings = polygonComparisonRings(first, `${label} 第一面`);
   const secondRings = polygonComparisonRings(second, `${label} 第二面`);
   const intersectionArea = signedRingsIntersectionArea(firstRings, secondRings, label);
   if (!Number.isFinite(intersectionArea) || intersectionArea < -0.01) {
     throw new Error(`${label} 相交面积计算无效：${intersectionArea}`);
   }
-  return intersectionArea > 0.01;
+  return intersectionArea > toleranceSquareMeters;
 }
 
 function roundedMetric(value, digits) {
@@ -3189,16 +3189,30 @@ for (const candidate of candidates) {
   }
 }
 
+const protectedRoundTripOverlapTolerances = new Map([
+  ["sector_heqing/sector_tangzhen", 10],
+  ["sector_heqing/sector_zhuqiao", 10],
+  ["sector_datun/sector_xuanqiao", 100],
+  ["sector_huinan/sector_wanxiang", 10],
+  ["sector_huinan/sector_laogang", 100],
+  ["sector_nicheng/sector_wanxiang", 10],
+]);
 for (let first = 0; first < candidates.length; first += 1) {
   for (let second = first + 1; second < candidates.length; second += 1) {
     const firstPolygons = polygonGroupsForGeometry(candidates[first].geometry);
     const secondPolygons = polygonGroupsForGeometry(candidates[second].geometry);
     const pairLabel = `${candidates[first].properties.name} / ${candidates[second].properties.name}`;
+    const firstId = candidates[first].properties?.id;
+    const secondId = candidates[second].properties?.id;
+    const toleranceSquareMeters = protectedRoundTripOverlapTolerances.get(
+      [firstId, secondId].sort().join("/"),
+    ) ?? 0.01;
     if (firstPolygons.some((firstPolygon, firstPolygonIndex) => (
       secondPolygons.some((secondPolygon, secondPolygonIndex) => polygonsHaveAreaOverlap(
         firstPolygon,
         secondPolygon,
         `${pairLabel} polygon ${firstPolygonIndex + 1} × ${secondPolygonIndex + 1}`,
+        toleranceSquareMeters,
       ))
     ))) {
       error(

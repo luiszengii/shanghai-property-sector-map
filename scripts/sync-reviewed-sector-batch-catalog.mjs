@@ -223,6 +223,13 @@ const batchPolicies = new Map([
     },
     catalogMode: "linked-admin-batch",
   }],
+  ["pudong-eight-current-town-proxies-2026-07", {
+    expectedSectorCount: 7,
+    districtCounts: {
+      浦东新区: 7,
+    },
+    catalogMode: "linked-admin-batch",
+  }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -280,6 +287,14 @@ const aliasesBySectorId = new Map([
   ["sector_maqiao", ["马桥镇"]],
   ["sector_wujing", ["吴泾镇"]],
   ["sector_pujiangzhen", ["浦江"]],
+  ["sector_gaohang", ["高行镇"]],
+  ["sector_caolu", ["曹路镇"]],
+  ["sector_heqing", ["合庆镇"]],
+  ["sector_datun", ["大团镇"]],
+  ["sector_nicheng", ["泥城镇"]],
+  ["sector_shuyuan", ["书院镇"]],
+  ["sector_wanxiang", ["万祥镇"]],
+  ["sector_laogang", ["老港镇"]],
 ]);
 const sides = [
   ["north", "北"],

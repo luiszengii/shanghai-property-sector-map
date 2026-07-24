@@ -161,6 +161,27 @@
       "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江、川沙—祝桥和北蔡—康桥等部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
     },
     {
+      "id": "official-pudong-current-admin-directory-2026",
+      "title": "浦东新区街道、镇现行目录",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/zwgk_zfxxgkzn_jdz/index.html",
+      "sourceType": "official_admin_register",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "确认浦东新区现行 24 镇、12 街道名称和隶属；只用于身份与行政代理名称核验，不提供楼市板块边界。"
+    },
+    {
+      "id": "official-pudong-administrative-map-2026",
+      "title": "浦东新区行政区划图",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/14559.gkml_qt/2026/103/354309.html",
+      "publishedAt": "2026-04-13",
+      "sourceType": "official_admin_boundary_notice",
+      "licenseStatus": "reference_only",
+      "allowedUse": "visual_comparison_only",
+      "note": "仅人工复核当前镇级邻接与轮廓版本；不从图面提取坐标，也不等同楼市板块边界。"
+    },
+    {
       "id": "official-shanggang-scope-2023",
       "title": "上钢新村街道精品城区专项行动计划（2022—2025）",
       "publisher": "上海市浦东新区人民政府",

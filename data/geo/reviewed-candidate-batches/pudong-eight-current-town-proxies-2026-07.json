@@ -1,0 +1,353 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "pudong-eight-current-town-proxies-2026-07",
+  "topologyGroups": [],
+  "sectors": [
+    {
+      "id": "sector_gaohang",
+      "canonicalName": "高行",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14179185",
+      "expectedOsmName": "高行镇",
+      "adminProxyName": "高行镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.5772043,
+        31.3086035
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_caolu"
+      ],
+      "subtractSectorIds": [
+        "sector_tangzhen",
+        "sector_chuansha",
+        "sector_zhuqiao"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_gaodong_version_review",
+        "unresolved_senlan",
+        "unresolved_waigaoqiao"
+      ],
+      "sharedEdgeSnapDistanceMeters": 10,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        21,
+        25
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_port_industrial_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场高行暂以现行高行镇固定 OSM relation 作为低置信、可编辑行政代理。镇域混有港区、产业和非连续住宅，不能表述为精确卖方高行边界；森兰与外高桥范围继续独立研究。"
+    },
+    {
+      "id": "sector_caolu",
+      "canonicalName": "曹路",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14179174",
+      "expectedOsmName": "曹路镇",
+      "adminProxyName": "曹路镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.6732765,
+        31.2840134
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_gaohang",
+        "sector_heqing"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_gaodong_version_review",
+        "sector_tangzhen"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        43,
+        50
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场曹路暂以现行曹路镇固定 OSM relation 作为低置信、可编辑行政代理。完整镇域含乡村、产业及不同居住片区，不能称为精确市场边界。"
+    },
+    {
+      "id": "sector_heqing",
+      "canonicalName": "合庆",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14179128",
+      "expectedOsmName": "合庆镇",
+      "adminProxyName": "合庆镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.7232735,
+        31.2353523
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_caolu"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "sector_tangzhen",
+        "sector_chuansha",
+        "sector_zhuqiao"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        40,
+        46
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场合庆暂以现行合庆镇固定 OSM relation 作为低置信、可编辑行政代理。完整镇域不是住宅市场的精确外框，唐镇、川沙和祝桥接口须随相邻候选共同复核。"
+    },
+    {
+      "id": "sector_nicheng",
+      "canonicalName": "泥城",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14180408",
+      "expectedOsmName": "泥城镇",
+      "adminProxyName": "泥城镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.8240503,
+        30.9105756
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_wanxiang"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_lingang_main_city",
+        "unresolved_datun_topology",
+        "sector_situan",
+        "sector_haiwan"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        56,
+        63
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "nested_lingang_management_area",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场泥城暂以现行泥城镇固定 OSM relation 作为低置信行政代理。临港新片区管理范围不等于泥城市场范围；与大团、万祥及奉贤海湾、四团的边界必须同源复算。"
+    },
+    {
+      "id": "sector_shuyuan",
+      "canonicalName": "书院",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14180406",
+      "expectedOsmName": "书院镇",
+      "adminProxyName": "书院镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.8716459,
+        30.9577473
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_wanxiang",
+        "sector_laogang"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_lingang_main_city",
+        "sector_huinan"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        51,
+        58
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "nested_lingang_management_area",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场书院暂以现行书院镇固定 OSM relation 作为低置信行政代理。完整镇域包含非连续住宅和临港管理空间，不能称为精确市场边界。"
+    },
+    {
+      "id": "sector_wanxiang",
+      "canonicalName": "万祥",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14180410",
+      "expectedOsmName": "万祥镇",
+      "adminProxyName": "万祥镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.8136371,
+        30.96479
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_nicheng",
+        "sector_shuyuan"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_lingang_main_city",
+        "unresolved_datun_topology",
+        "sector_huinan"
+      ],
+      "sharedEdgeSnapDistanceMeters": 1,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        21,
+        26
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_non_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场万祥暂以现行万祥镇固定 OSM relation 作为低置信行政代理。镇域内的乡村、产业和临港相关空间不得静默写入市场范围。"
+    },
+    {
+      "id": "sector_laogang",
+      "canonicalName": "老港",
+      "districtName": "浦东新区",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "confidence": "low",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmAdminRelationId": "14180412",
+      "expectedOsmName": "老港镇",
+      "adminProxyName": "老港镇",
+      "adminBoundaryVersion": "2026-04-or-later",
+      "insidePoint": [
+        121.8329886,
+        31.0430804
+      ],
+      "sharedEdgeSectorIds": [
+        "sector_shuyuan"
+      ],
+      "subtractSectorIds": [
+        "sector_zhuqiao"
+      ],
+      "requiredAdjacencyReviewIds": [
+        "unresolved_lingang_main_city",
+        "sector_huinan",
+        "sector_zhuqiao"
+      ],
+      "sharedEdgeSnapDistanceMeters": 10,
+      "preserveTopologyPrecision": true,
+      "preserveMultiPolygonSemantics": true,
+      "marketAdminAlignmentUnverified": true,
+      "areaRangeSquareKilometers": [
+        62,
+        70
+      ],
+      "riskFlags": [
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_port_industrial_residential",
+        "market_boundary_not_official"
+      ],
+      "definitionSourceIds": [
+        "seller-lianjia-shanghai-sector-sitemap",
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026"
+      ],
+      "geometryVerificationSourceIds": [
+        "official-pudong-current-admin-directory-2026",
+        "official-pudong-administrative-map-2026",
+        "osm-geofabrik-shanghai-260721"
+      ],
+      "geometryRule": "市场老港暂以现行老港镇固定 OSM relation 作为低置信行政代理。完整镇域并非连续住宅市场，港口及非住宅空间须在后续编辑中独立剔除。"
+    }
+  ]
+}
