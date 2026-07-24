@@ -411,6 +411,11 @@ test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbone
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
     ));
   }
+  for (const unresolvedName of ["镇宁路", "西藏北路", "闸北公园"]) {
+    assert.equal(registryData.sectors.find(
+      (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
+    )?.geometry?.status, "missing");
+  }
 });
 
 test("the Putuo pair preserves five Liangwancheng parts and five Ganquan Yichuan holes", () => {

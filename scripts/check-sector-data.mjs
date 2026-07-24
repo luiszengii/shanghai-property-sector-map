@@ -1755,6 +1755,14 @@ for (const forbiddenName of [
     error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
   }
 }
+for (const unresolvedName of ["镇宁路", "西藏北路", "闸北公园"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`静安市场替代身份只能以 geometry.status=missing 注册 ${unresolvedName}`);
+  }
+}
 for (const id of ["sector_buyecheng", "sector_suhewan"]) {
   const record = registryById.get(id);
   if (candidateById.has(id)
