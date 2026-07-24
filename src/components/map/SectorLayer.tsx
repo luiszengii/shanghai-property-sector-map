@@ -102,6 +102,7 @@ interface SectorOverlay {
   geometryKind: SectorGeometryKind;
   hiddenLegacyDemo: boolean;
   labelMounted: boolean;
+  hoverLeaveTimer: ReturnType<typeof setTimeout> | null;
 }
 
 function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = false) {
@@ -174,6 +175,10 @@ export function SectorLayer({
     const bindOverlayInteractions = (overlay: SectorOverlay) => {
       const { polygon, label, sector } = overlay;
       const highlight = () => {
+        if (overlay.hoverLeaveTimer) {
+          clearTimeout(overlay.hoverLeaveTimer);
+          overlay.hoverLeaveTimer = null;
+        }
         polygon.setOptions({
           fillOpacity: 0.48,
           strokeWeight: 3,
@@ -195,20 +200,23 @@ export function SectorLayer({
         }
       };
       const restore = () => {
-        applyOverlayStyle(
-          overlay,
-          zoomRef.current,
-          selectedSectorIdRef.current === sector.properties.id,
-        );
-        if (labelModeRef.current === "hover" && label && overlay.labelMounted) {
-          map.remove(label);
-          overlay.labelMounted = false;
-        }
+        if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
+        overlay.hoverLeaveTimer = setTimeout(() => {
+          overlay.hoverLeaveTimer = null;
+          applyOverlayStyle(
+            overlay,
+            zoomRef.current,
+            selectedSectorIdRef.current === sector.properties.id,
+          );
+          if (labelModeRef.current === "hover" && label && overlay.labelMounted) {
+            map.remove(label);
+            overlay.labelMounted = false;
+          }
+        }, 90);
       };
       polygon.on("mouseover", highlight);
       polygon.on("mouseout", restore);
       polygon.on("click", () => onSelectRef.current(sector));
-      label?.on("click", () => onSelectRef.current(sector));
     };
 
     const createOverlays = async () => {
@@ -239,6 +247,7 @@ export function SectorLayer({
           position: initialLabelPosition,
           anchor: "center",
           zIndex: 25,
+          clickable: false,
           style: labelStyle("demo"),
         });
 
@@ -254,6 +263,7 @@ export function SectorLayer({
             zoom: zoomRef.current,
             minZoom: labelMinZoomRef.current,
           }),
+          hoverLeaveTimer: null,
         };
         applyOverlayStyle(
           overlay,
@@ -332,6 +342,7 @@ export function SectorLayer({
               geometryKind,
               hiddenLegacyDemo: false,
               labelMounted: false,
+              hoverLeaveTimer: null,
             };
             applyOverlayStyle(
               administrativeOverlay,
@@ -389,6 +400,7 @@ export function SectorLayer({
               ?? sector.properties.center,
             anchor: "center",
             zIndex: 25,
+            clickable: false,
             style: labelStyle("reviewed-market-candidate"),
           });
           const overlay: SectorOverlay = {
@@ -403,6 +415,7 @@ export function SectorLayer({
               zoom: zoomRef.current,
               minZoom: labelMinZoomRef.current,
             }),
+            hoverLeaveTimer: null,
           };
           applyOverlayStyle(
             overlay,
@@ -447,6 +460,7 @@ export function SectorLayer({
             geometryKind: "official-subscope-reference",
             hiddenLegacyDemo: false,
             labelMounted: false,
+            hoverLeaveTimer: null,
           };
           applyOverlayStyle(
             overlay,
@@ -483,7 +497,10 @@ export function SectorLayer({
       researchGeometries.forEach((feature) => {
         setSectorGeometryLoading(feature.properties.id, false);
       });
-      overlays.forEach(({ polygon, label }) => map.remove(label ? [polygon, label] : polygon));
+      overlays.forEach(({ polygon, label, hoverLeaveTimer }) => {
+        if (hoverLeaveTimer) clearTimeout(hoverLeaveTimer);
+        map.remove(label ? [polygon, label] : polygon);
+      });
       overlaysRef.current = [];
       polygonGroupRef.current = null;
     };
