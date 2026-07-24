@@ -156,14 +156,20 @@ export function DetailCard() {
     subscopes,
   } = sectorMetadata!;
   const geometryStatus = sectorRecord?.geometry.status;
+  const isEditorialSeed = sectorCatalog.hasEditorialSeed(sector.properties.id)
+    && !isRuntimeLoading
+    && !isRuntimeFallback;
   const usesAdministrativeReference = geometryStatus === "admin-reference";
   const isAdministrativeReference = usesAdministrativeReference
     && !isRuntimeLoading
     && !isRuntimeFallback;
-  const isReviewedCandidate = geometryStatus !== undefined
-    && ["draft", "reviewed", "published"].includes(geometryStatus)
-    && !isRuntimeLoading
-    && !isRuntimeFallback;
+  const isReviewedCandidate = (
+    isEditorialSeed
+    || (
+      geometryStatus !== undefined
+      && ["draft", "reviewed", "published"].includes(geometryStatus)
+    )
+  ) && !isRuntimeLoading && !isRuntimeFallback;
   const geometrySourceRows: Array<{
     label: string;
     sources: typeof geometrySources;
@@ -185,6 +191,8 @@ export function DetailCard() {
       ? usesAdministrativeReference
         ? "行政参考层转换失败 · 楼市演示面可见"
         : "演示几何 · 候选面转换失败"
+      : isEditorialSeed
+        ? "低置信可编辑覆盖初稿"
       : isReviewedCandidate
         ? "楼市研究候选面"
       : isAdministrativeReference
@@ -198,6 +206,8 @@ export function DetailCard() {
     ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
+    : isEditorialSeed
+      ? "覆盖初稿 · 待按道路、水系和邻接关系逐边精修"
     : sectorRecord?.definitionStatus === "market_scope_candidate"
       ? "身份已裁定 · 待第二来源、东界身份、南界中位线与沿线项目核验"
     : sectorRecord?.reviewStatus === "reviewed-high"
@@ -206,7 +216,9 @@ export function DetailCard() {
         ? "口径待选择"
         : "定义草案 · 暂不发布";
   const baseDescription = sector.properties.description.replace(/演示范围。?$/, "");
-  const description = isReviewedCandidate
+  const description = isEditorialSeed
+    ? `${baseDescription}；当前显示按公开地名与相邻板块位置起画的低置信可编辑初稿，用于先补覆盖，不代表边界已经核验。`
+    : isReviewedCandidate
     ? `${baseDescription}；当前显示按可追溯文字四至与开放地物独立重建的研究候选面。`
     : isAdministrativeReference
       ? `${baseDescription}；当前只显示蓝色虚线${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层，不把旧演示面当作楼市主板块。`

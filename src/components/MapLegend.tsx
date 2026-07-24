@@ -13,7 +13,7 @@ export function MapLegend() {
       <button onClick={() => setOpen((value) => !value)} aria-expanded={open}><span className="legend-dot" />{mode}<ChevronUp size={15} /></button>
       {open && (
         <div className="legend-body">
-          <span><i aria-hidden="true" style={{ borderTop: "3px solid #0f766e", width: 24 }} />青绿实线：楼市研究候选面</span>
+          <span><i aria-hidden="true" style={{ borderTop: "3px solid #0f766e", width: 24 }} />青绿实线：研究候选面 / 可编辑覆盖初稿</span>
           <span><i aria-hidden="true" style={{ borderTop: "2px dashed #d97706", width: 24 }} />橙色虚线：主板块内部子范围</span>
           <span><i aria-hidden="true" style={{ borderTop: "2px dashed #2563eb", width: 24 }} />蓝色虚线：独立行政参考层</span>
           <span><i className="project-swatch" />500–800 万新盘</span>

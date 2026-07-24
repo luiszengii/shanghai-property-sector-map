@@ -21,6 +21,7 @@ interface EditorActiveGeometry {
   kind:
     | "market-demo"
     | "reviewed-market-candidate"
+    | "editorial-seed"
     | "administrative-reference"
     | "official-subscope-reference";
   coordinateSystem: "WGS84" | "GCJ-02-assumed";
@@ -131,6 +132,8 @@ export function buildSectorEditorTemplates(
     const riskReview = formatSectorRiskFlags(record.riskFlags);
     const baseNote = geometryStatus === "missing"
       ? "板块身份与定义已登记，尚未绘制边界；请在地图上人工绘制并逐边核验。"
+      : activeGeometry?.kind === "editorial-seed"
+        ? "从主页当前显示的低置信可编辑覆盖初稿载入；请按道路、水系和相邻板块逐边精修。"
       : activeGeometry?.kind === "administrative-reference"
         ? "从主页当前显示的高精度行政参考面载入；它不是楼市板块定稿，修改后仍需逐边核验。"
         : geometryStatus === "candidate"
