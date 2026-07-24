@@ -1,0 +1,12 @@
+{
+  "schemaVersion":"1.0.0", "batchId":"minhang-wujing-verified-admin-proxy-2026-07", "topologyGroups": [],
+  "sectors":[{
+    "id":"sector_wujing", "canonicalName":"吴泾", "districtName":"闵行区", "scopeVersion":"minhang-current-town-admin-proxy-2026-07", "confidence":"low", "method":"market_admin_candidate_with_shared_topology",
+    "osmAdminRelationId":"14187982", "expectedOsmName":"吴泾镇", "adminProxyName":"吴泾镇", "adminBoundaryVersion":"2022-12-or-later", "insidePoint":[121.459,31.010],
+    "sharedEdgeSectorIds":["sector_huajing","sector_xidu","sector_meilong","sector_zhuanqiao","sector_pujiangzhen"], "snapDependencySectorIds":["sector_huajing","sector_xidu","sector_meilong","sector_zhuanqiao","sector_pujiangzhen"], "sharedEdgeSnapDistanceMeters":1,
+    "requiredAdjacencyReviewIds":["unresolved_laominhang_residential_core"], "preserveTopologyPrecision":true, "preserveMultiPolygonSemantics":true, "marketAdminAlignmentUnverified":true, "areaRangeSquareKilometers":[35,40],
+    "riskFlags":["overwide_admin_proxy","mixed_industrial_residential","market_boundary_not_official"],
+    "definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-minhang-current-admin-units-2026"], "geometryVerificationSourceIds":["official-minhang-current-admin-units-2026","official-tianditu-shanghai-standard-maps-2025","osm-geofabrik-shanghai-260721"],
+    "geometryRule":"市场吴泾暂以现行吴泾镇固定 OSM relation 作为低置信、可编辑行政代理。与华泾、西渡、梅陇、颛桥、浦江镇共享同一锁定快照边；当前与梅陇、颛桥仅有 85–133 平方米的数值级交叠，已在总装中按共享边吸附。镇域含产业、滨江和非连续住宅，不能表述为精确卖方吴泾边界。"
+  }], "subscopes":[]
+}

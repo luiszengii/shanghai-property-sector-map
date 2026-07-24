@@ -3978,6 +3978,31 @@
       }
     },
     {
+      "id": "sector_wujing",
+      "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14187982"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_huajing",
+          "sector_xidu",
+          "sector_meilong",
+          "sector_zhuanqiao",
+          "sector_pujiangzhen"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0,
+        "snapDependencySectorIds": [
+          "sector_huajing",
+          "sector_xidu",
+          "sector_meilong",
+          "sector_zhuanqiao",
+          "sector_pujiangzhen"
+        ]
+      }
+    },
+    {
       "id": "sector_biyun",
       "scopeVersion": "biyun-official-service-scope-four-sides-2026-07",
       "method": "market_four_sides_osm_linear_component",
