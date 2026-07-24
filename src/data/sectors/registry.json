@@ -5534,32 +5534,26 @@
       "aliases": [
         "浦江"
       ],
-      "riskFlags": [
-        "overwide_admin_proxy",
-        "cross_district_existing_candidate_overlap",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["overwide_admin_proxy", "mixed_rural_industrial_residential", "market_boundary_not_official"],
       "districtNames": [
         "闵行区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场浦江镇与现行浦江镇名称一致，但完整镇域同时与既有三林、康桥、周浦、航头和奉贤金汇候选发生跨区交叠；没有项目归属证据时不得用多次差集生成残余面。保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场浦江镇与现行浦江镇名称一致，现以固定 OSM 镇界作为低置信、可编辑行政代理；与三林、康桥、周浦、航头和奉贤金汇共享同一快照边，镇域不等于精确市场范围。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-minhang-current-admin-units-2026"
       ],
-      "adminProxyName": "浦江镇（待跨区接口重建）",
-      "adminBoundaryVersion": "2022-12-or-later-required",
+      "adminProxyName": "浦江镇",
+      "adminBoundaryVersion": "2022-12-or-later",
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
         "sector_hangtou",
-        "sector_xinchang",
         "unresolved_pujiang_residential_core"
       ],
-      "legacyOsmAdminRelationId": "14187979",
-      "legacyLockedGeometryAreaKm2": 78.8526,
+      "linkedTopologySectorIds": ["sector_sanlin", "sector_kangqiao", "sector_zhoupu", "sector_hangtou", "sector_fengxianjinhui"],
       "boundaryEvidenceIds": [
         "pujiangzhen-north",
         "pujiangzhen-east",
@@ -5567,18 +5561,18 @@
         "pujiangzhen-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "cross-district-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-minhang-current-admin-units-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定浦江镇 relation 14187979跨越既有三林、康桥、周浦、航头和奉贤金汇候选。没有经核验的市场成员边界时禁止发布镇域或残余面，允许用户在编辑器人工起画。"
+        "note": "固定浦江镇 relation 14187979 作为低置信可编辑行政骨架，与相邻候选共享锁定快照边；镇域不等于精确住宅市场。"
       }
     },
     {
