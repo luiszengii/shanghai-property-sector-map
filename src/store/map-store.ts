@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import categoriesData from "@/src/data/categories.json";
+import type { SectorLabelMode } from "@/src/lib/sector-label-visibility";
 import type { Category } from "@/src/types/map";
 
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
@@ -22,6 +23,8 @@ interface MapState {
   projectClusterEnabled: boolean;
   projectClusterRadius: number;
   projectDetailMinZoom: number;
+  sectorLabelMode: SectorLabelMode;
+  sectorLabelMinZoom: number;
   zoom: number;
   center: [number, number];
   mobileFiltersOpen: boolean;
@@ -40,6 +43,8 @@ interface MapState {
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
   setProjectDetailMinZoom: (zoom: number) => void;
+  setSectorLabelMode: (mode: SectorLabelMode) => void;
+  setSectorLabelMinZoom: (zoom: number) => void;
   setZoom: (zoom: number) => void;
   setCenter: (center: [number, number]) => void;
   setMobileFiltersOpen: (open: boolean) => void;
@@ -62,6 +67,8 @@ export const useMapStore = create<MapState>()(
       projectClusterEnabled: true,
       projectClusterRadius: 72,
       projectDetailMinZoom: 13.8,
+      sectorLabelMode: "hover",
+      sectorLabelMinZoom: 13,
       zoom: 10.6,
       center: [121.4737, 31.2304],
       mobileFiltersOpen: false,
@@ -85,6 +92,8 @@ export const useMapStore = create<MapState>()(
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
       setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
+      setSectorLabelMode: (mode) => set({ sectorLabelMode: mode }),
+      setSectorLabelMinZoom: (zoom) => set({ sectorLabelMinZoom: zoom }),
       setZoom: (zoom) => set({ zoom }),
       setCenter: (center) => set({ center }),
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
@@ -119,6 +128,8 @@ export const useMapStore = create<MapState>()(
         projectClusterEnabled: state.projectClusterEnabled,
         projectClusterRadius: state.projectClusterRadius,
         projectDetailMinZoom: state.projectDetailMinZoom,
+        sectorLabelMode: state.sectorLabelMode,
+        sectorLabelMinZoom: state.sectorLabelMinZoom,
       }),
     },
   ),

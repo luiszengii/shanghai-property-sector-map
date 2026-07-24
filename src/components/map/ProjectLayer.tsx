@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { projects } from "@/src/content/project-leads";
 import {
   clusterMapPoints,
+  shouldShowProjectLabel,
   zoomToSeparatePoints,
 } from "@/src/lib/project-marker-clustering";
 import type { PropertyProject } from "@/src/types/map";
@@ -93,7 +94,7 @@ export function ProjectLayer({
       const selected = project.id === selectedProjectId;
       const displayName = project.officialName ?? project.name;
       const price = project.averagePrice.toFixed(project.averagePrice % 1 ? 2 : 0).replace(/0$/, "") + "万";
-      const label = zoom >= 11.4
+      const label = shouldShowProjectLabel(zoom, detailMinZoom)
         ? '<span class="project-label"><b>' + escapeHtml(displayName) + "</b><small>" + price + "/㎡</small></span>"
         : "";
       const content = '<button class="project-marker' + (selected ? " is-selected" : "") + '" aria-label="' + escapeHtml(displayName) + '"><span class="project-pin"><i>房</i></span>' + label + "</button>";

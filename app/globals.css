@@ -80,6 +80,14 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .project-settings-body input[type="range"] { width: 100%; accent-color: #f97316; cursor: pointer; }
 .project-settings-body input[type="range"]:disabled { cursor: not-allowed; opacity: .4; }
 .project-settings-body p { margin: 0; color: #9a7b67; font-size: 9px; line-height: 1.45; }
+.sector-display-settings { background: rgba(240,253,250,.7); border-color: rgba(13,148,136,.12); }
+.sector-display-settings summary small { color: #0f766e; }
+.sector-display-settings .project-settings-body { border-color: rgba(13,148,136,.12); }
+.sector-display-settings .project-settings-body output { color: #0f766e; }
+.sector-display-settings .project-settings-body input[type="range"] { accent-color: #0f766e; }
+.sector-label-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 9px; background: rgba(15,118,110,.08); }
+.sector-label-mode button { min-height: 29px; border: 0; border-radius: 7px; color: #64748b; background: transparent; font-size: 10px; cursor: pointer; }
+.sector-label-mode button.is-active { color: #fff; background: #0f766e; box-shadow: 0 3px 9px rgba(15,118,110,.18); }
 .filter-group + .filter-group { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
 .group-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .group-title strong { font-size: 13px; }

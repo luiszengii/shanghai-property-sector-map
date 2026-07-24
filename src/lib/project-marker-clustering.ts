@@ -9,6 +9,10 @@ export interface MapPointCluster<T> {
   center: { x: number; y: number };
 }
 
+export function shouldShowProjectLabel(zoom: number, detailMinZoom: number) {
+  return zoom >= detailMinZoom;
+}
+
 export function zoomToSeparatePoints(
   points: Array<{ x: number; y: number }>,
   radius: number,

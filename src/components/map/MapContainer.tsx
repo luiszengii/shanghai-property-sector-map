@@ -35,6 +35,8 @@ export function MapContainer() {
     projectClusterEnabled,
     projectClusterRadius,
     projectDetailMinZoom,
+    sectorLabelMode,
+    sectorLabelMinZoom,
     focusRequest,
     sectorGeometryFallbacks,
     setZoom,
@@ -289,7 +291,17 @@ export function MapContainer() {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
-          <SectorLayer amapApi={amapApi} map={mapInstance} zoom={zoom} selectedSectorId={selectedSectorId} onSelect={handleSectorSelect} />
+          <SectorLayer
+            amapApi={amapApi}
+            map={mapInstance}
+            zoom={zoom}
+            viewportVersion={viewportVersion}
+            viewportInteracting={viewportInteracting}
+            labelMode={sectorLabelMode}
+            labelMinZoom={sectorLabelMinZoom}
+            selectedSectorId={selectedSectorId}
+            onSelect={handleSectorSelect}
+          />
           <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
           <ProjectLayer
             amapApi={amapApi}

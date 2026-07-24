@@ -2,9 +2,15 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   clusterMapPoints,
+  shouldShowProjectLabel,
   zoomToSeparatePoints,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./project-marker-clustering.ts";
+
+test("does not show project details below the configured zoom", () => {
+  assert.equal(shouldShowProjectLabel(14, 16), false);
+  assert.equal(shouldShowProjectLabel(16, 16), true);
+});
 
 test("groups nearby screen points and keeps distant points separate", () => {
   const clusters = clusterMapPoints([

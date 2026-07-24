@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import type { SectorFeature } from "@/src/types/map";
+import { simplifySectorGeometryForDisplay } from "@/src/lib/sector-display-lod";
+import {
+  shouldMountSectorLabel,
+  type SectorLabelMode,
+} from "@/src/lib/sector-label-visibility";
 import {
   nativeGeometryToDisplayPath,
   wgs84GeometryToDisplayPath,
@@ -73,6 +78,7 @@ function labelStyle(kind: SectorGeometryKind) {
     fontWeight: "700",
     boxShadow: "0 5px 16px rgba(15,23,42,.12)",
     whiteSpace: "nowrap",
+    pointerEvents: "none",
   };
 }
 
@@ -80,6 +86,10 @@ interface SectorLayerProps {
   amapApi: typeof AMap;
   map: AMap.Map;
   zoom: number;
+  viewportVersion: number;
+  viewportInteracting: boolean;
+  labelMode: SectorLabelMode;
+  labelMinZoom: number;
   selectedSectorId: string | null;
   onSelect: (sector: SectorFeature) => void;
 }
@@ -91,6 +101,7 @@ interface SectorOverlay {
   sector: SectorFeature;
   geometryKind: SectorGeometryKind;
   hiddenLegacyDemo: boolean;
+  labelMounted: boolean;
 }
 
 function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = false) {
@@ -114,10 +125,24 @@ function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = fals
   });
 }
 
-export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: SectorLayerProps) {
+export function SectorLayer({
+  amapApi,
+  map,
+  zoom,
+  viewportVersion,
+  viewportInteracting,
+  labelMode,
+  labelMinZoom,
+  selectedSectorId,
+  onSelect,
+}: SectorLayerProps) {
   const overlaysRef = useRef<SectorOverlay[]>([]);
+  const polygonGroupRef = useRef<AMap.OverlayGroup | null>(null);
+  const [overlayVersion, setOverlayVersion] = useState(0);
   const onSelectRef = useRef(onSelect);
   const zoomRef = useRef(zoom);
+  const labelModeRef = useRef(labelMode);
+  const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
   const setSectorGeometryLoading = useMapStore((state) => state.setSectorGeometryLoading);
   const setSectorGeometryFallback = useMapStore((state) => state.setSectorGeometryFallback);
@@ -131,26 +156,55 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
   }, [zoom]);
 
   useEffect(() => {
+    labelModeRef.current = labelMode;
+    labelMinZoomRef.current = labelMinZoom;
+  }, [labelMinZoom, labelMode]);
+
+  useEffect(() => {
     selectedSectorIdRef.current = selectedSectorId;
   }, [selectedSectorId]);
 
   useEffect(() => {
     let cancelled = false;
     const overlays: SectorOverlay[] = [];
+    const polygonGroup = new amapApi.OverlayGroup();
+    polygonGroupRef.current = polygonGroup;
     const settledResearchIds = new Set<string>();
 
     const bindOverlayInteractions = (overlay: SectorOverlay) => {
       const { polygon, label, sector } = overlay;
-      const highlight = () => polygon.setOptions({
-        fillOpacity: 0.48,
-        strokeWeight: 3,
-        strokeColor: strokeColor(overlay.geometryKind),
-      });
-      const restore = () => applyOverlayStyle(
-        overlay,
-        zoomRef.current,
-        selectedSectorIdRef.current === sector.properties.id,
-      );
+      const highlight = () => {
+        polygon.setOptions({
+          fillOpacity: 0.48,
+          strokeWeight: 3,
+          strokeColor: strokeColor(overlay.geometryKind),
+        });
+        if (
+          label
+          && !overlay.labelMounted
+          && shouldMountSectorLabel({
+            mode: labelModeRef.current,
+            zoom: zoomRef.current,
+            minZoom: labelMinZoomRef.current,
+            hovered: true,
+          })
+        ) {
+          label.show();
+          map.add(label);
+          overlay.labelMounted = true;
+        }
+      };
+      const restore = () => {
+        applyOverlayStyle(
+          overlay,
+          zoomRef.current,
+          selectedSectorIdRef.current === sector.properties.id,
+        );
+        if (labelModeRef.current === "hover" && label && overlay.labelMounted) {
+          map.remove(label);
+          overlay.labelMounted = false;
+        }
+      };
       polygon.on("mouseover", highlight);
       polygon.on("mouseout", restore);
       polygon.on("click", () => onSelectRef.current(sector));
@@ -195,6 +249,11 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           sector,
           geometryKind: "demo",
           hiddenLegacyDemo: !sectorCatalog.getReviewedCandidate(sector.properties.id),
+          labelMounted: shouldMountSectorLabel({
+            mode: labelModeRef.current,
+            zoom: zoomRef.current,
+            minZoom: labelMinZoomRef.current,
+          }),
         };
         applyOverlayStyle(
           overlay,
@@ -202,10 +261,11 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           selectedSectorIdRef.current === sector.properties.id,
         );
         bindOverlayInteractions(overlay);
-        map.add([polygon, label]);
+        map.add(overlay.labelMounted ? [polygon, label] : polygon);
         if (overlay.hiddenLegacyDemo) {
           polygon.hide();
-          label.hide();
+          map.remove(label);
+          overlay.labelMounted = false;
         }
         overlays.push(overlay);
       }
@@ -213,7 +273,10 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
 
       const researchPathRequestByKey = new Map(researchGeometries.map((feature) => [
         `${feature.properties.status}:${feature.properties.id}`,
-        wgs84GeometryToDisplayPath(amapApi, feature.geometry),
+        wgs84GeometryToDisplayPath(
+          amapApi,
+          simplifySectorGeometryForDisplay(feature.geometry),
+        ),
       ]));
 
       const displayLabelById = new Map<string, AMap.LngLat>();
@@ -249,6 +312,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           if (reviewedCandidate) {
             marketOverlay.geometryKind = geometryKind;
             marketOverlay.polygon.setPath(path);
+            polygonGroup.addOverlay(marketOverlay.polygon);
             const displayLabel = displayLabelById.get(id);
             if (displayLabel) marketOverlay.label?.setPosition(displayLabel.toArray());
             marketOverlay.label?.setStyle(labelStyle(geometryKind));
@@ -267,6 +331,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
               sector: marketOverlay.sector,
               geometryKind,
               hiddenLegacyDemo: false,
+              labelMounted: false,
             };
             applyOverlayStyle(
               administrativeOverlay,
@@ -275,6 +340,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             );
             bindOverlayInteractions(administrativeOverlay);
             map.add(polygon);
+            polygonGroup.addOverlay(polygon);
             overlays.push(administrativeOverlay);
           }
           settledResearchIds.add(id);
@@ -289,7 +355,6 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           if (!reviewedCandidate) {
             marketOverlay.hiddenLegacyDemo = false;
             marketOverlay.polygon.show();
-            marketOverlay.label?.show();
             applyOverlayStyle(
               marketOverlay,
               zoomRef.current,
@@ -333,6 +398,11 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             sector,
             geometryKind: "reviewed-market-candidate",
             hiddenLegacyDemo: false,
+            labelMounted: shouldMountSectorLabel({
+              mode: labelModeRef.current,
+              zoom: zoomRef.current,
+              minZoom: labelMinZoomRef.current,
+            }),
           };
           applyOverlayStyle(
             overlay,
@@ -340,7 +410,8 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             selectedSectorIdRef.current === id,
           );
           bindOverlayInteractions(overlay);
-          map.add([polygon, label]);
+          map.add(overlay.labelMounted ? [polygon, label] : polygon);
+          polygonGroup.addOverlay(polygon);
           overlays.push(overlay);
           settledResearchIds.add(id);
           setSectorGeometryLoading(id, false);
@@ -361,7 +432,10 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           continue;
         }
         try {
-          const path = await wgs84GeometryToDisplayPath(amapApi, subscope.geometry);
+          const path = await wgs84GeometryToDisplayPath(
+            amapApi,
+            simplifySectorGeometryForDisplay(subscope.geometry),
+          );
           if (cancelled) return;
           const polygon = new amapApi.Polygon();
           polygon.setOptions({ path, cursor: "pointer" });
@@ -372,6 +446,7 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
             sector: parentSector,
             geometryKind: "official-subscope-reference",
             hiddenLegacyDemo: false,
+            labelMounted: false,
           };
           applyOverlayStyle(
             overlay,
@@ -380,11 +455,16 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
           );
           bindOverlayInteractions(overlay);
           map.add(polygon);
+          polygonGroup.addOverlay(polygon);
           overlays.push(overlay);
         } catch (error) {
           if (cancelled) return;
           console.warn(`${subscope.properties.name}子范围坐标转换失败`, error);
         }
+      }
+      if (!cancelled) {
+        overlaysRef.current = overlays;
+        setOverlayVersion((version) => version + 1);
       }
     };
 
@@ -405,23 +485,82 @@ export function SectorLayer({ amapApi, map, zoom, selectedSectorId, onSelect }: 
       });
       overlays.forEach(({ polygon, label }) => map.remove(label ? [polygon, label] : polygon));
       overlaysRef.current = [];
+      polygonGroupRef.current = null;
     };
   }, [amapApi, map, setSectorGeometryFallback, setSectorGeometryLoading]);
 
   useEffect(() => {
-    overlaysRef.current.forEach((overlay) => {
+    const polygonGroup = polygonGroupRef.current;
+    if (!polygonGroup) return;
+    if (viewportInteracting) polygonGroup.hide();
+    else polygonGroup.show();
+  }, [viewportInteracting]);
+
+  useEffect(() => {
+    const labelCellWidth = zoom < 11.5 ? 94 : 82;
+    const labelCellHeight = 38;
+    const mapSize = map.getSize();
+    const occupiedCells = new Set<string>();
+    const orderedOverlays = [...overlaysRef.current].sort((left, right) => {
+      const leftSelected = left.sector.properties.id === selectedSectorId ? 1 : 0;
+      const rightSelected = right.sector.properties.id === selectedSectorId ? 1 : 0;
+      return rightSelected - leftSelected;
+    });
+
+    orderedOverlays.forEach((overlay) => {
       const { label, polygon, sector } = overlay;
       if (overlay.hiddenLegacyDemo) {
         polygon.hide();
-        label?.hide();
+        if (label && overlay.labelMounted) {
+          map.remove(label);
+          overlay.labelMounted = false;
+        }
         return;
       }
       const selected = sector.properties.id === selectedSectorId;
       applyOverlayStyle(overlay, zoom, selected);
-      if (zoom <= 13.2) label?.show();
-      else label?.hide();
+      if (!label) return;
+
+      let shouldShow = shouldMountSectorLabel({
+        mode: labelMode,
+        zoom,
+        minZoom: labelMinZoom,
+      });
+      const position = label.getPosition();
+      if (shouldShow && position) {
+        const pixel = map.lngLatToContainer(position);
+        const x = pixel.getX();
+        const y = pixel.getY();
+        const inViewport = x >= 0
+          && y >= 0
+          && x <= mapSize.getWidth()
+          && y <= mapSize.getHeight();
+        if (!inViewport) {
+          shouldShow = false;
+        } else {
+          const cell = `${Math.floor(x / labelCellWidth)}:${Math.floor(y / labelCellHeight)}`;
+          if (!selected && occupiedCells.has(cell)) shouldShow = false;
+          else occupiedCells.add(cell);
+        }
+      }
+      if (shouldShow === overlay.labelMounted) return;
+      if (shouldShow) {
+        label.show();
+        map.add(label);
+      } else {
+        map.remove(label);
+      }
+      overlay.labelMounted = shouldShow;
     });
-  }, [selectedSectorId, zoom]);
+  }, [
+    labelMinZoom,
+    labelMode,
+    map,
+    overlayVersion,
+    selectedSectorId,
+    viewportVersion,
+    zoom,
+  ]);
 
   return null;
 }

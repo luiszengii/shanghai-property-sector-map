@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Check, Layers3, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import { Building2, Check, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { useId } from "react";
 import categoriesData from "@/src/data/categories.json";
 import { projects } from "@/src/content/project-leads";
@@ -12,17 +12,22 @@ const categories = categoriesData as Category[];
 export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
   const clusterRadiusId = useId();
   const detailZoomId = useId();
+  const sectorLabelZoomId = useId();
   const {
     enabledCategories,
     showProjects,
     projectClusterEnabled,
     projectClusterRadius,
     projectDetailMinZoom,
+    sectorLabelMode,
+    sectorLabelMinZoom,
     toggleCategory,
     toggleProjects,
     setProjectClusterEnabled,
     setProjectClusterRadius,
     setProjectDetailMinZoom,
+    setSectorLabelMode,
+    setSectorLabelMinZoom,
     showAllCategories,
     clearCategories,
     setMobileFiltersOpen,
@@ -44,6 +49,50 @@ export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
       <div className="filter-actions">
         <button onClick={showAllCategories}><Check size={14} /> 显示全部</button>
         <button onClick={clearCategories}><RotateCcw size={14} /> 清空</button>
+      </div>
+      <div className="filter-group sector-label-filter-group">
+        <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>
+        <details className="project-display-settings sector-display-settings">
+          <summary>
+            <MapPinned size={13} />
+            <span>显示设置</span>
+            <small>{sectorLabelMode === "hover" ? "悬停时显示" : `Z ${sectorLabelMinZoom.toFixed(1)} 起显示`}</small>
+          </summary>
+          <div className="project-settings-body">
+            <div className="sector-label-mode" role="group" aria-label="板块名称显示方式">
+              <button
+                type="button"
+                className={sectorLabelMode === "hover" ? "is-active" : ""}
+                onClick={() => setSectorLabelMode("hover")}
+                aria-pressed={sectorLabelMode === "hover"}
+              >
+                悬停显示
+              </button>
+              <button
+                type="button"
+                className={sectorLabelMode === "zoom" ? "is-active" : ""}
+                onClick={() => setSectorLabelMode("zoom")}
+                aria-pressed={sectorLabelMode === "zoom"}
+              >
+                按 Zoom 显示
+              </button>
+            </div>
+            <label htmlFor={sectorLabelZoomId}>
+              <span>开始显示级别 <output>Z {sectorLabelMinZoom.toFixed(1)}</output></span>
+              <input
+                id={sectorLabelZoomId}
+                type="range"
+                min="10"
+                max="16"
+                step="0.2"
+                value={sectorLabelMinZoom}
+                disabled={sectorLabelMode !== "zoom"}
+                onChange={(event) => setSectorLabelMinZoom(Number(event.target.value))}
+              />
+            </label>
+            <p>悬停模式性能最好；按 Zoom 显示时会自动隐藏相互重叠的名称。</p>
+          </div>
+        </details>
       </div>
       <div className="filter-group project-filter-group">
         <div className="group-title"><strong>新房项目</strong><span>{projects.length} 个项目</span></div>
