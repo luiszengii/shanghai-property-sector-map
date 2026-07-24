@@ -2082,11 +2082,12 @@ for (const [firstId, secondId, minimumSharedMeters] of [
     error(`${firstId} / ${secondId}: 宝山—杨浦跨区行政骨架共享边不足 ${minimumSharedMeters} 米`);
   }
 }
-for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === forbiddenName,
-  )) {
-    error(`宝山直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+for (const unresolvedName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`宝山复杂市场只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 

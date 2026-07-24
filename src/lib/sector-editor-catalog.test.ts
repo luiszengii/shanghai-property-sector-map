@@ -589,10 +589,10 @@ test("the Baoshan direct batch exposes eight editable low-confidence backbones w
       ?.linkedTopologySectorIds,
     ["sector_zhangmiao", "sector_yanghang", "sector_luodian"],
   );
-  for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) {
-    assert.ok(!registryData.sectors.some(
-      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
-    ));
+  for (const unresolvedName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+    assert.equal(registryData.sectors.find(
+      (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
+    )?.geometry?.status, "missing");
   }
 });
 
