@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { useMemo } from "react";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
@@ -11,8 +12,10 @@ import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
 const places = placesData as Place[];
-const sectors = sectorCatalog.features;
 const categories = categoriesData as Category[];
+const placeById = new Map(places.map((place) => [place.id, place]));
+const projectById = new Map(projects.map((project) => [project.id, project]));
+const categoryById = new Map(categories.map((category) => [category.id, category]));
 const boundarySideLabels: Record<SectorBoundarySide, string> = { north: "北", east: "东", south: "南", west: "西" };
 const evidenceStatusLabels: Record<SectorBoundaryStatus, string> = {
   definition_confirmed: "已确认",
@@ -37,22 +40,43 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
-  const {
-    selectedSectorId,
-    selectedPlaceId,
-    selectedProjectId,
-    zoom,
-    projectDetailMinZoom,
-    center,
-    closeDetail,
-    requestFocus,
-    selectSector,
-    sectorGeometryLoading,
-    sectorGeometryFallbacks,
-  } = useMapStore();
-  const place = places.find((item) => item.id === selectedPlaceId);
-  const project = projects.find((item) => item.id === selectedProjectId);
-  const sector = sectors.find((item) => item.properties.id === selectedSectorId);
+  const selectedSectorId = useMapStore((state) => state.selectedSectorId);
+  const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
+  const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const zoom = useMapStore((state) => state.zoom);
+  const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
+  const center = useMapStore((state) => state.center);
+  const closeDetail = useMapStore((state) => state.closeDetail);
+  const requestFocus = useMapStore((state) => state.requestFocus);
+  const selectSector = useMapStore((state) => state.selectSector);
+  const isRuntimeLoading = useMapStore((state) => (
+    selectedSectorId
+      ? Boolean(state.sectorGeometryLoading[selectedSectorId])
+      : false
+  ));
+  const isRuntimeFallback = useMapStore((state) => (
+    selectedSectorId
+      ? Boolean(state.sectorGeometryFallbacks[selectedSectorId])
+      : false
+  ));
+  const place = selectedPlaceId ? placeById.get(selectedPlaceId) : undefined;
+  const project = selectedProjectId ? projectById.get(selectedProjectId) : undefined;
+  const sector = selectedSectorId
+    ? sectorCatalog.getFeature(selectedSectorId)
+    : undefined;
+  const sectorMetadata = useMemo(() => {
+    if (!sector) return null;
+    const id = sector.properties.id;
+    return {
+      sectorRecord: sectorCatalog.getRecord(id),
+      definitionSources: sectorCatalog.getSources(id),
+      geometrySources: sectorCatalog.getGeometrySources(id),
+      geometryVerificationSources: sectorCatalog.getGeometryVerificationSources(id),
+      boundaryEvidence: sectorCatalog.getBoundaryEvidence(id),
+      referenceCheck: sectorCatalog.getReferenceCheck(id),
+      subscopes: sectorCatalog.getSubscopesForSector(id),
+    };
+  }, [sector]);
 
   if (!place && !project && !sector) return null;
 
@@ -90,11 +114,11 @@ export function DetailCard() {
   }
 
   if (place) {
-    const category = categories.find((item) => item.id === place.category);
+    const category = categoryById.get(place.category);
     const activeGeometry = sector
-      ? sectorCatalog.resolveActiveGeometry(
+      ? sectorCatalog.resolveActiveLocation(
         sector.properties.id,
-        Boolean(sectorGeometryFallbacks[sector.properties.id]),
+        isRuntimeFallback,
       )
       : undefined;
     const origin = activeGeometry
@@ -121,15 +145,15 @@ export function DetailCard() {
   }
 
   if (!sector) return null;
-  const sectorRecord = sectorCatalog.getRecord(sector.properties.id);
-  const definitionSources = sectorCatalog.getSources(sector.properties.id);
-  const geometrySources = sectorCatalog.getGeometrySources(sector.properties.id);
-  const geometryVerificationSources = sectorCatalog.getGeometryVerificationSources(sector.properties.id);
-  const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
-  const referenceCheck = sectorCatalog.getReferenceCheck(sector.properties.id);
-  const subscopes = sectorCatalog.getSubscopesForSector(sector.properties.id);
-  const isRuntimeLoading = Boolean(sectorGeometryLoading[sector.properties.id]);
-  const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
+  const {
+    sectorRecord,
+    definitionSources,
+    geometrySources,
+    geometryVerificationSources,
+    boundaryEvidence,
+    referenceCheck,
+    subscopes,
+  } = sectorMetadata!;
   const geometryStatus = sectorRecord?.geometry.status;
   const usesAdministrativeReference = geometryStatus === "admin-reference";
   const isAdministrativeReference = usesAdministrativeReference

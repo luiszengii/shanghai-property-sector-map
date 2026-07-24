@@ -9,7 +9,7 @@ interface ReviewedCandidateEntry {
     id: string;
     labelPoint: [number, number];
   };
-  geometry: SectorGeometry;
+  geometry?: SectorGeometry;
 }
 
 export function buildCandidateOnlySectorFeatures(
@@ -36,7 +36,10 @@ export function buildCandidateOnlySectorFeatures(
         isMock: false,
         center: candidate.properties.labelPoint,
       },
-      geometry: candidate.geometry,
+      geometry: candidate.geometry ?? {
+        type: "Polygon",
+        coordinates: [],
+      },
     }];
   });
 }

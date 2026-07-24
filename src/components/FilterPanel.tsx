@@ -1,42 +1,49 @@
 "use client";
 
 import { Building2, Check, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
-import { useId } from "react";
+import { memo, useId } from "react";
 import categoriesData from "@/src/data/categories.json";
 import { projects } from "@/src/content/project-leads";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category } from "@/src/types/map";
 
 const categories = categoriesData as Category[];
+const groups = [
+  { id: "benefit", label: "有利配套", helper: "生活与通勤资源" },
+  { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
+] as const;
+const categoriesByGroup = new Map(
+  groups.map((group) => [
+    group.id,
+    categories.filter((category) => category.group === group.id),
+  ]),
+);
 
-export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
+export const FilterPanel = memo(function FilterPanel({
+  mobile = false,
+}: {
+  mobile?: boolean;
+}) {
   const clusterRadiusId = useId();
   const detailZoomId = useId();
   const sectorLabelZoomId = useId();
-  const {
-    enabledCategories,
-    showProjects,
-    projectClusterEnabled,
-    projectClusterRadius,
-    projectDetailMinZoom,
-    sectorLabelMode,
-    sectorLabelMinZoom,
-    toggleCategory,
-    toggleProjects,
-    setProjectClusterEnabled,
-    setProjectClusterRadius,
-    setProjectDetailMinZoom,
-    setSectorLabelMode,
-    setSectorLabelMinZoom,
-    showAllCategories,
-    clearCategories,
-    setMobileFiltersOpen,
-  } = useMapStore();
-  const groups = [
-    { id: "benefit", label: "有利配套", helper: "生活与通勤资源" },
-    { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
-  ] as const;
-
+  const enabledCategories = useMapStore((state) => state.enabledCategories);
+  const showProjects = useMapStore((state) => state.showProjects);
+  const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
+  const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
+  const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
+  const sectorLabelMode = useMapStore((state) => state.sectorLabelMode);
+  const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
+  const toggleCategory = useMapStore((state) => state.toggleCategory);
+  const toggleProjects = useMapStore((state) => state.toggleProjects);
+  const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
+  const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
+  const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
+  const setSectorLabelMode = useMapStore((state) => state.setSectorLabelMode);
+  const setSectorLabelMinZoom = useMapStore((state) => state.setSectorLabelMinZoom);
+  const showAllCategories = useMapStore((state) => state.showAllCategories);
+  const clearCategories = useMapStore((state) => state.clearCategories);
+  const setMobileFiltersOpen = useMapStore((state) => state.setMobileFiltersOpen);
   return (
     <section className={`filter-panel glass-panel ${mobile ? "is-mobile" : ""}`} aria-label="设施图层筛选">
       <div className="panel-heading">
@@ -150,7 +157,7 @@ export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
         <div className="filter-group" key={group.id}>
           <div className="group-title"><strong>{group.label}</strong><span>{group.helper}</span></div>
           <div className="filter-list">
-            {categories.filter((item) => item.group === group.id).map((category) => {
+            {(categoriesByGroup.get(group.id) ?? []).map((category) => {
               const checked = enabledCategories.includes(category.id);
               return (
                 <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
@@ -166,4 +173,4 @@ export function FilterPanel({ mobile = false }: { mobile?: boolean }) {
       <p className="panel-footnote">46 个新盘点位已逐项核对并固定；优劣势、教育及价格仍为用户提供的待核验观点，不构成购房建议。</p>
     </section>
   );
-}
+});

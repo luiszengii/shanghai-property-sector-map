@@ -19,8 +19,15 @@ interface PlaceLayerProps {
   onSelect: (place: Place) => void;
 }
 
+function placeMarkerContent(place: Place, selected: boolean) {
+  const category = categoryById[place.category];
+  return `<button class="place-marker${selected ? " is-selected" : ""}" style="--marker-color:${category.color}" aria-label="${place.name}"><span>${category.icon}</span></button>`;
+}
+
 export function PlaceLayer({ amapApi, map, zoom, enabledCategories, viewportVersion, selectedPlaceId, onSelect }: PlaceLayerProps) {
-  const markersRef = useRef<AMap.Marker[]>([]);
+  const markerByPlaceIdRef = useRef(new Map<string, AMap.Marker>());
+  const mountedPlaceIdsRef = useRef(new Set<string>());
+  const selectedPlaceIdRef = useRef(selectedPlaceId);
   const onSelectRef = useRef(onSelect);
 
   useEffect(() => {
@@ -28,35 +35,70 @@ export function PlaceLayer({ amapApi, map, zoom, enabledCategories, viewportVers
   }, [onSelect]);
 
   useEffect(() => {
-    markersRef.current.forEach((marker) => map.remove(marker));
-    markersRef.current = [];
-    if (zoom < 11.7) return;
+    const previousId = selectedPlaceIdRef.current;
+    selectedPlaceIdRef.current = selectedPlaceId;
+    for (const id of [previousId, selectedPlaceId]) {
+      if (!id) continue;
+      const marker = markerByPlaceIdRef.current.get(id);
+      const place = places.find((item) => item.id === id);
+      if (!marker || !place) continue;
+      const selected = id === selectedPlaceId;
+      marker.setContent(placeMarkerContent(place, selected));
+      marker.setzIndex(selected ? 160 : 120);
+    }
+  }, [selectedPlaceId]);
 
-    const bounds = map.getBounds();
-    const markers = places
+  useEffect(() => {
+    const markerByPlaceId = markerByPlaceIdRef.current;
+    const mountedPlaceIds = mountedPlaceIdsRef.current;
+    return () => {
+      const mountedMarkers = [...mountedPlaceIds]
+        .map((id) => markerByPlaceId.get(id))
+        .filter((marker): marker is AMap.Marker => Boolean(marker));
+      if (mountedMarkers.length) map.remove(mountedMarkers);
+      mountedPlaceIds.clear();
+      markerByPlaceId.clear();
+    };
+  }, [map]);
+
+  useEffect(() => {
+    const markerByPlaceId = markerByPlaceIdRef.current;
+    const mountedPlaceIds = mountedPlaceIdsRef.current;
+    const wantedPlaceIds = new Set<string>();
+
+    const bounds = zoom >= 11.7 ? map.getBounds() : null;
+    const visiblePlaces = zoom < 11.7 ? [] : places
       .filter((place) => enabledCategories.includes(place.category))
-      .filter((place) => !bounds || bounds.contains([place.longitude, place.latitude]))
-      .map((place) => {
-        const category = categoryById[place.category];
-        const selected = place.id === selectedPlaceId;
-        const content = `<button class="place-marker${selected ? " is-selected" : ""}" style="--marker-color:${category.color}" aria-label="${place.name}"><span>${category.icon}</span></button>`;
-        const marker = new amapApi.Marker({
+      .filter((place) => !bounds || bounds.contains([place.longitude, place.latitude]));
+
+    for (const place of visiblePlaces) {
+      wantedPlaceIds.add(place.id);
+      let marker = markerByPlaceId.get(place.id);
+      if (!marker) {
+        const selected = place.id === selectedPlaceIdRef.current;
+        marker = new amapApi.Marker({
           position: [place.longitude, place.latitude],
-          content,
+          content: placeMarkerContent(place, selected),
           anchor: "center",
           zIndex: selected ? 160 : 120,
           offset: new amapApi.Pixel(0, 0),
         });
         marker.on("click", () => onSelectRef.current(place));
+        markerByPlaceId.set(place.id, marker);
+      }
+      if (!mountedPlaceIds.has(place.id)) {
         map.add(marker);
-        return marker;
-      });
-    markersRef.current = markers;
+        mountedPlaceIds.add(place.id);
+      }
+    }
 
-    return () => {
-      markers.forEach((marker) => map.remove(marker));
-    };
-  }, [amapApi, enabledCategories, map, selectedPlaceId, viewportVersion, zoom]);
+    for (const id of [...mountedPlaceIds]) {
+      if (wantedPlaceIds.has(id)) continue;
+      const marker = markerByPlaceId.get(id);
+      if (marker) map.remove(marker);
+      mountedPlaceIds.delete(id);
+    }
+  }, [amapApi, enabledCategories, map, viewportVersion, zoom]);
 
   return null;
 }

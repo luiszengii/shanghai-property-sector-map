@@ -1,13 +1,11 @@
 import boundaryEvidenceData from "@/src/data/sectors/boundary-evidence.json";
-import adminReferencesData from "@/src/data/sectors/admin-references.wgs84.json";
+import candidateIndexData from "@/src/data/sectors/reviewed-candidates.index.json";
 import referenceChecksData from "@/src/data/sectors/reference-checks.json";
 import registryData from "@/src/data/sectors/registry.json";
-import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84.json";
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
 import { buildCandidateOnlySectorFeatures } from "@/src/lib/sector-catalog-features";
-import { selectPreferredEditorGeometry } from "@/src/lib/sector-editor-catalog";
 import type {
   SectorBoundaryEvidence,
   SectorCollection,
@@ -40,10 +38,9 @@ export interface SectorSubscopeFeature {
   geometry: SectorGeometry;
 }
 
-export interface SectorActiveGeometry {
+export interface SectorActiveLocation {
   kind: "market-demo" | "reviewed-market-candidate" | "administrative-reference";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
-  geometry: SectorGeometry;
   center: [number, number];
 }
 
@@ -52,9 +49,13 @@ const registry = registryData.sectors as SectorRegistryEntry[];
 const sources = sourcesData.sources as SectorSourceRecord[];
 const boundaryEvidence = boundaryEvidenceData.edges as SectorBoundaryEvidence[];
 const referenceChecks = referenceChecksData.checks as SectorReferenceCheck[];
-const reviewedCandidates = reviewedCandidatesData.features as unknown as SectorResearchGeometryFeature[];
+const reviewedCandidateIndex = candidateIndexData.features.map((feature) => ({
+  properties: {
+    ...feature,
+    labelPoint: feature.labelPoint as [number, number],
+  },
+}));
 const subscopes = subscopesData.features as unknown as SectorSubscopeFeature[];
-const administrativeReferences = adminReferencesData.features as unknown as SectorResearchGeometryFeature[];
 
 const legacyFeatureById = new Map(
   legacyFeatures.map((feature) => [feature.properties.id, feature]),
@@ -62,21 +63,33 @@ const legacyFeatureById = new Map(
 const recordById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const referenceCheckById = new Map(referenceChecks.map((check) => [check.sectorId, check]));
+const boundaryEvidenceBySectorId = new Map<string, SectorBoundaryEvidence[]>();
+for (const edge of boundaryEvidence) {
+  boundaryEvidenceBySectorId.set(edge.sectorId, [
+    ...(boundaryEvidenceBySectorId.get(edge.sectorId) ?? []),
+    edge,
+  ]);
+}
+const subscopesBySectorId = new Map<string, SectorSubscopeFeature[]>();
+for (const feature of subscopes) {
+  const parentId = feature.properties.parentSectorId;
+  subscopesBySectorId.set(parentId, [
+    ...(subscopesBySectorId.get(parentId) ?? []),
+    feature,
+  ]);
+}
 const marketDemoSources = [sourceById.get("internal-legacy-demo-v1")]
   .filter((source): source is SectorSourceRecord => Boolean(source));
 const reviewedCandidateById = new Map(
-  reviewedCandidates.map((feature) => [feature.properties.id, feature]),
+  reviewedCandidateIndex.map((feature) => [feature.properties.id, feature]),
 );
 const candidateOnlyFeatures = buildCandidateOnlySectorFeatures(
   legacyFeatures,
   registry,
-  reviewedCandidates,
+  reviewedCandidateIndex,
 );
 const features = [...legacyFeatures, ...candidateOnlyFeatures];
 const featureById = new Map(features.map((feature) => [feature.properties.id, feature]));
-const administrativeReferenceById = new Map(
-  administrativeReferences.map((feature) => [feature.properties.id, feature]),
-);
 const researchGeometryRecords = registry.filter(
   (record) => record.geometry.status !== "demo" && record.geometry.status !== "missing",
 );
@@ -130,7 +143,7 @@ function getGeometryVerificationSourcesForSector(id: string) {
 }
 
 function getBoundaryEvidenceForSector(id: string) {
-  return boundaryEvidence.filter((edge) => edge.sectorId === id);
+  return boundaryEvidenceBySectorId.get(id) ?? [];
 }
 
 function getMatchedAlias(id: string, query: string) {
@@ -140,7 +153,7 @@ function getMatchedAlias(id: string, query: string) {
   return record.aliases.find((alias) => normalizeSearchTerm(alias).includes(needle));
 }
 
-function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActiveGeometry | undefined {
+function resolveActiveLocation(id: string, fallbackToDemo = false): SectorActiveLocation | undefined {
   const feature = featureById.get(id);
   if (!feature) return undefined;
   const reviewedCandidate = reviewedCandidateById.get(id);
@@ -149,7 +162,6 @@ function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActive
     return {
       kind: "reviewed-market-candidate",
       coordinateSystem: "WGS84",
-      geometry: reviewedCandidate.geometry,
       center: reviewedCandidate.properties.labelPoint,
     };
   }
@@ -159,41 +171,8 @@ function resolveActiveGeometry(id: string, fallbackToDemo = false): SectorActive
   return {
     kind: "market-demo",
     coordinateSystem: "GCJ-02-assumed",
-    geometry: legacyFeature.geometry,
     center: legacyFeature.properties.center,
   };
-}
-
-function resolveEditorGeometry(id: string): SectorActiveGeometry | undefined {
-  const feature = featureById.get(id);
-  const reviewedCandidate = reviewedCandidateById.get(id);
-  const administrativeReference = administrativeReferenceById.get(id);
-  return selectPreferredEditorGeometry({
-    reviewedCandidate: reviewedCandidate
-      ? {
-        kind: "reviewed-market-candidate" as const,
-        coordinateSystem: "WGS84" as const,
-        geometry: reviewedCandidate.geometry,
-        center: reviewedCandidate.properties.labelPoint,
-      }
-      : undefined,
-    administrativeReference: administrativeReference
-      ? {
-        kind: "administrative-reference" as const,
-        coordinateSystem: "WGS84" as const,
-        geometry: administrativeReference.geometry,
-        center: administrativeReference.properties.labelPoint,
-      }
-      : undefined,
-    legacyDemo: feature
-      ? {
-        kind: "market-demo" as const,
-        coordinateSystem: "GCJ-02-assumed" as const,
-        geometry: feature.geometry,
-        center: feature.properties.center,
-      }
-      : undefined,
-  });
 }
 
 export const sectorCatalog = {
@@ -201,9 +180,7 @@ export const sectorCatalog = {
   legacyFeatures,
   candidateOnlyFeatures,
   registry,
-  reviewedCandidates,
   subscopes,
-  administrativeReferences,
   researchGeometryRecords,
   candidateGeometryRecords,
   administrativeReferenceRecords,
@@ -214,12 +191,10 @@ export const sectorCatalog = {
   getFeature: (id: string) => featureById.get(id),
   hasLegacyFeature: (id: string) => legacyFeatureById.has(id),
   getRecord: (id: string) => recordById.get(id),
-  resolveActiveGeometry,
-  resolveEditorGeometry,
-  getReviewedCandidate: (id: string) => reviewedCandidateById.get(id),
-  getAdministrativeReference: (id: string) => administrativeReferenceById.get(id),
+  resolveActiveLocation,
+  getReviewedCandidateIndex: (id: string) => reviewedCandidateById.get(id),
   getSubscopesForSector: (id: string) => (
-    subscopes.filter((feature) => feature.properties.parentSectorId === id)
+    subscopesBySectorId.get(id) ?? []
   ),
   hasResearchGeometry: (id: string) => {
     const status = recordById.get(id)?.geometry.status;

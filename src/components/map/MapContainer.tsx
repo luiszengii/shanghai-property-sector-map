@@ -25,27 +25,25 @@ export function MapContainer() {
   const [errorMessage, setErrorMessage] = useState("");
   const [viewportVersion, setViewportVersion] = useState(0);
   const [viewportInteracting, setViewportInteracting] = useState(false);
-  const {
-    zoom,
-    enabledCategories,
-    selectedSectorId,
-    selectedPlaceId,
-    selectedProjectId,
-    showProjects,
-    projectClusterEnabled,
-    projectClusterRadius,
-    projectDetailMinZoom,
-    sectorLabelMode,
-    sectorLabelMinZoom,
-    focusRequest,
-    sectorGeometryFallbacks,
-    setZoom,
-    setCenter,
-    selectSector,
-    selectPlace,
-    selectProject,
-    requestFocus,
-  } = useMapStore();
+  const zoom = useMapStore((state) => state.zoom);
+  const enabledCategories = useMapStore((state) => state.enabledCategories);
+  const selectedSectorId = useMapStore((state) => state.selectedSectorId);
+  const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
+  const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const showProjects = useMapStore((state) => state.showProjects);
+  const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
+  const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
+  const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
+  const sectorLabelMode = useMapStore((state) => state.sectorLabelMode);
+  const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
+  const focusRequest = useMapStore((state) => state.focusRequest);
+  const sectorGeometryFallbacks = useMapStore((state) => state.sectorGeometryFallbacks);
+  const setZoom = useMapStore((state) => state.setZoom);
+  const setCenter = useMapStore((state) => state.setCenter);
+  const selectSector = useMapStore((state) => state.selectSector);
+  const selectPlace = useMapStore((state) => state.selectPlace);
+  const selectProject = useMapStore((state) => state.selectProject);
+  const requestFocus = useMapStore((state) => state.requestFocus);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_AMAP_KEY;
@@ -74,6 +72,7 @@ export function MapContainer() {
           touchZoom: true,
           touchZoomCenter: 0,
         });
+        const appShell = containerRef.current.closest(".app-shell");
 
         let wheelFrame: number | null = null;
         let wheelDelta = 0;
@@ -120,7 +119,6 @@ export function MapContainer() {
         const handlePinchWheel = (event: WheelEvent) => {
           if (!event.ctrlKey) return;
           const eventTarget = event.target;
-          const appShell = document.querySelector(".app-shell");
           if (!(eventTarget instanceof Node) || !appShell?.contains(eventTarget)) return;
           event.preventDefault();
           event.stopPropagation();
@@ -192,7 +190,7 @@ export function MapContainer() {
     const map = mapRef.current;
     if (!map || !focusRequest) return;
     if (focusRequest.type === "sector") {
-      const activeGeometry = sectorCatalog.resolveActiveGeometry(
+      const activeGeometry = sectorCatalog.resolveActiveLocation(
         focusRequest.id,
         Boolean(sectorGeometryFallbacks[focusRequest.id]),
       );

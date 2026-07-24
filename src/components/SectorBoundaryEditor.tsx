@@ -18,6 +18,11 @@ import {
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
+import {
+  resolveLoadedActiveGeometry,
+  resolveLoadedEditorGeometry,
+  sectorGeometryCatalog,
+} from "@/src/data/sector-geometry-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import {
   buildSectorEditorTemplates,
@@ -32,6 +37,7 @@ import {
   draftHoles,
   draftParts,
   findDirtyLinkedTopologyGroups,
+  fingerprintDraftParts,
   formatSectorDraftFilename,
   isCompleteSectorDraft,
   normalizeAmapPolygonGeometry,
@@ -49,6 +55,11 @@ import styles from "./SectorBoundaryEditor.module.css";
 
 type LoadStatus = "loading" | "ready" | "missing-key" | "error";
 type Notice = { tone: "neutral" | "success" | "warning"; message: string };
+interface ReferencePolygonEntry {
+  polygon: AMap.Polygon;
+  signature: string;
+  clickHandler: () => void;
+}
 
 interface MouseToolDrawEvent {
   obj: AMap.Polygon;
@@ -67,12 +78,12 @@ type SidebarSectorItem =
 
 const primarySectorTemplates = buildSectorEditorTemplates(
   sectorCatalog.registry,
-  sectorCatalog.resolveEditorGeometry,
+  resolveLoadedEditorGeometry,
   coordinateToDisplayPosition,
-  (id) => sectorCatalog.resolveActiveGeometry(id, true),
+  (id) => resolveLoadedActiveGeometry(id, true),
 );
 const subscopeTemplates = buildSubscopeEditorTemplates(
-  sectorCatalog.subscopes,
+  sectorGeometryCatalog.subscopes,
   sectorCatalog.getRecord,
   coordinateToDisplayPosition,
 );
@@ -147,7 +158,7 @@ export function SectorBoundaryEditor() {
   const activePolygonRef = useRef<AMap.Polygon | null>(null);
   const polygonEditorRef = useRef<AMap.PolygonEditor | null>(null);
   const mouseToolRef = useRef<AMap.MouseTool | null>(null);
-  const referencePolygonsRef = useRef<AMap.Polygon[]>([]);
+  const referencePolygonsRef = useRef(new Map<string, ReferencePolygonEntry>());
   const draftsRef = useRef<SectorBoundaryDraft[]>([]);
   const activeIdRef = useRef<string | null>(null);
   const [status, setStatus] = useState<LoadStatus>(() => (
@@ -222,7 +233,9 @@ export function SectorBoundaryEditor() {
   const inactiveGeometrySignature = useMemo(
     () => drafts
       .filter((draft) => !draft.archived && draft.id !== activeId)
-      .map((draft) => `${draft.id}:${JSON.stringify(draftFingerprintRings(draft))}`)
+      .map((draft) => (
+        `${draft.id}:${fingerprintDraftParts(draftFingerprintRings(draft))}`
+      ))
       .join("|"),
     [activeId, drafts],
   );
@@ -466,20 +479,61 @@ export function SectorBoundaryEditor() {
     const map = mapRef.current;
     const api = amapApiRef.current;
     if (status !== "ready" || !map || !api) return;
-    if (referencePolygonsRef.current.length) {
-      map.remove(referencePolygonsRef.current);
-    }
+    const desiredReferences = new Map<string, {
+      signature: string;
+      path: AMap.PolygonOptions["path"];
+      kind: "editable" | "source";
+      clickHandler: () => void;
+    }>();
 
-    const editableReferences = draftsRef.current
+    draftsRef.current
       .filter(
         (draft) => !draft.archived
           && draft.id !== activeId
           && draftParts(draft).length > 0,
       )
-      .map((draft) => {
-        const polygon = new api.Polygon();
-        polygon.setOptions({
+      .forEach((draft) => {
+        desiredReferences.set(`draft:${draft.id}`, {
+          signature: fingerprintDraftParts(draftFingerprintRings(draft)),
           path: polygonPath(draft),
+          kind: "editable",
+          clickHandler: () => {
+            setActiveId(draft.id);
+            setIsDrawing(false);
+          },
+        });
+      });
+    const editableSourceIds = new Set(
+      draftsRef.current
+        .map((draft) => draft.sourceSectorId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    existingSectorTemplates
+      .filter((template) => (
+        template.ring.length >= 3 && !editableSourceIds.has(template.id)
+      ))
+      .forEach((template) => {
+        desiredReferences.set(`source:${template.id}`, {
+          signature: template.geometryFingerprint,
+          path: polygonPath(template),
+          kind: "source",
+          clickHandler: () => activateExistingSector(template),
+        });
+      });
+
+    for (const [id, entry] of referencePolygonsRef.current) {
+      const desired = desiredReferences.get(id);
+      if (desired?.signature === entry.signature) continue;
+      entry.polygon.off("click", entry.clickHandler);
+      map.remove(entry.polygon);
+      referencePolygonsRef.current.delete(id);
+    }
+
+    for (const [id, desired] of desiredReferences) {
+      if (referencePolygonsRef.current.has(id)) continue;
+      const polygon = new api.Polygon();
+      polygon.setOptions(desired.kind === "editable" ? {
+          path: desired.path,
           strokeColor: "#0f766e",
           strokeWeight: 1.4,
           strokeOpacity: 0.74,
@@ -488,24 +542,8 @@ export function SectorBoundaryEditor() {
           fillOpacity: 0.07,
           cursor: "pointer",
           zIndex: 30,
-        });
-        polygon.on("click", () => {
-          setActiveId(draft.id);
-          setIsDrawing(false);
-        });
-        return polygon;
-      });
-    const editableSourceIds = new Set(
-      draftsRef.current
-        .map((draft) => draft.sourceSectorId)
-        .filter((id): id is string => Boolean(id)),
-    );
-    const sourceReferences = existingSectorTemplates
-      .filter((template) => template.ring.length >= 3 && !editableSourceIds.has(template.id))
-      .map((template) => {
-        const polygon = new api.Polygon();
-        polygon.setOptions({
-          path: polygonPath(template),
+        } : {
+          path: desired.path,
           strokeColor: "#64748b",
           strokeWeight: 1.4,
           strokeOpacity: 0.72,
@@ -515,17 +553,24 @@ export function SectorBoundaryEditor() {
           cursor: "pointer",
           zIndex: 24,
         });
-        polygon.on("click", () => activateExistingSector(template));
-        return polygon;
+      polygon.on("click", desired.clickHandler);
+      map.add(polygon);
+      referencePolygonsRef.current.set(id, {
+        polygon,
+        signature: desired.signature,
+        clickHandler: desired.clickHandler,
       });
-    const references = [...sourceReferences, ...editableReferences];
-    if (references.length) map.add(references);
-    referencePolygonsRef.current = references;
-
-    return () => {
-      if (references.length) map.remove(references);
-    };
+    }
   }, [activateExistingSector, activeId, inactiveGeometrySignature, status]);
+
+  useEffect(() => () => {
+    const map = mapRef.current;
+    for (const entry of referencePolygonsRef.current.values()) {
+      entry.polygon.off("click", entry.clickHandler);
+      map?.remove(entry.polygon);
+    }
+    referencePolygonsRef.current.clear();
+  }, []);
 
   const addDraft = useCallback(() => {
     const draft = createSectorDraft(createDraftId());
