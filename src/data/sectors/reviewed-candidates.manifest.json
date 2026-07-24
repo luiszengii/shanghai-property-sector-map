@@ -3995,6 +3995,18 @@
       }
     },
     {
+      "id": "sector_bao_town",
+      "scopeVersion": "baotown-current-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "18310022"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
       "id": "sector_pujiangzhen",
       "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
       "method": "market_admin_candidate_with_shared_topology",
