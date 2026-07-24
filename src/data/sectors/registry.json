@@ -5864,17 +5864,17 @@
         "大团镇"
       ],
       "riskFlags": [
-        "admin_proxy_crosses_existing_xuanqiao_candidate",
-        "requires_cross_district_topology_rebuild",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_residential",
         "market_boundary_not_official"
       ],
       "districtNames": [
         "浦东新区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场大团身份与现行大团镇名称已核验，但固定镇面与既有宣桥候选存在无法通过本批局部吸附解释的接口冲突。不得发布行政残余面；保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_verified_admin_proxy",
+      "definitionCandidate": "市场大团暂以现行大团镇固定 OSM relation 作为低置信、可编辑行政代理。2026-07 总装已复核其与宣桥、惠南、奉贤四团、泥城、万祥共享锁定边且没有正面积交叠；镇域不等于精确住宅市场。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-pudong-current-admin-directory-2026",
@@ -5885,10 +5885,12 @@
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
         "unresolved_lingang_main_city",
-        "unresolved_datun_topology",
         "sector_xuanqiao",
         "sector_huinan",
-        "sector_situan"
+        "sector_situan",
+        "sector_nicheng",
+        "sector_wanxiang",
+        "unresolved_lingang_main_city"
       ],
       "boundaryEvidenceIds": [
         "datun-north",
@@ -5897,19 +5899,21 @@
         "datun-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "xuanqiao-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
         "verificationSourceIds": [
           "official-pudong-current-admin-directory-2026",
           "official-pudong-administrative-map-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定大团镇 relation 与既有宣桥候选的接口需跨批次重建；禁止发布旧镇面或差集残余面，允许用户在编辑器人工起画。"
+        "note": "固定 OSM 大团镇 relation 只作低置信、可编辑市场候选骨架；2026-07 总装复核与宣桥、惠南、奉贤四团、泥城、万祥为共享边且无正面积交叠。行政边界不等于行业统一楼市板块边界。"
       }
     },
     {

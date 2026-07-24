@@ -3953,6 +3953,24 @@
       }
     },
     {
+      "id": "sector_datun",
+      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14179370"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_xuanqiao",
+          "sector_huinan",
+          "sector_situan",
+          "sector_nicheng",
+          "sector_wanxiang"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
       "id": "sector_pujiangzhen",
       "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
       "method": "market_admin_candidate_with_shared_topology",
