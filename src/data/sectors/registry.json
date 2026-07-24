@@ -6361,7 +6361,7 @@
       "kind": "market_sector",
       "reviewStatus": "draft-low",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理；碧云、花木及金桥的独立市场语义不自动并入。",
+      "definitionCandidate": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理，并显式扣除按官方服务范围四至重建的碧云候选，以免把碧云核心重复发布；花木及金桥的独立市场语义不自动并入。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-pudong-current-admin-directory-2026",
@@ -6375,7 +6375,8 @@
         "unresolved_huamu_boundary_version"
       ],
       "linkedTopologySectorIds": [
-        "sector_yangjing"
+        "sector_yangjing",
+        "sector_biyun"
       ],
       "boundaryEvidenceIds": [
         "jinyang-north",
@@ -6511,9 +6512,9 @@
         "浦东新区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "碧云国际社区四至已由2024年官方清单核验：北杨高中路、西云山路、南锦绣东路、东金桥路；但该服务范围与现有金杨行政代理面重叠，不能用粗代理裁切精确核心，保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_official_service_scope_candidate",
+      "definitionCandidate": "碧云国际社区按2024年官方清单四至（北杨高中路、西云山路、南锦绣东路、东金桥路）及固定 OSM 道路中心线重建为内部低置信候选；与金杨行政代理的交集由金杨候选显式扣除。服务范围不等于法定或统一楼市边界。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-shanghai-biyun-international-community-scope-2024"
@@ -6523,6 +6524,9 @@
         "sector_jinyang",
         "unresolved_lianyang"
       ],
+      "linkedTopologySectorIds": [
+        "sector_jinyang"
+      ],
       "boundaryEvidenceIds": [
         "biyun-north",
         "biyun-west",
@@ -6530,18 +6534,20 @@
         "biyun-east"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "official-service-area-four-sides-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "biyun-official-service-scope-four-sides-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
         "verificationSourceIds": [
           "official-shanghai-biyun-international-community-scope-2024",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "官方四至可作为人工起画卡；在金杨粗行政代理改为市场精修面前，不发布重叠候选。服务范围也不等于法定或统一楼市边界。"
+        "note": "2024年官方高标准保洁服务范围的四至已以固定 OSM 道路中心线重建；链家分类与第三方地图只用于确认独立市场身份和相邻关系，未复制其人工边界。该服务范围不等于法定或统一楼市边界，仅供内部复核和编辑。"
       }
     },
     {"id":"sector_shanghainan_zhan","canonicalName":"上海南站","aliases":["铁路上海南站"],"riskFlags":["transport_hub_not_market_boundary","inside_caohejing_admin_proxy","market_boundary_not_official"],"districtNames":["徐汇区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"上海南站是漕河泾街道内的交通枢纽/治理语境，不等同街道或完整楼市板块；保留为可人工起画的待绘身份。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-xuhui-shanghai-south-station-context-2026"],"requiredAdjacencyReviewIds":["sector_caohejing","sector_kangjian","sector_changqiao"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["official-xuhui-shanghai-south-station-context-2026"],"publicationPolicy":"internal_review","note":"不得用漕河泾街道、枢纽设施或治理范围替代市场面；允许编辑器人工起画。"}},
