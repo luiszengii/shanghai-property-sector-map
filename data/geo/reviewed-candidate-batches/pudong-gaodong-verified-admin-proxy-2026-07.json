@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "pudong-gaodong-verified-admin-proxy-2026-07",
+  "topologyGroups": [],
+  "sectors": [{
+    "id": "sector_gaodong", "canonicalName": "高东", "districtName": "浦东新区",
+    "scopeVersion": "pudong-current-town-admin-proxy-post-2025-adjustment-2026-07", "confidence": "low",
+    "method": "market_admin_candidate_with_shared_topology", "osmAdminRelationId": "14179184", "expectedOsmName": "高东镇", "adminProxyName": "高东镇", "adminBoundaryVersion": "2025-11-14-or-later-verified-against-locked-osm", "insidePoint": [121.639, 31.327],
+    "sharedEdgeSectorIds": ["sector_gaohang", "sector_caolu"], "requiredAdjacencyReviewIds": ["unresolved_waigaoqiao", "unresolved_senlan"], "sharedEdgeSnapDistanceMeters": 1,
+    "preserveTopologyPrecision": true, "preserveMultiPolygonSemantics": true, "marketAdminAlignmentUnverified": true, "areaRangeSquareKilometers": [34, 38],
+    "riskFlags": ["admin_proxy_may_be_broader_than_residential_market", "mixed_port_industrial_residential", "market_boundary_not_official"],
+    "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-pudong-current-admin-directory-2026", "official-pudong-administrative-map-2026", "official-pudong-boundary-adjustment-2025"],
+    "geometryVerificationSourceIds": ["official-pudong-boundary-adjustment-2025", "official-pudong-administrative-map-2026", "osm-geofabrik-shanghai-260721"],
+    "geometryRule": "市场高东暂以现行高东镇固定 OSM relation 作为低置信、可编辑行政代理。2025 年高桥—高东调整段已逐项与锁定 relation 边界核对：日京路、富特北路、杨高北路为 0 米贴合，美盛路最小偏距 1.7 米，且富特东一路、航津路为调整段端点。镇域混有港区、产业和非连续住宅，不能表述为精确卖方高东边界；外高桥、森兰继续独立研究。"
+  }],
+  "subscopes": []
+}

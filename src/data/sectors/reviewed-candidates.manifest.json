@@ -3938,6 +3938,21 @@
       }
     },
     {
+      "id": "sector_gaodong",
+      "scopeVersion": "pudong-current-town-admin-proxy-post-2025-adjustment-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "14179184"
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_gaohang",
+          "sector_caolu"
+        ],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
       "id": "sector_biyun",
       "scopeVersion": "biyun-official-service-scope-four-sides-2026-07",
       "method": "market_four_sides_osm_linear_component",
