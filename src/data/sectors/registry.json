@@ -5127,57 +5127,47 @@
       "aliases": [
         "奉城镇"
       ],
-      "riskFlags": [
-        "stale_admin_relation",
-        "missing_touqiao_subtraction",
-        "admin_area_version_mismatch",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["stale_admin_relation_includes_touqiao", "historical_admin_market_proxy", "market_boundary_not_official"],
       "districtNames": [
         "奉贤区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "卖方奉城身份已确认；现行几何必须使用2024年头桥街道析出后的奉城镇范围。固定OSM关系仍包含头桥，禁止作为2026现行行政代理。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_historical_admin_proxy_candidate",
+      "definitionCandidate": "卖方奉城身份已确认；当前产品以固定 OSM 旧奉城镇 relation 作为低置信、可编辑历史市场代理，明确包含已析出的头桥，不能作为2026现行行政代理。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-fengxian-current-admin-units-2026",
         "official-fengxian-touqiao-establishment-2024"
       ],
-      "adminProxyName": "奉城镇（待现行边界）",
-      "adminBoundaryVersion": "2024-07-or-later-required",
+      "adminProxyName": "奉城镇（含已析出头桥的历史代理）",
+      "adminBoundaryVersion": "pre-2024-legacy-relation",
       "marketAdminAlignmentUnverified": true,
       "adminAreaVersionMismatch": true,
       "officialCurrentAreaKm2": null,
-      "legacyOsmAdminRelationId": "17885593",
-      "legacyLockedGeometryAreaKm2": 109.857816,
       "requiredAdjacencyReviewIds": [
         "unresolved_touqiao",
         "sector_fengxianjinhui",
-        "sector_haiwan",
         "sector_situan",
         "sector_qingcun",
-        "sector_hangtou",
-        "sector_xinchang",
-        "sector_xuanqiao"
+        "sector_haiwan"
       ],
       "boundaryEvidenceIds": [
         "fengcheng-version-blocker"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "post-touqiao-split-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "fengcheng-legacy-town-market-proxy-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-fengxian-touqiao-establishment-2024",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定OSM relation 17885593约109.8578平方公里，仍覆盖已析出的38.4平方公里头桥地区；在取得头桥现行矢量或可复算差集前保持缺失，并允许用户在编辑器人工起画。"
+        "note": "固定OSM relation 17885593约109.8578平方公里，仍覆盖已析出的38.4平方公里头桥地区；当前仅作为可编辑历史市场代理，取得头桥现行矢量或可复算差集后应优先替换。"
       }
     },
     {

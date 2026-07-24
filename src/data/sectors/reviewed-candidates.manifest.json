@@ -4028,6 +4028,18 @@
       }
     },
     {
+      "id": "sector_fengcheng",
+      "scopeVersion": "fengcheng-legacy-town-market-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "17885593"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
       "id": "sector_biyun",
       "scopeVersion": "biyun-official-service-scope-four-sides-2026-07",
       "method": "market_four_sides_osm_linear_component",
