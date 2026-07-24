@@ -3971,6 +3971,30 @@
       }
     },
     {
+      "id": "sector_changxing_island",
+      "scopeVersion": "changxing-island-current-town-extent-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "16469113"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
+      "id": "sector_hengsha_island",
+      "scopeVersion": "hengsha-island-current-township-extent-proxy-2026-07",
+      "method": "market_admin_candidate_with_shared_topology",
+      "osmRefs": {
+        "adminRelations": [
+          "15708308"
+        ],
+        "sharedEdgeSectorIds": [],
+        "sharedEdgeSnapDistanceMeters": 1.0
+      }
+    },
+    {
       "id": "sector_pujiangzhen",
       "scopeVersion": "minhang-current-town-admin-proxy-2026-07",
       "method": "market_admin_candidate_with_shared_topology",
