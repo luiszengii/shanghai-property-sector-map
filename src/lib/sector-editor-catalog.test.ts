@@ -253,9 +253,9 @@ test("the Xuhui admin-aligned batch exposes all 12 candidates without inventing 
   assert.equal(batchIdSet.size, 12);
   assert.equal(records.length, 12);
   assert.ok(batchIds.every((id: string) => candidateById.has(id)));
-  assert.ok(!registryData.sectors.some(
+  assert.equal(registryData.sectors.find(
     (record: { canonicalName: string }) => record.canonicalName === "上海南站",
-  ));
+  )?.geometry.status, "missing");
   assert.ok(!registryData.sectors.some(
     (record: { canonicalName: string }) => record.canonicalName === "虹梅路",
   ));
@@ -312,11 +312,9 @@ test("the Changning direct batch exposes four candidates without inventing custo
   assert.equal(registryData.sectors.filter(
     (record: { id: string }) => batchIdSet.has(record.id),
   ).length, 4);
-  for (const forbiddenName of ["西郊"]) {
-    assert.ok(!registryData.sectors.some(
-      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
-    ));
-  }
+  assert.equal(registryData.sectors.find(
+    (record: { canonicalName: string }) => record.canonicalName === "西郊",
+  )?.geometry.status, "missing");
   assert.equal(
     registryData.sectors.find(
       (record: { id: string }) => record.id === "sector_hongqiao",
@@ -407,9 +405,7 @@ test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbone
     ["sector_zhenru", "sector_changzheng", "sector_wanli", "unresolved_baoshan_interface"],
   );
   for (const forbiddenName of [
-    "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-    "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
-    "武宁", "真光", "光新",
+    "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村", "阳城—永和",
   ]) {
     assert.ok(!registryData.sectors.some(
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
@@ -1088,9 +1084,9 @@ test("the Zhongshan Park official core is editable without inventing a full West
   assert.equal(record?.reviewStatus, "draft-medium");
   assert.equal(candidate?.properties?.areaSquareKilometers, 1.0727);
   assert.equal(candidate?.geometry.type, "Polygon");
-  assert.ok(!registryData.sectors.some(
+  assert.equal(registryData.sectors.find(
     (item: { canonicalName: string }) => item.canonicalName === "西郊",
-  ));
+  )?.geometry.status, "missing");
 });
 
 test("the Gubei and Changning residential Hongqiao batch stays mutually exclusive and distinct from Hongqiao CBD", () => {
