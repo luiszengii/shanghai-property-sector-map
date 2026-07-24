@@ -1747,8 +1747,7 @@ for (const definition of jinganPutuoElevenDefinitions) {
 }
 for (const forbiddenName of [
   "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-  "阳城—永和", "阳城", "永和",
-  "武宁", "真光", "光新",
+  "阳城—永和",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
@@ -1763,6 +1762,15 @@ for (const id of ["sector_buyecheng", "sector_suhewan"]) {
     || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
     || !record?.definitionSourceIds?.includes("official-jingan-suhewan-2017-functional-scope")) {
     error(`${id}: 历史功能片区只可作为人工起画卡，联合道路段未冻结前不得自动发布市场候选面`);
+  }
+}
+for (const id of ["sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_wuning", "sector_zhenguang", "sector_guangxin"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.includes("seller-lianjia-shanghai-sector-sitemap")) {
+    error(`${id}: 已确认市场身份在成员/共享边未核验前必须保持可编辑缺失几何，不得自动发布候选面`);
   }
 }
 const liangwanchengDefinition = candidateDefinitionById.get(
