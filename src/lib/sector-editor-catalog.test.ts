@@ -694,10 +694,10 @@ test("the Jiading current-admin batch exposes eight editable proxies while prese
       ?.linkedTopologySectorIds,
     ["sector_nanxiang", "sector_xuhang", "sector_anting", "sector_juyuanxinqu"],
   );
-  for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
-    assert.ok(!registryData.sectors.some(
-      (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
-    ));
+  for (const unresolvedName of ["丰庄", "嘉定新城", "嘉定老城"]) {
+    assert.equal(registryData.sectors.find(
+      (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
+    )?.geometry?.status, "missing");
   }
 });
 

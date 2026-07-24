@@ -2272,11 +2272,12 @@ for (const definition of jiadingEightDefinitions) {
     error(`${definition.id}: 嘉定批次不得虚构与徐泾或虹桥商务区的直接共享边`);
   }
 }
-for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === forbiddenName,
-  )) {
-    error(`嘉定直接代理批次不得在独立范围研究完成前自动注册 ${forbiddenName}`);
+for (const unresolvedName of ["丰庄", "嘉定新城", "嘉定老城"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`嘉定复杂市场只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 
