@@ -1231,6 +1231,16 @@
       "note": "分别给出西部不夜城和东部苏河湾功能片区四至；是历史功能口径，不是法定或统一楼市边界。"
     },
     {
+      "id": "official-chongming-tri-islands-overview",
+      "title": "崇明区概况与三岛空间关系",
+      "publisher": "上海市人民政府 / 上海市崇明区人民政府",
+      "url": "https://www.shanghai.gov.cn/chongming/index.html",
+      "sourceType": "official_district_overview",
+      "licenseStatus": "reference_only",
+      "allowedUse": "scope_comparison_only",
+      "note": "用于确认崇明、长兴、横沙三岛及崇明区空间身份；不提供住宅市场边界，也不得把岛域或镇域直接发布为市场面。"
+    },
+    {
       "id": "osm-odbl-1",
       "title": "OpenStreetMap copyright and license",
       "publisher": "OpenStreetMap contributors / OpenStreetMap Foundation",
