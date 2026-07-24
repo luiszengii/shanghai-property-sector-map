@@ -6456,5 +6456,47 @@
         "publicationPolicy": "internal_review",
         "note": "固定 OSM 街镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一楼市板块边界。"
       }
+    },
+    {
+      "id": "sector_weifang",
+      "canonicalName": "潍坊",
+      "aliases": ["潍坊新村街道"],
+      "riskFlags": ["post_2025_admin_boundary_adjustment", "old_osm_admin_proxy_not_current", "market_boundary_not_official"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "市场潍坊与现行潍坊新村街道名称已核验；2025年官方已调整其与花木的界线，固定 OSM relation 不能证明为公告后的可复算现行面。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-pudong-current-admin-directory-2026", "official-pudong-administrative-map-2026", "official-pudong-boundary-adjustment-2025"],
+      "legacyOsmAdminRelationId": "12867311",
+      "requiredAdjacencyReviewIds": ["unresolved_huamu_boundary_version", "sector_tangqiao", "sector_lujiazui"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "post-2025-huamu-weifang-adjustment-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-pudong-boundary-adjustment-2025", "official-pudong-current-admin-directory-2026", "osm-geofabrik-shanghai-260721"],
+        "publicationPolicy": "internal_review",
+        "note": "2025年官方公告已调整潍坊新村—花木界线；固定 OSM relation 12867311 仅可作人工起画参考，不能作为已复原的现行或市场候选面发布。"
+      }
+    },
+    {
+      "id": "sector_huamu",
+      "canonicalName": "花木",
+      "aliases": ["花木街道"],
+      "riskFlags": ["post_2025_admin_boundary_adjustment", "old_osm_admin_proxy_not_current", "market_boundary_not_official", "independent_market_scope_required"],
+      "districtNames": ["浦东新区"],
+      "kind": "market_sector",
+      "reviewStatus": "needs-research",
+      "definitionStatus": "market_identity_verified_geometry_blocked",
+      "definitionCandidate": "市场花木与现行花木街道名称已核验；2025年官方调整后的潍坊接口尚无可复算坐标，且联洋等独立市场语义不应以街道残余自动填充。保留为可人工起画的待绘制身份。",
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-pudong-current-admin-directory-2026", "official-pudong-administrative-map-2026", "official-pudong-boundary-adjustment-2025"],
+      "legacyOsmAdminRelationId": "12867438",
+      "requiredAdjacencyReviewIds": ["unresolved_weifang_boundary_version", "unresolved_lianyang", "sector_yangjing", "sector_tangqiao", "sector_jinyang", "sector_nanmatou"],
+      "geometry": {
+        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
+        "version": "post-2025-huamu-weifang-adjustment-required-2026-07", "sourceIds": [],
+        "verificationSourceIds": ["official-pudong-boundary-adjustment-2025", "official-pudong-current-admin-directory-2026", "osm-geofabrik-shanghai-260721"],
+        "publicationPolicy": "internal_review",
+        "note": "2025年官方公告已调整花木—潍坊新村界线；固定 OSM relation 12867438 仅可作人工起画参考，不能作为已复原的现行或市场候选面发布。"
+      }
     }]
 }
