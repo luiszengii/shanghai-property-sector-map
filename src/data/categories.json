@@ -1,12 +1,12 @@
 [
-  { "id": "school", "name": "学校", "group": "benefit", "icon": "🎓", "color": "#2563eb" },
-  { "id": "hospital", "name": "医院", "group": "benefit", "icon": "✚", "color": "#e11d48" },
-  { "id": "commercial", "name": "商业", "group": "benefit", "icon": "商", "color": "#f59e0b" },
-  { "id": "park", "name": "公园", "group": "benefit", "icon": "树", "color": "#16a34a" },
-  { "id": "metro", "name": "地铁站", "group": "benefit", "icon": "M", "color": "#7c3aed" },
-  { "id": "industry", "name": "产业园", "group": "benefit", "icon": "产", "color": "#0891b2" },
-  { "id": "funeral", "name": "殡葬设施", "group": "attention", "icon": "葬", "color": "#475569" },
-  { "id": "power", "name": "变电站及电力设施", "group": "attention", "icon": "电", "color": "#dc2626" },
-  { "id": "waste", "name": "垃圾及固废处理设施", "group": "attention", "icon": "废", "color": "#92400e" },
-  { "id": "environment", "name": "环境监管重点单位", "group": "attention", "icon": "环", "color": "#0f766e" }
+  { "id": "school", "name": "学校", "group": "benefit", "icon": "GraduationCap", "color": "#2563eb" },
+  { "id": "hospital", "name": "医院", "group": "benefit", "icon": "Stethoscope", "color": "#e11d48" },
+  { "id": "commercial", "name": "商业", "group": "benefit", "icon": "ShoppingBag", "color": "#f59e0b" },
+  { "id": "park", "name": "公园", "group": "benefit", "icon": "Trees", "color": "#16a34a" },
+  { "id": "metro", "name": "地铁站", "group": "benefit", "icon": "TrainFront", "color": "#7c3aed" },
+  { "id": "industry", "name": "产业园", "group": "benefit", "icon": "Factory", "color": "#0891b2" },
+  { "id": "funeral", "name": "殡葬设施", "group": "attention", "icon": "Flower2", "color": "#475569" },
+  { "id": "power", "name": "变电站及电力设施", "group": "attention", "icon": "Zap", "color": "#dc2626" },
+  { "id": "waste", "name": "垃圾及固废处理设施", "group": "attention", "icon": "Factory", "color": "#92400e" },
+  { "id": "environment", "name": "环境监管重点单位", "group": "attention", "icon": "ShieldAlert", "color": "#0f766e" }
 ]

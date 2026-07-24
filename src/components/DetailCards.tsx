@@ -2,6 +2,7 @@
 
 import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { useMemo } from "react";
+import { CategoryIcon } from "@/src/components/CategoryIcon";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
@@ -129,7 +130,7 @@ export function DetailCard() {
       <article className="detail-card glass-panel" aria-label={`${place.name}详情`}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
         <div className="detail-topline">
-          <span className="category-icon large" style={{ "--category-color": category?.color ?? "#0f766e" } as React.CSSProperties}>{category?.icon ?? "•"}</span>
+          <span className="category-icon large" style={{ "--category-color": category?.color ?? "#0f766e" } as React.CSSProperties}>{category ? <CategoryIcon name={category.icon} size={22} /> : "•"}</span>
           <div><span className="eyebrow">{category?.name}</span><h2>{place.name}</h2></div>
         </div>
         <span className="mock-badge">演示数据</span>

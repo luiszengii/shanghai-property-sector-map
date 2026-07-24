@@ -7,6 +7,7 @@ import {
   shouldShowProjectLabel,
   zoomToSeparatePoints,
 } from "@/src/lib/project-marker-clustering";
+import { projectHouseIconSvg } from "@/src/lib/category-icon-svg";
 import type { PropertyProject } from "@/src/types/map";
 
 interface ProjectLayerProps {
@@ -54,7 +55,7 @@ function projectMarkerContent(
   return '<button class="project-marker'
     + (selected ? " is-selected" : "")
     + '" aria-label="' + escapeHtml(displayName)
-    + '"><span class="project-pin"><i>房</i></span>'
+    + '"><span class="project-pin"><i>' + projectHouseIconSvg + "</i></span>"
     + label + "</button>";
 }
 

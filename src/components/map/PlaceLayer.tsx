@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
+import { categoryIconSvg } from "@/src/lib/category-icon-svg";
 import type { Category, Place } from "@/src/types/map";
 
 const places = placesData as Place[];
@@ -21,7 +22,7 @@ interface PlaceLayerProps {
 
 function placeMarkerContent(place: Place, selected: boolean) {
   const category = categoryById[place.category];
-  return `<button class="place-marker${selected ? " is-selected" : ""}" style="--marker-color:${category.color}" aria-label="${place.name}"><span>${category.icon}</span></button>`;
+  return `<button class="place-marker${selected ? " is-selected" : ""}" style="--marker-color:${category.color}" aria-label="${place.name}"><span>${categoryIconSvg[category.icon]}</span></button>`;
 }
 
 export function PlaceLayer({ amapApi, map, zoom, enabledCategories, viewportVersion, selectedPlaceId, onSelect }: PlaceLayerProps) {

@@ -59,11 +59,22 @@ export interface ProjectLocation {
   note?: string;
 }
 
+export type CategoryIconName =
+  | "GraduationCap"
+  | "Stethoscope"
+  | "ShoppingBag"
+  | "Trees"
+  | "TrainFront"
+  | "Factory"
+  | "Flower2"
+  | "Zap"
+  | "ShieldAlert";
+
 export interface Category {
   id: PlaceCategory;
   name: string;
   group: "benefit" | "attention";
-  icon: string;
+  icon: CategoryIconName;
   color: string;
 }
 

@@ -2,6 +2,7 @@
 
 import { Building2, Check, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { memo, useId } from "react";
+import { CategoryIcon } from "@/src/components/CategoryIcon";
 import categoriesData from "@/src/data/categories.json";
 import { projects } from "@/src/content/project-leads";
 import { useMapStore } from "@/src/store/map-store";
@@ -161,7 +162,7 @@ export const FilterPanel = memo(function FilterPanel({
               const checked = enabledCategories.includes(category.id);
               return (
                 <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
-                  <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}>{category.icon}</span>
+                  <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
                   <span>{category.name}</span>
                   <span className="toggle"><span /></span>
                 </button>
