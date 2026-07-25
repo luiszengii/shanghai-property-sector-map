@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "workpackId": "pudong-north-repartition",
+  "status": "selected-candidate-ready-for-internal-review",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
+  "selectedSectorIds": [
+    "sector_jinqiao",
+    "sector_senlan",
+    "sector_gaohang",
+    "sector_waigaoqiao"
+  ],
+  "referenceSubscopeIds": [
+    "subscope_waigaoqiao_ftz_10_34"
+  ],
+  "rebuildCommand": "uv run --script data/geo/workpacks/pudong-north-repartition/_build_workpack.py --gpkg /path/to/locked/shanghai.gpkg"
+}

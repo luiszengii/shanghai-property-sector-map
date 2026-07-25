@@ -332,6 +332,10 @@ function normalizeBatchFeature(feature) {
   };
 }
 
+const retiredPrimaryProxyIds = new Set([
+  "sector_lianyang",
+  "sector_waigaoqiao",
+]);
 const batchFeatures = batches.flatMap((batch) => batch.features.map((feature) => {
   const normalizedFeature = normalizeBatchFeature(feature);
   const rawProperties = normalizedFeature.properties;
@@ -349,7 +353,7 @@ const batchFeatures = batches.flatMap((batch) => batch.features.map((feature) =>
     },
     geometry: normalizeGeometry(normalizedFeature.geometry),
   };
-}));
+})).filter((feature) => !retiredPrimaryProxyIds.has(feature.properties.id));
 
 const embeddedBatchSources = batches.flatMap((batch) => batch.features.flatMap((feature) => [
   embeddedSourceRecord(feature.definitionSource, "definition"),

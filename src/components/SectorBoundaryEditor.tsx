@@ -306,7 +306,7 @@ export function SectorBoundaryEditor() {
           if (synced.archivedDraftIds.length) {
             setNotice({
               tone: "warning",
-              message: `已按当前口径拆分前滩与杨思，并归档 ${synced.archivedDraftIds.length} 个旧“杨思前滩”手工草稿；需要时可从侧栏恢复备份。`,
+              message: `已按当前板块口径归档 ${synced.archivedDraftIds.length} 个已下线或已拆分的旧草稿；需要时可从侧栏恢复只读备份。`,
             });
           } else if (synced.preservedModifiedSourceIds.length) {
             setNotice({
@@ -726,7 +726,7 @@ export function SectorBoundaryEditor() {
     setGeometryRevision((value) => value + 1);
     setNotice({
       tone: "warning",
-      message: `已恢复 ${archived.length} 个旧合并草稿为自建备份；它们仅用于人工参考，不会改回前滩与杨思的独立身份。`,
+      message: `已恢复 ${archived.length} 个历史草稿为自建只读备份；它们仅用于人工参考，不会恢复已下线或旧合并板块身份。`,
     });
   }, []);
 

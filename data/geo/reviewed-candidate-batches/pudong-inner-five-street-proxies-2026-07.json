@@ -159,7 +159,8 @@
       ],
       "sharedEdgeSectorIds": [
         "sector_yangjing",
-        "sector_biyun"
+        "sector_biyun",
+        "sector_jinqiao"
       ],
       "subtractSectorIds": [
         "sector_biyun"

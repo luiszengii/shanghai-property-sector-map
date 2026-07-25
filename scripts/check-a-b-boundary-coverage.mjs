@@ -13,14 +13,14 @@ const sourcesDocument = JSON.parse(await readFile(
 
 const targets = {
   A: [
-    "sector_xijiao", "sector_buyecheng", "sector_suhewan", "sector_waigaoqiao",
+    "sector_xijiao", "sector_buyecheng", "sector_suhewan",
     "sector_lingang_main_city", "sector_ruihong_new_town", "sector_huangxing_park",
     "sector_jiading_new_city", "sector_shanghai_university", "sector_nanda",
     "sector_songbao", "sector_jiuting",
   ],
   B: [
     "sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_zhenguang",
-    "sector_weifang", "sector_huamu", "sector_lianyang", "sector_yangpu_dongwaitan",
+    "sector_weifang", "sector_huamu", "sector_yangpu_dongwaitan",
     "sector_dinghai_road", "sector_jiading_old_city", "sector_dahua",
     "sector_songjiang_university_town", "sector_chongming_new_city",
   ],
@@ -42,8 +42,8 @@ const missing = Object.fromEntries(Object.entries(targets).map(([level, ids]) =>
   ids.filter((id) => !proxyIds.has(id)),
 ]));
 
-assert.equal(targets.A.length, 12, "A 级目标应为 12 个");
-assert.equal(targets.B.length, 13, "B 级目标应为 13 个");
+assert.equal(targets.A.length, 11, "A 级代理目标应为 11 个；外高桥已升级为 reviewed candidate");
+assert.equal(targets.B.length, 12, "B 级代理目标应为 12 个；联洋已按用户裁定下线");
 assert.deepEqual(missing, { A: [], B: [] }, `A/B 级仍未替换的椭圆：${JSON.stringify(missing)}`);
 
 for (const id of targetIds) {
@@ -60,4 +60,4 @@ for (const id of targetIds) {
   }
 }
 
-console.log("A/B boundary coverage check passed: A=12, B=13");
+console.log("A/B boundary coverage check passed: A=11, B=12");

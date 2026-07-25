@@ -3827,26 +3827,6 @@
       }
     },
     {
-      "id": "sector_gaohang",
-      "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
-      "method": "market_admin_candidate_with_shared_topology",
-      "osmRefs": {
-        "adminRelations": [
-          "14179185"
-        ],
-        "subtractedSectorIds": [
-          "sector_tangzhen",
-          "sector_chuansha",
-          "sector_zhuqiao"
-        ],
-        "sharedEdgeSectorIds": [
-          "sector_caolu"
-        ],
-        "sharedEdgeSnapDistanceMeters": 10.0,
-        "protectedSubtractionStage": "post-topology-output-crs"
-      }
-    },
-    {
       "id": "sector_caolu",
       "scopeVersion": "pudong-current-town-admin-proxy-2026-07",
       "method": "market_admin_candidate_with_shared_topology",
@@ -3856,7 +3836,8 @@
         ],
         "sharedEdgeSectorIds": [
           "sector_gaohang",
-          "sector_heqing"
+          "sector_heqing",
+          "sector_waigaoqiao"
         ],
         "sharedEdgeSnapDistanceMeters": 1.0
       }
@@ -3935,21 +3916,6 @@
         ],
         "sharedEdgeSnapDistanceMeters": 10.0,
         "protectedSubtractionStage": "post-topology-output-crs"
-      }
-    },
-    {
-      "id": "sector_gaodong",
-      "scopeVersion": "pudong-current-town-admin-proxy-post-2025-adjustment-2026-07",
-      "method": "market_admin_candidate_with_shared_topology",
-      "osmRefs": {
-        "adminRelations": [
-          "14179184"
-        ],
-        "sharedEdgeSectorIds": [
-          "sector_gaohang",
-          "sector_caolu"
-        ],
-        "sharedEdgeSnapDistanceMeters": 1.0
       }
     },
     {
@@ -4508,6 +4474,10 @@
             "centerlineToleranceMeters": 15.0,
             "coverageStage": "final-topology"
           }
+        ],
+        "sharedEdgeSectorIds": [
+          "sector_jinyang",
+          "sector_jinqiao"
         ]
       }
     },
@@ -4567,7 +4537,8 @@
         ],
         "sharedEdgeSectorIds": [
           "sector_yangjing",
-          "sector_biyun"
+          "sector_biyun",
+          "sector_jinqiao"
         ],
         "sharedEdgeSnapDistanceMeters": 1.0,
         "protectedSubtractionStage": "post-topology-output-crs"
@@ -4590,7 +4561,129 @@
         "sharedEdgeSnapDistanceMeters": 1.0,
         "protectedSubtractionStage": "post-topology-output-crs"
       }
+    },
+    {
+      "id": "sector_jinqiao",
+      "scopeVersion": "seller-market-scope-protected-jinyang-biyun-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "pudong-north-repartition",
+        "workpackSourceId": "pudong-north-repartition-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d",
+        "sourceFeatureId": "sector_jinqiao",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_jinyang",
+          "sector_biyun"
+        ],
+        "protectedSubtractionStage": "post-topology-output-crs"
+      }
+    },
+    {
+      "id": "sector_senlan",
+      "scopeVersion": "user-market-four-sides-with-west-extension-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "pudong-north-repartition",
+        "workpackSourceId": "pudong-north-repartition-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d",
+        "sourceFeatureId": "sector_senlan",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_gaohang",
+          "sector_waigaoqiao"
+        ]
+      }
+    },
+    {
+      "id": "sector_gaohang",
+      "scopeVersion": "gaohang-south-of-hangjin-minus-senlan-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "pudong-north-repartition",
+        "workpackSourceId": "pudong-north-repartition-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d",
+        "sourceFeatureId": "sector_gaohang",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_senlan",
+          "sector_waigaoqiao",
+          "sector_caolu"
+        ]
+      }
+    },
+    {
+      "id": "sector_waigaoqiao",
+      "scopeVersion": "gaoqiao-gaodong-north-gaohang-market-union-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "pudong-north-repartition",
+        "workpackSourceId": "pudong-north-repartition-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d",
+        "sourceFeatureId": "sector_waigaoqiao",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_senlan",
+          "sector_gaohang",
+          "sector_caolu"
+        ]
+      }
     }
   ],
-  "subscopes": []
+  "subscopes": [
+    {
+      "id": "subscope_waigaoqiao_ftz_10_34",
+      "parentSectorId": "sector_waigaoqiao",
+      "scopeVersion": "waigaoqiao-ftz-planning-reference-demoted-2026-07",
+      "method": "selected_workpack_reference_subscope",
+      "osmRefs": {
+        "workpackId": "pudong-north-repartition",
+        "workpackSourceId": "pudong-north-repartition-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d",
+        "sourceFeatureId": "subscope_waigaoqiao_ftz_10_34",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": []
+      },
+      "outsideParentAreaRatio": 0.04430486
+    }
+  ]
 }

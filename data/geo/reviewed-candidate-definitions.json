@@ -18,7 +18,6 @@
     "data/geo/reviewed-candidate-batches/fengxian-eight-current-admin-proxies-2026-07.json",
     "data/geo/reviewed-candidate-batches/minhang-four-current-town-proxies-2026-07.json"
     ,"data/geo/reviewed-candidate-batches/pudong-eight-current-town-proxies-2026-07.json",
-    "data/geo/reviewed-candidate-batches/pudong-gaodong-verified-admin-proxy-2026-07.json",
     "data/geo/reviewed-candidate-batches/pudong-datun-verified-admin-proxy-2026-07.json",
     "data/geo/reviewed-candidate-batches/chongming-two-island-admin-proxies-2026-07.json",
     "data/geo/reviewed-candidate-batches/chongming-baotown-admin-proxy-2026-07.json",
@@ -28,7 +27,8 @@
     "data/geo/reviewed-candidate-batches/minhang-huacao-reference-aided-admin-difference-2026-07.json",
     "data/geo/reviewed-candidate-batches/fengxian-fengcheng-historical-market-proxy-2026-07.json",
     "data/geo/reviewed-candidate-batches/pudong-biyun-official-service-scope-2026-07.json",
-    "data/geo/reviewed-candidate-batches/pudong-inner-five-street-proxies-2026-07.json"
+    "data/geo/reviewed-candidate-batches/pudong-inner-five-street-proxies-2026-07.json",
+    "data/geo/reviewed-candidate-batches/pudong-north-market-repartition-2026-07.json"
   ],
   "workpackSources": {
     "beicai-yuqiao-selected-v1": {
@@ -48,6 +48,12 @@
       "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
       "sourceGeojson": "data/geo/workpacks/gumei-xinzhuang/candidate.wgs84.geojson",
       "sourceGeojsonSha256": "60ca5e8362a585f560ab5e3fa5a5ce53c13dc4000c9c576850143cdaf6141601"
+    },
+    "pudong-north-repartition-selected-v1": {
+      "expectedWorkpackId": "pudong-north-repartition",
+      "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+      "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d"
     }
   },
   "topologyGroups": [

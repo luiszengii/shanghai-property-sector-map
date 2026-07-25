@@ -193,13 +193,13 @@
         }
       ],
       "legacyGeometryComparison": {
-        "reference": "osm-admin-relation-14179186",
-        "intersectionOverUnion": 0.435,
-        "referenceCoveredPercent": 86,
-        "legacyAreaRatio": 1.84,
-        "centroidDistanceKilometers": 1.61
+        "reference": "reviewed-candidate",
+        "intersectionOverUnion": 0.589,
+        "referenceCoveredPercent": 87.7,
+        "legacyAreaRatio": 1.37,
+        "centroidDistanceKilometers": 0.56
       },
-      "summary": "旧演示面约为金桥镇行政参考面的 1.84 倍；2025 年 7 月标准图早于金桥—张江调整，调整段以后续公告为准。"
+      "summary": "旧演示面约为新版市场金桥候选的 1.37 倍，重叠率约 58.9%，质心偏约 0.56 公里；金桥镇行政参考面继续单独显示，不冒充市场板块。"
     },
     {
       "sectorId": "sector_sanlin",
