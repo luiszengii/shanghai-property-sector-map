@@ -64,6 +64,22 @@
         31.314
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_weifang",
+      "labelPoint": [
+        121.519,
+        31.224
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_huamu",
+      "labelPoint": [
+        121.55,
+        31.215
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }
