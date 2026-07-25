@@ -1,0 +1,12 @@
+{
+  "schemaVersion":"1.0.0", "batchId":"fengxian-fengcheng-historical-market-proxy-2026-07", "topologyGroups": [],
+  "sectors":[{
+    "id":"sector_fengcheng", "canonicalName":"奉城", "districtName":"奉贤区", "scopeVersion":"fengcheng-legacy-town-market-proxy-2026-07", "confidence":"low", "method":"market_admin_candidate_with_shared_topology",
+    "osmAdminRelationId":"17885593", "expectedOsmName":"奉城镇", "adminProxyName":"奉城镇（含已析出头桥的历史代理）", "adminBoundaryVersion":"pre-2024-legacy-relation", "insidePoint":[121.6504107,30.9305340],
+    "sharedEdgeSectorIds":[], "requiredAdjacencyReviewIds":["unresolved_touqiao","sector_fengxianjinhui","sector_qingcun","sector_situan"], "sharedEdgeSnapDistanceMeters":1,
+    "preserveTopologyPrecision":true, "preserveMultiPolygonSemantics":true, "marketAdminAlignmentUnverified":true, "areaRangeSquareKilometers":[105,115],
+    "riskFlags":["stale_admin_relation_includes_touqiao","historical_admin_market_proxy","market_boundary_not_official"],
+    "definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-fengxian-touqiao-establishment-2024"], "geometryVerificationSourceIds":["official-fengxian-touqiao-establishment-2024","osm-geofabrik-shanghai-260721"],
+    "geometryRule":"市场奉城按产品参考口径暂以固定 OSM 旧奉城镇 relation 作为低置信、可编辑历史市场代理。该 relation 包含 2024 年析出的头桥街道，不能称为 2026 年现行奉城镇行政界；待头桥现行面可复算后优先扣除并复核相邻接口。"
+  }], "subscopes":[]
+}

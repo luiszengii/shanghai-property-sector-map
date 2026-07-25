@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "chongming-chenjia-area-mismatch-admin-proxy-2026-07",
+  "topologyGroups": [],
+  "sectors": [{
+    "id": "sector_chenjia_town", "canonicalName": "陈家镇", "districtName": "崇明区", "scopeVersion": "chenjia-current-osm-admin-proxy-area-mismatch-2026-07", "confidence": "low", "method": "market_admin_candidate_with_shared_topology", "osmAdminRelationId": "18309975", "expectedOsmName": "陈家镇", "adminProxyName": "陈家镇", "adminBoundaryVersion": "2025-06-or-later", "insidePoint": [121.91695244, 31.52185415], "sharedEdgeSectorIds": [], "requiredAdjacencyReviewIds": ["unresolved_chongming_new_city"], "sharedEdgeSnapDistanceMeters": 1, "preserveTopologyPrecision": true, "preserveMultiPolygonSemantics": true, "marketAdminAlignmentUnverified": true, "adminAreaVersionMismatch": true, "officialCurrentAreaKm2": 94.4, "areaRangeSquareKilometers": [200, 211], "riskFlags": ["town_boundary_not_market_boundary", "multi_scale_scope", "admin_area_version_mismatch", "market_boundary_not_official"], "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-chongming-tri-islands-overview"], "geometryVerificationSourceIds": ["official-chongming-tri-islands-overview", "osm-geofabrik-shanghai-260721"], "geometryRule": "陈家镇暂以锁定 OSM 同名 relation 作为低置信、可编辑行政骨架。官方公开镇域约 94.4 平方公里，而该 relation 为 205.7 平方公里，并可能包含东滩／围垦等广义空间；面积不一致已明确保留，不得把它称为现行精确镇界或住宅市场，后续须以授权官方坐标数据或可核验边线裁切。"
+  }],
+  "subscopes": []
+}

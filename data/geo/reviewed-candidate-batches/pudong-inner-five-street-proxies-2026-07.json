@@ -158,7 +158,11 @@
         31.2566926
       ],
       "sharedEdgeSectorIds": [
-        "sector_yangjing"
+        "sector_yangjing",
+        "sector_biyun"
+      ],
+      "subtractSectorIds": [
+        "sector_biyun"
       ],
       "requiredAdjacencyReviewIds": [
         "sector_jinqiao",
@@ -186,7 +190,7 @@
         "official-pudong-administrative-map-2026",
         "osm-geofabrik-shanghai-260721"
       ],
-      "geometryRule": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理；碧云、花木及金桥的独立市场语义不自动并入。"
+      "geometryRule": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理，并显式扣除按官方服务范围四至重建的碧云候选，以免把碧云核心重复发布；花木及金桥的独立市场语义不自动并入。"
     },
     {
       "id": "sector_nanmatou",

@@ -1,0 +1,5411 @@
+{
+  "type": "FeatureCollection",
+  "name": "source-backed-sector-proxies-wgs84",
+  "schemaVersion": "1.0.0",
+  "status": "internal-review",
+  "notice": "依据公开规划文字四至和 OSM 道路节点重建的参考代理，非行政区划、非法定界址、非商业平台原始边界。",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_suhewan",
+        "name": "苏河湾",
+        "labelPoint": [
+          121.468,
+          31.247
+        ],
+        "scopeVersion": "jingan-suhewan-east-functional-scope-2017-2026-07",
+        "confidence": "medium",
+        "proxyType": "historical-functional-proxy",
+        "definitionSourceIds": [
+          "official-jingan-suhewan-2017-functional-scope"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jingan-suhewan-2017-functional-scope",
+          "osm-overpass-roads-2026-07-25"
+        ],
+        "geometryRule": "按静安区 2017 年《苏河湾地区“十三五”规划》东部地区四至闭合：东河南北路，西共和新路，北交通路，南光复路、北苏州路。道路节点取 2026-07-25 OSM Overpass 可复核道路线；这是历史功能范围代理，不宣称等于楼市苏河湾。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.45824,
+              31.24291
+            ],
+            [
+              121.46577,
+              31.24156
+            ],
+            [
+              121.46734,
+              31.24235
+            ],
+            [
+              121.47631,
+              31.24252
+            ],
+            [
+              121.47843,
+              31.24435
+            ],
+            [
+              121.47776,
+              31.24572
+            ],
+            [
+              121.47723,
+              31.24842
+            ],
+            [
+              121.4769,
+              31.24969
+            ],
+            [
+              121.47512,
+              31.25183
+            ],
+            [
+              121.47468,
+              31.25226
+            ],
+            [
+              121.47206,
+              31.2541
+            ],
+            [
+              121.4692,
+              31.25269
+            ],
+            [
+              121.45932,
+              31.252
+            ],
+            [
+              121.45892,
+              31.25098
+            ],
+            [
+              121.45862,
+              31.24944
+            ],
+            [
+              121.45847,
+              31.2481
+            ],
+            [
+              121.45819,
+              31.24703
+            ],
+            [
+              121.45813,
+              31.24358
+            ],
+            [
+              121.45824,
+              31.24291
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_buyecheng",
+        "name": "不夜城",
+        "labelPoint": [
+          121.4515,
+          31.2485
+        ],
+        "scopeVersion": "jingan-buyecheng-west-functional-scope-2017-2026-07",
+        "confidence": "medium",
+        "proxyType": "historical-functional-proxy",
+        "definitionSourceIds": [
+          "official-jingan-suhewan-2017-functional-scope"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jingan-suhewan-2017-functional-scope",
+          "osm-overpass-roads-2026-07-25"
+        ],
+        "geometryRule": "按静安区 2017 年《苏河湾地区“十三五”规划》西部不夜城四至闭合：东共和新路，西恒丰北路、南苏州路，北中华新路—大统路—交通路，南光复路。道路节点取 2026-07-25 OSM Overpass 可复核道路线；这是历史功能范围代理，不宣称等于楼市不夜城。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.45425,
+              31.24074
+            ],
+            [
+              121.45813,
+              31.24358
+            ],
+            [
+              121.45819,
+              31.24703
+            ],
+            [
+              121.45847,
+              31.2481
+            ],
+            [
+              121.45862,
+              31.24944
+            ],
+            [
+              121.45892,
+              31.25098
+            ],
+            [
+              121.45932,
+              31.252
+            ],
+            [
+              121.45527,
+              31.25112
+            ],
+            [
+              121.45017,
+              31.25297
+            ],
+            [
+              121.44711,
+              31.25415
+            ],
+            [
+              121.44501,
+              31.25496
+            ],
+            [
+              121.44567,
+              31.24545
+            ],
+            [
+              121.45425,
+              31.24074
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_huangxing_park",
+        "name": "黄兴公园",
+        "labelPoint": [
+          121.5259,
+          31.2954
+        ],
+        "scopeVersion": "yangpu-huangxing-park-core-reference-2025-2026-07",
+        "confidence": "medium",
+        "proxyType": "core_reference_proxy",
+        "definitionSourceIds": [
+          "official-yangpu-huangxing-park-four-sides-2025"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-yangpu-huangxing-park-four-sides-2025",
+          "osm-huangxing-park-relation-6262917-2026-07-25"
+        ],
+        "geometryRule": "按杨浦区公开的营口路、双阳北路、走马塘、国顺东路四至，以 OSM 黄兴公园 relation 6262917 的已记录版本闭合公园核心；这是住宅板块的可编辑核心参考，不把公园本体等同于完整楼市市场。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5217521,
+              31.2957958
+            ],
+            [
+              121.5217633,
+              31.2957127
+            ],
+            [
+              121.5217816,
+              31.2956438
+            ],
+            [
+              121.5223692,
+              31.2939524
+            ],
+            [
+              121.5233811,
+              31.2911759
+            ],
+            [
+              121.5243621,
+              31.2912276
+            ],
+            [
+              121.5250831,
+              31.2919978
+            ],
+            [
+              121.5263024,
+              31.2926416
+            ],
+            [
+              121.5280262,
+              31.2934212
+            ],
+            [
+              121.5278011,
+              31.294321
+            ],
+            [
+              121.5280475,
+              31.2946692
+            ],
+            [
+              121.5280311,
+              31.294776
+            ],
+            [
+              121.5288998,
+              31.2951272
+            ],
+            [
+              121.5290776,
+              31.2950757
+            ],
+            [
+              121.5299227,
+              31.2955141
+            ],
+            [
+              121.5299113,
+              31.2955557
+            ],
+            [
+              121.5296195,
+              31.296099
+            ],
+            [
+              121.5291331,
+              31.2959129
+            ],
+            [
+              121.5277924,
+              31.2985088
+            ],
+            [
+              121.528166,
+              31.2987286
+            ],
+            [
+              121.5278092,
+              31.2994645
+            ],
+            [
+              121.5276973,
+              31.2997047
+            ],
+            [
+              121.5276532,
+              31.2997079
+            ],
+            [
+              121.5244767,
+              31.2976612
+            ],
+            [
+              121.5235596,
+              31.2970634
+            ],
+            [
+              121.5225731,
+              31.2964198
+            ],
+            [
+              121.5218942,
+              31.2959507
+            ],
+            [
+              121.5217521,
+              31.2957958
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_nanda",
+        "name": "南大",
+        "labelPoint": [
+          121.381,
+          31.304
+        ],
+        "scopeVersion": "baoshan-w12-1301-planning-reference-2020-2026-07",
+        "confidence": "medium",
+        "proxyType": "planning_reference_proxy",
+        "definitionSourceIds": [
+          "official-baoshan-w12-1301-nanda-plan-2020"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-baoshan-w12-1301-nanda-plan-2020",
+          "osm-overpass-nanda-shanghai-university-roads-2026-07-25"
+        ],
+        "geometryRule": "按沪府〔2020〕50号公布的南大地区（W12-1301）四至，以南陈路—南秀路、环镇南路—祁连山路—S5、S20、丰翔路—环镇北路的开放道路节点闭合。该面是跨区、产居混合的获批控详规参考范围，不等同住宅市场边界。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.3528,
+              31.3114
+            ],
+            [
+              121.3592,
+              31.3111
+            ],
+            [
+              121.3691,
+              31.3107
+            ],
+            [
+              121.3756,
+              31.3102
+            ],
+            [
+              121.3824,
+              31.3092
+            ],
+            [
+              121.3937,
+              31.3022
+            ],
+            [
+              121.4058,
+              31.2967
+            ],
+            [
+              121.4101,
+              31.2961
+            ],
+            [
+              121.4114,
+              31.3031
+            ],
+            [
+              121.4111,
+              31.3115
+            ],
+            [
+              121.4088,
+              31.3177
+            ],
+            [
+              121.4017,
+              31.3201
+            ],
+            [
+              121.3924,
+              31.3215
+            ],
+            [
+              121.3829,
+              31.3211
+            ],
+            [
+              121.3736,
+              31.3197
+            ],
+            [
+              121.3643,
+              31.3175
+            ],
+            [
+              121.3561,
+              31.3145
+            ],
+            [
+              121.3528,
+              31.3114
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_shanghai_university",
+        "name": "上大",
+        "labelPoint": [
+          121.394,
+          31.32
+        ],
+        "scopeVersion": "baoshan-shanghai-university-surroundings-planning-reference-2021-2026-07",
+        "confidence": "medium",
+        "proxyType": "planning_reference_proxy",
+        "definitionSourceIds": [
+          "official-baoshan-huanshangda-science-park-plan-2021"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-baoshan-huanshangda-science-park-plan-2021",
+          "osm-overpass-nanda-shanghai-university-roads-2026-07-25"
+        ],
+        "geometryRule": "按宝山区《环上大科技园“十四五”规划》上大周边约10平方公里核心区四至，以大场机场界、真大路—环镇南路、祁连山路—环镇北路—南陈路、塘祁路的开放道路节点闭合；这是科技园规划参考面，包含校园、产业及周边社区，不等同住宅市场边界。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.3767,
+              31.3201
+            ],
+            [
+              121.3782,
+              31.3138
+            ],
+            [
+              121.384,
+              31.3093
+            ],
+            [
+              121.3951,
+              31.309
+            ],
+            [
+              121.4058,
+              31.3097
+            ],
+            [
+              121.4101,
+              31.3114
+            ],
+            [
+              121.4148,
+              31.3193
+            ],
+            [
+              121.4142,
+              31.3244
+            ],
+            [
+              121.4088,
+              31.3282
+            ],
+            [
+              121.4004,
+              31.3295
+            ],
+            [
+              121.3907,
+              31.3299
+            ],
+            [
+              121.3821,
+              31.3289
+            ],
+            [
+              121.3764,
+              31.3274
+            ],
+            [
+              121.3767,
+              31.3201
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_yangcheng",
+        "name": "阳城",
+        "labelPoint": [
+          121.421,
+          31.287
+        ],
+        "scopeVersion": "jingan-yangcheng-community-member-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "community_member_reference_proxy",
+        "definitionSourceIds": [
+          "official-jingan-yangcheng-yonghe-community-notice-2019"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jingan-yangcheng-yonghe-community-notice-2019",
+          "osm-yangcheng-yonghe-community-ways-2026-07-25"
+        ],
+        "geometryRule": "按静安区公开材料确认的阳城贵都、浦联佳苑住宅成员，以 OSM 住宅地块边界合并为阳城可编辑成员参考；不把彭浦镇行政范围或该成员集直接等同于完整市场面。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.4184013,
+              31.2859692
+            ],
+            [
+              121.4197538,
+              31.2860127
+            ],
+            [
+              121.4232545,
+              31.2862354
+            ],
+            [
+              121.4234491,
+              31.2865275
+            ],
+            [
+              121.4232292,
+              31.2881942
+            ],
+            [
+              121.4193982,
+              31.2879434
+            ],
+            [
+              121.4186349,
+              31.287894
+            ],
+            [
+              121.4183318,
+              31.2862844
+            ],
+            [
+              121.4184013,
+              31.2859692
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_yonghe",
+        "name": "永和",
+        "labelPoint": [
+          121.424,
+          31.294
+        ],
+        "scopeVersion": "jingan-yonghe-community-member-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "community_member_reference_proxy",
+        "definitionSourceIds": [
+          "official-jingan-yangcheng-yonghe-community-notice-2019"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jingan-yangcheng-yonghe-community-notice-2019",
+          "osm-yangcheng-yonghe-community-ways-2026-07-25"
+        ],
+        "geometryRule": "按静安区公开材料中的永和二村、永和东村、永和家园成员，用 OSM 住宅地块和相邻公共道路形成可编辑成员参考；该范围仍须与阳城、彭浦及共康联合裁切。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.4191963,
+              31.2919885
+            ],
+            [
+              121.4215241,
+              31.2915946
+            ],
+            [
+              121.4247119,
+              31.2922535
+            ],
+            [
+              121.4270079,
+              31.2926723
+            ],
+            [
+              121.4285233,
+              31.2926849
+            ],
+            [
+              121.4282012,
+              31.2948927
+            ],
+            [
+              121.4266757,
+              31.2955497
+            ],
+            [
+              121.4240482,
+              31.2951279
+            ],
+            [
+              121.4231703,
+              31.2922408
+            ],
+            [
+              121.4191963,
+              31.2919885
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_pengpu",
+        "name": "彭浦",
+        "labelPoint": [
+          121.44,
+          31.314
+        ],
+        "scopeVersion": "jingan-pengpu-xincun-admin-core-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-jingan-pengpu-xincun-profile-2016"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jingan-pengpu-xincun-profile-2016",
+          "osm-pengpu-xincun-relation-14186008-2026-07-25"
+        ],
+        "geometryRule": "以静安区公开四至说明和 OSM 彭浦新村街道 relation 14186008 为行政核心代理；卖方彭浦市场可能越过行政东界，因此仍须与阳城、永和、共康和大宁联合裁切。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.4278641,
+              31.320636
+            ],
+            [
+              121.4298869,
+              31.3143246
+            ],
+            [
+              121.4309835,
+              31.3112067
+            ],
+            [
+              121.4310264,
+              31.3081177
+            ],
+            [
+              121.4310157,
+              31.306926
+            ],
+            [
+              121.4312625,
+              31.3059635
+            ],
+            [
+              121.4325285,
+              31.3063118
+            ],
+            [
+              121.4349103,
+              31.3068252
+            ],
+            [
+              121.4368629,
+              31.3069718
+            ],
+            [
+              121.4429569,
+              31.3075768
+            ],
+            [
+              121.4440727,
+              31.3076318
+            ],
+            [
+              121.4442015,
+              31.3042585
+            ],
+            [
+              121.4470553,
+              31.3047718
+            ],
+            [
+              121.447463,
+              31.3049093
+            ],
+            [
+              121.4501452,
+              31.3053493
+            ],
+            [
+              121.4500058,
+              31.3059818
+            ],
+            [
+              121.4497375,
+              31.3062202
+            ],
+            [
+              121.4495337,
+              31.3064218
+            ],
+            [
+              121.4498556,
+              31.3067427
+            ],
+            [
+              121.4498448,
+              31.3073568
+            ],
+            [
+              121.450789,
+              31.3074027
+            ],
+            [
+              121.4507031,
+              31.3153315
+            ],
+            [
+              121.4513147,
+              31.3186311
+            ],
+            [
+              121.4511767,
+              31.3219314
+            ],
+            [
+              121.4507564,
+              31.321645
+            ],
+            [
+              121.4487179,
+              31.3202611
+            ],
+            [
+              121.4483317,
+              31.3200686
+            ],
+            [
+              121.4435145,
+              31.3188404
+            ],
+            [
+              121.4432999,
+              31.3187763
+            ],
+            [
+              121.4429136,
+              31.3196653
+            ],
+            [
+              121.4418541,
+              31.322097
+            ],
+            [
+              121.4409902,
+              31.321865
+            ],
+            [
+              121.4400208,
+              31.321785
+            ],
+            [
+              121.4322277,
+              31.3214938
+            ],
+            [
+              121.4319491,
+              31.3226547
+            ],
+            [
+              121.4290497,
+              31.322657
+            ],
+            [
+              121.4289987,
+              31.3223797
+            ],
+            [
+              121.4286686,
+              31.3205232
+            ],
+            [
+              121.4280546,
+              31.3206063
+            ],
+            [
+              121.4278641,
+              31.320636
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_weifang",
+        "name": "潍坊",
+        "labelPoint": [
+          121.519,
+          31.224
+        ],
+        "scopeVersion": "pudong-weifang-admin-reference-2025-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-pudong-boundary-adjustment-2025"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-pudong-boundary-adjustment-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以 OSM 潍坊新村街道 relation 12867311 v5（2025-09-22）为可编辑行政参考；官方公告确认与花木应以杨高中路、杨高南路为界，但未公开端点，故不伪造全段共享线，留待联合编辑精修。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5025807,
+              31.2254751
+            ],
+            [
+              121.5059457,
+              31.2175022
+            ],
+            [
+              121.5143785,
+              31.2168291
+            ],
+            [
+              121.5216963,
+              31.2176079
+            ],
+            [
+              121.524908,
+              31.2210638
+            ],
+            [
+              121.5315466,
+              31.2202828
+            ],
+            [
+              121.5347796,
+              31.2247441
+            ],
+            [
+              121.5293907,
+              31.2348826
+            ],
+            [
+              121.5025807,
+              31.2254751
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_huamu",
+        "name": "花木",
+        "labelPoint": [
+          121.55,
+          31.215
+        ],
+        "scopeVersion": "pudong-huamu-admin-reference-2025-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-pudong-boundary-adjustment-2025"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-pudong-boundary-adjustment-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以 OSM 花木街道 relation 12867438 v8（2025-09-22）为可编辑行政参考；官方公告确认与潍坊的杨高中路、杨高南路界，未公开端点，故市场共享边仍标为待联合裁切。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5193629,
+              31.1897636
+            ],
+            [
+              121.5286608,
+              31.1870461
+            ],
+            [
+              121.5332276,
+              31.1897068
+            ],
+            [
+              121.5635276,
+              31.1925024
+            ],
+            [
+              121.5744924,
+              31.195274
+            ],
+            [
+              121.5730977,
+              31.2099569
+            ],
+            [
+              121.5745997,
+              31.2145999
+            ],
+            [
+              121.5705549,
+              31.2300779
+            ],
+            [
+              121.57902,
+              31.2338484
+            ],
+            [
+              121.5736821,
+              31.243296
+            ],
+            [
+              121.564856,
+              31.2393925
+            ],
+            [
+              121.5609503,
+              31.2405261
+            ],
+            [
+              121.5596113,
+              31.2367047
+            ],
+            [
+              121.5335129,
+              31.223705
+            ],
+            [
+              121.525149,
+              31.2041317
+            ],
+            [
+              121.5224303,
+              31.2015462
+            ],
+            [
+              121.5230375,
+              31.1990927
+            ],
+            [
+              121.5193629,
+              31.1897636
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_dinghai_road",
+        "name": "定海路",
+        "labelPoint": [
+          121.553,
+          31.285
+        ],
+        "scopeVersion": "yangpu-dinghai-road-admin-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-yangpu-dinghai-road-subdistrict-profile-2018"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-yangpu-dinghai-road-subdistrict-profile-2018",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以官方定海路街道四至说明和 OSM relation 13466400 v12（2026-03-09）生成行政参考代理；复兴岛产业空间及东外滩组成部分需在与东外滩联合编辑时继续扣除。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5362109,
+              31.2743104
+            ],
+            [
+              121.5440162,
+              31.2673559
+            ],
+            [
+              121.5454514,
+              31.2684618
+            ],
+            [
+              121.5501162,
+              31.2636017
+            ],
+            [
+              121.562259,
+              31.2749544
+            ],
+            [
+              121.5643049,
+              31.2789793
+            ],
+            [
+              121.5647584,
+              31.2862884
+            ],
+            [
+              121.5574946,
+              31.3055415
+            ],
+            [
+              121.5540036,
+              31.3055053
+            ],
+            [
+              121.5546834,
+              31.2928588
+            ],
+            [
+              121.5497532,
+              31.2911365
+            ],
+            [
+              121.5513517,
+              31.2889665
+            ],
+            [
+              121.5366371,
+              31.2800321
+            ],
+            [
+              121.5393438,
+              31.2764346
+            ],
+            [
+              121.5362109,
+              31.2743104
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_xijiao",
+        "name": "西郊",
+        "labelPoint": [
+          121.356,
+          31.207
+        ],
+        "proxyType": "core_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "以官方2.55平方公里西郊样板区组成描述为定义依据；按天山西路—新泾港—金浜路—外环高速/绿道中心线形成可编辑核心参考面。该范围偏向公园城市样板区，不等同卖方口径的完整西郊住宅板块。",
+        "definitionSourceIds": [
+          "official-changning-xijiao-park-city-2024"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-changning-xijiao-park-city-2024",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "正文没有闭合四至；本面只以天山西路、金浜路、新泾港及外环高速/绿道形成约2.55平方公里的道路水系核心，不声称复原规划附图。",
+          "使用固定 GPKG 快照中的道路、河道中心线交点和折点闭合；未读取或描摹 PDF 图像。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.351797,
+              31.200383
+            ],
+            [
+              121.3545,
+              31.2003
+            ],
+            [
+              121.3577,
+              31.2004
+            ],
+            [
+              121.3607457,
+              31.2005397
+            ],
+            [
+              121.362,
+              31.204
+            ],
+            [
+              121.365,
+              31.209
+            ],
+            [
+              121.368,
+              31.214
+            ],
+            [
+              121.3712398,
+              31.2181035
+            ],
+            [
+              121.365,
+              31.2188
+            ],
+            [
+              121.359,
+              31.2195
+            ],
+            [
+              121.352,
+              31.2204
+            ],
+            [
+              121.3456719,
+              31.2208253
+            ],
+            [
+              121.3468,
+              31.215
+            ],
+            [
+              121.3483,
+              31.21
+            ],
+            [
+              121.3502,
+              31.205
+            ],
+            [
+              121.351797,
+              31.200383
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_waigaoqiao",
+        "name": "外高桥",
+        "labelPoint": [
+          121.607,
+          31.334
+        ],
+        "proxyType": "planning_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "按官方10.34平方公里协调范围，以五洲大道—浦东运河/港电路—威斯路—杨高北路中心线闭合规划参考面；东侧开放数据未形成连续同名线的段落为待核共享边，不把产业港区静默归入住宅市场。",
+        "definitionSourceIds": [
+          "official-pudong-waigaoqiao-free-trade-zone-plan-2009"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-pudong-waigaoqiao-free-trade-zone-plan-2009",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "这是保税区协调/用地规划口径，含产业和港区；不是外高桥住宅市场边界。",
+          "沿固定快照中的道路和运河中心线折点闭合；港电路与浦东运河之间缺失的开放线段采用相邻端点直连并显式保留为待编辑边。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.60015,
+              31.30605
+            ],
+            [
+              121.61141,
+              31.3059
+            ],
+            [
+              121.6333,
+              31.3059
+            ],
+            [
+              121.6541053,
+              31.3026724
+            ],
+            [
+              121.642,
+              31.32
+            ],
+            [
+              121.625,
+              31.338
+            ],
+            [
+              121.607,
+              31.349
+            ],
+            [
+              121.593775,
+              31.363919
+            ],
+            [
+              121.5910687,
+              31.360807
+            ],
+            [
+              121.58531,
+              31.3688841
+            ],
+            [
+              121.5830783,
+              31.365881
+            ],
+            [
+              121.581,
+              31.3577
+            ],
+            [
+              121.5832,
+              31.349
+            ],
+            [
+              121.5873,
+              31.3421
+            ],
+            [
+              121.5925,
+              31.3271
+            ],
+            [
+              121.596,
+              31.3217
+            ],
+            [
+              121.60005,
+              31.315
+            ],
+            [
+              121.60015,
+              31.30605
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_lingang_main_city",
+        "name": "临港主城区",
+        "labelPoint": [
+          121.91,
+          30.92
+        ],
+        "proxyType": "administrative_core_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "官方343.3平方公里规划只用于确认临港主城区/南汇新城的上位口径；当前采用 OSM 南汇新城镇 relation 14180411 的行政核心参考面，后续须再与滴水湖、书院、泥城、产业区和滨海生态空间联合裁切。",
+        "definitionSourceIds": [
+          "official-shanghai-nanhui-new-city-action-plan-2021"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-shanghai-nanhui-new-city-action-plan-2021",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "公开规划范围远大于楼市常说的滴水湖主城区；本面采用南汇新城镇行政 relation 作为可编辑核心，而不是把343.3平方公里全域直接作为住宅板块。",
+          "取固定快照 relation 主外环并以0.001度拓扑保持容差简化；Geofabrik GPKG 不保留 OSM relation 版本号。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.7635429,
+              30.8661019
+            ],
+            [
+              121.7642956,
+              30.8479478
+            ],
+            [
+              121.7835217,
+              30.8486787
+            ],
+            [
+              121.8150887,
+              30.8462366
+            ],
+            [
+              121.8175332,
+              30.8458812
+            ],
+            [
+              121.8173173,
+              30.8410802
+            ],
+            [
+              121.8179435,
+              30.8410843
+            ],
+            [
+              121.8176699,
+              30.8458714
+            ],
+            [
+              121.8351026,
+              30.8452552
+            ],
+            [
+              121.8394405,
+              30.847601
+            ],
+            [
+              121.8482803,
+              30.8478247
+            ],
+            [
+              121.8481488,
+              30.8504959
+            ],
+            [
+              121.8875505,
+              30.8482001
+            ],
+            [
+              121.962297,
+              30.8770435
+            ],
+            [
+              121.9601534,
+              30.879537
+            ],
+            [
+              121.9629434,
+              30.877436
+            ],
+            [
+              121.9648129,
+              30.8785133
+            ],
+            [
+              121.9725671,
+              30.8850324
+            ],
+            [
+              121.9741416,
+              30.9212881
+            ],
+            [
+              121.9399595,
+              30.9995728
+            ],
+            [
+              121.9350671,
+              31.0023685
+            ],
+            [
+              121.9245744,
+              31.0031041
+            ],
+            [
+              121.9246602,
+              31.0049249
+            ],
+            [
+              121.8748569,
+              31.0067641
+            ],
+            [
+              121.886487,
+              30.9755118
+            ],
+            [
+              121.8997264,
+              30.974178
+            ],
+            [
+              121.9047904,
+              30.9567629
+            ],
+            [
+              121.9064212,
+              30.943734
+            ],
+            [
+              121.8909502,
+              30.9438996
+            ],
+            [
+              121.8902206,
+              30.9262305
+            ],
+            [
+              121.8844056,
+              30.9081163
+            ],
+            [
+              121.8784618,
+              30.8967011
+            ],
+            [
+              121.868999,
+              30.9042684
+            ],
+            [
+              121.8437862,
+              30.8876416
+            ],
+            [
+              121.8400526,
+              30.8916006
+            ],
+            [
+              121.8356752,
+              30.8857817
+            ],
+            [
+              121.8373489,
+              30.8804229
+            ],
+            [
+              121.8263411,
+              30.8802019
+            ],
+            [
+              121.8263411,
+              30.8734982
+            ],
+            [
+              121.8088102,
+              30.8729826
+            ],
+            [
+              121.809175,
+              30.8658364
+            ],
+            [
+              121.7956567,
+              30.8656522
+            ],
+            [
+              121.7948627,
+              30.8711961
+            ],
+            [
+              121.7943263,
+              30.8657075
+            ],
+            [
+              121.7745423,
+              30.8682124
+            ],
+            [
+              121.7757869,
+              30.872338
+            ],
+            [
+              121.7674398,
+              30.8717486
+            ],
+            [
+              121.7671354,
+              30.8774679
+            ],
+            [
+              121.7635429,
+              30.8661019
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_ruihong_new_town",
+        "name": "瑞虹新城",
+        "labelPoint": [
+          121.4962,
+          31.2652
+        ],
+        "proxyType": "core_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "严格按官方“天虹路—瑞虹路—虹关路—虹镇老街—飞虹路”顺序复用 OSM 道路中心线节点闭合瑞虹核心参考面；与临平路、北外滩和嘉兴路街道其余部分仍需联合裁切。",
+        "definitionSourceIds": [
+          "official-hongkou-zhangjiang-ruihong-parcel-2023"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-hongkou-zhangjiang-ruihong-parcel-2023",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "该四至定义的是张江虹口园瑞虹地块，虽与瑞虹社区高度重合，仍不是全部楼市瑞虹新城的法定边界。",
+          "按五条道路在固定快照中的共同节点及中心线折点闭合。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.4966036,
+              31.2633168
+            ],
+            [
+              121.4971399,
+              31.2641093
+            ],
+            [
+              121.497339,
+              31.2645285
+            ],
+            [
+              121.49771,
+              31.2655872
+            ],
+            [
+              121.4979905,
+              31.2665314
+            ],
+            [
+              121.496461,
+              31.2669215
+            ],
+            [
+              121.4954642,
+              31.2671683
+            ],
+            [
+              121.4949709,
+              31.2660628
+            ],
+            [
+              121.4944817,
+              31.2650599
+            ],
+            [
+              121.4956128,
+              31.2641668
+            ],
+            [
+              121.4961869,
+              31.2636773
+            ],
+            [
+              121.4966036,
+              31.2633168
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_jiading_new_city",
+        "name": "嘉定新城",
+        "labelPoint": [
+          121.281,
+          31.351
+        ],
+        "proxyType": "core_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "采用官方12.5平方公里领先示范区而非159.5平方公里新城全域：浏翔公路—思义路—沪嘉高速S5—上海绕城高速G1503闭合。思义路在固定 OSM 快照缺名，南边明确标为需现场编辑校正。",
+        "definitionSourceIds": [
+          "official-shanghai-jiading-new-city-green-core-2025"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-shanghai-jiading-new-city-green-core-2025",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "这是嘉定新城159.5平方公里全域中的领先示范核心；采用核心而不是全域，避免吞并嘉定老城、菊园、新成路和马陆其余市场。",
+          "浏翔公路、S5、G1503按固定快照折点近似；快照中未检出“思义路”同名要素，南边采用官方方位与相邻道路端点形成待编辑共享线。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.2608,
+              31.334
+            ],
+            [
+              121.272,
+              31.3345
+            ],
+            [
+              121.285,
+              31.335
+            ],
+            [
+              121.297,
+              31.336
+            ],
+            [
+              121.3,
+              31.348
+            ],
+            [
+              121.303,
+              31.36
+            ],
+            [
+              121.305,
+              31.374
+            ],
+            [
+              121.294,
+              31.375
+            ],
+            [
+              121.282,
+              31.3745
+            ],
+            [
+              121.272,
+              31.374
+            ],
+            [
+              121.268,
+              31.365
+            ],
+            [
+              121.265,
+              31.355
+            ],
+            [
+              121.2625,
+              31.344
+            ],
+            [
+              121.2608,
+              31.334
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_songbao",
+        "name": "淞宝",
+        "labelPoint": [
+          121.492,
+          31.391
+        ],
+        "proxyType": "administrative_core_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "获批淞宝单元用于定义上位口径；几何采用 OSM 吴淞街道与友谊路街道 relation 主陆域并集作为可编辑行政核心。港区、水域及产业地块需在后续与高境、宝山老城方向联合裁切。",
+        "definitionSourceIds": [
+          "official-shanghai-songbao-unit-plan-2022"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-shanghai-songbao-unit-plan-2022",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "HTML和批复正文未提供可仅凭文字复原的完整逐边四至；本面使用吴淞街道与友谊路街道开放行政关系并集作为强核心，不描摹规划附图。",
+          "并集两个 relation 的主陆域外环，移除微小离散岛并以0.0006度拓扑保持容差简化；不描摹官方规划图。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.508274,
+              31.3972752
+            ],
+            [
+              121.5034112,
+              31.4049217
+            ],
+            [
+              121.5007918,
+              31.4069778
+            ],
+            [
+              121.4997554,
+              31.406705
+            ],
+            [
+              121.4890641,
+              31.4164704
+            ],
+            [
+              121.4816102,
+              31.4176859
+            ],
+            [
+              121.4697361,
+              31.4177797
+            ],
+            [
+              121.4706731,
+              31.4189996
+            ],
+            [
+              121.4627591,
+              31.4149536
+            ],
+            [
+              121.46307,
+              31.4125301
+            ],
+            [
+              121.4657612,
+              31.4093335
+            ],
+            [
+              121.4678125,
+              31.4025306
+            ],
+            [
+              121.4699611,
+              31.3992609
+            ],
+            [
+              121.4706012,
+              31.3957005
+            ],
+            [
+              121.473398,
+              31.3924749
+            ],
+            [
+              121.4729138,
+              31.3856223
+            ],
+            [
+              121.4765728,
+              31.3828475
+            ],
+            [
+              121.4782035,
+              31.379637
+            ],
+            [
+              121.4772659,
+              31.3759161
+            ],
+            [
+              121.4793158,
+              31.372569
+            ],
+            [
+              121.4777826,
+              31.3660292
+            ],
+            [
+              121.4796102,
+              31.3657744
+            ],
+            [
+              121.4828708,
+              31.3604956
+            ],
+            [
+              121.4866411,
+              31.3613718
+            ],
+            [
+              121.4887623,
+              31.3603623
+            ],
+            [
+              121.4920851,
+              31.3536216
+            ],
+            [
+              121.4968945,
+              31.3552505
+            ],
+            [
+              121.4978143,
+              31.3533201
+            ],
+            [
+              121.5022415,
+              31.3544334
+            ],
+            [
+              121.5054668,
+              31.3580372
+            ],
+            [
+              121.5016268,
+              31.3620124
+            ],
+            [
+              121.5001627,
+              31.3650892
+            ],
+            [
+              121.4992685,
+              31.3731212
+            ],
+            [
+              121.5013638,
+              31.3809056
+            ],
+            [
+              121.5047715,
+              31.385273
+            ],
+            [
+              121.5116147,
+              31.3905117
+            ],
+            [
+              121.5143348,
+              31.391142
+            ],
+            [
+              121.5080595,
+              31.3943813
+            ],
+            [
+              121.508274,
+              31.3972752
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_jiuting",
+        "name": "九亭",
+        "labelPoint": [
+          121.315,
+          31.129
+        ],
+        "proxyType": "administrative_reference_proxy",
+        "confidence": "medium",
+        "geometryRule": "官方规划确认G50、G60、嘉闵高架、淀浦河的上位外框；为避免覆盖独立九里亭板块，当前以 OSM 九亭镇 relation 16202386 作为行政参考代理，后续与九里亭、莘闵别墅、泗泾共边精修。",
+        "definitionSourceIds": [
+          "official-songjiang-jiuting-new-town-plan-2019"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-songjiang-jiuting-new-town-plan-2019",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "method": "official_text_and_fixed_open_geometry_snapshot_proxy",
+        "limitations": [
+          "市场目录已有独立九里亭口径，因此本面只采用九亭镇 relation，未把官方31.32平方公里九亭新市镇全域直接归入九亭。",
+          "取固定快照 relation 主外环并以0.001度拓扑保持容差简化；Geofabrik GPKG 不保留 relation 版本号。"
+        ],
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.2723433,
+              31.1478468
+            ],
+            [
+              121.2728043,
+              31.146284
+            ],
+            [
+              121.2751769,
+              31.1477505
+            ],
+            [
+              121.2775013,
+              31.1442238
+            ],
+            [
+              121.27997,
+              31.1446114
+            ],
+            [
+              121.2833258,
+              31.1420229
+            ],
+            [
+              121.2770228,
+              31.135206
+            ],
+            [
+              121.282978,
+              31.1338261
+            ],
+            [
+              121.2855575,
+              31.1353199
+            ],
+            [
+              121.2884579,
+              31.1347996
+            ],
+            [
+              121.2877881,
+              31.1327011
+            ],
+            [
+              121.2960516,
+              31.1307461
+            ],
+            [
+              121.3002607,
+              31.1325697
+            ],
+            [
+              121.3009469,
+              31.1296163
+            ],
+            [
+              121.2961954,
+              31.1256153
+            ],
+            [
+              121.2940754,
+              31.1193107
+            ],
+            [
+              121.2968999,
+              31.1097152
+            ],
+            [
+              121.2947598,
+              31.109387
+            ],
+            [
+              121.2980626,
+              31.1082759
+            ],
+            [
+              121.2965272,
+              31.1071866
+            ],
+            [
+              121.2983157,
+              31.1064585
+            ],
+            [
+              121.3057591,
+              31.0933525
+            ],
+            [
+              121.3099774,
+              31.0939424
+            ],
+            [
+              121.3180077,
+              31.0999766
+            ],
+            [
+              121.3180628,
+              31.1014967
+            ],
+            [
+              121.3166476,
+              31.1007807
+            ],
+            [
+              121.3156181,
+              31.1023207
+            ],
+            [
+              121.3168977,
+              31.1030044
+            ],
+            [
+              121.319299,
+              31.1028526
+            ],
+            [
+              121.3244315,
+              31.095601
+            ],
+            [
+              121.3297351,
+              31.0976146
+            ],
+            [
+              121.3306424,
+              31.1017443
+            ],
+            [
+              121.3360788,
+              31.104132
+            ],
+            [
+              121.3400912,
+              31.0983998
+            ],
+            [
+              121.3467067,
+              31.1010308
+            ],
+            [
+              121.3427386,
+              31.1089143
+            ],
+            [
+              121.34871,
+              31.1088607
+            ],
+            [
+              121.3484118,
+              31.1103088
+            ],
+            [
+              121.352611,
+              31.112542
+            ],
+            [
+              121.3514742,
+              31.114522
+            ],
+            [
+              121.3491456,
+              31.1134622
+            ],
+            [
+              121.3472606,
+              31.1151918
+            ],
+            [
+              121.3465197,
+              31.1173444
+            ],
+            [
+              121.3491408,
+              31.1184911
+            ],
+            [
+              121.3479059,
+              31.120366
+            ],
+            [
+              121.3446512,
+              31.1197694
+            ],
+            [
+              121.3434561,
+              31.1216493
+            ],
+            [
+              121.3374522,
+              31.1367505
+            ],
+            [
+              121.3325163,
+              31.1395175
+            ],
+            [
+              121.3343479,
+              31.1425709
+            ],
+            [
+              121.3292734,
+              31.1480615
+            ],
+            [
+              121.3297123,
+              31.1494215
+            ],
+            [
+              121.3199082,
+              31.1441052
+            ],
+            [
+              121.3157493,
+              31.1400943
+            ],
+            [
+              121.3002822,
+              31.1349783
+            ],
+            [
+              121.2984099,
+              31.1398996
+            ],
+            [
+              121.2855792,
+              31.1548279
+            ],
+            [
+              121.2785099,
+              31.1542934
+            ],
+            [
+              121.2790822,
+              31.1531282
+            ],
+            [
+              121.2764992,
+              31.1526692
+            ],
+            [
+              121.2742176,
+              31.1550853
+            ],
+            [
+              121.2730207,
+              31.1544792
+            ],
+            [
+              121.2743098,
+              31.1514472
+            ],
+            [
+              121.2729015,
+              31.1508673
+            ],
+            [
+              121.2739586,
+              31.1485072
+            ],
+            [
+              121.2723433,
+              31.1478468
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_jiading_old_city",
+        "name": "嘉定老城",
+        "labelPoint": [
+          121.243,
+          31.384
+        ],
+        "scopeVersion": "jiading-old-city-admin-core-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-jiading-old-city-profile-2024"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-jiading-old-city-profile-2024",
+          "osm-b3-outer-relations-2026-07-25"
+        ],
+        "geometryRule": "以官方确认的嘉定老城区语境和嘉定镇街道 relation 17000644 作为强行政核心代理；后续与菊园、新成路、嘉定新城共同裁边。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_or_open_geometry_reference_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.228352,
+              31.373717
+            ],
+            [
+              121.230994,
+              31.37201
+            ],
+            [
+              121.253647,
+              31.379255
+            ],
+            [
+              121.255881,
+              31.384616
+            ],
+            [
+              121.255684,
+              31.389505
+            ],
+            [
+              121.251511,
+              31.394027
+            ],
+            [
+              121.24513,
+              31.395114
+            ],
+            [
+              121.239237,
+              31.393085
+            ],
+            [
+              121.235539,
+              31.38217
+            ],
+            [
+              121.229245,
+              31.377143
+            ],
+            [
+              121.228352,
+              31.373717
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_songjiang_university_town",
+        "name": "松江大学城",
+        "labelPoint": [
+          121.199,
+          31.057
+        ],
+        "scopeVersion": "songjiang-university-town-guangfulin-admin-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-songjiang-university-town-communities-2023"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-songjiang-university-town-communities-2023",
+          "osm-b3-outer-relations-2026-07-25"
+        ],
+        "geometryRule": "以官方社区四至通知定位大学城社区成员，以广富林街道 relation 16202387 作为可编辑最大行政包络；校园与非住宅范围需继续排除。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_or_open_geometry_reference_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.1656295,
+              31.0698204
+            ],
+            [
+              121.1677355,
+              31.0469782
+            ],
+            [
+              121.1722432,
+              31.0425371
+            ],
+            [
+              121.1891858,
+              31.0453788
+            ],
+            [
+              121.235702,
+              31.0450641
+            ],
+            [
+              121.2329967,
+              31.0711104
+            ],
+            [
+              121.1736598,
+              31.07166
+            ],
+            [
+              121.1656295,
+              31.0698204
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_chongming_new_city",
+        "name": "崇明新城",
+        "labelPoint": [
+          121.437,
+          31.632
+        ],
+        "scopeVersion": "chongming-new-city-open-core-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "core_reference_proxy",
+        "definitionSourceIds": [
+          "official-chongming-chengqiao-new-city-plan-2019"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-chongming-chengqiao-new-city-plan-2019",
+          "osm-b3-outer-relations-2026-07-25"
+        ],
+        "geometryRule": "官方总规确认城桥新城由西、中、东区及工业园构成；当前仅以 OSM 同名城桥新城公开面作为可编辑核心锚点，未把城桥镇全域或工业园静默并入住宅市场。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_or_open_geometry_reference_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.4340642,
+              31.6308874
+            ],
+            [
+              121.436586,
+              31.6292889
+            ],
+            [
+              121.4395468,
+              31.6319768
+            ],
+            [
+              121.4364179,
+              31.6337979
+            ],
+            [
+              121.4340642,
+              31.6308874
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "official-putuo-zhenru-zhenguang-block-communities-2024",
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_zhenguang",
+        "name": "真光",
+        "labelPoint": [
+          121.3808,
+          31.2581
+        ],
+        "scopeVersion": "putuo-zhenguang-verified-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_17_community_member_list_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-putuo-zhenru-zhenguang-block-communities-2024"
+        ],
+        "officialMembers": [
+          "清二",
+          "清三",
+          "清四",
+          "清六",
+          "中鼎",
+          "真四",
+          "清七",
+          "真三",
+          "真五",
+          "真六",
+          "真八",
+          "真一",
+          "真二",
+          "真七",
+          "真九",
+          "真十",
+          "清八"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "清二",
+            "osmName": "清涧新村第二小区",
+            "object": "way/1431067082",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067082"
+          },
+          {
+            "officialMember": "清三",
+            "osmName": "清涧三街坊",
+            "object": "way/1431067081",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067081"
+          },
+          {
+            "officialMember": "清六",
+            "osmName": "清涧新村第六小区",
+            "object": "way/1431067080",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067080"
+          },
+          {
+            "officialMember": "中鼎",
+            "osmName": "中鼎豪园",
+            "object": "way/1431067069",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067069"
+          },
+          {
+            "officialMember": "真四",
+            "osmName": "真光新村第四小区",
+            "object": "way/956596812",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/956596812"
+          },
+          {
+            "officialMember": "真五",
+            "osmName": "真光新村第五小区",
+            "object": "way/957024133",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/957024133"
+          },
+          {
+            "officialMember": "真六",
+            "osmName": "真光第六小区",
+            "object": "way/957024135",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024135"
+          },
+          {
+            "officialMember": "真八",
+            "osmName": "真光新村第八小区",
+            "object": "way/957024145",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/957024145"
+          },
+          {
+            "officialMember": "真一",
+            "osmName": "真光一小区",
+            "object": "way/1431067085",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067085"
+          },
+          {
+            "officialMember": "真二",
+            "osmName": "真光新村第二小区",
+            "object": "way/957024141",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024141"
+          },
+          {
+            "officialMember": "真七",
+            "osmName": "真光新村第七小区",
+            "object": "way/957024143",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024143"
+          },
+          {
+            "officialMember": "真九",
+            "osmName": "真光新村第九小区",
+            "object": "way/957025218",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957025218"
+          },
+          {
+            "officialMember": "真十",
+            "osmName": "真光十小区",
+            "object": "way/1431067083",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067083"
+          },
+          {
+            "officialMember": "清八",
+            "osmName": "清涧新村第八小区",
+            "object": "way/1431067079",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067079"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "清四",
+          "清七",
+          "真三"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/1431067082",
+            "version": 1,
+            "name": "清涧新村第二小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067082"
+          },
+          {
+            "object": "way/1431067081",
+            "version": 1,
+            "name": "清涧三街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067081"
+          },
+          {
+            "object": "way/1431067080",
+            "version": 1,
+            "name": "清涧新村第六小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067080"
+          },
+          {
+            "object": "way/1431067069",
+            "version": 1,
+            "name": "中鼎豪园",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067069"
+          },
+          {
+            "object": "way/956596812",
+            "version": 1,
+            "name": "真光新村第四小区",
+            "osmUrl": "https://www.openstreetmap.org/way/956596812"
+          },
+          {
+            "object": "way/957024133",
+            "version": 2,
+            "name": "真光新村第五小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024133"
+          },
+          {
+            "object": "way/957024135",
+            "version": 1,
+            "name": "真光第六小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024135"
+          },
+          {
+            "object": "way/957024145",
+            "version": 2,
+            "name": "真光新村第八小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024145"
+          },
+          {
+            "object": "way/1431067085",
+            "version": 1,
+            "name": "真光一小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067085"
+          },
+          {
+            "object": "way/957024141",
+            "version": 1,
+            "name": "真光新村第二小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024141"
+          },
+          {
+            "object": "way/957024143",
+            "version": 1,
+            "name": "真光新村第七小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024143"
+          },
+          {
+            "object": "way/957025218",
+            "version": 1,
+            "name": "真光新村第九小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957025218"
+          },
+          {
+            "object": "way/1431067083",
+            "version": 1,
+            "name": "真光十小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067083"
+          },
+          {
+            "object": "way/1431067079",
+            "version": 1,
+            "name": "清涧新村第八小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067079"
+          }
+        ],
+        "geometryRule": "保留14个能与官方真光块17居委简称直接对应的OSM住宅用地面为MultiPolygon；清四、清七、真三无可靠同名开放住宅面，保持缺口，不做凸包或道路猜测。",
+        "limitations": [
+          "居民区通讯录只证明17个成员，不发布居委法定边界。",
+          "OSM住宅用地面是可编辑成员锚点，不等于17居委并集，也不等于卖方市场外边界。",
+          "当前缺少清四、清七、真三的可核验面；不得用真如镇、长征镇或其剩余面自动补齐。",
+          "与真如、长征、桃浦、万里接口仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.3798238,
+                31.2643714
+              ],
+              [
+                121.3773075,
+                31.2638256
+              ],
+              [
+                121.3771899,
+                31.2636604
+              ],
+              [
+                121.3771815,
+                31.262953
+              ],
+              [
+                121.3772434,
+                31.2628252
+              ],
+              [
+                121.3773503,
+                31.2627359
+              ],
+              [
+                121.3796165,
+                31.2623368
+              ],
+              [
+                121.3797152,
+                31.262389
+              ],
+              [
+                121.3797592,
+                31.2624821
+              ],
+              [
+                121.3799141,
+                31.2642871
+              ],
+              [
+                121.3798238,
+                31.2643714
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3813579,
+                31.2631682
+              ],
+              [
+                121.3816098,
+                31.2631646
+              ],
+              [
+                121.3816683,
+                31.2630872
+              ],
+              [
+                121.3819314,
+                31.2621765
+              ],
+              [
+                121.3819859,
+                31.2619772
+              ],
+              [
+                121.382508,
+                31.2619536
+              ],
+              [
+                121.3826431,
+                31.2620612
+              ],
+              [
+                121.3827945,
+                31.2642553
+              ],
+              [
+                121.3826824,
+                31.2643577
+              ],
+              [
+                121.3804274,
+                31.2644264
+              ],
+              [
+                121.3802215,
+                31.264386
+              ],
+              [
+                121.380115,
+                31.2642695
+              ],
+              [
+                121.3800081,
+                31.2632645
+              ],
+              [
+                121.3813579,
+                31.2631682
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3773456,
+                31.2624759
+              ],
+              [
+                121.3770964,
+                31.262273
+              ],
+              [
+                121.3769935,
+                31.2617219
+              ],
+              [
+                121.3769026,
+                31.2612046
+              ],
+              [
+                121.3776758,
+                31.261044
+              ],
+              [
+                121.3782217,
+                31.260574
+              ],
+              [
+                121.3781168,
+                31.2595749
+              ],
+              [
+                121.3792045,
+                31.2594803
+              ],
+              [
+                121.3793944,
+                31.2595766
+              ],
+              [
+                121.3796646,
+                31.2616731
+              ],
+              [
+                121.379067,
+                31.2617268
+              ],
+              [
+                121.3790968,
+                31.2621603
+              ],
+              [
+                121.3773456,
+                31.2624759
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3820238,
+                31.2663667
+              ],
+              [
+                121.381987,
+                31.2645155
+              ],
+              [
+                121.3855791,
+                31.26442
+              ],
+              [
+                121.385661,
+                31.2662601
+              ],
+              [
+                121.3855033,
+                31.2663025
+              ],
+              [
+                121.3851357,
+                31.2663238
+              ],
+              [
+                121.3844443,
+                31.2663185
+              ],
+              [
+                121.3844256,
+                31.2669032
+              ],
+              [
+                121.3834937,
+                31.266796
+              ],
+              [
+                121.3826966,
+                31.2665951
+              ],
+              [
+                121.3820238,
+                31.2663667
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3752014,
+                31.2560241
+              ],
+              [
+                121.3778166,
+                31.255561
+              ],
+              [
+                121.378732,
+                31.2579404
+              ],
+              [
+                121.3759673,
+                31.2581799
+              ],
+              [
+                121.3752014,
+                31.2560241
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3750017,
+                31.2557163
+              ],
+              [
+                121.3746852,
+                31.2548192
+              ],
+              [
+                121.3754523,
+                31.2546249
+              ],
+              [
+                121.3756078,
+                31.254391
+              ],
+              [
+                121.3756293,
+                31.2542168
+              ],
+              [
+                121.3754069,
+                31.2536132
+              ],
+              [
+                121.376965,
+                31.2532262
+              ],
+              [
+                121.3777214,
+                31.2552944
+              ],
+              [
+                121.3750017,
+                31.2557163
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3779011,
+                31.2550246
+              ],
+              [
+                121.3772099,
+                31.2531882
+              ],
+              [
+                121.3783681,
+                31.2529367
+              ],
+              [
+                121.3787315,
+                31.2539783
+              ],
+              [
+                121.3781517,
+                31.2541024
+              ],
+              [
+                121.3784286,
+                31.2547021
+              ],
+              [
+                121.3792847,
+                31.2544753
+              ],
+              [
+                121.3794842,
+                31.2549807
+              ],
+              [
+                121.3790312,
+                31.2550566
+              ],
+              [
+                121.3789238,
+                31.2547931
+              ],
+              [
+                121.3779011,
+                31.2550246
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3742682,
+                31.2536637
+              ],
+              [
+                121.3736273,
+                31.2517883
+              ],
+              [
+                121.3778534,
+                31.2507645
+              ],
+              [
+                121.3781359,
+                31.2515236
+              ],
+              [
+                121.3781643,
+                31.2515981
+              ],
+              [
+                121.3764686,
+                31.2521311
+              ],
+              [
+                121.3768069,
+                31.2531105
+              ],
+              [
+                121.3742682,
+                31.2536637
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3859646,
+                31.2557435
+              ],
+              [
+                121.3852652,
+                31.2555424
+              ],
+              [
+                121.3847715,
+                31.2554005
+              ],
+              [
+                121.3849031,
+                31.2550856
+              ],
+              [
+                121.3852748,
+                31.2541969
+              ],
+              [
+                121.3862321,
+                31.2544437
+              ],
+              [
+                121.3863659,
+                31.2548198
+              ],
+              [
+                121.3859646,
+                31.2557435
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3821855,
+                31.2577751
+              ],
+              [
+                121.381096,
+                31.2549879
+              ],
+              [
+                121.3836572,
+                31.2542928
+              ],
+              [
+                121.3842508,
+                31.2561417
+              ],
+              [
+                121.383088,
+                31.2564476
+              ],
+              [
+                121.3835027,
+                31.2576153
+              ],
+              [
+                121.3821855,
+                31.2577751
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.381003,
+                31.2546917
+              ],
+              [
+                121.3802081,
+                31.252553
+              ],
+              [
+                121.3823094,
+                31.2520736
+              ],
+              [
+                121.3827407,
+                31.2522
+              ],
+              [
+                121.3835664,
+                31.2540385
+              ],
+              [
+                121.381003,
+                31.2546917
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3801428,
+                31.2523258
+              ],
+              [
+                121.3793917,
+                31.2504089
+              ],
+              [
+                121.3824977,
+                31.249643
+              ],
+              [
+                121.3825728,
+                31.2509729
+              ],
+              [
+                121.3819077,
+                31.2509592
+              ],
+              [
+                121.3818111,
+                31.2512298
+              ],
+              [
+                121.3811137,
+                31.2513398
+              ],
+              [
+                121.381339,
+                31.2520965
+              ],
+              [
+                121.3801428,
+                31.2523258
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3833612,
+                31.2531021
+              ],
+              [
+                121.3830021,
+                31.252299
+              ],
+              [
+                121.3837005,
+                31.2524224
+              ],
+              [
+                121.3845136,
+                31.2526311
+              ],
+              [
+                121.385007,
+                31.2527133
+              ],
+              [
+                121.3849028,
+                31.2532261
+              ],
+              [
+                121.3846811,
+                31.2532592
+              ],
+              [
+                121.3843623,
+                31.2533067
+              ],
+              [
+                121.3833612,
+                31.2531021
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3830286,
+                31.2605543
+              ],
+              [
+                121.3834779,
+                31.2604311
+              ],
+              [
+                121.3833818,
+                31.2594191
+              ],
+              [
+                121.3826415,
+                31.2594626
+              ],
+              [
+                121.3826449,
+                31.2593275
+              ],
+              [
+                121.3827882,
+                31.2592441
+              ],
+              [
+                121.385072,
+                31.2590929
+              ],
+              [
+                121.385197,
+                31.2591685
+              ],
+              [
+                121.3852976,
+                31.2613944
+              ],
+              [
+                121.3851939,
+                31.2615247
+              ],
+              [
+                121.3829894,
+                31.2616263
+              ],
+              [
+                121.3828644,
+                31.2615169
+              ],
+              [
+                121.3828025,
+                31.2605736
+              ],
+              [
+                121.3830286,
+                31.2605543
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "official-pudong-lianyang-community-service-list-2021",
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_lianyang",
+        "name": "联洋",
+        "labelPoint": [
+          121.5562,
+          31.2265
+        ],
+        "scopeVersion": "pudong-lianyang-verified-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_7_community_residential_member_list_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-pudong-lianyang-community-service-list-2021"
+        ],
+        "officialMembers": [
+          "御景园",
+          "天安花园",
+          "联洋新苑",
+          "当代清水园",
+          "联洋花园",
+          "金樽花园/金色维也纳",
+          "御翠园",
+          "千秋别墅",
+          "四季雅苑",
+          "九间堂",
+          "水清木华",
+          "华丽家族",
+          "中邦晶座",
+          "吉云公寓",
+          "仁恒河滨城",
+          "浦东虹桥花园",
+          "浦东虹桥公寓",
+          "联洋年华园"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "联洋一居委",
+            "osmName": "天安花园",
+            "object": "way/872868842",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/872868842"
+          },
+          {
+            "officialMember": "联洋一居委",
+            "osmName": "联洋新苑",
+            "object": "way/1435592515",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1435592515"
+          },
+          {
+            "officialMember": "联洋二居委",
+            "osmName": "当代清水园",
+            "object": "way/709159322",
+            "version": 4,
+            "osmUrl": "https://www.openstreetmap.org/way/709159322"
+          },
+          {
+            "officialMember": "联洋二居委",
+            "osmName": "联洋花园",
+            "object": "way/851368750",
+            "version": 5,
+            "osmUrl": "https://www.openstreetmap.org/way/851368750"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "金樽花园/金色维也纳",
+            "object": "way/872868846",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/872868846"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "御翠园",
+            "object": "way/13038758",
+            "version": 9,
+            "osmUrl": "https://www.openstreetmap.org/way/13038758"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "四季雅苑",
+            "object": "way/13038757",
+            "version": 7,
+            "osmUrl": "https://www.openstreetmap.org/way/13038757"
+          },
+          {
+            "officialMember": "联洋四居委",
+            "osmName": "中邦晶座",
+            "object": "way/851368751",
+            "version": 6,
+            "osmUrl": "https://www.openstreetmap.org/way/851368751"
+          },
+          {
+            "officialMember": "联洋五居委",
+            "osmName": "吉云公寓",
+            "object": "way/407606425",
+            "version": 4,
+            "osmUrl": "https://www.openstreetmap.org/way/407606425"
+          },
+          {
+            "officialMember": "联洋五居委",
+            "osmName": "仁恒河滨城",
+            "object": "way/302865540",
+            "version": 9,
+            "osmUrl": "https://www.openstreetmap.org/way/302865540"
+          },
+          {
+            "officialMember": "联洋六居委",
+            "osmName": "浦东虹桥花园",
+            "object": "way/851371552",
+            "version": 3,
+            "osmUrl": "https://www.openstreetmap.org/way/851371552"
+          },
+          {
+            "officialMember": "联洋七居委",
+            "osmName": "联洋年华园",
+            "object": "way/586076252",
+            "version": 5,
+            "osmUrl": "https://www.openstreetmap.org/way/586076252"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "御景园",
+          "千秋别墅",
+          "九间堂",
+          "水清木华",
+          "华丽家族",
+          "浦东虹桥公寓"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/872868842",
+            "version": 2,
+            "name": "天安花园",
+            "osmUrl": "https://www.openstreetmap.org/way/872868842"
+          },
+          {
+            "object": "way/1435592515",
+            "version": 1,
+            "name": "联洋新苑",
+            "osmUrl": "https://www.openstreetmap.org/way/1435592515"
+          },
+          {
+            "object": "way/709159322",
+            "version": 4,
+            "name": "当代清水园",
+            "osmUrl": "https://www.openstreetmap.org/way/709159322"
+          },
+          {
+            "object": "way/851368750",
+            "version": 5,
+            "name": "联洋花园",
+            "osmUrl": "https://www.openstreetmap.org/way/851368750"
+          },
+          {
+            "object": "way/872868846",
+            "version": 2,
+            "name": "金色维也纳",
+            "osmUrl": "https://www.openstreetmap.org/way/872868846"
+          },
+          {
+            "object": "way/13038758",
+            "version": 9,
+            "name": "御翠园",
+            "osmUrl": "https://www.openstreetmap.org/way/13038758"
+          },
+          {
+            "object": "way/13038757",
+            "version": 7,
+            "name": "四季雅苑",
+            "osmUrl": "https://www.openstreetmap.org/way/13038757"
+          },
+          {
+            "object": "way/851368751",
+            "version": 6,
+            "name": "中邦晶座",
+            "osmUrl": "https://www.openstreetmap.org/way/851368751"
+          },
+          {
+            "object": "way/407606425",
+            "version": 4,
+            "name": "吉云公寓",
+            "osmUrl": "https://www.openstreetmap.org/way/407606425"
+          },
+          {
+            "object": "way/302865540",
+            "version": 9,
+            "name": "仁恒河滨城",
+            "osmUrl": "https://www.openstreetmap.org/way/302865540"
+          },
+          {
+            "object": "way/851371552",
+            "version": 3,
+            "name": "浦东虹桥花园",
+            "osmUrl": "https://www.openstreetmap.org/way/851371552"
+          },
+          {
+            "object": "way/586076252",
+            "version": 5,
+            "name": "联洋年华园",
+            "osmUrl": "https://www.openstreetmap.org/way/586076252"
+          }
+        ],
+        "geometryRule": "将官方联洋一至七居委清单中能精确匹配的12个OSM住宅用地面保留为成员MultiPolygon；未匹配的6个官方成员不以点位凸包、花木差集或道路包络补造。",
+        "limitations": [
+          "官方清单发布成员小区和门牌，不发布居委外缘。",
+          "12个开放住宅面只是已匹配成员，不代表联洋市场已连续闭合。",
+          "御景园、千秋别墅、九间堂、水清木华、华丽家族、浦东虹桥公寓尚无可靠同名开放面。",
+          "不得把花木街道relation 12867438、世纪公园或成员之间空白自动并入。",
+          "与花木、杨东、金桥、碧云接口仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.5515764,
+                31.2263116
+              ],
+              [
+                121.5491747,
+                31.2256877
+              ],
+              [
+                121.5490822,
+                31.2256301
+              ],
+              [
+                121.5490237,
+                31.2255356
+              ],
+              [
+                121.5490302,
+                31.2254336
+              ],
+              [
+                121.5499002,
+                31.22311
+              ],
+              [
+                121.5499562,
+                31.2230475
+              ],
+              [
+                121.5500373,
+                31.2229995
+              ],
+              [
+                121.5501291,
+                31.2230001
+              ],
+              [
+                121.5522787,
+                31.2238741
+              ],
+              [
+                121.5523516,
+                31.2239164
+              ],
+              [
+                121.5524023,
+                31.223986
+              ],
+              [
+                121.5524032,
+                31.2240496
+              ],
+              [
+                121.5518024,
+                31.2261965
+              ],
+              [
+                121.5517527,
+                31.2262672
+              ],
+              [
+                121.551676,
+                31.2263058
+              ],
+              [
+                121.5515764,
+                31.2263116
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5476065,
+                31.2245512
+              ],
+              [
+                121.548115,
+                31.2245141
+              ],
+              [
+                121.5489205,
+                31.2247184
+              ],
+              [
+                121.5490196,
+                31.2247436
+              ],
+              [
+                121.5487786,
+                31.2253948
+              ],
+              [
+                121.5487221,
+                31.2254712
+              ],
+              [
+                121.548641,
+                31.2255107
+              ],
+              [
+                121.5485435,
+                31.2255184
+              ],
+              [
+                121.5476599,
+                31.2252846
+              ],
+              [
+                121.5477988,
+                31.2249085
+              ],
+              [
+                121.5478101,
+                31.224878
+              ],
+              [
+                121.5476065,
+                31.2245512
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.554205,
+                31.2303744
+              ],
+              [
+                121.5542719,
+                31.2303875
+              ],
+              [
+                121.5556557,
+                31.2309612
+              ],
+              [
+                121.5553904,
+                31.2316851
+              ],
+              [
+                121.5568413,
+                31.2322675
+              ],
+              [
+                121.5568352,
+                31.2328361
+              ],
+              [
+                121.5565884,
+                31.23284
+              ],
+              [
+                121.5563452,
+                31.2328741
+              ],
+              [
+                121.5561055,
+                31.2329446
+              ],
+              [
+                121.5558862,
+                31.2330443
+              ],
+              [
+                121.5557153,
+                31.2331721
+              ],
+              [
+                121.5555824,
+                31.2333231
+              ],
+              [
+                121.5554549,
+                31.2334756
+              ],
+              [
+                121.5553521,
+                31.2336311
+              ],
+              [
+                121.5534871,
+                31.2328094
+              ],
+              [
+                121.5541039,
+                31.2304548
+              ],
+              [
+                121.5541416,
+                31.2303996
+              ],
+              [
+                121.554205,
+                31.2303744
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5461229,
+                31.2292722
+              ],
+              [
+                121.5463739,
+                31.2286925
+              ],
+              [
+                121.5466543,
+                31.2279988
+              ],
+              [
+                121.5482176,
+                31.2284927
+              ],
+              [
+                121.5480471,
+                31.228896
+              ],
+              [
+                121.5487386,
+                31.2291171
+              ],
+              [
+                121.5492385,
+                31.229077
+              ],
+              [
+                121.5495557,
+                31.2291733
+              ],
+              [
+                121.5496523,
+                31.2289453
+              ],
+              [
+                121.5534992,
+                31.230133
+              ],
+              [
+                121.5535677,
+                31.2301753
+              ],
+              [
+                121.5536289,
+                31.2302471
+              ],
+              [
+                121.5536398,
+                31.2303158
+              ],
+              [
+                121.55336,
+                31.2313909
+              ],
+              [
+                121.5524459,
+                31.2312043
+              ],
+              [
+                121.551215,
+                31.2308353
+              ],
+              [
+                121.5510437,
+                31.2314207
+              ],
+              [
+                121.5495513,
+                31.2306501
+              ],
+              [
+                121.5494036,
+                31.2305948
+              ],
+              [
+                121.5481423,
+                31.2301227
+              ],
+              [
+                121.5474199,
+                31.2298755
+              ],
+              [
+                121.5462261,
+                31.229475
+              ],
+              [
+                121.5461229,
+                31.2292722
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5621755,
+                31.2269944
+              ],
+              [
+                121.5621024,
+                31.2270382
+              ],
+              [
+                121.5620152,
+                31.2270638
+              ],
+              [
+                121.5619279,
+                31.2270652
+              ],
+              [
+                121.558185,
+                31.2255875
+              ],
+              [
+                121.5582857,
+                31.2254024
+              ],
+              [
+                121.559015,
+                31.2252885
+              ],
+              [
+                121.5595711,
+                31.2248063
+              ],
+              [
+                121.5601714,
+                31.2244179
+              ],
+              [
+                121.5606521,
+                31.2234935
+              ],
+              [
+                121.5613174,
+                31.2236688
+              ],
+              [
+                121.5617202,
+                31.2238296
+              ],
+              [
+                121.5622624,
+                31.2241593
+              ],
+              [
+                121.562795,
+                31.2244929
+              ],
+              [
+                121.5622132,
+                31.2269295
+              ],
+              [
+                121.5621755,
+                31.2269944
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5564628,
+                31.2213864
+              ],
+              [
+                121.5576441,
+                31.2161754
+              ],
+              [
+                121.5577606,
+                31.2161081
+              ],
+              [
+                121.5628679,
+                31.2169347
+              ],
+              [
+                121.5643185,
+                31.2171695
+              ],
+              [
+                121.5644825,
+                31.2172724
+              ],
+              [
+                121.5643401,
+                31.2178771
+              ],
+              [
+                121.5629637,
+                31.2237223
+              ],
+              [
+                121.5622489,
+                31.2233457
+              ],
+              [
+                121.5619556,
+                31.2231985
+              ],
+              [
+                121.5616538,
+                31.2230628
+              ],
+              [
+                121.5613061,
+                31.2229265
+              ],
+              [
+                121.5605827,
+                31.2226726
+              ],
+              [
+                121.5564628,
+                31.2213864
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5632172,
+                31.2238331
+              ],
+              [
+                121.56475,
+                31.2173334
+              ],
+              [
+                121.5650079,
+                31.2171941
+              ],
+              [
+                121.5682288,
+                31.2177137
+              ],
+              [
+                121.5683013,
+                31.2178176
+              ],
+              [
+                121.5664804,
+                31.2254518
+              ],
+              [
+                121.5662823,
+                31.2253553
+              ],
+              [
+                121.5661113,
+                31.2252622
+              ],
+              [
+                121.5632172,
+                31.2238331
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.551198,
+                31.2291333
+              ],
+              [
+                121.5511737,
+                31.2290959
+              ],
+              [
+                121.5511653,
+                31.2290494
+              ],
+              [
+                121.5512432,
+                31.2287768
+              ],
+              [
+                121.5523198,
+                31.2290966
+              ],
+              [
+                121.5524378,
+                31.2291324
+              ],
+              [
+                121.5528793,
+                31.2292464
+              ],
+              [
+                121.5537873,
+                31.2294809
+              ],
+              [
+                121.5536991,
+                31.229803
+              ],
+              [
+                121.5536837,
+                31.2298352
+              ],
+              [
+                121.5536509,
+                31.2298618
+              ],
+              [
+                121.5536102,
+                31.2298723
+              ],
+              [
+                121.5535654,
+                31.2298726
+              ],
+              [
+                121.5512518,
+                31.2291599
+              ],
+              [
+                121.551198,
+                31.2291333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5638245,
+                31.2313871
+              ],
+              [
+                121.5640205,
+                31.2309376
+              ],
+              [
+                121.5638476,
+                31.2308794
+              ],
+              [
+                121.5642536,
+                31.2299204
+              ],
+              [
+                121.5644082,
+                31.2299692
+              ],
+              [
+                121.5652337,
+                31.2302328
+              ],
+              [
+                121.5650106,
+                31.2309244
+              ],
+              [
+                121.5646825,
+                31.2316618
+              ],
+              [
+                121.5638245,
+                31.2313871
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5622108,
+                31.2280397
+              ],
+              [
+                121.5622788,
+                31.2279984
+              ],
+              [
+                121.5623712,
+                31.2279917
+              ],
+              [
+                121.5624851,
+                31.2280043
+              ],
+              [
+                121.5648565,
+                31.2288767
+              ],
+              [
+                121.5644082,
+                31.2299692
+              ],
+              [
+                121.5642536,
+                31.2299204
+              ],
+              [
+                121.5638476,
+                31.2308794
+              ],
+              [
+                121.5640205,
+                31.2309376
+              ],
+              [
+                121.5638245,
+                31.2313871
+              ],
+              [
+                121.5646825,
+                31.2316618
+              ],
+              [
+                121.5640725,
+                31.2330242
+              ],
+              [
+                121.5639824,
+                31.2331463
+              ],
+              [
+                121.5631123,
+                31.2351173
+              ],
+              [
+                121.5590669,
+                31.2351447
+              ],
+              [
+                121.5589364,
+                31.2351463
+              ],
+              [
+                121.5588596,
+                31.2351473
+              ],
+              [
+                121.5586849,
+                31.235103
+              ],
+              [
+                121.5559508,
+                31.2338455
+              ],
+              [
+                121.5562947,
+                31.2334824
+              ],
+              [
+                121.5567045,
+                31.2333332
+              ],
+              [
+                121.558252,
+                31.2334046
+              ],
+              [
+                121.5582467,
+                31.2328306
+              ],
+              [
+                121.558236,
+                31.2316757
+              ],
+              [
+                121.5596561,
+                31.231403
+              ],
+              [
+                121.5604452,
+                31.2311759
+              ],
+              [
+                121.5609194,
+                31.230806
+              ],
+              [
+                121.5615113,
+                31.2295311
+              ],
+              [
+                121.5621506,
+                31.2281154
+              ],
+              [
+                121.5622108,
+                31.2280397
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5579198,
+                31.2286059
+              ],
+              [
+                121.5578908,
+                31.2285552
+              ],
+              [
+                121.5578802,
+                31.228494
+              ],
+              [
+                121.5578897,
+                31.2284407
+              ],
+              [
+                121.5584762,
+                31.2270599
+              ],
+              [
+                121.5587485,
+                31.226948
+              ],
+              [
+                121.5590432,
+                31.2268831
+              ],
+              [
+                121.5593704,
+                31.2268478
+              ],
+              [
+                121.5597611,
+                31.2268374
+              ],
+              [
+                121.5617873,
+                31.2276465
+              ],
+              [
+                121.561878,
+                31.2277062
+              ],
+              [
+                121.5619499,
+                31.2277837
+              ],
+              [
+                121.5619633,
+                31.2278715
+              ],
+              [
+                121.5619413,
+                31.2279522
+              ],
+              [
+                121.5611218,
+                31.2297978
+              ],
+              [
+                121.5610942,
+                31.2298477
+              ],
+              [
+                121.5610558,
+                31.2298712
+              ],
+              [
+                121.5609866,
+                31.2298921
+              ],
+              [
+                121.5609202,
+                31.2298899
+              ],
+              [
+                121.5579727,
+                31.2286541
+              ],
+              [
+                121.5579198,
+                31.2286059
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5481159,
+                31.2281637
+              ],
+              [
+                121.5480589,
+                31.228074
+              ],
+              [
+                121.5480513,
+                31.2279612
+              ],
+              [
+                121.5487466,
+                31.2260656
+              ],
+              [
+                121.5487899,
+                31.2259672
+              ],
+              [
+                121.5488628,
+                31.2259073
+              ],
+              [
+                121.54896,
+                31.225887
+              ],
+              [
+                121.5490667,
+                31.2258957
+              ],
+              [
+                121.5506501,
+                31.2263389
+              ],
+              [
+                121.5505491,
+                31.2266397
+              ],
+              [
+                121.5507466,
+                31.2266905
+              ],
+              [
+                121.5510021,
+                31.2270915
+              ],
+              [
+                121.5515149,
+                31.2272205
+              ],
+              [
+                121.5510198,
+                31.2288953
+              ],
+              [
+                121.5509588,
+                31.2289762
+              ],
+              [
+                121.5508853,
+                31.2290267
+              ],
+              [
+                121.5507791,
+                31.2290178
+              ],
+              [
+                121.5482155,
+                31.2282261
+              ],
+              [
+                121.5481159,
+                31.2281637
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "official-yangpu-riverside-key-functional-area-2025",
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_yangpu_dongwaitan",
+        "name": "东外滩",
+        "labelPoint": [
+          121.5224,
+          31.2592
+        ],
+        "scopeVersion": "yangpu-dongwaitan-pingliang-admin-reference-2026-07",
+        "proxyType": "riverside_administrative_reference_proxy",
+        "method": "official_riverside_constraint_plus_osm_pingliang_subdistrict_relation",
+        "definitionSourceIds": [
+          "official-yangpu-riverside-key-functional-area-2025"
+        ],
+        "osmObjects": [
+          {
+            "object": "relation/13464332",
+            "version": 6,
+            "name": "平凉路街道",
+            "osmUrl": "https://www.openstreetmap.org/relation/13464332"
+          },
+          {
+            "object": "way/364662260",
+            "version": 1,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662260"
+          },
+          {
+            "object": "way/364662259",
+            "version": 5,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662259"
+          },
+          {
+            "object": "way/39692816",
+            "version": 19,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/39692816"
+          },
+          {
+            "object": "way/1004975669",
+            "version": 2,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/1004975669"
+          },
+          {
+            "object": "way/1064218886",
+            "version": 3,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/1064218886"
+          },
+          {
+            "object": "way/364662090",
+            "version": 5,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662090"
+          }
+        ],
+        "geometryRule": "使用OSM平凉路街道relation 13464332的完整开放行政壳作为东外滩可编辑起画代理；官方杨浦滨江15.6平方公里功能区仅用于确认滨江方向，不直接输出该功能区面。",
+        "limitations": [
+          "平凉路街道不是东外滩楼市板块的同义词，本面只能作为行政参考壳。",
+          "杨浦滨江重点功能区横跨多街道且含产业、公共空间，不能直接作为住宅市场面。",
+          "尚未按住宅成员、滨江功能和定海路共享边裁出市场外缘。",
+          "不得把北外滩、定海路街道、黄浦江水域或15.6平方公里功能区静默并入。"
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5257093,
+              31.2497581
+            ],
+            [
+              121.5292658,
+              31.2508032
+            ],
+            [
+              121.5328594,
+              31.2523235
+            ],
+            [
+              121.5339383,
+              31.2529256
+            ],
+            [
+              121.5318492,
+              31.2553076
+            ],
+            [
+              121.5315636,
+              31.2560752
+            ],
+            [
+              121.5315559,
+              31.2561888
+            ],
+            [
+              121.5315773,
+              31.2565595
+            ],
+            [
+              121.531701,
+              31.2568859
+            ],
+            [
+              121.5317362,
+              31.2571144
+            ],
+            [
+              121.5316873,
+              31.2572515
+            ],
+            [
+              121.5311744,
+              31.2580615
+            ],
+            [
+              121.5310657,
+              31.2582332
+            ],
+            [
+              121.5309176,
+              31.258416
+            ],
+            [
+              121.530771,
+              31.2585321
+            ],
+            [
+              121.5301647,
+              31.2587345
+            ],
+            [
+              121.5299585,
+              31.2588154
+            ],
+            [
+              121.52976,
+              31.2589525
+            ],
+            [
+              121.5296195,
+              31.2590752
+            ],
+            [
+              121.5295752,
+              31.2591679
+            ],
+            [
+              121.529534,
+              31.2592737
+            ],
+            [
+              121.5295767,
+              31.2597932
+            ],
+            [
+              121.5295767,
+              31.2599851
+            ],
+            [
+              121.5295218,
+              31.2601196
+            ],
+            [
+              121.5294683,
+              31.2601914
+            ],
+            [
+              121.528371,
+              31.2610974
+            ],
+            [
+              121.5281878,
+              31.2612658
+            ],
+            [
+              121.5274425,
+              31.2620797
+            ],
+            [
+              121.5273707,
+              31.2621574
+            ],
+            [
+              121.5271679,
+              31.2626248
+            ],
+            [
+              121.5271073,
+              31.2627644
+            ],
+            [
+              121.5269454,
+              31.2630255
+            ],
+            [
+              121.5268156,
+              31.2630882
+            ],
+            [
+              121.5267194,
+              31.263156
+            ],
+            [
+              121.5266201,
+              31.2632996
+            ],
+            [
+              121.5265163,
+              31.2635503
+            ],
+            [
+              121.5263956,
+              31.2637696
+            ],
+            [
+              121.5262887,
+              31.2639106
+            ],
+            [
+              121.5259085,
+              31.2641951
+            ],
+            [
+              121.5258352,
+              31.2643152
+            ],
+            [
+              121.5257848,
+              31.2645633
+            ],
+            [
+              121.5256962,
+              31.2647173
+            ],
+            [
+              121.5254022,
+              31.2649568
+            ],
+            [
+              121.5252289,
+              31.2651363
+            ],
+            [
+              121.5245676,
+              31.2659391
+            ],
+            [
+              121.5240759,
+              31.266832
+            ],
+            [
+              121.5237154,
+              31.2674599
+            ],
+            [
+              121.5235108,
+              31.2678606
+            ],
+            [
+              121.5231336,
+              31.2682823
+            ],
+            [
+              121.5231145,
+              31.2683265
+            ],
+            [
+              121.5228583,
+              31.2682173
+            ],
+            [
+              121.5226341,
+              31.2681175
+            ],
+            [
+              121.5220994,
+              31.267866
+            ],
+            [
+              121.521504,
+              31.2675966
+            ],
+            [
+              121.5209763,
+              31.2673551
+            ],
+            [
+              121.5202828,
+              31.2670338
+            ],
+            [
+              121.519573,
+              31.2666965
+            ],
+            [
+              121.5192484,
+              31.2665248
+            ],
+            [
+              121.5189192,
+              31.2663811
+            ],
+            [
+              121.5181439,
+              31.2660398
+            ],
+            [
+              121.5176993,
+              31.2658413
+            ],
+            [
+              121.5155161,
+              31.2648877
+            ],
+            [
+              121.5133536,
+              31.2636469
+            ],
+            [
+              121.5128008,
+              31.2633394
+            ],
+            [
+              121.5123019,
+              31.2630643
+            ],
+            [
+              121.5119729,
+              31.262817
+            ],
+            [
+              121.5099201,
+              31.2610146
+            ],
+            [
+              121.5091342,
+              31.2603313
+            ],
+            [
+              121.5087538,
+              31.259994
+            ],
+            [
+              121.5087911,
+              31.2599514
+            ],
+            [
+              121.5099887,
+              31.2586338
+            ],
+            [
+              121.5100773,
+              31.2585198
+            ],
+            [
+              121.5101634,
+              31.2583912
+            ],
+            [
+              121.5102709,
+              31.2582323
+            ],
+            [
+              121.5125413,
+              31.2549923
+            ],
+            [
+              121.5128014,
+              31.2545587
+            ],
+            [
+              121.5132943,
+              31.2539096
+            ],
+            [
+              121.5115216,
+              31.2536495
+            ],
+            [
+              121.5116521,
+              31.2534674
+            ],
+            [
+              121.5119556,
+              31.2530341
+            ],
+            [
+              121.5119746,
+              31.2530049
+            ],
+            [
+              121.512059,
+              31.2528141
+            ],
+            [
+              121.5120886,
+              31.2526997
+            ],
+            [
+              121.5121069,
+              31.2526029
+            ],
+            [
+              121.5121199,
+              31.2524815
+            ],
+            [
+              121.5121211,
+              31.2523829
+            ],
+            [
+              121.512098,
+              31.2517615
+            ],
+            [
+              121.5120974,
+              31.2493126
+            ],
+            [
+              121.5195853,
+              31.2490817
+            ],
+            [
+              121.522173,
+              31.2492025
+            ],
+            [
+              121.5257093,
+              31.2497581
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "official-baoshan-dahua-1v6-community-four-sides-2011",
+          "official-baoshan-dahua-2-binjiangyayuan-four-sides-2011",
+          "official-baoshan-dahua-5v1-community-four-sides-2011",
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_dahua",
+        "name": "大华",
+        "labelPoint": [
+          121.4128,
+          31.2776
+        ],
+        "scopeVersion": "baoshan-dahua-verified-community-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_community_four_sides_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-baoshan-dahua-1v6-community-four-sides-2011",
+          "official-baoshan-dahua-2-binjiangyayuan-four-sides-2011",
+          "official-baoshan-dahua-5v1-community-four-sides-2011"
+        ],
+        "officialMembers": [
+          "大华一村第六居民委员会（东、西两块）",
+          "大华二村滨江雅苑居民委员会",
+          "大华五村第一居民委员会（东、西两块）"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "大华二村滨江雅苑居委",
+            "osmName": "滨江雅苑",
+            "object": "way/940758604",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/940758604"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村三街坊",
+            "object": "way/1431653618",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653618"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村二街坊",
+            "object": "way/1431653621",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653621"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村",
+            "object": "way/1431653623",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653623"
+          },
+          {
+            "officialMember": "大华一村周边开放住宅成员",
+            "osmName": "大华一村三居",
+            "object": "way/1431653622",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653622"
+          },
+          {
+            "officialMember": "大华一村周边开放住宅成员",
+            "osmName": "大华一村东区",
+            "object": "way/1431653624",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653624"
+          },
+          {
+            "officialMember": "大华一村第六居委北侧道路锚点",
+            "osmName": "南华苑",
+            "object": "way/1431653614",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653614"
+          },
+          {
+            "officialMember": "大华一村第六居委北侧道路锚点",
+            "osmName": "南华苑东区",
+            "object": "way/1368070500",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/1368070500"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "大华一村第六居民委员会完整东块",
+          "大华一村第六居民委员会完整西块",
+          "大华五村第一居民委员会完整东块",
+          "大华五村第一居民委员会完整西块"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/940758604",
+            "version": 1,
+            "name": "滨江雅苑",
+            "osmUrl": "https://www.openstreetmap.org/way/940758604"
+          },
+          {
+            "object": "way/1431653618",
+            "version": 1,
+            "name": "大华二村三街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653618"
+          },
+          {
+            "object": "way/1431653621",
+            "version": 1,
+            "name": "大华二村二街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653621"
+          },
+          {
+            "object": "way/1431653623",
+            "version": 1,
+            "name": "大华二村",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653623"
+          },
+          {
+            "object": "way/1431653622",
+            "version": 1,
+            "name": "大华一村三居",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653622"
+          },
+          {
+            "object": "way/1431653624",
+            "version": 1,
+            "name": "大华一村东区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653624"
+          },
+          {
+            "object": "way/1431653614",
+            "version": 1,
+            "name": "南华苑",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653614"
+          },
+          {
+            "object": "way/1368070500",
+            "version": 2,
+            "name": "南华苑东区",
+            "osmUrl": "https://www.openstreetmap.org/way/1368070500"
+          }
+        ],
+        "geometryRule": "保留与三份官方社区四至直接关联的8个OSM住宅用地面为成员MultiPolygon；滨江雅苑为名称直接命中，其余大华一村、二村、南华苑开放住宅面只作同片区锚点，不以其并集或凸包替代完整市场。",
+        "limitations": [
+          "三份官方批复只覆盖部分大华居委，不是完整楼市大华成员表。",
+          "除滨江雅苑外，开放住宅名称不能证明它恰好等于批复中的同名居委边界。",
+          "大华一村第六和大华五村第一的官方道路四至尚未逐段冻结为共享道路节点，故保留缺口。",
+          "不得用大场镇、顾村镇、相邻行政余量或这些成员的凸包补齐。",
+          "与大场、万里、上大、共康、祁连山路方向仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.4100213,
+                31.2778391
+              ],
+              [
+                121.4109486,
+                31.2808788
+              ],
+              [
+                121.4103387,
+                31.2809251
+              ],
+              [
+                121.4103856,
+                31.2812983
+              ],
+              [
+                121.408058,
+                31.2812489
+              ],
+              [
+                121.4071017,
+                31.2781
+              ],
+              [
+                121.4100213,
+                31.2778391
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4109079,
+                31.276534
+              ],
+              [
+                121.4100969,
+                31.2766174
+              ],
+              [
+                121.4101104,
+                31.2758083
+              ],
+              [
+                121.4102351,
+                31.2747377
+              ],
+              [
+                121.4103059,
+                31.2746359
+              ],
+              [
+                121.4104646,
+                31.2746069
+              ],
+              [
+                121.412012,
+                31.2744165
+              ],
+              [
+                121.4122189,
+                31.275537
+              ],
+              [
+                121.4117258,
+                31.2755903
+              ],
+              [
+                121.4119185,
+                31.2767287
+              ],
+              [
+                121.4127942,
+                31.2766536
+              ],
+              [
+                121.4128934,
+                31.2774238
+              ],
+              [
+                121.4110462,
+                31.2776233
+              ],
+              [
+                121.4109079,
+                31.276534
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.410299,
+                31.2744396
+              ],
+              [
+                121.4107543,
+                31.2710002
+              ],
+              [
+                121.4146892,
+                31.2705059
+              ],
+              [
+                121.4148477,
+                31.2705402
+              ],
+              [
+                121.4152572,
+                31.272453
+              ],
+              [
+                121.4148464,
+                31.2725646
+              ],
+              [
+                121.4143935,
+                31.2727725
+              ],
+              [
+                121.4139407,
+                31.2730823
+              ],
+              [
+                121.4127047,
+                31.273108
+              ],
+              [
+                121.4127299,
+                31.2737873
+              ],
+              [
+                121.4128465,
+                31.2737878
+              ],
+              [
+                121.4128843,
+                31.2741406
+              ],
+              [
+                121.410299,
+                31.2744396
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4166969,
+                31.2764711
+              ],
+              [
+                121.4162766,
+                31.2766484
+              ],
+              [
+                121.4164021,
+                31.2768586
+              ],
+              [
+                121.4156412,
+                31.2771323
+              ],
+              [
+                121.4155644,
+                31.2768783
+              ],
+              [
+                121.4154132,
+                31.276655
+              ],
+              [
+                121.415239,
+                31.276447
+              ],
+              [
+                121.4150546,
+                31.2762915
+              ],
+              [
+                121.4148445,
+                31.276147
+              ],
+              [
+                121.4146418,
+                31.2759961
+              ],
+              [
+                121.4154832,
+                31.2757084
+              ],
+              [
+                121.4148465,
+                31.2745259
+              ],
+              [
+                121.4148408,
+                31.2743444
+              ],
+              [
+                121.4154231,
+                31.2741879
+              ],
+              [
+                121.4155541,
+                31.2742359
+              ],
+              [
+                121.4157382,
+                31.2742593
+              ],
+              [
+                121.4162705,
+                31.2754729
+              ],
+              [
+                121.4160788,
+                31.2755244
+              ],
+              [
+                121.416393,
+                31.2760918
+              ],
+              [
+                121.4165957,
+                31.2763467
+              ],
+              [
+                121.4166969,
+                31.2764711
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4181812,
+                31.2765827
+              ],
+              [
+                121.4176019,
+                31.2765599
+              ],
+              [
+                121.4172909,
+                31.2765593
+              ],
+              [
+                121.4168485,
+                31.2766076
+              ],
+              [
+                121.4166969,
+                31.2764711
+              ],
+              [
+                121.4165957,
+                31.2763467
+              ],
+              [
+                121.416393,
+                31.2760918
+              ],
+              [
+                121.4160788,
+                31.2755244
+              ],
+              [
+                121.4162705,
+                31.2754729
+              ],
+              [
+                121.4157382,
+                31.2742593
+              ],
+              [
+                121.4182844,
+                31.2743462
+              ],
+              [
+                121.4183683,
+                31.2745255
+              ],
+              [
+                121.4182918,
+                31.2755183
+              ],
+              [
+                121.4181812,
+                31.2765827
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4183345,
+                31.2775063
+              ],
+              [
+                121.418283,
+                31.2771992
+              ],
+              [
+                121.4183012,
+                31.2770359
+              ],
+              [
+                121.4184494,
+                31.2763937
+              ],
+              [
+                121.4187243,
+                31.2764096
+              ],
+              [
+                121.4189112,
+                31.2764203
+              ],
+              [
+                121.4198241,
+                31.276473
+              ],
+              [
+                121.4196148,
+                31.2775399
+              ],
+              [
+                121.4183345,
+                31.2775063
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4181973,
+                31.2741256
+              ],
+              [
+                121.4166152,
+                31.2741023
+              ],
+              [
+                121.416293,
+                31.2740123
+              ],
+              [
+                121.4160532,
+                31.2738494
+              ],
+              [
+                121.4154721,
+                31.2725855
+              ],
+              [
+                121.4179561,
+                31.271855
+              ],
+              [
+                121.4183681,
+                31.2717762
+              ],
+              [
+                121.41882,
+                31.2717657
+              ],
+              [
+                121.4190886,
+                31.2717543
+              ],
+              [
+                121.4192717,
+                31.2716653
+              ],
+              [
+                121.4194452,
+                31.2715319
+              ],
+              [
+                121.4198095,
+                31.2719388
+              ],
+              [
+                121.4185085,
+                31.2739518
+              ],
+              [
+                121.4181973,
+                31.2741256
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4186812,
+                31.2741498
+              ],
+              [
+                121.4188313,
+                31.2738003
+              ],
+              [
+                121.419219,
+                31.2731862
+              ],
+              [
+                121.4199168,
+                31.2721336
+              ],
+              [
+                121.4204305,
+                31.272527
+              ],
+              [
+                121.4200315,
+                31.2731052
+              ],
+              [
+                121.4199288,
+                31.2735055
+              ],
+              [
+                121.4198954,
+                31.2738146
+              ],
+              [
+                121.4198714,
+                31.2741909
+              ],
+              [
+                121.4186812,
+                31.2741498
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

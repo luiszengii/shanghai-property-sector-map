@@ -84,7 +84,7 @@ export function ObservationExplorer() {
 
   useEffect(() => {
     let active = true;
-    fetch("/api/xhs-observations", { cache: "no-store" })
+    fetch("/api/xhs-observations")
       .then(async (response) => {
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error ?? "研究数据读取失败");
@@ -101,15 +101,28 @@ export function ObservationExplorer() {
     return grouped;
   }, [dataset]);
 
+  const searchIndexByNoteId = useMemo(() => new Map(
+    (dataset?.notes ?? []).map((note) => {
+      const commentText = (commentsByNote.get(note.note_id) ?? [])
+        .map((comment) => comment.content)
+        .join(" ");
+      return [
+        note.note_id,
+        `${note.title} ${note.excerpt} ${note.sectors} ${commentText}`
+          .toLocaleLowerCase("zh-CN"),
+      ];
+    }),
+  ), [commentsByNote, dataset]);
+
   const filteredNotes = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase("zh-CN");
     return (dataset?.notes ?? []).filter((note) => {
       const sectorMatch = sector === "全部" || note.sectors.split("；").includes(sector);
-      const commentText = (commentsByNote.get(note.note_id) ?? []).map((comment) => comment.content).join(" ");
-      const queryMatch = !needle || `${note.title} ${note.excerpt} ${note.sectors} ${commentText}`.toLocaleLowerCase("zh-CN").includes(needle);
+      const queryMatch = !needle
+        || searchIndexByNoteId.get(note.note_id)?.includes(needle);
       return sectorMatch && queryMatch;
     });
-  }, [commentsByNote, dataset, query, sector]);
+  }, [dataset, query, searchIndexByNoteId, sector]);
 
   const availableSectorSet = useMemo(() => new Set((dataset?.notes ?? []).flatMap((note) => note.sectors.split("；"))), [dataset]);
   const visibleSectors = district === "全部行政区"

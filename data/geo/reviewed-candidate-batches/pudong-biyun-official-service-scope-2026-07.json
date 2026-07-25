@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "pudong-biyun-official-service-scope-2026-07",
+  "topologyGroups": [],
+  "sectors": [
+    {
+      "id": "sector_biyun",
+      "canonicalName": "碧云",
+      "districtName": "浦东新区",
+      "scopeVersion": "biyun-official-service-scope-four-sides-2026-07",
+      "confidence": "low",
+      "method": "market_four_sides_osm_linear_component",
+      "bbox": [121.54, 31.18, 121.67, 31.30],
+      "insidePoint": [121.5848035, 31.2425366],
+      "boundaryAnchors": [
+        {"side":"north","featureType":"road","expectedIdentity":"杨高中路","identityStatus":"verified-by-osm-name","match":{"names":["杨高中路"]},"verificationSourceIds":["official-shanghai-biyun-international-community-scope-2024","osm-geofabrik-shanghai-260721"],"minimumBoundaryCoverageMeters":1500},
+        {"side":"west","featureType":"road","expectedIdentity":"云山路","identityStatus":"verified-by-osm-name","match":{"names":["云山路"]},"verificationSourceIds":["official-shanghai-biyun-international-community-scope-2024","osm-geofabrik-shanghai-260721"],"minimumBoundaryCoverageMeters":1000},
+        {"side":"south","featureType":"road","expectedIdentity":"锦绣东路","identityStatus":"verified-by-osm-name","match":{"names":["锦绣东路"]},"verificationSourceIds":["official-shanghai-biyun-international-community-scope-2024","osm-geofabrik-shanghai-260721"],"minimumBoundaryCoverageMeters":1500},
+        {"side":"east","featureType":"road","expectedIdentity":"金桥路","identityStatus":"verified-by-osm-name","match":{"names":["金桥路"]},"verificationSourceIds":["official-shanghai-biyun-international-community-scope-2024","osm-geofabrik-shanghai-260721"],"minimumBoundaryCoverageMeters":1500}
+      ],
+      "cutBufferMeters": 4,
+      "centerlineToleranceMeters": 15,
+      "minimumBboxClearanceMeters": 30,
+      "fillHolesBelowSquareMeters": 1,
+      "preserveTopologyPrecision": true,
+      "areaRangeSquareKilometers": [2, 3],
+      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-biyun-international-community-scope-2024"],
+      "geometryVerificationSourceIds": ["official-shanghai-biyun-international-community-scope-2024", "osm-geofabrik-shanghai-260721"],
+      "geometryRule": "碧云按2024年官方高标准保洁区域文字四至，使用固定 OSM 中同名道路中心线闭合重建。该范围是服务范围而非市场法定界；链家分类和第三方地图仅作独立市场身份与相邻关系的校准，不复制其边界。候选保持低置信、仅内部复核与可编辑。"
+    }
+  ]
+}

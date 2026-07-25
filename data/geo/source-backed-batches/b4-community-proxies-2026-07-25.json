@@ -1,0 +1,3066 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "b4-community-proxies-2026-07-25",
+  "status": "internal-review",
+  "evidenceGrade": "B",
+  "coordinateSystem": "WGS84",
+  "geometryConstruction": "official member/four-side evidence plus frozen open OSM geometries; no ellipses, convex hulls, commercial polygons, or screen tracing",
+  "notice": "这些面是行政或社区成员参考代理，不是法定界址，也不是商业平台楼市板块原始边界。成员缺口被显式保留。",
+  "sources": [
+    {
+      "suggestedId": "official-putuo-zhenru-zhenguang-block-communities-2024",
+      "title": "真如镇街道居民区基本情况（真光块17个居民区）",
+      "publisher": "上海市普陀区人民政府 真如镇街道",
+      "publishedAt": "2024-09-03",
+      "url": "https://www.shpt.gov.cn/zrzjd-jiedaozhen/bmfw-zrzjd/20220801/848477.html",
+      "sourceType": "official-community-member-list",
+      "geometryUse": "defines the 17-member set; does not publish community polygons"
+    },
+    {
+      "suggestedId": "official-pudong-lianyang-community-service-list-2021",
+      "title": "上海市浦东新区花木街道公共法律服务一览表（联洋一至七居委）",
+      "publisher": "上海市浦东新区人民政府 花木街道",
+      "publishedAt": "2021-10-27",
+      "url": "https://www.pudong.gov.cn/zwgk/qt-hmjd/2022/286/33685.html",
+      "sourceType": "official-community-address-and-member-list",
+      "geometryUse": "defines named residential members and addresses; does not publish community polygons"
+    },
+    {
+      "suggestedId": "official-yangpu-riverside-key-functional-area-2025",
+      "title": "杨浦区重点功能区发展十四五规划（杨浦滨江功能区）",
+      "publisher": "上海市杨浦区人民政府",
+      "publishedAt": "2025",
+      "url": "https://www.shyp.gov.cn/zhengwu/zwgk-qzfwj/2025/220/ea2d2053c6de6337ba1ac7992724c6d1.html",
+      "sourceType": "official-functional-area-description",
+      "geometryUse": "riverside location constraint only; 15.6 km² functional area is not the market polygon"
+    },
+    {
+      "suggestedId": "official-baoshan-dahua-1v6-community-four-sides-2011",
+      "title": "大华一村第六居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "publishedAt": "2011-09-19",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=51ed4693-937a-4e72-82ed-ca12ac887199",
+      "sourceType": "official-community-four-sides",
+      "geometryUse": "two-block community boundary reference"
+    },
+    {
+      "suggestedId": "official-baoshan-dahua-2-binjiangyayuan-four-sides-2011",
+      "title": "大华二村滨江雅苑居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "publishedAt": "2011-09-19",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=65671f0e-daff-4a5c-a7b8-57a7caeb70c5",
+      "sourceType": "official-community-four-sides",
+      "geometryUse": "community boundary reference around the named residential member"
+    },
+    {
+      "suggestedId": "official-baoshan-dahua-5v1-community-four-sides-2011",
+      "title": "大华五村第一居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "publishedAt": "2011-09-19",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=1da8da4c-d24a-4caa-ae68-dc5d01119c99",
+      "sourceType": "official-community-four-sides",
+      "geometryUse": "two-block community boundary reference"
+    },
+    {
+      "suggestedId": "osm-overpass-b4-community-proxies-2026-07-25",
+      "title": "OpenStreetMap residential ways and Pingliang Road Subdistrict relation queried through Overpass",
+      "publisher": "OpenStreetMap contributors / Overpass API",
+      "publishedAt": "2026-07-25",
+      "url": "https://overpass-api.de/api/interpreter",
+      "sourceType": "open-geometry-query",
+      "licenseStatus": "ODbL-1.0",
+      "attribution": "© OpenStreetMap contributors",
+      "extractedAt": "2026-07-25T04:43:33.141Z",
+      "osmBaseTimestamps": [
+        "2026-07-25T04:42:36Z",
+        "2026-07-25T04:42:36Z"
+      ],
+      "query": {
+        "residentialWays": "[out:json][timeout:180];way(id:1431067082,1431067081,1431067080,1431067069,956596812,957024133,957024135,957024145,1431067085,957024141,957024143,957025218,1431067083,1431067079,872868842,1435592515,709159322,851368750,872868846,13038758,13038757,851368751,407606425,302865540,851371552,586076252,940758604,1431653618,1431653621,1431653623,1431653622,1431653624,1431653614,1368070500);out meta geom;",
+        "pingliangRelation": "[out:json][timeout:180];rel(13464332);out meta geom;way(r);out meta geom;"
+      }
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_zhenguang",
+        "name": "真光",
+        "labelPoint": [
+          121.3808,
+          31.2581
+        ],
+        "scopeVersion": "putuo-zhenguang-verified-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_17_community_member_list_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-putuo-zhenru-zhenguang-block-communities-2024"
+        ],
+        "officialMembers": [
+          "清二",
+          "清三",
+          "清四",
+          "清六",
+          "中鼎",
+          "真四",
+          "清七",
+          "真三",
+          "真五",
+          "真六",
+          "真八",
+          "真一",
+          "真二",
+          "真七",
+          "真九",
+          "真十",
+          "清八"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "清二",
+            "osmName": "清涧新村第二小区",
+            "object": "way/1431067082",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067082"
+          },
+          {
+            "officialMember": "清三",
+            "osmName": "清涧三街坊",
+            "object": "way/1431067081",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067081"
+          },
+          {
+            "officialMember": "清六",
+            "osmName": "清涧新村第六小区",
+            "object": "way/1431067080",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067080"
+          },
+          {
+            "officialMember": "中鼎",
+            "osmName": "中鼎豪园",
+            "object": "way/1431067069",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067069"
+          },
+          {
+            "officialMember": "真四",
+            "osmName": "真光新村第四小区",
+            "object": "way/956596812",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/956596812"
+          },
+          {
+            "officialMember": "真五",
+            "osmName": "真光新村第五小区",
+            "object": "way/957024133",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/957024133"
+          },
+          {
+            "officialMember": "真六",
+            "osmName": "真光第六小区",
+            "object": "way/957024135",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024135"
+          },
+          {
+            "officialMember": "真八",
+            "osmName": "真光新村第八小区",
+            "object": "way/957024145",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/957024145"
+          },
+          {
+            "officialMember": "真一",
+            "osmName": "真光一小区",
+            "object": "way/1431067085",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067085"
+          },
+          {
+            "officialMember": "真二",
+            "osmName": "真光新村第二小区",
+            "object": "way/957024141",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024141"
+          },
+          {
+            "officialMember": "真七",
+            "osmName": "真光新村第七小区",
+            "object": "way/957024143",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957024143"
+          },
+          {
+            "officialMember": "真九",
+            "osmName": "真光新村第九小区",
+            "object": "way/957025218",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/957025218"
+          },
+          {
+            "officialMember": "真十",
+            "osmName": "真光十小区",
+            "object": "way/1431067083",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067083"
+          },
+          {
+            "officialMember": "清八",
+            "osmName": "清涧新村第八小区",
+            "object": "way/1431067079",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431067079"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "清四",
+          "清七",
+          "真三"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/1431067082",
+            "version": 1,
+            "name": "清涧新村第二小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067082"
+          },
+          {
+            "object": "way/1431067081",
+            "version": 1,
+            "name": "清涧三街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067081"
+          },
+          {
+            "object": "way/1431067080",
+            "version": 1,
+            "name": "清涧新村第六小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067080"
+          },
+          {
+            "object": "way/1431067069",
+            "version": 1,
+            "name": "中鼎豪园",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067069"
+          },
+          {
+            "object": "way/956596812",
+            "version": 1,
+            "name": "真光新村第四小区",
+            "osmUrl": "https://www.openstreetmap.org/way/956596812"
+          },
+          {
+            "object": "way/957024133",
+            "version": 2,
+            "name": "真光新村第五小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024133"
+          },
+          {
+            "object": "way/957024135",
+            "version": 1,
+            "name": "真光第六小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024135"
+          },
+          {
+            "object": "way/957024145",
+            "version": 2,
+            "name": "真光新村第八小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024145"
+          },
+          {
+            "object": "way/1431067085",
+            "version": 1,
+            "name": "真光一小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067085"
+          },
+          {
+            "object": "way/957024141",
+            "version": 1,
+            "name": "真光新村第二小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024141"
+          },
+          {
+            "object": "way/957024143",
+            "version": 1,
+            "name": "真光新村第七小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957024143"
+          },
+          {
+            "object": "way/957025218",
+            "version": 1,
+            "name": "真光新村第九小区",
+            "osmUrl": "https://www.openstreetmap.org/way/957025218"
+          },
+          {
+            "object": "way/1431067083",
+            "version": 1,
+            "name": "真光十小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067083"
+          },
+          {
+            "object": "way/1431067079",
+            "version": 1,
+            "name": "清涧新村第八小区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431067079"
+          }
+        ],
+        "geometryRule": "保留14个能与官方真光块17居委简称直接对应的OSM住宅用地面为MultiPolygon；清四、清七、真三无可靠同名开放住宅面，保持缺口，不做凸包或道路猜测。",
+        "limitations": [
+          "居民区通讯录只证明17个成员，不发布居委法定边界。",
+          "OSM住宅用地面是可编辑成员锚点，不等于17居委并集，也不等于卖方市场外边界。",
+          "当前缺少清四、清七、真三的可核验面；不得用真如镇、长征镇或其剩余面自动补齐。",
+          "与真如、长征、桃浦、万里接口仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.3798238,
+                31.2643714
+              ],
+              [
+                121.3773075,
+                31.2638256
+              ],
+              [
+                121.3771899,
+                31.2636604
+              ],
+              [
+                121.3771815,
+                31.262953
+              ],
+              [
+                121.3772434,
+                31.2628252
+              ],
+              [
+                121.3773503,
+                31.2627359
+              ],
+              [
+                121.3796165,
+                31.2623368
+              ],
+              [
+                121.3797152,
+                31.262389
+              ],
+              [
+                121.3797592,
+                31.2624821
+              ],
+              [
+                121.3799141,
+                31.2642871
+              ],
+              [
+                121.3798238,
+                31.2643714
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3813579,
+                31.2631682
+              ],
+              [
+                121.3816098,
+                31.2631646
+              ],
+              [
+                121.3816683,
+                31.2630872
+              ],
+              [
+                121.3819314,
+                31.2621765
+              ],
+              [
+                121.3819859,
+                31.2619772
+              ],
+              [
+                121.382508,
+                31.2619536
+              ],
+              [
+                121.3826431,
+                31.2620612
+              ],
+              [
+                121.3827945,
+                31.2642553
+              ],
+              [
+                121.3826824,
+                31.2643577
+              ],
+              [
+                121.3804274,
+                31.2644264
+              ],
+              [
+                121.3802215,
+                31.264386
+              ],
+              [
+                121.380115,
+                31.2642695
+              ],
+              [
+                121.3800081,
+                31.2632645
+              ],
+              [
+                121.3813579,
+                31.2631682
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3773456,
+                31.2624759
+              ],
+              [
+                121.3770964,
+                31.262273
+              ],
+              [
+                121.3769935,
+                31.2617219
+              ],
+              [
+                121.3769026,
+                31.2612046
+              ],
+              [
+                121.3776758,
+                31.261044
+              ],
+              [
+                121.3782217,
+                31.260574
+              ],
+              [
+                121.3781168,
+                31.2595749
+              ],
+              [
+                121.3792045,
+                31.2594803
+              ],
+              [
+                121.3793944,
+                31.2595766
+              ],
+              [
+                121.3796646,
+                31.2616731
+              ],
+              [
+                121.379067,
+                31.2617268
+              ],
+              [
+                121.3790968,
+                31.2621603
+              ],
+              [
+                121.3773456,
+                31.2624759
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3820238,
+                31.2663667
+              ],
+              [
+                121.381987,
+                31.2645155
+              ],
+              [
+                121.3855791,
+                31.26442
+              ],
+              [
+                121.385661,
+                31.2662601
+              ],
+              [
+                121.3855033,
+                31.2663025
+              ],
+              [
+                121.3851357,
+                31.2663238
+              ],
+              [
+                121.3844443,
+                31.2663185
+              ],
+              [
+                121.3844256,
+                31.2669032
+              ],
+              [
+                121.3834937,
+                31.266796
+              ],
+              [
+                121.3826966,
+                31.2665951
+              ],
+              [
+                121.3820238,
+                31.2663667
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3752014,
+                31.2560241
+              ],
+              [
+                121.3778166,
+                31.255561
+              ],
+              [
+                121.378732,
+                31.2579404
+              ],
+              [
+                121.3759673,
+                31.2581799
+              ],
+              [
+                121.3752014,
+                31.2560241
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3750017,
+                31.2557163
+              ],
+              [
+                121.3746852,
+                31.2548192
+              ],
+              [
+                121.3754523,
+                31.2546249
+              ],
+              [
+                121.3756078,
+                31.254391
+              ],
+              [
+                121.3756293,
+                31.2542168
+              ],
+              [
+                121.3754069,
+                31.2536132
+              ],
+              [
+                121.376965,
+                31.2532262
+              ],
+              [
+                121.3777214,
+                31.2552944
+              ],
+              [
+                121.3750017,
+                31.2557163
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3779011,
+                31.2550246
+              ],
+              [
+                121.3772099,
+                31.2531882
+              ],
+              [
+                121.3783681,
+                31.2529367
+              ],
+              [
+                121.3787315,
+                31.2539783
+              ],
+              [
+                121.3781517,
+                31.2541024
+              ],
+              [
+                121.3784286,
+                31.2547021
+              ],
+              [
+                121.3792847,
+                31.2544753
+              ],
+              [
+                121.3794842,
+                31.2549807
+              ],
+              [
+                121.3790312,
+                31.2550566
+              ],
+              [
+                121.3789238,
+                31.2547931
+              ],
+              [
+                121.3779011,
+                31.2550246
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3742682,
+                31.2536637
+              ],
+              [
+                121.3736273,
+                31.2517883
+              ],
+              [
+                121.3778534,
+                31.2507645
+              ],
+              [
+                121.3781359,
+                31.2515236
+              ],
+              [
+                121.3781643,
+                31.2515981
+              ],
+              [
+                121.3764686,
+                31.2521311
+              ],
+              [
+                121.3768069,
+                31.2531105
+              ],
+              [
+                121.3742682,
+                31.2536637
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3859646,
+                31.2557435
+              ],
+              [
+                121.3852652,
+                31.2555424
+              ],
+              [
+                121.3847715,
+                31.2554005
+              ],
+              [
+                121.3849031,
+                31.2550856
+              ],
+              [
+                121.3852748,
+                31.2541969
+              ],
+              [
+                121.3862321,
+                31.2544437
+              ],
+              [
+                121.3863659,
+                31.2548198
+              ],
+              [
+                121.3859646,
+                31.2557435
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3821855,
+                31.2577751
+              ],
+              [
+                121.381096,
+                31.2549879
+              ],
+              [
+                121.3836572,
+                31.2542928
+              ],
+              [
+                121.3842508,
+                31.2561417
+              ],
+              [
+                121.383088,
+                31.2564476
+              ],
+              [
+                121.3835027,
+                31.2576153
+              ],
+              [
+                121.3821855,
+                31.2577751
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.381003,
+                31.2546917
+              ],
+              [
+                121.3802081,
+                31.252553
+              ],
+              [
+                121.3823094,
+                31.2520736
+              ],
+              [
+                121.3827407,
+                31.2522
+              ],
+              [
+                121.3835664,
+                31.2540385
+              ],
+              [
+                121.381003,
+                31.2546917
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3801428,
+                31.2523258
+              ],
+              [
+                121.3793917,
+                31.2504089
+              ],
+              [
+                121.3824977,
+                31.249643
+              ],
+              [
+                121.3825728,
+                31.2509729
+              ],
+              [
+                121.3819077,
+                31.2509592
+              ],
+              [
+                121.3818111,
+                31.2512298
+              ],
+              [
+                121.3811137,
+                31.2513398
+              ],
+              [
+                121.381339,
+                31.2520965
+              ],
+              [
+                121.3801428,
+                31.2523258
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3833612,
+                31.2531021
+              ],
+              [
+                121.3830021,
+                31.252299
+              ],
+              [
+                121.3837005,
+                31.2524224
+              ],
+              [
+                121.3845136,
+                31.2526311
+              ],
+              [
+                121.385007,
+                31.2527133
+              ],
+              [
+                121.3849028,
+                31.2532261
+              ],
+              [
+                121.3846811,
+                31.2532592
+              ],
+              [
+                121.3843623,
+                31.2533067
+              ],
+              [
+                121.3833612,
+                31.2531021
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.3830286,
+                31.2605543
+              ],
+              [
+                121.3834779,
+                31.2604311
+              ],
+              [
+                121.3833818,
+                31.2594191
+              ],
+              [
+                121.3826415,
+                31.2594626
+              ],
+              [
+                121.3826449,
+                31.2593275
+              ],
+              [
+                121.3827882,
+                31.2592441
+              ],
+              [
+                121.385072,
+                31.2590929
+              ],
+              [
+                121.385197,
+                31.2591685
+              ],
+              [
+                121.3852976,
+                31.2613944
+              ],
+              [
+                121.3851939,
+                31.2615247
+              ],
+              [
+                121.3829894,
+                31.2616263
+              ],
+              [
+                121.3828644,
+                31.2615169
+              ],
+              [
+                121.3828025,
+                31.2605736
+              ],
+              [
+                121.3830286,
+                31.2605543
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_lianyang",
+        "name": "联洋",
+        "labelPoint": [
+          121.5562,
+          31.2265
+        ],
+        "scopeVersion": "pudong-lianyang-verified-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_7_community_residential_member_list_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-pudong-lianyang-community-service-list-2021"
+        ],
+        "officialMembers": [
+          "御景园",
+          "天安花园",
+          "联洋新苑",
+          "当代清水园",
+          "联洋花园",
+          "金樽花园/金色维也纳",
+          "御翠园",
+          "千秋别墅",
+          "四季雅苑",
+          "九间堂",
+          "水清木华",
+          "华丽家族",
+          "中邦晶座",
+          "吉云公寓",
+          "仁恒河滨城",
+          "浦东虹桥花园",
+          "浦东虹桥公寓",
+          "联洋年华园"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "联洋一居委",
+            "osmName": "天安花园",
+            "object": "way/872868842",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/872868842"
+          },
+          {
+            "officialMember": "联洋一居委",
+            "osmName": "联洋新苑",
+            "object": "way/1435592515",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1435592515"
+          },
+          {
+            "officialMember": "联洋二居委",
+            "osmName": "当代清水园",
+            "object": "way/709159322",
+            "version": 4,
+            "osmUrl": "https://www.openstreetmap.org/way/709159322"
+          },
+          {
+            "officialMember": "联洋二居委",
+            "osmName": "联洋花园",
+            "object": "way/851368750",
+            "version": 5,
+            "osmUrl": "https://www.openstreetmap.org/way/851368750"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "金樽花园/金色维也纳",
+            "object": "way/872868846",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/872868846"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "御翠园",
+            "object": "way/13038758",
+            "version": 9,
+            "osmUrl": "https://www.openstreetmap.org/way/13038758"
+          },
+          {
+            "officialMember": "联洋三居委",
+            "osmName": "四季雅苑",
+            "object": "way/13038757",
+            "version": 7,
+            "osmUrl": "https://www.openstreetmap.org/way/13038757"
+          },
+          {
+            "officialMember": "联洋四居委",
+            "osmName": "中邦晶座",
+            "object": "way/851368751",
+            "version": 6,
+            "osmUrl": "https://www.openstreetmap.org/way/851368751"
+          },
+          {
+            "officialMember": "联洋五居委",
+            "osmName": "吉云公寓",
+            "object": "way/407606425",
+            "version": 4,
+            "osmUrl": "https://www.openstreetmap.org/way/407606425"
+          },
+          {
+            "officialMember": "联洋五居委",
+            "osmName": "仁恒河滨城",
+            "object": "way/302865540",
+            "version": 9,
+            "osmUrl": "https://www.openstreetmap.org/way/302865540"
+          },
+          {
+            "officialMember": "联洋六居委",
+            "osmName": "浦东虹桥花园",
+            "object": "way/851371552",
+            "version": 3,
+            "osmUrl": "https://www.openstreetmap.org/way/851371552"
+          },
+          {
+            "officialMember": "联洋七居委",
+            "osmName": "联洋年华园",
+            "object": "way/586076252",
+            "version": 5,
+            "osmUrl": "https://www.openstreetmap.org/way/586076252"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "御景园",
+          "千秋别墅",
+          "九间堂",
+          "水清木华",
+          "华丽家族",
+          "浦东虹桥公寓"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/872868842",
+            "version": 2,
+            "name": "天安花园",
+            "osmUrl": "https://www.openstreetmap.org/way/872868842"
+          },
+          {
+            "object": "way/1435592515",
+            "version": 1,
+            "name": "联洋新苑",
+            "osmUrl": "https://www.openstreetmap.org/way/1435592515"
+          },
+          {
+            "object": "way/709159322",
+            "version": 4,
+            "name": "当代清水园",
+            "osmUrl": "https://www.openstreetmap.org/way/709159322"
+          },
+          {
+            "object": "way/851368750",
+            "version": 5,
+            "name": "联洋花园",
+            "osmUrl": "https://www.openstreetmap.org/way/851368750"
+          },
+          {
+            "object": "way/872868846",
+            "version": 2,
+            "name": "金色维也纳",
+            "osmUrl": "https://www.openstreetmap.org/way/872868846"
+          },
+          {
+            "object": "way/13038758",
+            "version": 9,
+            "name": "御翠园",
+            "osmUrl": "https://www.openstreetmap.org/way/13038758"
+          },
+          {
+            "object": "way/13038757",
+            "version": 7,
+            "name": "四季雅苑",
+            "osmUrl": "https://www.openstreetmap.org/way/13038757"
+          },
+          {
+            "object": "way/851368751",
+            "version": 6,
+            "name": "中邦晶座",
+            "osmUrl": "https://www.openstreetmap.org/way/851368751"
+          },
+          {
+            "object": "way/407606425",
+            "version": 4,
+            "name": "吉云公寓",
+            "osmUrl": "https://www.openstreetmap.org/way/407606425"
+          },
+          {
+            "object": "way/302865540",
+            "version": 9,
+            "name": "仁恒河滨城",
+            "osmUrl": "https://www.openstreetmap.org/way/302865540"
+          },
+          {
+            "object": "way/851371552",
+            "version": 3,
+            "name": "浦东虹桥花园",
+            "osmUrl": "https://www.openstreetmap.org/way/851371552"
+          },
+          {
+            "object": "way/586076252",
+            "version": 5,
+            "name": "联洋年华园",
+            "osmUrl": "https://www.openstreetmap.org/way/586076252"
+          }
+        ],
+        "geometryRule": "将官方联洋一至七居委清单中能精确匹配的12个OSM住宅用地面保留为成员MultiPolygon；未匹配的6个官方成员不以点位凸包、花木差集或道路包络补造。",
+        "limitations": [
+          "官方清单发布成员小区和门牌，不发布居委外缘。",
+          "12个开放住宅面只是已匹配成员，不代表联洋市场已连续闭合。",
+          "御景园、千秋别墅、九间堂、水清木华、华丽家族、浦东虹桥公寓尚无可靠同名开放面。",
+          "不得把花木街道relation 12867438、世纪公园或成员之间空白自动并入。",
+          "与花木、杨东、金桥、碧云接口仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.5515764,
+                31.2263116
+              ],
+              [
+                121.5491747,
+                31.2256877
+              ],
+              [
+                121.5490822,
+                31.2256301
+              ],
+              [
+                121.5490237,
+                31.2255356
+              ],
+              [
+                121.5490302,
+                31.2254336
+              ],
+              [
+                121.5499002,
+                31.22311
+              ],
+              [
+                121.5499562,
+                31.2230475
+              ],
+              [
+                121.5500373,
+                31.2229995
+              ],
+              [
+                121.5501291,
+                31.2230001
+              ],
+              [
+                121.5522787,
+                31.2238741
+              ],
+              [
+                121.5523516,
+                31.2239164
+              ],
+              [
+                121.5524023,
+                31.223986
+              ],
+              [
+                121.5524032,
+                31.2240496
+              ],
+              [
+                121.5518024,
+                31.2261965
+              ],
+              [
+                121.5517527,
+                31.2262672
+              ],
+              [
+                121.551676,
+                31.2263058
+              ],
+              [
+                121.5515764,
+                31.2263116
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5476065,
+                31.2245512
+              ],
+              [
+                121.548115,
+                31.2245141
+              ],
+              [
+                121.5489205,
+                31.2247184
+              ],
+              [
+                121.5490196,
+                31.2247436
+              ],
+              [
+                121.5487786,
+                31.2253948
+              ],
+              [
+                121.5487221,
+                31.2254712
+              ],
+              [
+                121.548641,
+                31.2255107
+              ],
+              [
+                121.5485435,
+                31.2255184
+              ],
+              [
+                121.5476599,
+                31.2252846
+              ],
+              [
+                121.5477988,
+                31.2249085
+              ],
+              [
+                121.5478101,
+                31.224878
+              ],
+              [
+                121.5476065,
+                31.2245512
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.554205,
+                31.2303744
+              ],
+              [
+                121.5542719,
+                31.2303875
+              ],
+              [
+                121.5556557,
+                31.2309612
+              ],
+              [
+                121.5553904,
+                31.2316851
+              ],
+              [
+                121.5568413,
+                31.2322675
+              ],
+              [
+                121.5568352,
+                31.2328361
+              ],
+              [
+                121.5565884,
+                31.23284
+              ],
+              [
+                121.5563452,
+                31.2328741
+              ],
+              [
+                121.5561055,
+                31.2329446
+              ],
+              [
+                121.5558862,
+                31.2330443
+              ],
+              [
+                121.5557153,
+                31.2331721
+              ],
+              [
+                121.5555824,
+                31.2333231
+              ],
+              [
+                121.5554549,
+                31.2334756
+              ],
+              [
+                121.5553521,
+                31.2336311
+              ],
+              [
+                121.5534871,
+                31.2328094
+              ],
+              [
+                121.5541039,
+                31.2304548
+              ],
+              [
+                121.5541416,
+                31.2303996
+              ],
+              [
+                121.554205,
+                31.2303744
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5461229,
+                31.2292722
+              ],
+              [
+                121.5463739,
+                31.2286925
+              ],
+              [
+                121.5466543,
+                31.2279988
+              ],
+              [
+                121.5482176,
+                31.2284927
+              ],
+              [
+                121.5480471,
+                31.228896
+              ],
+              [
+                121.5487386,
+                31.2291171
+              ],
+              [
+                121.5492385,
+                31.229077
+              ],
+              [
+                121.5495557,
+                31.2291733
+              ],
+              [
+                121.5496523,
+                31.2289453
+              ],
+              [
+                121.5534992,
+                31.230133
+              ],
+              [
+                121.5535677,
+                31.2301753
+              ],
+              [
+                121.5536289,
+                31.2302471
+              ],
+              [
+                121.5536398,
+                31.2303158
+              ],
+              [
+                121.55336,
+                31.2313909
+              ],
+              [
+                121.5524459,
+                31.2312043
+              ],
+              [
+                121.551215,
+                31.2308353
+              ],
+              [
+                121.5510437,
+                31.2314207
+              ],
+              [
+                121.5495513,
+                31.2306501
+              ],
+              [
+                121.5494036,
+                31.2305948
+              ],
+              [
+                121.5481423,
+                31.2301227
+              ],
+              [
+                121.5474199,
+                31.2298755
+              ],
+              [
+                121.5462261,
+                31.229475
+              ],
+              [
+                121.5461229,
+                31.2292722
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5621755,
+                31.2269944
+              ],
+              [
+                121.5621024,
+                31.2270382
+              ],
+              [
+                121.5620152,
+                31.2270638
+              ],
+              [
+                121.5619279,
+                31.2270652
+              ],
+              [
+                121.558185,
+                31.2255875
+              ],
+              [
+                121.5582857,
+                31.2254024
+              ],
+              [
+                121.559015,
+                31.2252885
+              ],
+              [
+                121.5595711,
+                31.2248063
+              ],
+              [
+                121.5601714,
+                31.2244179
+              ],
+              [
+                121.5606521,
+                31.2234935
+              ],
+              [
+                121.5613174,
+                31.2236688
+              ],
+              [
+                121.5617202,
+                31.2238296
+              ],
+              [
+                121.5622624,
+                31.2241593
+              ],
+              [
+                121.562795,
+                31.2244929
+              ],
+              [
+                121.5622132,
+                31.2269295
+              ],
+              [
+                121.5621755,
+                31.2269944
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5564628,
+                31.2213864
+              ],
+              [
+                121.5576441,
+                31.2161754
+              ],
+              [
+                121.5577606,
+                31.2161081
+              ],
+              [
+                121.5628679,
+                31.2169347
+              ],
+              [
+                121.5643185,
+                31.2171695
+              ],
+              [
+                121.5644825,
+                31.2172724
+              ],
+              [
+                121.5643401,
+                31.2178771
+              ],
+              [
+                121.5629637,
+                31.2237223
+              ],
+              [
+                121.5622489,
+                31.2233457
+              ],
+              [
+                121.5619556,
+                31.2231985
+              ],
+              [
+                121.5616538,
+                31.2230628
+              ],
+              [
+                121.5613061,
+                31.2229265
+              ],
+              [
+                121.5605827,
+                31.2226726
+              ],
+              [
+                121.5564628,
+                31.2213864
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5632172,
+                31.2238331
+              ],
+              [
+                121.56475,
+                31.2173334
+              ],
+              [
+                121.5650079,
+                31.2171941
+              ],
+              [
+                121.5682288,
+                31.2177137
+              ],
+              [
+                121.5683013,
+                31.2178176
+              ],
+              [
+                121.5664804,
+                31.2254518
+              ],
+              [
+                121.5662823,
+                31.2253553
+              ],
+              [
+                121.5661113,
+                31.2252622
+              ],
+              [
+                121.5632172,
+                31.2238331
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.551198,
+                31.2291333
+              ],
+              [
+                121.5511737,
+                31.2290959
+              ],
+              [
+                121.5511653,
+                31.2290494
+              ],
+              [
+                121.5512432,
+                31.2287768
+              ],
+              [
+                121.5523198,
+                31.2290966
+              ],
+              [
+                121.5524378,
+                31.2291324
+              ],
+              [
+                121.5528793,
+                31.2292464
+              ],
+              [
+                121.5537873,
+                31.2294809
+              ],
+              [
+                121.5536991,
+                31.229803
+              ],
+              [
+                121.5536837,
+                31.2298352
+              ],
+              [
+                121.5536509,
+                31.2298618
+              ],
+              [
+                121.5536102,
+                31.2298723
+              ],
+              [
+                121.5535654,
+                31.2298726
+              ],
+              [
+                121.5512518,
+                31.2291599
+              ],
+              [
+                121.551198,
+                31.2291333
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5638245,
+                31.2313871
+              ],
+              [
+                121.5640205,
+                31.2309376
+              ],
+              [
+                121.5638476,
+                31.2308794
+              ],
+              [
+                121.5642536,
+                31.2299204
+              ],
+              [
+                121.5644082,
+                31.2299692
+              ],
+              [
+                121.5652337,
+                31.2302328
+              ],
+              [
+                121.5650106,
+                31.2309244
+              ],
+              [
+                121.5646825,
+                31.2316618
+              ],
+              [
+                121.5638245,
+                31.2313871
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5622108,
+                31.2280397
+              ],
+              [
+                121.5622788,
+                31.2279984
+              ],
+              [
+                121.5623712,
+                31.2279917
+              ],
+              [
+                121.5624851,
+                31.2280043
+              ],
+              [
+                121.5648565,
+                31.2288767
+              ],
+              [
+                121.5644082,
+                31.2299692
+              ],
+              [
+                121.5642536,
+                31.2299204
+              ],
+              [
+                121.5638476,
+                31.2308794
+              ],
+              [
+                121.5640205,
+                31.2309376
+              ],
+              [
+                121.5638245,
+                31.2313871
+              ],
+              [
+                121.5646825,
+                31.2316618
+              ],
+              [
+                121.5640725,
+                31.2330242
+              ],
+              [
+                121.5639824,
+                31.2331463
+              ],
+              [
+                121.5631123,
+                31.2351173
+              ],
+              [
+                121.5590669,
+                31.2351447
+              ],
+              [
+                121.5589364,
+                31.2351463
+              ],
+              [
+                121.5588596,
+                31.2351473
+              ],
+              [
+                121.5586849,
+                31.235103
+              ],
+              [
+                121.5559508,
+                31.2338455
+              ],
+              [
+                121.5562947,
+                31.2334824
+              ],
+              [
+                121.5567045,
+                31.2333332
+              ],
+              [
+                121.558252,
+                31.2334046
+              ],
+              [
+                121.5582467,
+                31.2328306
+              ],
+              [
+                121.558236,
+                31.2316757
+              ],
+              [
+                121.5596561,
+                31.231403
+              ],
+              [
+                121.5604452,
+                31.2311759
+              ],
+              [
+                121.5609194,
+                31.230806
+              ],
+              [
+                121.5615113,
+                31.2295311
+              ],
+              [
+                121.5621506,
+                31.2281154
+              ],
+              [
+                121.5622108,
+                31.2280397
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5579198,
+                31.2286059
+              ],
+              [
+                121.5578908,
+                31.2285552
+              ],
+              [
+                121.5578802,
+                31.228494
+              ],
+              [
+                121.5578897,
+                31.2284407
+              ],
+              [
+                121.5584762,
+                31.2270599
+              ],
+              [
+                121.5587485,
+                31.226948
+              ],
+              [
+                121.5590432,
+                31.2268831
+              ],
+              [
+                121.5593704,
+                31.2268478
+              ],
+              [
+                121.5597611,
+                31.2268374
+              ],
+              [
+                121.5617873,
+                31.2276465
+              ],
+              [
+                121.561878,
+                31.2277062
+              ],
+              [
+                121.5619499,
+                31.2277837
+              ],
+              [
+                121.5619633,
+                31.2278715
+              ],
+              [
+                121.5619413,
+                31.2279522
+              ],
+              [
+                121.5611218,
+                31.2297978
+              ],
+              [
+                121.5610942,
+                31.2298477
+              ],
+              [
+                121.5610558,
+                31.2298712
+              ],
+              [
+                121.5609866,
+                31.2298921
+              ],
+              [
+                121.5609202,
+                31.2298899
+              ],
+              [
+                121.5579727,
+                31.2286541
+              ],
+              [
+                121.5579198,
+                31.2286059
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.5481159,
+                31.2281637
+              ],
+              [
+                121.5480589,
+                31.228074
+              ],
+              [
+                121.5480513,
+                31.2279612
+              ],
+              [
+                121.5487466,
+                31.2260656
+              ],
+              [
+                121.5487899,
+                31.2259672
+              ],
+              [
+                121.5488628,
+                31.2259073
+              ],
+              [
+                121.54896,
+                31.225887
+              ],
+              [
+                121.5490667,
+                31.2258957
+              ],
+              [
+                121.5506501,
+                31.2263389
+              ],
+              [
+                121.5505491,
+                31.2266397
+              ],
+              [
+                121.5507466,
+                31.2266905
+              ],
+              [
+                121.5510021,
+                31.2270915
+              ],
+              [
+                121.5515149,
+                31.2272205
+              ],
+              [
+                121.5510198,
+                31.2288953
+              ],
+              [
+                121.5509588,
+                31.2289762
+              ],
+              [
+                121.5508853,
+                31.2290267
+              ],
+              [
+                121.5507791,
+                31.2290178
+              ],
+              [
+                121.5482155,
+                31.2282261
+              ],
+              [
+                121.5481159,
+                31.2281637
+              ]
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "official-yangpu-riverside-key-functional-area-2025",
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_yangpu_dongwaitan",
+        "name": "东外滩",
+        "labelPoint": [
+          121.5224,
+          31.2592
+        ],
+        "scopeVersion": "yangpu-dongwaitan-pingliang-admin-reference-2026-07",
+        "proxyType": "riverside_administrative_reference_proxy",
+        "method": "official_riverside_constraint_plus_osm_pingliang_subdistrict_relation",
+        "definitionSourceIds": [
+          "official-yangpu-riverside-key-functional-area-2025"
+        ],
+        "osmObjects": [
+          {
+            "object": "relation/13464332",
+            "version": 6,
+            "name": "平凉路街道",
+            "osmUrl": "https://www.openstreetmap.org/relation/13464332"
+          },
+          {
+            "object": "way/364662260",
+            "version": 1,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662260"
+          },
+          {
+            "object": "way/364662259",
+            "version": 5,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662259"
+          },
+          {
+            "object": "way/39692816",
+            "version": 19,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/39692816"
+          },
+          {
+            "object": "way/1004975669",
+            "version": 2,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/1004975669"
+          },
+          {
+            "object": "way/1064218886",
+            "version": 3,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/1064218886"
+          },
+          {
+            "object": "way/364662090",
+            "version": 5,
+            "name": null,
+            "osmUrl": "https://www.openstreetmap.org/way/364662090"
+          }
+        ],
+        "geometryRule": "使用OSM平凉路街道relation 13464332的完整开放行政壳作为东外滩可编辑起画代理；官方杨浦滨江15.6平方公里功能区仅用于确认滨江方向，不直接输出该功能区面。",
+        "limitations": [
+          "平凉路街道不是东外滩楼市板块的同义词，本面只能作为行政参考壳。",
+          "杨浦滨江重点功能区横跨多街道且含产业、公共空间，不能直接作为住宅市场面。",
+          "尚未按住宅成员、滨江功能和定海路共享边裁出市场外缘。",
+          "不得把北外滩、定海路街道、黄浦江水域或15.6平方公里功能区静默并入。"
+        ]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5257093,
+              31.2497581
+            ],
+            [
+              121.5292658,
+              31.2508032
+            ],
+            [
+              121.5328594,
+              31.2523235
+            ],
+            [
+              121.5339383,
+              31.2529256
+            ],
+            [
+              121.5318492,
+              31.2553076
+            ],
+            [
+              121.5315636,
+              31.2560752
+            ],
+            [
+              121.5315559,
+              31.2561888
+            ],
+            [
+              121.5315773,
+              31.2565595
+            ],
+            [
+              121.531701,
+              31.2568859
+            ],
+            [
+              121.5317362,
+              31.2571144
+            ],
+            [
+              121.5316873,
+              31.2572515
+            ],
+            [
+              121.5311744,
+              31.2580615
+            ],
+            [
+              121.5310657,
+              31.2582332
+            ],
+            [
+              121.5309176,
+              31.258416
+            ],
+            [
+              121.530771,
+              31.2585321
+            ],
+            [
+              121.5301647,
+              31.2587345
+            ],
+            [
+              121.5299585,
+              31.2588154
+            ],
+            [
+              121.52976,
+              31.2589525
+            ],
+            [
+              121.5296195,
+              31.2590752
+            ],
+            [
+              121.5295752,
+              31.2591679
+            ],
+            [
+              121.529534,
+              31.2592737
+            ],
+            [
+              121.5295767,
+              31.2597932
+            ],
+            [
+              121.5295767,
+              31.2599851
+            ],
+            [
+              121.5295218,
+              31.2601196
+            ],
+            [
+              121.5294683,
+              31.2601914
+            ],
+            [
+              121.528371,
+              31.2610974
+            ],
+            [
+              121.5281878,
+              31.2612658
+            ],
+            [
+              121.5274425,
+              31.2620797
+            ],
+            [
+              121.5273707,
+              31.2621574
+            ],
+            [
+              121.5271679,
+              31.2626248
+            ],
+            [
+              121.5271073,
+              31.2627644
+            ],
+            [
+              121.5269454,
+              31.2630255
+            ],
+            [
+              121.5268156,
+              31.2630882
+            ],
+            [
+              121.5267194,
+              31.263156
+            ],
+            [
+              121.5266201,
+              31.2632996
+            ],
+            [
+              121.5265163,
+              31.2635503
+            ],
+            [
+              121.5263956,
+              31.2637696
+            ],
+            [
+              121.5262887,
+              31.2639106
+            ],
+            [
+              121.5259085,
+              31.2641951
+            ],
+            [
+              121.5258352,
+              31.2643152
+            ],
+            [
+              121.5257848,
+              31.2645633
+            ],
+            [
+              121.5256962,
+              31.2647173
+            ],
+            [
+              121.5254022,
+              31.2649568
+            ],
+            [
+              121.5252289,
+              31.2651363
+            ],
+            [
+              121.5245676,
+              31.2659391
+            ],
+            [
+              121.5240759,
+              31.266832
+            ],
+            [
+              121.5237154,
+              31.2674599
+            ],
+            [
+              121.5235108,
+              31.2678606
+            ],
+            [
+              121.5231336,
+              31.2682823
+            ],
+            [
+              121.5231145,
+              31.2683265
+            ],
+            [
+              121.5228583,
+              31.2682173
+            ],
+            [
+              121.5226341,
+              31.2681175
+            ],
+            [
+              121.5220994,
+              31.267866
+            ],
+            [
+              121.521504,
+              31.2675966
+            ],
+            [
+              121.5209763,
+              31.2673551
+            ],
+            [
+              121.5202828,
+              31.2670338
+            ],
+            [
+              121.519573,
+              31.2666965
+            ],
+            [
+              121.5192484,
+              31.2665248
+            ],
+            [
+              121.5189192,
+              31.2663811
+            ],
+            [
+              121.5181439,
+              31.2660398
+            ],
+            [
+              121.5176993,
+              31.2658413
+            ],
+            [
+              121.5155161,
+              31.2648877
+            ],
+            [
+              121.5133536,
+              31.2636469
+            ],
+            [
+              121.5128008,
+              31.2633394
+            ],
+            [
+              121.5123019,
+              31.2630643
+            ],
+            [
+              121.5119729,
+              31.262817
+            ],
+            [
+              121.5099201,
+              31.2610146
+            ],
+            [
+              121.5091342,
+              31.2603313
+            ],
+            [
+              121.5087538,
+              31.259994
+            ],
+            [
+              121.5087911,
+              31.2599514
+            ],
+            [
+              121.5099887,
+              31.2586338
+            ],
+            [
+              121.5100773,
+              31.2585198
+            ],
+            [
+              121.5101634,
+              31.2583912
+            ],
+            [
+              121.5102709,
+              31.2582323
+            ],
+            [
+              121.5125413,
+              31.2549923
+            ],
+            [
+              121.5128014,
+              31.2545587
+            ],
+            [
+              121.5132943,
+              31.2539096
+            ],
+            [
+              121.5115216,
+              31.2536495
+            ],
+            [
+              121.5116521,
+              31.2534674
+            ],
+            [
+              121.5119556,
+              31.2530341
+            ],
+            [
+              121.5119746,
+              31.2530049
+            ],
+            [
+              121.512059,
+              31.2528141
+            ],
+            [
+              121.5120886,
+              31.2526997
+            ],
+            [
+              121.5121069,
+              31.2526029
+            ],
+            [
+              121.5121199,
+              31.2524815
+            ],
+            [
+              121.5121211,
+              31.2523829
+            ],
+            [
+              121.512098,
+              31.2517615
+            ],
+            [
+              121.5120974,
+              31.2493126
+            ],
+            [
+              121.5195853,
+              31.2490817
+            ],
+            [
+              121.522173,
+              31.2492025
+            ],
+            [
+              121.5257093,
+              31.2497581
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "status": "source-backed-proxy",
+        "evidenceGrade": "B",
+        "coordinateSystem": "WGS84",
+        "generatedAt": "2026-07-25",
+        "confidence": "medium",
+        "publicationPolicy": "internal-review",
+        "geometryVerificationSourceIds": [
+          "osm-overpass-b4-community-proxies-2026-07-25"
+        ],
+        "id": "sector_dahua",
+        "name": "大华",
+        "labelPoint": [
+          121.4128,
+          31.2776
+        ],
+        "scopeVersion": "baoshan-dahua-verified-community-member-set-2026-07",
+        "proxyType": "community_member_multipolygon_proxy",
+        "method": "official_community_four_sides_plus_exact_named_osm_residential_ways",
+        "definitionSourceIds": [
+          "official-baoshan-dahua-1v6-community-four-sides-2011",
+          "official-baoshan-dahua-2-binjiangyayuan-four-sides-2011",
+          "official-baoshan-dahua-5v1-community-four-sides-2011"
+        ],
+        "officialMembers": [
+          "大华一村第六居民委员会（东、西两块）",
+          "大华二村滨江雅苑居民委员会",
+          "大华五村第一居民委员会（东、西两块）"
+        ],
+        "matchedMembers": [
+          {
+            "officialMember": "大华二村滨江雅苑居委",
+            "osmName": "滨江雅苑",
+            "object": "way/940758604",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/940758604"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村三街坊",
+            "object": "way/1431653618",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653618"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村二街坊",
+            "object": "way/1431653621",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653621"
+          },
+          {
+            "officialMember": "大华二村周边开放住宅成员",
+            "osmName": "大华二村",
+            "object": "way/1431653623",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653623"
+          },
+          {
+            "officialMember": "大华一村周边开放住宅成员",
+            "osmName": "大华一村三居",
+            "object": "way/1431653622",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653622"
+          },
+          {
+            "officialMember": "大华一村周边开放住宅成员",
+            "osmName": "大华一村东区",
+            "object": "way/1431653624",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653624"
+          },
+          {
+            "officialMember": "大华一村第六居委北侧道路锚点",
+            "osmName": "南华苑",
+            "object": "way/1431653614",
+            "version": 1,
+            "osmUrl": "https://www.openstreetmap.org/way/1431653614"
+          },
+          {
+            "officialMember": "大华一村第六居委北侧道路锚点",
+            "osmName": "南华苑东区",
+            "object": "way/1368070500",
+            "version": 2,
+            "osmUrl": "https://www.openstreetmap.org/way/1368070500"
+          }
+        ],
+        "unmatchedOfficialMembers": [
+          "大华一村第六居民委员会完整东块",
+          "大华一村第六居民委员会完整西块",
+          "大华五村第一居民委员会完整东块",
+          "大华五村第一居民委员会完整西块"
+        ],
+        "osmObjects": [
+          {
+            "object": "way/940758604",
+            "version": 1,
+            "name": "滨江雅苑",
+            "osmUrl": "https://www.openstreetmap.org/way/940758604"
+          },
+          {
+            "object": "way/1431653618",
+            "version": 1,
+            "name": "大华二村三街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653618"
+          },
+          {
+            "object": "way/1431653621",
+            "version": 1,
+            "name": "大华二村二街坊",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653621"
+          },
+          {
+            "object": "way/1431653623",
+            "version": 1,
+            "name": "大华二村",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653623"
+          },
+          {
+            "object": "way/1431653622",
+            "version": 1,
+            "name": "大华一村三居",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653622"
+          },
+          {
+            "object": "way/1431653624",
+            "version": 1,
+            "name": "大华一村东区",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653624"
+          },
+          {
+            "object": "way/1431653614",
+            "version": 1,
+            "name": "南华苑",
+            "osmUrl": "https://www.openstreetmap.org/way/1431653614"
+          },
+          {
+            "object": "way/1368070500",
+            "version": 2,
+            "name": "南华苑东区",
+            "osmUrl": "https://www.openstreetmap.org/way/1368070500"
+          }
+        ],
+        "geometryRule": "保留与三份官方社区四至直接关联的8个OSM住宅用地面为成员MultiPolygon；滨江雅苑为名称直接命中，其余大华一村、二村、南华苑开放住宅面只作同片区锚点，不以其并集或凸包替代完整市场。",
+        "limitations": [
+          "三份官方批复只覆盖部分大华居委，不是完整楼市大华成员表。",
+          "除滨江雅苑外，开放住宅名称不能证明它恰好等于批复中的同名居委边界。",
+          "大华一村第六和大华五村第一的官方道路四至尚未逐段冻结为共享道路节点，故保留缺口。",
+          "不得用大场镇、顾村镇、相邻行政余量或这些成员的凸包补齐。",
+          "与大场、万里、上大、共康、祁连山路方向仍须联合裁切。"
+        ]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                121.4100213,
+                31.2778391
+              ],
+              [
+                121.4109486,
+                31.2808788
+              ],
+              [
+                121.4103387,
+                31.2809251
+              ],
+              [
+                121.4103856,
+                31.2812983
+              ],
+              [
+                121.408058,
+                31.2812489
+              ],
+              [
+                121.4071017,
+                31.2781
+              ],
+              [
+                121.4100213,
+                31.2778391
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4109079,
+                31.276534
+              ],
+              [
+                121.4100969,
+                31.2766174
+              ],
+              [
+                121.4101104,
+                31.2758083
+              ],
+              [
+                121.4102351,
+                31.2747377
+              ],
+              [
+                121.4103059,
+                31.2746359
+              ],
+              [
+                121.4104646,
+                31.2746069
+              ],
+              [
+                121.412012,
+                31.2744165
+              ],
+              [
+                121.4122189,
+                31.275537
+              ],
+              [
+                121.4117258,
+                31.2755903
+              ],
+              [
+                121.4119185,
+                31.2767287
+              ],
+              [
+                121.4127942,
+                31.2766536
+              ],
+              [
+                121.4128934,
+                31.2774238
+              ],
+              [
+                121.4110462,
+                31.2776233
+              ],
+              [
+                121.4109079,
+                31.276534
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.410299,
+                31.2744396
+              ],
+              [
+                121.4107543,
+                31.2710002
+              ],
+              [
+                121.4146892,
+                31.2705059
+              ],
+              [
+                121.4148477,
+                31.2705402
+              ],
+              [
+                121.4152572,
+                31.272453
+              ],
+              [
+                121.4148464,
+                31.2725646
+              ],
+              [
+                121.4143935,
+                31.2727725
+              ],
+              [
+                121.4139407,
+                31.2730823
+              ],
+              [
+                121.4127047,
+                31.273108
+              ],
+              [
+                121.4127299,
+                31.2737873
+              ],
+              [
+                121.4128465,
+                31.2737878
+              ],
+              [
+                121.4128843,
+                31.2741406
+              ],
+              [
+                121.410299,
+                31.2744396
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4166969,
+                31.2764711
+              ],
+              [
+                121.4162766,
+                31.2766484
+              ],
+              [
+                121.4164021,
+                31.2768586
+              ],
+              [
+                121.4156412,
+                31.2771323
+              ],
+              [
+                121.4155644,
+                31.2768783
+              ],
+              [
+                121.4154132,
+                31.276655
+              ],
+              [
+                121.415239,
+                31.276447
+              ],
+              [
+                121.4150546,
+                31.2762915
+              ],
+              [
+                121.4148445,
+                31.276147
+              ],
+              [
+                121.4146418,
+                31.2759961
+              ],
+              [
+                121.4154832,
+                31.2757084
+              ],
+              [
+                121.4148465,
+                31.2745259
+              ],
+              [
+                121.4148408,
+                31.2743444
+              ],
+              [
+                121.4154231,
+                31.2741879
+              ],
+              [
+                121.4155541,
+                31.2742359
+              ],
+              [
+                121.4157382,
+                31.2742593
+              ],
+              [
+                121.4162705,
+                31.2754729
+              ],
+              [
+                121.4160788,
+                31.2755244
+              ],
+              [
+                121.416393,
+                31.2760918
+              ],
+              [
+                121.4165957,
+                31.2763467
+              ],
+              [
+                121.4166969,
+                31.2764711
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4181812,
+                31.2765827
+              ],
+              [
+                121.4176019,
+                31.2765599
+              ],
+              [
+                121.4172909,
+                31.2765593
+              ],
+              [
+                121.4168485,
+                31.2766076
+              ],
+              [
+                121.4166969,
+                31.2764711
+              ],
+              [
+                121.4165957,
+                31.2763467
+              ],
+              [
+                121.416393,
+                31.2760918
+              ],
+              [
+                121.4160788,
+                31.2755244
+              ],
+              [
+                121.4162705,
+                31.2754729
+              ],
+              [
+                121.4157382,
+                31.2742593
+              ],
+              [
+                121.4182844,
+                31.2743462
+              ],
+              [
+                121.4183683,
+                31.2745255
+              ],
+              [
+                121.4182918,
+                31.2755183
+              ],
+              [
+                121.4181812,
+                31.2765827
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4183345,
+                31.2775063
+              ],
+              [
+                121.418283,
+                31.2771992
+              ],
+              [
+                121.4183012,
+                31.2770359
+              ],
+              [
+                121.4184494,
+                31.2763937
+              ],
+              [
+                121.4187243,
+                31.2764096
+              ],
+              [
+                121.4189112,
+                31.2764203
+              ],
+              [
+                121.4198241,
+                31.276473
+              ],
+              [
+                121.4196148,
+                31.2775399
+              ],
+              [
+                121.4183345,
+                31.2775063
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4181973,
+                31.2741256
+              ],
+              [
+                121.4166152,
+                31.2741023
+              ],
+              [
+                121.416293,
+                31.2740123
+              ],
+              [
+                121.4160532,
+                31.2738494
+              ],
+              [
+                121.4154721,
+                31.2725855
+              ],
+              [
+                121.4179561,
+                31.271855
+              ],
+              [
+                121.4183681,
+                31.2717762
+              ],
+              [
+                121.41882,
+                31.2717657
+              ],
+              [
+                121.4190886,
+                31.2717543
+              ],
+              [
+                121.4192717,
+                31.2716653
+              ],
+              [
+                121.4194452,
+                31.2715319
+              ],
+              [
+                121.4198095,
+                31.2719388
+              ],
+              [
+                121.4185085,
+                31.2739518
+              ],
+              [
+                121.4181973,
+                31.2741256
+              ]
+            ]
+          ],
+          [
+            [
+              [
+                121.4186812,
+                31.2741498
+              ],
+              [
+                121.4188313,
+                31.2738003
+              ],
+              [
+                121.419219,
+                31.2731862
+              ],
+              [
+                121.4199168,
+                31.2721336
+              ],
+              [
+                121.4204305,
+                31.272527
+              ],
+              [
+                121.4200315,
+                31.2731052
+              ],
+              [
+                121.4199288,
+                31.2735055
+              ],
+              [
+                121.4198954,
+                31.2738146
+              ],
+              [
+                121.4198714,
+                31.2741909
+              ],
+              [
+                121.4186812,
+                31.2741498
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

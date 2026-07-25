@@ -1552,7 +1552,7 @@ assertConnectedSharedEdgeBatch({
   expectedPairCount: 21,
   label: "徐汇同名街镇批次",
 });
-for (const forbiddenName of ["虹梅路", "上海南站"]) {
+for (const forbiddenName of ["虹梅路"]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -1652,7 +1652,7 @@ if (changningFourSharedPairs.size !== 2
   || !changningFourSharedPairs.has("sector_tianshan/sector_xianxia")) {
   error("长宁直接同名街道批次必须保持新华路—天山—仙霞两组固定共享边");
 }
-for (const forbiddenName of ["西郊"]) {
+for (const forbiddenName of []) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
@@ -1747,13 +1747,38 @@ for (const definition of jinganPutuoElevenDefinitions) {
 }
 for (const forbiddenName of [
   "石门二路", "宝山路", "芷江西路", "共和新路", "彭浦新村",
-  "不夜城", "苏河湾", "阳城—永和", "阳城", "永和",
-  "武宁", "真光", "光新",
+  "阳城—永和",
 ]) {
   if ([...registryById.values()].some(
     (record) => record.canonicalName === forbiddenName,
   )) {
     error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+  }
+}
+for (const unresolvedName of ["镇宁路", "西藏北路", "闸北公园"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`静安市场替代身份只能以 geometry.status=missing 注册 ${unresolvedName}`);
+  }
+}
+for (const id of ["sector_buyecheng", "sector_suhewan"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.includes("official-jingan-suhewan-2017-functional-scope")) {
+    error(`${id}: 历史功能片区只可作为人工起画卡，联合道路段未冻结前不得自动发布市场候选面`);
+  }
+}
+for (const id of ["sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_wuning", "sector_zhenguang", "sector_guangxin"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.includes("seller-lianjia-shanghai-sector-sitemap")) {
+    error(`${id}: 已确认市场身份在成员/共享边未核验前必须保持可编辑缺失几何，不得自动发布候选面`);
   }
 }
 const liangwanchengDefinition = candidateDefinitionById.get(
@@ -2065,11 +2090,12 @@ for (const [firstId, secondId, minimumSharedMeters] of [
     error(`${firstId} / ${secondId}: 宝山—杨浦跨区行政骨架共享边不足 ${minimumSharedMeters} 米`);
   }
 }
-for (const forbiddenName of ["大华", "上大", "南大", "共康", "淞宝"]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === forbiddenName,
-  )) {
-    error(`宝山直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
+for (const unresolvedName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`宝山复杂市场只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 
@@ -2255,11 +2281,12 @@ for (const definition of jiadingEightDefinitions) {
     error(`${definition.id}: 嘉定批次不得虚构与徐泾或虹桥商务区的直接共享边`);
   }
 }
-for (const forbiddenName of ["丰庄", "嘉定新城", "嘉定老城"]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === forbiddenName,
-  )) {
-    error(`嘉定直接代理批次不得在独立范围研究完成前自动注册 ${forbiddenName}`);
+for (const unresolvedName of ["丰庄", "嘉定新城", "嘉定老城"]) {
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`嘉定复杂市场只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 
@@ -2835,10 +2862,11 @@ for (const [firstId, secondId, minimumSharedLengthMeters] of [
 for (const unresolvedName of [
   "瑞虹新城", "鲁迅公园", "东外滩", "定海路", "黄兴公园",
 ]) {
-  if ([...registryById.values()].some(
-    (record) => record.canonicalName === unresolvedName,
-  )) {
-    error(`虹口—杨浦第二批证据不足，不得自动注册 ${unresolvedName}`);
+  const record = [...registryById.values()].find(
+    (candidate) => candidate.canonicalName === unresolvedName,
+  );
+  if (!record || record.geometry?.status !== "missing") {
+    error(`虹口—杨浦第二批只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
 
@@ -2953,10 +2981,18 @@ for (const anchor of zhongshanParkDefinition?.boundaryAnchors ?? []) {
     error(`sector_zhongshangongyuan: ${anchor.side} 侧必须达到声明的官方命名道路覆盖长度`);
   }
 }
-if ([...registryById.values()].some(
-  (record) => record.canonicalName === "西郊",
-)) {
+if (candidateById.has("sector_xijiao")) {
   error("sector_zhongshangongyuan: 中山公园核心批次不得在联合裁定前自动注册西郊");
+}
+for (const id of ["sector_shanghainan_zhan", "sector_xijiao"]) {
+  const record = registryById.get(id);
+  if (candidateById.has(id)
+    || record?.geometry?.status !== "missing"
+    || record?.definitionStatus !== "market_identity_verified_geometry_blocked"
+    || !record?.definitionSourceIds?.length
+    || !record?.geometry?.verificationSourceIds?.length) {
+    error(`${id}: 已核验但未冻结市场四至的身份必须只在编辑器中以缺失几何出现，不得自动发布候选面`);
+  }
 }
 
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");

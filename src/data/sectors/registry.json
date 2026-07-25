@@ -5127,57 +5127,47 @@
       "aliases": [
         "奉城镇"
       ],
-      "riskFlags": [
-        "stale_admin_relation",
-        "missing_touqiao_subtraction",
-        "admin_area_version_mismatch",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["stale_admin_relation_includes_touqiao", "historical_admin_market_proxy", "market_boundary_not_official"],
       "districtNames": [
         "奉贤区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "卖方奉城身份已确认；现行几何必须使用2024年头桥街道析出后的奉城镇范围。固定OSM关系仍包含头桥，禁止作为2026现行行政代理。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_historical_admin_proxy_candidate",
+      "definitionCandidate": "卖方奉城身份已确认；当前产品以固定 OSM 旧奉城镇 relation 作为低置信、可编辑历史市场代理，明确包含已析出的头桥，不能作为2026现行行政代理。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-fengxian-current-admin-units-2026",
         "official-fengxian-touqiao-establishment-2024"
       ],
-      "adminProxyName": "奉城镇（待现行边界）",
-      "adminBoundaryVersion": "2024-07-or-later-required",
+      "adminProxyName": "奉城镇（含已析出头桥的历史代理）",
+      "adminBoundaryVersion": "pre-2024-legacy-relation",
       "marketAdminAlignmentUnverified": true,
       "adminAreaVersionMismatch": true,
       "officialCurrentAreaKm2": null,
-      "legacyOsmAdminRelationId": "17885593",
-      "legacyLockedGeometryAreaKm2": 109.857816,
       "requiredAdjacencyReviewIds": [
         "unresolved_touqiao",
         "sector_fengxianjinhui",
-        "sector_haiwan",
         "sector_situan",
         "sector_qingcun",
-        "sector_hangtou",
-        "sector_xinchang",
-        "sector_xuanqiao"
+        "sector_haiwan"
       ],
       "boundaryEvidenceIds": [
         "fengcheng-version-blocker"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "post-touqiao-split-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "fengcheng-legacy-town-market-proxy-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-fengxian-touqiao-establishment-2024",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定OSM relation 17885593约109.8578平方公里，仍覆盖已析出的38.4平方公里头桥地区；在取得头桥现行矢量或可复算差集前保持缺失，并允许用户在编辑器人工起画。"
+        "note": "固定OSM relation 17885593约109.8578平方公里，仍覆盖已析出的38.4平方公里头桥地区；当前仅作为可编辑历史市场代理，取得头桥现行矢量或可复算差集后应优先替换。"
       }
     },
     {
@@ -5247,33 +5237,25 @@
       "aliases": [
         "华漕镇"
       ],
-      "riskFlags": [
-        "admin_proxy_overlap_exceeds_snap_tolerance",
-        "overlaps_existing_xujing_candidate",
-        "cross_district_hongqiao_cbd_interface",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["admin_proxy_may_be_broader_than_residential_market", "reference_aided_difference", "market_boundary_not_official"],
       "districtNames": [
         "闵行区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场华漕身份与现行华漕镇名称均已核验，但固定华漕镇 relation 与既有徐泾市场候选重叠约1.98平方公里；在保护徐泾后需要超过1.15公里的非局部位移，不能把残余行政面冒充市场代理。保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_reference_aided_admin_difference_candidate",
+      "definitionCandidate": "市场华漕身份与现行华漕镇名称均已核验；以固定华漕镇 relation 为低置信可编辑骨架，并显式扣除既有徐泾候选，避免参考市场命名的一级图层重复覆盖。该差集不等于完整住宅市场。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-minhang-current-admin-units-2026"
       ],
-      "adminProxyName": "华漕镇（待与徐泾重建接口）",
-      "adminBoundaryVersion": "2022-12-or-later-required",
+      "adminProxyName": "华漕镇（扣除徐泾候选）",
+      "adminBoundaryVersion": "2022-12-or-later",
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
-        "sector_hongqiao",
-        "unresolved_hanghua",
-        "unresolved_jinhongqiao"
+        "unresolved_huacao_residential_core"
       ],
-      "legacyOsmAdminRelationId": "14187985",
-      "legacyLockedGeometryAreaKm2": 28.1633,
+      "linkedTopologySectorIds": ["sector_xujing", "sector_huaxin", "sector_jiangqiao"],
       "boundaryEvidenceIds": [
         "huacao-north",
         "huacao-east",
@@ -5281,18 +5263,18 @@
         "huacao-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "xujing-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-minus-xujing-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-minhang-current-admin-units-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定华漕镇 relation 14187985 与既有徐泾候选重叠约1.98平方公里；保护既有面时需要约1.15公里位移，远超10米拓扑容差。禁止发布旧镇面或大幅吸附后的残余面，允许用户在编辑器人工起画。"
+        "note": "固定华漕镇 relation 14187985 扣除徐泾候选后作为可编辑低置信差集骨架；差集仅解决当前图层拓扑，不等于精确住宅市场。"
       }
     },
     {
@@ -5482,31 +5464,25 @@
       "aliases": [
         "吴泾镇"
       ],
-      "riskFlags": [
-        "admin_proxy_subtraction_creates_self_intersection",
-        "cross_district_existing_candidate_overlap",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["overwide_admin_proxy", "mixed_industrial_residential", "market_boundary_not_official"],
       "districtNames": [
         "闵行区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场吴泾身份与现行吴泾镇名称已核验，但保护既有梅陇、颛桥、华泾候选后的行政差集产生自相交，不能自动发布。保留为可人工起画的待绘制身份，老闵行不得被吴泾镇替代。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场吴泾身份与现行吴泾镇名称已核验，现以固定 OSM 镇界作为低置信、可编辑行政代理；与华泾、西渡、梅陇、颛桥、浦江镇共享同一快照边，老闵行仍保持独立。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-minhang-current-admin-units-2026"
       ],
-      "adminProxyName": "吴泾镇（待跨区接口重建）",
-      "adminBoundaryVersion": "2022-12-or-later-required",
+      "adminProxyName": "吴泾镇",
+      "adminBoundaryVersion": "2022-12-or-later",
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
-        "unresolved_laominhang",
-        "unresolved_jinhui_minhang"
+        "unresolved_laominhang_residential_core"
       ],
-      "legacyOsmAdminRelationId": "14187982",
-      "legacyLockedGeometryAreaKm2": 37.5441,
+      "linkedTopologySectorIds": ["sector_huajing", "sector_xidu", "sector_meilong", "sector_zhuanqiao", "sector_pujiangzhen"],
       "boundaryEvidenceIds": [
         "wujing-north",
         "wujing-east",
@@ -5514,18 +5490,18 @@
         "wujing-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "cross-district-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-minhang-current-admin-units-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定吴泾镇 relation 14187982 与既有梅陇、颛桥、华泾候选的保护性差集会产生自相交。禁止发布旧镇面或自动差集面，允许用户在编辑器人工起画。"
+        "note": "固定吴泾镇 relation 14187982 作为低置信可编辑行政骨架，与相邻候选共享锁定快照边；镇域不等于精确住宅市场。"
       }
     },
     {
@@ -5534,32 +5510,26 @@
       "aliases": [
         "浦江"
       ],
-      "riskFlags": [
-        "overwide_admin_proxy",
-        "cross_district_existing_candidate_overlap",
-        "market_boundary_not_official"
-      ],
+      "riskFlags": ["overwide_admin_proxy", "mixed_rural_industrial_residential", "market_boundary_not_official"],
       "districtNames": [
         "闵行区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场浦江镇与现行浦江镇名称一致，但完整镇域同时与既有三林、康桥、周浦、航头和奉贤金汇候选发生跨区交叠；没有项目归属证据时不得用多次差集生成残余面。保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_admin_backbone_candidate",
+      "definitionCandidate": "市场浦江镇与现行浦江镇名称一致，现以固定 OSM 镇界作为低置信、可编辑行政代理；与三林、康桥、周浦、航头和奉贤金汇共享同一快照边，镇域不等于精确市场范围。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-minhang-current-admin-units-2026"
       ],
-      "adminProxyName": "浦江镇（待跨区接口重建）",
-      "adminBoundaryVersion": "2022-12-or-later-required",
+      "adminProxyName": "浦江镇",
+      "adminBoundaryVersion": "2022-12-or-later",
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
         "sector_hangtou",
-        "sector_xinchang",
         "unresolved_pujiang_residential_core"
       ],
-      "legacyOsmAdminRelationId": "14187979",
-      "legacyLockedGeometryAreaKm2": 78.8526,
+      "linkedTopologySectorIds": ["sector_sanlin", "sector_kangqiao", "sector_zhoupu", "sector_hangtou", "sector_fengxianjinhui"],
       "boundaryEvidenceIds": [
         "pujiangzhen-north",
         "pujiangzhen-east",
@@ -5567,18 +5537,18 @@
         "pujiangzhen-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "cross-district-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "minhang-current-town-admin-proxy-2026-07",
+        "sourceIds": ["osm-geofabrik-shanghai-260721"],
         "verificationSourceIds": [
           "official-minhang-current-admin-units-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定浦江镇 relation 14187979跨越既有三林、康桥、周浦、航头和奉贤金汇候选。没有经核验的市场成员边界时禁止发布镇域或残余面，允许用户在编辑器人工起画。"
+        "note": "固定浦江镇 relation 14187979 作为低置信可编辑行政骨架，与相邻候选共享锁定快照边；镇域不等于精确住宅市场。"
       }
     },
     {
@@ -5894,17 +5864,17 @@
         "大团镇"
       ],
       "riskFlags": [
-        "admin_proxy_crosses_existing_xuanqiao_candidate",
-        "requires_cross_district_topology_rebuild",
+        "admin_proxy_may_be_broader_than_residential_market",
+        "mixed_rural_industrial_residential",
         "market_boundary_not_official"
       ],
       "districtNames": [
         "浦东新区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "市场大团身份与现行大团镇名称已核验，但固定镇面与既有宣桥候选存在无法通过本批局部吸附解释的接口冲突。不得发布行政残余面；保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_verified_admin_proxy",
+      "definitionCandidate": "市场大团暂以现行大团镇固定 OSM relation 作为低置信、可编辑行政代理。2026-07 总装已复核其与宣桥、惠南、奉贤四团、泥城、万祥共享锁定边且没有正面积交叠；镇域不等于精确住宅市场。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-pudong-current-admin-directory-2026",
@@ -5915,10 +5885,12 @@
       "marketAdminAlignmentUnverified": true,
       "requiredAdjacencyReviewIds": [
         "unresolved_lingang_main_city",
-        "unresolved_datun_topology",
         "sector_xuanqiao",
         "sector_huinan",
-        "sector_situan"
+        "sector_situan",
+        "sector_nicheng",
+        "sector_wanxiang",
+        "unresolved_lingang_main_city"
       ],
       "boundaryEvidenceIds": [
         "datun-north",
@@ -5927,19 +5899,21 @@
         "datun-west"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "xuanqiao-interface-rebuild-required-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "pudong-current-town-admin-proxy-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
         "verificationSourceIds": [
           "official-pudong-current-admin-directory-2026",
           "official-pudong-administrative-map-2026",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "固定大团镇 relation 与既有宣桥候选的接口需跨批次重建；禁止发布旧镇面或差集残余面，允许用户在编辑器人工起画。"
+        "note": "固定 OSM 大团镇 relation 只作低置信、可编辑市场候选骨架；2026-07 总装复核与宣桥、惠南、奉贤四团、泥城、万祥为共享边且无正面积交叠。行政边界不等于行业统一楼市板块边界。"
       }
     },
     {
@@ -6361,7 +6335,7 @@
       "kind": "market_sector",
       "reviewStatus": "draft-low",
       "definitionStatus": "market_identity_admin_backbone_candidate",
-      "definitionCandidate": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理；碧云、花木及金桥的独立市场语义不自动并入。",
+      "definitionCandidate": "市场金杨暂以金杨新村街道作为低置信可编辑行政代理，并显式扣除按官方服务范围四至重建的碧云候选，以免把碧云核心重复发布；花木及金桥的独立市场语义不自动并入。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-pudong-current-admin-directory-2026",
@@ -6375,7 +6349,8 @@
         "unresolved_huamu_boundary_version"
       ],
       "linkedTopologySectorIds": [
-        "sector_yangjing"
+        "sector_yangjing",
+        "sector_biyun"
       ],
       "boundaryEvidenceIds": [
         "jinyang-north",
@@ -6511,9 +6486,9 @@
         "浦东新区"
       ],
       "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "碧云国际社区四至已由2024年官方清单核验：北杨高中路、西云山路、南锦绣东路、东金桥路；但该服务范围与现有金杨行政代理面重叠，不能用粗代理裁切精确核心，保留为可人工起画的待绘制身份。",
+      "reviewStatus": "draft-low",
+      "definitionStatus": "market_identity_official_service_scope_candidate",
+      "definitionCandidate": "碧云国际社区按2024年官方清单四至（北杨高中路、西云山路、南锦绣东路、东金桥路）及固定 OSM 道路中心线重建为内部低置信候选；与金杨行政代理的交集由金杨候选显式扣除。服务范围不等于法定或统一楼市边界。",
       "definitionSourceIds": [
         "seller-lianjia-shanghai-sector-sitemap",
         "official-shanghai-biyun-international-community-scope-2024"
@@ -6523,6 +6498,9 @@
         "sector_jinyang",
         "unresolved_lianyang"
       ],
+      "linkedTopologySectorIds": [
+        "sector_jinyang"
+      ],
       "boundaryEvidenceIds": [
         "biyun-north",
         "biyun-west",
@@ -6530,18 +6508,64 @@
         "biyun-east"
       ],
       "geometry": {
-        "status": "missing",
+        "status": "draft",
         "confidence": "low",
-        "coordinateSystem": "unknown",
-        "coordinateSystemVerified": false,
-        "version": "official-service-area-four-sides-2026-07",
-        "sourceIds": [],
+        "coordinateSystem": "WGS84",
+        "coordinateSystemVerified": true,
+        "version": "biyun-official-service-scope-four-sides-2026-07",
+        "sourceIds": [
+          "osm-geofabrik-shanghai-260721"
+        ],
         "verificationSourceIds": [
           "official-shanghai-biyun-international-community-scope-2024",
           "osm-geofabrik-shanghai-260721"
         ],
         "publicationPolicy": "internal_review",
-        "note": "官方四至可作为人工起画卡；在金杨粗行政代理改为市场精修面前，不发布重叠候选。服务范围也不等于法定或统一楼市边界。"
+        "note": "2024年官方高标准保洁服务范围的四至已以固定 OSM 道路中心线重建；链家分类与第三方地图只用于确认独立市场身份和相邻关系，未复制其人工边界。该服务范围不等于法定或统一楼市边界，仅供内部复核和编辑。"
       }
-    }]
+    },
+    {"id":"sector_shanghainan_zhan","canonicalName":"上海南站","aliases":["铁路上海南站"],"riskFlags":["transport_hub_not_market_boundary","inside_caohejing_admin_proxy","market_boundary_not_official"],"districtNames":["徐汇区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"上海南站是漕河泾街道内的交通枢纽/治理语境，不等同街道或完整楼市板块；保留为可人工起画的待绘身份。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-xuhui-shanghai-south-station-context-2026"],"requiredAdjacencyReviewIds":["sector_caohejing","sector_kangjian","sector_changqiao"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["official-xuhui-shanghai-south-station-context-2026"],"publicationPolicy":"internal_review","note":"不得用漕河泾街道、枢纽设施或治理范围替代市场面；允许编辑器人工起画。"}},
+    {"id":"sector_xijiao","canonicalName":"西郊","aliases":["长宁西郊"],"riskFlags":["functional_area_not_market_boundary","cross_admin_market_scope","market_boundary_not_official"],"districtNames":["长宁区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"西郊市场身份已核验，但官方西郊样板区为公园城市功能对象且固定线网不能唯一闭合；保留为可人工起画的待绘身份。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-changning-xijiao-park-city-2024"],"requiredAdjacencyReviewIds":["sector_beixinjing","sector_changning_hongqiao","sector_hongqiao"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["official-changning-xijiao-park-city-2024","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"不得从公园城市样板区 PDF 描线、用行政残余面或补猜线生成市场候选；允许编辑器人工起画。"}},
+    {"id":"sector_buyecheng","canonicalName":"不夜城","aliases":[],"riskFlags":["historical_functional_scope_not_market_legal_boundary","market_boundary_not_official"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"卖方不夜城身份已核验；2017年官方西部功能片区四至可作道路起画卡，但须与苏河湾成对复核。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-jingan-suhewan-2017-functional-scope"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"historical-functional-pair-rebuild-required-2026-07","sourceIds":[],"verificationSourceIds":["official-jingan-suhewan-2017-functional-scope","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许按道路卡人工起画，不能直接把历史功能区发布为楼市边界。"}},
+    {"id":"sector_suhewan","canonicalName":"苏河湾","aliases":[],"riskFlags":["historical_functional_scope_not_market_legal_boundary","multiple_official_scope_versions","market_boundary_not_official"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"卖方苏河湾身份已核验；第一版只可参考2017年东部片区并与不夜城联合复核，2021年总功能区不能替代市场面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-jingan-suhewan-2017-functional-scope"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"historical-functional-pair-rebuild-required-2026-07","sourceIds":[],"verificationSourceIds":["official-jingan-suhewan-2017-functional-scope","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"必须先锁定共享道路段；不得把2021年总功能区直接发布为卖方苏河湾。"}},
+    {"id":"sector_yangcheng","canonicalName":"阳城","aliases":[],"riskFlags":["split_from_legacy_combined_identity","market_boundary_not_official"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"卖方阳城与永和为独立身份，现有彭浦镇包络不能替代其范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"member-boundary-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"需与永和成对按项目成员和道路水系人工裁切。"}},
+    {"id":"sector_yonghe","canonicalName":"永和","aliases":[],"riskFlags":["split_from_legacy_combined_identity","market_boundary_not_official"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"卖方永和与阳城为独立身份，现有彭浦镇包络不能替代其范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"member-boundary-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"需与阳城成对按项目成员和道路水系人工裁切。"}},
+    {"id":"sector_pengpu","canonicalName":"彭浦","aliases":[],"riskFlags":["must_not_equal_pengpu_xincun_subdistrict","market_boundary_not_official"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"卖方彭浦已被跨彭浦新村街道的项目样本证实，不能套用彭浦新村街道。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"cross-subdistrict-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"保留人工起画，禁止发布彭浦新村街道或彭浦镇整面。"}},
+    {"id":"sector_wuning","canonicalName":"武宁","aliases":[],"riskFlags":["inside_caoyang_admin_proxy","market_boundary_not_official"],"districtNames":["普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"武宁市场身份已核验，但官方仅提供曹杨街道内片区和7社区线索，不能套用曹杨面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"community-members-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"需先获取7社区成员再与曹杨联合裁切。"}},
+    {"id":"sector_zhenguang","canonicalName":"真光","aliases":[],"riskFlags":["inside_zhenru_changzheng_admin_proxies","market_boundary_not_official"],"districtNames":["普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"真光市场身份及17居委成员已核验，未取得居委边界前不生成道路猜测面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"17-community-boundaries-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"取得17居委边界后与真如、长征联合裁切。"}},
+    {"id":"sector_guangxin","canonicalName":"光新","aliases":[],"riskFlags":["market_boundary_not_official","insufficient_closed_scope"],"districtNames":["普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"光新市场身份已核验，但缺少可闭合外边界，不能用石泉路或光新路名称外推。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"member-boundary-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"保留人工起画，待补正反例和片区成员表。"}},
+    {"id":"sector_meiyuan","canonicalName":"梅园","aliases":[],"riskFlags":["inside_lujiazui_admin_proxy","name_ambiguity","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"梅园是陆家嘴内独立市场/社区语义，不能以同名村或完整陆家嘴街道替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_yuanshen","canonicalName":"源深","aliases":[],"riskFlags":["inside_weifang_admin_context","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"源深小区语义不能替代完整潍坊街道或市场范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_lianyang","canonicalName":"联洋","aliases":[],"riskFlags":["inside_huamu_admin_context","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"联洋居委会组不能自动等同花木街道或卖方联洋完整范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"community-members-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_yangdong","canonicalName":"杨东","aliases":[],"riskFlags":["dual_official_homonym","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"花木与三林存在不同杨东官方语境，须先解歧后绘制。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"disambiguation-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"禁止自动取同名行政或社区面。"}},
+    {"id":"sector_senlan","canonicalName":"森兰","aliases":[],"riskFlags":["functional_area_not_market_boundary","inside_gaohang_admin_proxy"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"森兰项目/功能区不能以完整高行镇替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_waigaoqiao","canonicalName":"外高桥","aliases":[],"riskFlags":["bonded_zone_not_market_boundary","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"外高桥保税区控规不能替代住宅市场外高桥。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_lingang_main_city","canonicalName":"临港主城区","aliases":["临港新城"],"riskFlags":["planning_new_town_not_market_boundary","cross_town_scope"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"临港主城区不等同南汇新城镇或临港新片区整体，需先锁定产品口径。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"product-scope-decision-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
+    {"id":"sector_ruihong_new_town","canonicalName":"瑞虹新城","aliases":["临平路"],"riskFlags":["project_cluster_not_market_boundary","inside_jiaxinglu_context"],"districtNames":["虹口区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"瑞虹新城为多期项目群；已知项目地块四至只能作人工描边锚点，不能并集、凸包或以嘉兴路街道替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"project-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；先与四川北路、北外滩、鲁迅公园复核接口。"}},
+    {"id":"sector_luxun_park","canonicalName":"鲁迅公园","aliases":[],"riskFlags":["park_not_market_boundary","multi_subdistrict_scope"],"districtNames":["虹口区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"鲁迅公园地名可定位但未有住宅市场四至；不能以公园本体、旅游功能区或周边街道整面替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-outer-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需与四川北路、曲阳、凉城和瑞虹新城共同裁切。"}},
+    {"id":"sector_yangpu_dongwaitan","canonicalName":"东外滩","aliases":["杨浦东外滩"],"riskFlags":["functional_area_not_market_boundary","name_scope_ambiguity"],"districtNames":["杨浦区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"杨浦东外滩为市场/开发语境，不能把杨浦滨江功能区、平凉路街道或定海路街道直接替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-scope-disambiguation-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需先消除与浦东同名东外滩的口径冲突。"}},
+    {"id":"sector_dinghai_road","canonicalName":"定海路","aliases":[],"riskFlags":["must_not_equal_dinghai_subdistrict","market_boundary_not_official"],"districtNames":["杨浦区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"定海路街道明确包含复兴岛、产业滨江及东外滩组成部分，不能直接命名为独立住宅市场定海路。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"residential-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；行政街道仅作参考层。"}},
+    {"id":"sector_huangxing_park","canonicalName":"黄兴公园","aliases":[],"riskFlags":["park_not_market_boundary","shared_edge_required"],"districtNames":["杨浦区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"黄兴公园本体四至可作为地名核心锚点，但公园本体或长海路街道都不能替代周边住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"park-anchor-and-market-members-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需与五角场、新江湾城、中原及鞍山共同复核。"}},
+    {"id":"sector_fengzhuang","canonicalName":"丰庄","aliases":[],"riskFlags":["inside_zhenxin_subdistrict_context","market_boundary_not_official"],"districtNames":["嘉定区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"丰庄市场身份已核验，但真新街道含多个非丰庄片区，不能用完整真新街道或相邻江桥、南翔残余替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-counterexamples-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；沿丰庄路、丰庄北路及完整住宅单元闭合。"}},
+    {"id":"sector_jiading_new_city","canonicalName":"嘉定新城","aliases":[],"riskFlags":["planning_new_town_not_market_boundary","overlaps_malu_juyuan_oldcity_contexts"],"districtNames":["嘉定区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"嘉定新城有多层规划尺度，不能以159.5平方公里新城、完整马陆镇或主城区行政并集替代卖方住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；须与马陆、菊园新区、嘉定老城、新成路共同复核。"}},
+    {"id":"sector_jiading_old_city","canonicalName":"嘉定老城","aliases":[],"riskFlags":["historical_core_not_market_boundary","inside_jiading_town_context"],"districtNames":["嘉定区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"嘉定镇街道是嘉定老城区强行政核心，但不能证明完整街道就是卖方嘉定老城。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"historic-core-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；先以人民街、州桥、西门等成员与相邻新城反例共同裁切。"}},
+    {"id":"sector_dahua","canonicalName":"大华","aliases":[],"riskFlags":["community_anchors_not_market_boundary","cross_market_scope"],"districtNames":["宝山区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"大华多个居委/小区四至可作锚点，但并集、凸包、大场镇或相邻行政余量均不能替代完整市场边界。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"community-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需与万里、彭浦、顾村、上大等接口共同复核。"}},
+    {"id":"sector_shanghai_university","canonicalName":"上大","aliases":["上海大学"],"riskFlags":["science_park_not_market_boundary","includes_nanda_industrial_context"],"districtNames":["宝山区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"环上大科技园及上大周边规划范围含南大、工业园、校园等，不能替代上大住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"residential-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；规划范围仅作参考底图。"}},
+    {"id":"sector_nanda","canonicalName":"南大","aliases":[],"riskFlags":["planning_unit_not_market_boundary","cross_district_mixed_use"],"districtNames":["宝山区","普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"W12-1301南大地区控详规虽有完整四至，但跨区且产居混合，只能作为规划参考框。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"cross-district-market-scope-decision-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需显式决定是否跨普陀，禁止默认按区界裁切。"}},
+    {"id":"sector_gongkang","canonicalName":"共康","aliases":[],"riskFlags":["community_parcel_anchors_not_market_boundary","cross_subdistrict_scope"],"districtNames":["宝山区","静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"共康社区单元和项目地块可定位，但张庙、高境、彭浦及大华接口尚不能闭合为住宅市场面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-counterexamples-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；不得用共康路、张庙街道或高境镇替代。"}},
+    {"id":"sector_songbao","canonicalName":"淞宝","aliases":[],"riskFlags":["planning_unit_not_market_boundary","mixed_port_industry_residential_context"],"districtNames":["宝山区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"淞宝单元规划是空间治理单元，可能包含港口、产业、公共设施和多个居住片区，不能替代住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；需与淞南、杨行、月浦和吴淞方向共同复核。"}},
+    {"id":"sector_zhenning_road","canonicalName":"镇宁路","aliases":[],"riskFlags":["market_boundary_not_official","inside_central_jingan_context"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"镇宁路为卖方市场身份，不能以石门二路街道、南京西路或江宁路行政范围替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；待补项目正反例与南京西路、江宁路接口。"}},
+    {"id":"sector_xizang_north_road","canonicalName":"西藏北路","aliases":[],"riskFlags":["market_boundary_not_official","cross_subdistrict_scope"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"西藏北路为卖方市场身份，不能以宝山路、芷江西路等街道或道路本身替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；须与苏河湾、不夜城、闸北公园及大宁共同复核。"}},
+    {"id":"sector_zhabei_park","canonicalName":"闸北公园","aliases":[],"riskFlags":["park_name_not_market_boundary","cross_subdistrict_scope"],"districtNames":["静安区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"闸北公园为卖方市场身份，公园本体或共和新路、芷江西路行政街道均不能替代市场面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；须与大宁、彭浦、阳城、永和及西藏北路共同复核。"}},
+    {"id":"sector_gaodong","canonicalName":"高东","aliases":["高东镇"],"riskFlags":["admin_proxy_may_be_broader_than_residential_market","mixed_port_industrial_residential","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"draft-low","definitionStatus":"market_identity_admin_backbone_candidate","definitionCandidate":"高东与现行同名镇对应；2025 年高桥—高东调整段已按公告指定的日京路、富特北路、美盛路、杨高北路及调整段端点复核锁定 OSM relation，现以高东镇作低置信、可编辑行政代理。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-pudong-current-admin-directory-2026","official-pudong-administrative-map-2026","official-pudong-boundary-adjustment-2025"],"adminProxyName":"高东镇","adminBoundaryVersion":"2025-11-14-or-later-verified-against-locked-osm","marketAdminAlignmentUnverified":true,"requiredAdjacencyReviewIds":["unresolved_waigaoqiao","unresolved_senlan"],"linkedTopologySectorIds":["sector_gaohang","sector_caolu"],"geometry":{"status":"draft","confidence":"low","coordinateSystem":"WGS84","coordinateSystemVerified":true,"version":"pudong-current-town-admin-proxy-post-2025-adjustment-2026-07","sourceIds":["osm-geofabrik-shanghai-260721"],"verificationSourceIds":["official-pudong-boundary-adjustment-2025","official-pudong-administrative-map-2026","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"2025 公告调整段已与锁定 relation 边界逐项复核，仍只作为可编辑行政骨架；镇域不等于完整卖方住宅市场。"}},
+    {"id":"sector_jiuting","canonicalName":"九亭","aliases":[],"riskFlags":["jiuting_town_not_market_boundary","jiuting_new_town_not_market_boundary"],"districtNames":["松江区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"九亭为卖方市场身份；九亭镇与含九里亭街道的九亭新市镇均非可直接替代的住宅市场范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；与莘闵别墅、新桥、泗泾、徐泾、莘庄共同复核。"}},
+    {"id":"sector_xinmin_villas","canonicalName":"莘闵别墅","aliases":[],"riskFlags":["villa_projects_not_market_boundary","cross_district_commuting_context"],"districtNames":["松江区","闵行区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"莘闵别墅由多个交易项目和居住区锚点组成，不能以单一别墅区、九亭镇或新桥镇残余替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"project-members-and-cross-district-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；九亭—莘闵别墅必须成组编辑。"}},
+    {"id":"sector_songjiang_university_town","canonicalName":"松江大学城","aliases":[],"riskFlags":["campus_functional_area_not_market_boundary","inside_songjiang_new_city_context"],"districtNames":["松江区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"大学城空间语境混合校园、住宅、道路和文化设施，不能以广富林街道、样板区、校园或松江新城外框替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"residential-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；与松江新城、松江老城成组编辑。"}},
+    {"id":"sector_songjiang_old_city","canonicalName":"松江老城","aliases":[],"riskFlags":["historic_core_not_market_boundary","inside_songjiang_new_city_context"],"districtNames":["松江区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"松江老城存在风貌、公共中心与交通研究等多种尺度，均不能替代完整住宅市场边界。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"historic-members-and-shared-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；与松江新城、松江大学城同步复核。"}},
+    {"id":"sector_chongming_new_city","canonicalName":"崇明新城","aliases":[],"riskFlags":["new_town_plan_not_market_boundary","multi_scale_scope"],"districtNames":["崇明区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"崇明新城为市场/新城语境，不能以整体新城规划范围、城桥镇或单一项目替代住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-chongming-tri-islands-overview"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"market-members-and-new-town-edges-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画；新城规划仅作参考层。"}},
+    {"id":"sector_chenjia_town","canonicalName":"陈家镇","aliases":[],"riskFlags":["town_boundary_not_market_boundary","multi_scale_scope","admin_area_version_mismatch","market_boundary_not_official"],"districtNames":["崇明区"],"kind":"market_sector","reviewStatus":"draft-low","definitionStatus":"market_identity_verified_area_mismatch_admin_proxy","definitionCandidate":"陈家镇暂以锁定 OSM 同名 relation 作为低置信、可编辑行政骨架。官方镇域约 94.4 平方公里，而 relation 为 205.7 平方公里，可能包含东滩／围垦等广义空间；不得称为精确镇界或住宅市场。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-chongming-tri-islands-overview"],"adminProxyName":"陈家镇","adminBoundaryVersion":"2025-06-or-later","marketAdminAlignmentUnverified":true,"adminAreaVersionMismatch":true,"officialCurrentAreaKm2":94.4,"requiredAdjacencyReviewIds":["unresolved_chongming_new_city"],"geometry":{"status":"draft","confidence":"low","coordinateSystem":"WGS84","coordinateSystemVerified":true,"version":"chenjia-current-osm-admin-proxy-area-mismatch-2026-07","sourceIds":["osm-geofabrik-shanghai-260721"],"verificationSourceIds":["official-chongming-tri-islands-overview","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"固定 OSM 陈家镇 relation 只作面积版本不一致的低置信、可编辑行政骨架；不得当作现行精确镇界或行业统一住宅市场边界。"}},
+    {"id":"sector_changxing_island","canonicalName":"长兴岛","aliases":[],"riskFlags":["island_extent_not_market_boundary","industry_port_residential_mixed","admin_proxy_may_be_broader_than_residential_market"],"districtNames":["崇明区"],"kind":"market_sector","reviewStatus":"draft-low","definitionStatus":"market_identity_verified_island_admin_proxy","definitionCandidate":"长兴岛暂以现行长兴镇固定 OSM relation 作为低置信、可编辑的岛域行政骨架；它不等于住宅市场，港产生态范围后续需裁切。","definitionSourceIds":["official-chongming-tri-islands-overview"],"adminProxyName":"长兴镇","adminBoundaryVersion":"2025-02-or-later","marketAdminAlignmentUnverified":true,"geometry":{"status":"draft","confidence":"low","coordinateSystem":"WGS84","coordinateSystemVerified":true,"version":"changxing-island-current-town-extent-proxy-2026-07","sourceIds":["osm-geofabrik-shanghai-260721"],"verificationSourceIds":["official-chongming-tri-islands-overview","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"固定 OSM 长兴镇 relation 只作低置信、可编辑的岛域行政骨架，不等于行业统一住宅市场边界。"}},
+    {"id":"sector_bao_town","canonicalName":"堡镇","aliases":[],"riskFlags":["town_and_historic_town_not_market_boundary","admin_proxy_may_be_broader_than_residential_market","market_identity_scope_unverified"],"districtNames":["崇明区"],"kind":"market_sector","reviewStatus":"draft-low","definitionStatus":"market_identity_verified_admin_proxy","definitionCandidate":"堡镇暂以现行堡镇固定 OSM relation 作为低置信、可编辑行政代理；镇域、镇区和古镇语境不等，不能表述为精确住宅市场。","definitionSourceIds":["official-chongming-tri-islands-overview"],"adminProxyName":"堡镇","adminBoundaryVersion":"2024-01-or-later","marketAdminAlignmentUnverified":true,"geometry":{"status":"draft","confidence":"low","coordinateSystem":"WGS84","coordinateSystemVerified":true,"version":"baotown-current-admin-proxy-2026-07","sourceIds":["osm-geofabrik-shanghai-260721"],"verificationSourceIds":["official-chongming-tri-islands-overview","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"固定 OSM 堡镇 relation 只作低置信、可编辑市场候选骨架；行政边界不等于行业统一住宅市场边界。"}},
+    {"id":"sector_hengsha_island","canonicalName":"横沙岛","aliases":[],"riskFlags":["island_extent_not_market_boundary","market_identity_scope_unverified","admin_proxy_may_be_broader_than_residential_market"],"districtNames":["崇明区"],"kind":"market_sector","reviewStatus":"draft-low","definitionStatus":"market_identity_verified_island_admin_proxy","definitionCandidate":"横沙岛暂以现行横沙乡固定 OSM relation 作为低置信、可编辑的岛域行政骨架；它不等于住宅市场，围垦与生态范围后续需裁切。","definitionSourceIds":["official-chongming-tri-islands-overview"],"adminProxyName":"横沙乡","adminBoundaryVersion":"2025-02-or-later","marketAdminAlignmentUnverified":true,"geometry":{"status":"draft","confidence":"low","coordinateSystem":"WGS84","coordinateSystemVerified":true,"version":"hengsha-island-current-township-extent-proxy-2026-07","sourceIds":["osm-geofabrik-shanghai-260721"],"verificationSourceIds":["official-chongming-tri-islands-overview","osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"固定 OSM 横沙乡 relation 只作低置信、可编辑的岛域行政骨架，不等于行业统一住宅市场边界。"}}
+    ]
 }

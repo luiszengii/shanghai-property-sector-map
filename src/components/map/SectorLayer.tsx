@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
+import type { SectorResearchGeometryFeature } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import type { SectorFeature } from "@/src/types/map";
 import { simplifySectorGeometryForDisplay } from "@/src/lib/sector-display-lod";
@@ -22,18 +23,6 @@ type SectorGeometryKind =
   | "official-subscope-reference"
   | "administrative-reference"
   | "demo";
-const reviewedCandidates = sectorCatalog.reviewedCandidates;
-const candidateOnlyReviewedCandidates = reviewedCandidates.filter(
-  (feature) => !sectorCatalog.hasLegacyFeature(feature.properties.id),
-);
-const subscopes = sectorCatalog.subscopes;
-const adminReferences = sectorCatalog.administrativeReferences;
-const researchGeometries = [...reviewedCandidates, ...adminReferences];
-const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
-  id: feature.properties.id,
-  center: sectorCatalog.resolveActiveGeometry(feature.properties.id)?.center
-    ?? feature.properties.labelPoint,
-}));
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
 
 function strokeColor(kind: SectorGeometryKind) {
@@ -145,6 +134,7 @@ export function SectorLayer({
   const labelModeRef = useRef(labelMode);
   const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
+  const styleZoom = Math.floor(zoom);
   const setSectorGeometryLoading = useMapStore((state) => state.setSectorGeometryLoading);
   const setSectorGeometryFallback = useMapStore((state) => state.setSectorGeometryFallback);
 
@@ -168,6 +158,7 @@ export function SectorLayer({
   useEffect(() => {
     let cancelled = false;
     const overlays: SectorOverlay[] = [];
+    let researchGeometries: SectorResearchGeometryFeature[] = [];
     const polygonGroup = new amapApi.OverlayGroup();
     polygonGroupRef.current = polygonGroup;
     const settledResearchIds = new Set<string>();
@@ -220,10 +211,9 @@ export function SectorLayer({
     };
 
     const createOverlays = async () => {
-      candidateOnlyReviewedCandidates.forEach((candidate) => {
-        setSectorGeometryFallback(candidate.properties.id, false);
-        setSectorGeometryLoading(candidate.properties.id, true);
-      });
+      const geometryCatalogPromise = import(
+        "@/src/data/sector-geometry-catalog"
+      );
       for (const [index, sector] of sectors.entries()) {
         const hasResearchGeometry = sectorCatalog.hasResearchGeometry(sector.properties.id);
         if (hasResearchGeometry) {
@@ -238,7 +228,7 @@ export function SectorLayer({
           path,
           cursor: "pointer",
         });
-        const activeGeometry = sectorCatalog.resolveActiveGeometry(sector.properties.id);
+        const activeGeometry = sectorCatalog.resolveActiveLocation(sector.properties.id);
         const initialLabelPosition = activeGeometry?.kind === "market-demo"
           ? activeGeometry.center
           : sector.properties.center;
@@ -257,7 +247,9 @@ export function SectorLayer({
           baseColor,
           sector,
           geometryKind: "demo",
-          hiddenLegacyDemo: !sectorCatalog.getReviewedCandidate(sector.properties.id),
+          hiddenLegacyDemo: !sectorCatalog.getReviewedCandidateIndex(
+            sector.properties.id,
+          ),
           labelMounted: shouldMountSectorLabel({
             mode: labelModeRef.current,
             zoom: zoomRef.current,
@@ -280,6 +272,30 @@ export function SectorLayer({
         overlays.push(overlay);
       }
       overlaysRef.current = overlays;
+
+      const { sectorGeometryCatalog } = await geometryCatalogPromise;
+      if (cancelled) return;
+      const reviewedCandidates = sectorGeometryCatalog.reviewedCandidates;
+      const candidateOnlyReviewedCandidates = reviewedCandidates.filter(
+        (feature) => !sectorCatalog.hasLegacyFeature(feature.properties.id),
+      );
+      const subscopes = sectorGeometryCatalog.subscopes;
+      const adminReferences = sectorGeometryCatalog.administrativeReferences;
+      const reviewedCandidateById = new Map(
+        reviewedCandidates.map((feature) => [feature.properties.id, feature]),
+      );
+      const adminReferenceById = new Map(
+        adminReferences.map((feature) => [feature.properties.id, feature]),
+      );
+      researchGeometries = [...reviewedCandidates, ...adminReferences];
+      const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
+        id: feature.properties.id,
+        center: feature.properties.labelPoint,
+      }));
+      candidateOnlyReviewedCandidates.forEach((candidate) => {
+        setSectorGeometryFallback(candidate.properties.id, false);
+        setSectorGeometryLoading(candidate.properties.id, true);
+      });
 
       const researchPathRequestByKey = new Map(researchGeometries.map((feature) => [
         `${feature.properties.status}:${feature.properties.id}`,
@@ -305,8 +321,8 @@ export function SectorLayer({
 
       for (const marketOverlay of [...overlays]) {
         const id = marketOverlay.sector.properties.id;
-        const reviewedCandidate = sectorCatalog.getReviewedCandidate(id);
-        const adminReference = sectorCatalog.getAdministrativeReference(id);
+        const reviewedCandidate = reviewedCandidateById.get(id);
+        const adminReference = adminReferenceById.get(id);
         const researchGeometry = reviewedCandidate ?? adminReference;
         if (!researchGeometry) continue;
         const geometryKind: SectorGeometryKind = reviewedCandidate
@@ -514,61 +530,77 @@ export function SectorLayer({
   }, [viewportInteracting]);
 
   useEffect(() => {
-    const labelCellWidth = zoom < 11.5 ? 94 : 82;
-    const labelCellHeight = 38;
-    const mapSize = map.getSize();
-    const occupiedCells = new Set<string>();
-    const orderedOverlays = [...overlaysRef.current].sort((left, right) => {
-      const leftSelected = left.sector.properties.id === selectedSectorId ? 1 : 0;
-      const rightSelected = right.sector.properties.id === selectedSectorId ? 1 : 0;
-      return rightSelected - leftSelected;
-    });
-
-    orderedOverlays.forEach((overlay) => {
-      const { label, polygon, sector } = overlay;
+    overlaysRef.current.forEach((overlay) => {
       if (overlay.hiddenLegacyDemo) {
-        polygon.hide();
-        if (label && overlay.labelMounted) {
-          map.remove(label);
-          overlay.labelMounted = false;
-        }
+        overlay.polygon.hide();
         return;
       }
-      const selected = sector.properties.id === selectedSectorId;
-      applyOverlayStyle(overlay, zoom, selected);
-      if (!label) return;
-
-      let shouldShow = shouldMountSectorLabel({
-        mode: labelMode,
-        zoom,
-        minZoom: labelMinZoom,
-      });
-      const position = label.getPosition();
-      if (shouldShow && position) {
-        const pixel = map.lngLatToContainer(position);
-        const x = pixel.getX();
-        const y = pixel.getY();
-        const inViewport = x >= 0
-          && y >= 0
-          && x <= mapSize.getWidth()
-          && y <= mapSize.getHeight();
-        if (!inViewport) {
-          shouldShow = false;
-        } else {
-          const cell = `${Math.floor(x / labelCellWidth)}:${Math.floor(y / labelCellHeight)}`;
-          if (!selected && occupiedCells.has(cell)) shouldShow = false;
-          else occupiedCells.add(cell);
-        }
-      }
-      if (shouldShow === overlay.labelMounted) return;
-      if (shouldShow) {
-        label.show();
-        map.add(label);
-      } else {
-        map.remove(label);
-      }
-      overlay.labelMounted = shouldShow;
+      applyOverlayStyle(
+        overlay,
+        styleZoom,
+        overlay.sector.properties.id === selectedSectorId,
+      );
     });
+  }, [overlayVersion, selectedSectorId, styleZoom]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const labelCellWidth = zoom < 11.5 ? 94 : 82;
+      const labelCellHeight = 38;
+      const mapSize = map.getSize();
+      const occupiedCells = new Set<string>();
+      const orderedOverlays = [...overlaysRef.current].sort((left, right) => {
+        const leftSelected = left.sector.properties.id === selectedSectorId ? 1 : 0;
+        const rightSelected = right.sector.properties.id === selectedSectorId ? 1 : 0;
+        return rightSelected - leftSelected;
+      });
+
+      orderedOverlays.forEach((overlay) => {
+        const { label, polygon, sector } = overlay;
+        if (overlay.hiddenLegacyDemo) {
+          polygon.hide();
+          if (label && overlay.labelMounted) {
+            map.remove(label);
+            overlay.labelMounted = false;
+          }
+          return;
+        }
+        const selected = sector.properties.id === selectedSectorId;
+        if (!label) return;
+
+        let shouldShow = shouldMountSectorLabel({
+          mode: labelMode,
+          zoom,
+          minZoom: labelMinZoom,
+        });
+        const position = label.getPosition();
+        if (shouldShow && position) {
+          const pixel = map.lngLatToContainer(position);
+          const x = pixel.getX();
+          const y = pixel.getY();
+          const inViewport = x >= 0
+            && y >= 0
+            && x <= mapSize.getWidth()
+            && y <= mapSize.getHeight();
+          if (!inViewport) {
+            shouldShow = false;
+          } else {
+            const cell = `${Math.floor(x / labelCellWidth)}:${Math.floor(y / labelCellHeight)}`;
+            if (!selected && occupiedCells.has(cell)) shouldShow = false;
+            else occupiedCells.add(cell);
+          }
+        }
+        if (shouldShow === overlay.labelMounted) return;
+        if (shouldShow) {
+          label.show();
+          map.add(label);
+        } else {
+          map.remove(label);
+        }
+        overlay.labelMounted = shouldShow;
+      });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [
     labelMinZoom,
     labelMode,
