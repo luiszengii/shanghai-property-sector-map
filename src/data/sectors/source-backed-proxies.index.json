@@ -24,6 +24,22 @@
         31.2954
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_nanda",
+      "labelPoint": [
+        121.381,
+        31.304
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_shanghai_university",
+      "labelPoint": [
+        121.394,
+        31.32
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }

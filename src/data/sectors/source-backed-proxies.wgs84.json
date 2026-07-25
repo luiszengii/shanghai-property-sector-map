@@ -340,6 +340,198 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_nanda",
+        "name": "南大",
+        "labelPoint": [
+          121.381,
+          31.304
+        ],
+        "scopeVersion": "baoshan-w12-1301-planning-reference-2020-2026-07",
+        "confidence": "medium",
+        "proxyType": "planning_reference_proxy",
+        "definitionSourceIds": [
+          "official-baoshan-w12-1301-nanda-plan-2020"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-baoshan-w12-1301-nanda-plan-2020",
+          "osm-overpass-nanda-shanghai-university-roads-2026-07-25"
+        ],
+        "geometryRule": "按沪府〔2020〕50号公布的南大地区（W12-1301）四至，以南陈路—南秀路、环镇南路—祁连山路—S5、S20、丰翔路—环镇北路的开放道路节点闭合。该面是跨区、产居混合的获批控详规参考范围，不等同住宅市场边界。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.3528,
+              31.3114
+            ],
+            [
+              121.3592,
+              31.3111
+            ],
+            [
+              121.3691,
+              31.3107
+            ],
+            [
+              121.3756,
+              31.3102
+            ],
+            [
+              121.3824,
+              31.3092
+            ],
+            [
+              121.3937,
+              31.3022
+            ],
+            [
+              121.4058,
+              31.2967
+            ],
+            [
+              121.4101,
+              31.2961
+            ],
+            [
+              121.4114,
+              31.3031
+            ],
+            [
+              121.4111,
+              31.3115
+            ],
+            [
+              121.4088,
+              31.3177
+            ],
+            [
+              121.4017,
+              31.3201
+            ],
+            [
+              121.3924,
+              31.3215
+            ],
+            [
+              121.3829,
+              31.3211
+            ],
+            [
+              121.3736,
+              31.3197
+            ],
+            [
+              121.3643,
+              31.3175
+            ],
+            [
+              121.3561,
+              31.3145
+            ],
+            [
+              121.3528,
+              31.3114
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_shanghai_university",
+        "name": "上大",
+        "labelPoint": [
+          121.394,
+          31.32
+        ],
+        "scopeVersion": "baoshan-shanghai-university-surroundings-planning-reference-2021-2026-07",
+        "confidence": "medium",
+        "proxyType": "planning_reference_proxy",
+        "definitionSourceIds": [
+          "official-baoshan-huanshangda-science-park-plan-2021"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-baoshan-huanshangda-science-park-plan-2021",
+          "osm-overpass-nanda-shanghai-university-roads-2026-07-25"
+        ],
+        "geometryRule": "按宝山区《环上大科技园“十四五”规划》上大周边约10平方公里核心区四至，以大场机场界、真大路—环镇南路、祁连山路—环镇北路—南陈路、塘祁路的开放道路节点闭合；这是科技园规划参考面，包含校园、产业及周边社区，不等同住宅市场边界。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.3767,
+              31.3201
+            ],
+            [
+              121.3782,
+              31.3138
+            ],
+            [
+              121.384,
+              31.3093
+            ],
+            [
+              121.3951,
+              31.309
+            ],
+            [
+              121.4058,
+              31.3097
+            ],
+            [
+              121.4101,
+              31.3114
+            ],
+            [
+              121.4148,
+              31.3193
+            ],
+            [
+              121.4142,
+              31.3244
+            ],
+            [
+              121.4088,
+              31.3282
+            ],
+            [
+              121.4004,
+              31.3295
+            ],
+            [
+              121.3907,
+              31.3299
+            ],
+            [
+              121.3821,
+              31.3289
+            ],
+            [
+              121.3764,
+              31.3274
+            ],
+            [
+              121.3767,
+              31.3201
+            ]
+          ]
+        ]
+      }
     }
   ]
 }
