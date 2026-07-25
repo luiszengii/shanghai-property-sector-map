@@ -919,13 +919,6 @@
       ]
     },
     {
-      "id": "sector_gaohang",
-      "labelPoint": [
-        121.5772043,
-        31.3086035
-      ]
-    },
-    {
       "id": "sector_caolu",
       "labelPoint": [
         121.6732765,
@@ -965,13 +958,6 @@
       "labelPoint": [
         121.8329886,
         31.0430804
-      ]
-    },
-    {
-      "id": "sector_gaodong",
-      "labelPoint": [
-        121.6352557,
-        31.3274213
       ]
     },
     {
@@ -1077,6 +1063,34 @@
       "labelPoint": [
         121.5096038,
         31.1946041
+      ]
+    },
+    {
+      "id": "sector_jinqiao",
+      "labelPoint": [
+        121.6096786,
+        31.2563353
+      ]
+    },
+    {
+      "id": "sector_senlan",
+      "labelPoint": [
+        121.5869707,
+        31.3110918
+      ]
+    },
+    {
+      "id": "sector_gaohang",
+      "labelPoint": [
+        121.5656304,
+        31.3107416
+      ]
+    },
+    {
+      "id": "sector_waigaoqiao",
+      "labelPoint": [
+        121.5929972,
+        31.3409297
       ]
     }
   ]

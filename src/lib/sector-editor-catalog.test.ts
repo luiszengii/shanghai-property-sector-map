@@ -255,7 +255,7 @@ test("the Xuhui admin-aligned batch exposes all 12 candidates without inventing 
   assert.ok(batchIds.every((id: string) => candidateById.has(id)));
   assert.equal(registryData.sectors.find(
     (record: { canonicalName: string }) => record.canonicalName === "上海南站",
-  )?.geometry.status, "missing");
+  ), undefined);
   assert.ok(!registryData.sectors.some(
     (record: { canonicalName: string }) => record.canonicalName === "虹梅路",
   ));

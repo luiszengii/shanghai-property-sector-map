@@ -1507,6 +1507,10 @@ def build_feature(
     area_km2 = area_square_meters / 1_000_000
     official_area = definition.get("officialAreaSquareKilometers")
     area_range = definition.get("areaRangeSquareKilometers")
+    validation_area_range = definition.get(
+        "preSubtractionAreaRangeSquareKilometers",
+        area_range,
+    )
     signed_delta_ratio = None
     if official_area is not None:
         official_area = float(official_area)
@@ -1516,8 +1520,8 @@ def build_feature(
                 f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² 超出容差，"
                 f"官方参考 {official_area:.4f} km²"
             )
-    elif area_range is not None:
-        minimum_area, maximum_area = map(float, area_range)
+    elif validation_area_range is not None:
+        minimum_area, maximum_area = map(float, validation_area_range)
         if not minimum_area <= area_km2 <= maximum_area:
             raise ValueError(
                 f"{definition['canonicalName']} 候选面积 {area_km2:.4f} km² "
@@ -1841,8 +1845,10 @@ def main() -> None:
     for definition in definitions["sectors"]:
         subtract_ids = definition.get("subtractSectorIds", [])
         if (
-            definition["method"]
-            != "market_admin_candidate_with_shared_topology"
+            definition["method"] not in {
+                "market_admin_candidate_with_shared_topology",
+                "selected_workpack_candidate_with_shared_topology",
+            }
             or not subtract_ids
         ):
             continue
@@ -1874,6 +1880,21 @@ def main() -> None:
             projected.area / 1_000_000,
             4,
         )
+        final_area_km2 = projected.area / 1_000_000
+        if definition.get("areaRangeSquareKilometers"):
+            minimum_area, maximum_area = map(
+                float,
+                definition["areaRangeSquareKilometers"],
+            )
+            if not minimum_area <= final_area_km2 <= maximum_area:
+                raise ValueError(
+                    f"{definition['canonicalName']} 差集后面积 "
+                    f"{final_area_km2:.4f} km² 超出安全范围 "
+                    f"{minimum_area:.4f}–{maximum_area:.4f} km²"
+                )
+            feature["properties"]["areaSafetyRangeSquareKilometers"] = (
+                definition["areaRangeSquareKilometers"]
+            )
         feature["properties"]["labelPoint"] = [
             round(representative.x, 7),
             round(representative.y, 7),
@@ -1909,14 +1930,23 @@ def main() -> None:
     subscope_features = []
     manifest_subscopes = []
     for definition in definitions.get("subscopes", []):
-        if definition["method"] != "official_four_sides_osm_land_component":
+        if definition["method"] == "official_four_sides_osm_land_component":
+            geometry, area, osm_refs = build_qiantan(
+                args.gpkg,
+                definition,
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+            )
+        elif definition["method"] == "selected_workpack_reference_subscope":
+            geometry, area, osm_refs = build_selected_workpack_candidate(
+                definition,
+                definitions.get("workpackSources", {}),
+                definitions["workingCrs"],
+                definitions["outputCrs"],
+                source_lock["id"],
+            )
+        else:
             raise ValueError(f"未知子范围构建方法：{definition['method']}")
-        geometry, area, osm_refs = build_qiantan(
-            args.gpkg,
-            definition,
-            definitions["workingCrs"],
-            definitions["outputCrs"],
-        )
         parent_geometry = sector_geometry_by_id.get(definition["parentSectorId"])
         if parent_geometry is None:
             raise ValueError(

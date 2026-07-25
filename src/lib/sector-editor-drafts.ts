@@ -88,6 +88,11 @@ const retiredDraftSourcesBySourceId = new Map<string, {
     ]),
   }],
 ]);
+const retiredRemovedSectorNamesBySourceId = new Map<string, string>([
+  ["sector_shanghainan_zhan", "上海南站"],
+  ["sector_lianyang", "联洋"],
+  ["sector_gaodong", "高东"],
+]);
 
 function isFinitePosition(value: unknown): value is DraftPosition {
   return Array.isArray(value)
@@ -527,6 +532,28 @@ export function syncUntouchedDraftsToCurrentTemplates(
   const archivedDraftIds: string[] = [];
   const syncedDrafts = drafts.flatMap((draft) => {
     if (draft.archived || !draft.sourceSectorId) return [draft];
+    const retiredRemovedSectorName = retiredRemovedSectorNamesBySourceId.get(
+      draft.sourceSectorId,
+    );
+    if (retiredRemovedSectorName) {
+      const draftGeometryFingerprint = fingerprintDraftParts(
+        draftFingerprintRings(draft),
+      );
+      const archivedDraft = {
+        ...draft,
+        id: `retired-backup-${draft.id}-${draftGeometryFingerprint}`,
+        sourceSectorId: undefined,
+        archived: true,
+        referenceOnly: true,
+        name: `${draft.name}（已下线草稿备份）`,
+        note: [
+          draft.note,
+          `${retiredRemovedSectorName}已从活动板块目录下线；此草稿仅作只读历史参考，不参与导出。`,
+        ].filter(Boolean).join("\n"),
+      };
+      archivedDraftIds.push(archivedDraft.id);
+      return [archivedDraft];
+    }
     const template = templateById.get(draft.sourceSectorId);
     if (!template) return [draft];
     const retiredSource = retiredDraftSourcesBySourceId.get(draft.sourceSectorId);
@@ -579,6 +606,21 @@ export function syncUntouchedDraftsToCurrentTemplates(
     if (draftGeometryFingerprint === template.geometryFingerprint) {
       return [{
         ...migratedDraft,
+        sourceGeometryFingerprint: template.geometryFingerprint,
+      }];
+    }
+    const matchesStoredSourceGeometry = Boolean(
+      migratedDraft.sourceGeometryFingerprint
+      && migratedDraft.sourceGeometryFingerprint === draftGeometryFingerprint,
+    );
+    if (matchesStoredSourceGeometry) {
+      updatedSourceIds.push(migratedDraft.sourceSectorId!);
+      return [{
+        ...migratedDraft,
+        ring: normalizeDraftRing(template.ring),
+        holes: normalizeDraftRings(template.holes),
+        additionalRings: normalizeDraftRings(template.additionalRings),
+        additionalHoles: draftAdditionalHoles(template),
         sourceGeometryFingerprint: template.geometryFingerprint,
       }];
     }

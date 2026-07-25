@@ -232,6 +232,7 @@ const batchPolicies = new Map([
     catalogMode: "linked-admin-batch",
   }],
   ["pudong-inner-five-street-proxies-2026-07", { expectedSectorCount: 5, districtCounts: { 浦东新区: 5 }, catalogMode: "linked-admin-batch" }],
+  ["pudong-north-market-repartition-2026-07", { expectedSectorCount: 4, districtCounts: { 浦东新区: 4 }, catalogMode: "market-workpack-batch" }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -322,6 +323,39 @@ if (batch.sectors.some(({ districtName }) => !expectedDistrictCounts.has(distric
 
 const registryRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "market-workpack-batch") {
+    registryRecords.push({
+      id: definition.id,
+      canonicalName: definition.canonicalName,
+      aliases: aliasesBySectorId.get(definition.id) ?? [],
+      riskFlags: definition.riskFlags ?? [],
+      districtNames: [definition.districtName],
+      kind: "market_sector",
+      reviewStatus: "draft-medium",
+      definitionStatus: "user_decided_market_scope",
+      definitionCandidate: definition.geometryRule,
+      definitionSourceIds: definition.definitionSourceIds,
+      linkedTopologySectorIds: definition.sharedEdgeSectorIds,
+      boundaryEvidenceIds: [
+        `${definition.id.replace(/^sector_/, "")}-market-scope`,
+      ],
+      ...(definition.includedMarketAreas
+        ? { includedMarketAreas: definition.includedMarketAreas }
+        : {}),
+      geometry: {
+        status: "draft",
+        confidence: "medium",
+        coordinateSystem: "WGS84",
+        coordinateSystemVerified: true,
+        version: definition.scopeVersion,
+        sourceIds: ["osm-geofabrik-shanghai-260721"],
+        verificationSourceIds: definition.geometryVerificationSourceIds,
+        publicationPolicy: "internal_review",
+        note: "用户裁定的楼市板块候选；商业地图只用于语义与邻接参考，坐标由固定 OSM 道路、水系或行政骨架重建，不是法定或行业统一边界。",
+      },
+    });
+    continue;
+  }
   if (batchPolicy.catalogMode === "putuo-liangwancheng-ganquan-pair") {
     const isLiangwancheng = definition.id === "sector_zhongyuanliangwancheng";
     registryRecords.push({
@@ -538,6 +572,26 @@ upsertJsonArrayItems({
 
 const evidenceRecords = [];
 for (const definition of batch.sectors) {
+  if (batchPolicy.catalogMode === "market-workpack-batch") {
+    evidenceRecords.push({
+      id: `${definition.id.replace(/^sector_/, "")}-market-scope`,
+      sectorId: definition.id,
+      side: "component",
+      basisType: "user_decided_market_scope_locked_osm_workpack",
+      featureName: `${definition.canonicalName}联合重构候选范围`,
+      status: "candidate_scope_confirmed",
+      confidence: "medium",
+      sourceId: "internal-user-pudong-north-repartition-2026-07-25",
+      supportingSourceIds: [
+        ...new Set([
+          ...definition.definitionSourceIds,
+          ...definition.geometryVerificationSourceIds,
+        ]),
+      ],
+      note: definition.geometryRule,
+    });
+    continue;
+  }
   if (batchPolicy.catalogMode === "putuo-liangwancheng-ganquan-pair") {
     const isLiangwancheng = definition.id === "sector_zhongyuanliangwancheng";
     if (isLiangwancheng) {

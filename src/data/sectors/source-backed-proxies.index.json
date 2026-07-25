@@ -98,14 +98,6 @@
       "status": "source-backed-proxy"
     },
     {
-      "id": "sector_waigaoqiao",
-      "labelPoint": [
-        121.607,
-        31.334
-      ],
-      "status": "source-backed-proxy"
-    },
-    {
       "id": "sector_lingang_main_city",
       "labelPoint": [
         121.91,
@@ -174,14 +166,6 @@
       "labelPoint": [
         121.3808,
         31.2581
-      ],
-      "status": "source-backed-proxy"
-    },
-    {
-      "id": "sector_lianyang",
-      "labelPoint": [
-        121.5562,
-        31.2265
       ],
       "status": "source-backed-proxy"
     },

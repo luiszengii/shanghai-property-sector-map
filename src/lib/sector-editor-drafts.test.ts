@@ -582,6 +582,85 @@ test("a modified draft still named Yangsi Qiantan cannot override the independen
   assert.deepEqual(synced.archivedDraftIds, [synced.drafts[1].id]);
 });
 
+test("drafts for removed sector identities are archived and cannot be exported", () => {
+  const modifiedLianyangDraft = {
+    ...createDraftFromExistingSector({
+      id: "sector_lianyang",
+      name: "联洋",
+      district: "浦东新区",
+      boundaryBasis: "旧联洋代理面",
+      note: "用户手工调整过东侧边界",
+      geometryStatus: "candidate",
+      geometryFingerprint: "old-lianyang-source",
+      ring: [[121.54, 31.22], [121.58, 31.22], [121.58, 31.25]],
+    }),
+    ring: [[121.541, 31.221], [121.581, 31.221], [121.581, 31.251]] as [number, number][],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates(
+    [modifiedLianyangDraft],
+    [],
+  );
+
+  assert.equal(synced.drafts.length, 1);
+  assert.equal(synced.drafts[0].name, "联洋（已下线草稿备份）");
+  assert.equal(synced.drafts[0].sourceSectorId, undefined);
+  assert.equal(synced.drafts[0].archived, true);
+  assert.equal(synced.drafts[0].referenceOnly, true);
+  assert.match(synced.drafts[0].note, /仅作只读历史参考/);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[0].id]);
+  assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
+});
+
+test("stored source fingerprints update untouched drafts and preserve modified drafts", () => {
+  const oldRing = [
+    [121.57, 31.27],
+    [121.61, 31.27],
+    [121.61, 31.3],
+  ] as [number, number][];
+  const oldFingerprint = fingerprintDraftParts([oldRing]);
+  const oldGaohangDraft = createDraftFromExistingSector({
+    id: "sector_gaohang",
+    name: "高行",
+    district: "浦东新区",
+    boundaryBasis: "旧高行边界",
+    note: "旧版本",
+    geometryStatus: "candidate",
+    geometryFingerprint: oldFingerprint,
+    ring: oldRing,
+  });
+  const currentTemplate = {
+    id: "sector_gaohang",
+    name: "高行",
+    district: "浦东新区",
+    boundaryBasis: "航津路以南并扣除森兰",
+    note: "浦东北部联合重构",
+    geometryStatus: "candidate" as const,
+    geometryFingerprint: "pudong-north-v2",
+    previousGeometryFingerprints: [],
+    ring: [[121.58, 31.26], [121.62, 31.26], [121.62, 31.29]] as [number, number][],
+  };
+
+  const synced = syncUntouchedDraftsToCurrentTemplates(
+    [oldGaohangDraft],
+    [currentTemplate],
+  );
+  assert.deepEqual(synced.drafts[0].ring, currentTemplate.ring);
+  assert.equal(synced.drafts[0].sourceGeometryFingerprint, "pudong-north-v2");
+  assert.deepEqual(synced.updatedSourceIds, ["sector_gaohang"]);
+
+  const modifiedDraft = {
+    ...oldGaohangDraft,
+    ring: [[121.571, 31.271], [121.611, 31.271], [121.611, 31.301]] as [number, number][],
+  };
+  const preserved = syncUntouchedDraftsToCurrentTemplates(
+    [modifiedDraft],
+    [currentTemplate],
+  );
+  assert.deepEqual(preserved.drafts[0].ring, modifiedDraft.ring);
+  assert.deepEqual(preserved.preservedModifiedSourceIds, ["sector_gaohang"]);
+});
+
 test("archived retired drafts stay in browser storage but are excluded from GeoJSON export", () => {
   const archivedDraft = {
     ...createSectorDraft("retired-backup-sector_qiantan"),

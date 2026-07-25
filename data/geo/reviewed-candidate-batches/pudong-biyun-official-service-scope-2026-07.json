@@ -23,6 +23,7 @@
       "minimumBboxClearanceMeters": 30,
       "fillHolesBelowSquareMeters": 1,
       "preserveTopologyPrecision": true,
+      "sharedEdgeSectorIds": ["sector_jinyang", "sector_jinqiao"],
       "areaRangeSquareKilometers": [2, 3],
       "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-biyun-international-community-scope-2024"],
       "geometryVerificationSourceIds": ["official-shanghai-biyun-international-community-scope-2024", "osm-geofabrik-shanghai-260721"],

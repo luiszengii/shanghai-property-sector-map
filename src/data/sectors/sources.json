@@ -1574,6 +1574,61 @@
       "note": "two-block community boundary reference"
     },
     {
+      "id": "internal-user-pudong-north-repartition-2026-07-25",
+      "title": "浦东北部金桥—森兰—高行—外高桥市场范围裁定",
+      "publisher": "上海楼盘地图项目用户",
+      "url": null,
+      "sourceType": "internal_user_scope_decision",
+      "publishedAt": "2026-07-25",
+      "licenseStatus": "internal",
+      "allowedUse": "sector_definition_and_geometry_rule",
+      "note": "记录用户裁定：删除上海南站、联洋和高东；高东并入外高桥；金桥保留金杨与碧云；森兰采用四至主包络及五洲大道西侧凸出片；高行保留航津路以南部分。商业截图只作语义参考，不复制其坐标。"
+    },
+    {
+      "id": "seller-fang-jinqiao-market-2015",
+      "title": "上海金桥板块公开范围说明",
+      "publisher": "房天下",
+      "url": "https://sh.news.fang.com/2015-08-31/17171233_all.htm",
+      "sourceType": "seller_market_scope_description",
+      "publishedAt": "2015-08-31",
+      "licenseStatus": "reference_only",
+      "allowedUse": "sector_definition_only",
+      "note": "公开文字将市场金桥与碧云、金杨分列，并以外环、金桥路/浦东大道、龙东大道和黄浦江支流描述邻接；只用于市场语义，不使用商业平台坐标。"
+    },
+    {
+      "id": "official-pudong-senlan-green-oasis-procurement-2026",
+      "title": "高南森兰绿洲东沟区域政府采购文件",
+      "publisher": "上海市政府采购中心 / 浦东新区相关采购单位",
+      "url": "https://jpg.zfcg.sh.gov.cn/sh-gov-open-doc/1108QZ/06774858-f3f5-4213-be92-8d54d3a39d83.pdf",
+      "sourceType": "official_area_partition_description",
+      "publishedAt": "2026",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "第3页分别描述森兰片区与绿洲片区的道路四至，用于核验森兰为非矩形分片结构；不等同楼市板块法定四至。"
+    },
+    {
+      "id": "official-pudong-waigaoqiao-industry-plan-2023",
+      "title": "外高桥地区产业发展规划",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/azt_fzgh/2023/59/307523/1fcfc4f27867429599dd54972bfa3841.pdf",
+      "sourceType": "official_functional_region_plan",
+      "publishedAt": "2023",
+      "licenseStatus": "reference_only",
+      "allowedUse": "sector_definition_only",
+      "note": "官方说明外高桥地区西依黄浦江、北临长江入海口，由两保税区和高桥、高东、高行组成，面积98.39平方公里。该宏观产业功能区只支持上位语义，不直接作为住宅市场坐标。"
+    },
+    {
+      "id": "official-pudong-gaoqiao-profile-2024",
+      "title": "高桥镇官方概况",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/azt_yl/2024/214/329333.html",
+      "sourceType": "official_town_profile",
+      "publishedAt": "2024",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "官方说明高桥镇北毗吴淞口、西临黄浦江、东接自贸区、南接高行镇；用于核验外高桥候选的岸线和邻接。"
+    },
+    {
       "id": "osm-overpass-b4-community-proxies-2026-07-25",
       "title": "OpenStreetMap residential ways and Pingliang Road Subdistrict relation queried through Overpass",
       "publisher": "OpenStreetMap contributors / Overpass API",

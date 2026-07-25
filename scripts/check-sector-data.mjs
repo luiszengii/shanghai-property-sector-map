@@ -46,6 +46,7 @@ const candidateDefinitionsData = readCandidateDefinitions(
 );
 const referenceChecksData = readJson("src/data/sectors/reference-checks.json");
 const osmSourceLock = readJson("data/geo/sources/osm-shanghai-260721.json");
+const pudongNorthQa = readJson("data/geo/workpacks/pudong-north-repartition/qa.json");
 
 const errors = [];
 const warnings = [];
@@ -1006,6 +1007,9 @@ const registryById = new Map(registry.map((record) => [record.id, record]));
 const candidateDefinitionById = new Map(
   candidateDefinitions.map((definition) => [definition.id, definition]),
 );
+const subscopeDefinitionById = new Map(
+  candidateDefinitionsData.subscopes.map((definition) => [definition.id, definition]),
+);
 const sourceById = new Map(sources.map((source) => [source.id, source]));
 const edgeById = new Map(edges.map((edge) => [edge.id, edge]));
 const requiredBoundarySides = ["north", "east", "south", "west"];
@@ -1020,6 +1024,12 @@ const knownDefinitionStatuses = new Set([
   "official_scope_market_candidate",
   "market_identity_admin_backbone_candidate",
   "market_identity_verified_geometry_blocked",
+  "market_identity_historical_admin_proxy_candidate",
+  "market_identity_reference_aided_admin_difference_candidate",
+  "market_identity_verified_admin_proxy",
+  "market_identity_official_service_scope_candidate",
+  "market_identity_verified_area_mismatch_admin_proxy",
+  "market_identity_verified_island_admin_proxy",
   "admin_proxy_candidate",
   "multiple_official_versions_need_selection",
 ]);
@@ -1033,6 +1043,7 @@ const knownSourceAllowedUses = new Set([
   "scope_comparison_only",
   "market_identity_verification_only",
   "sector_definition_and_geometry_rule",
+  "sector_definition_only",
   "name_verification_only",
   "visual_comparison_only",
   "geometry_with_attribution_and_odbl_compliance",
@@ -1063,6 +1074,7 @@ const knownBoundaryBasisTypes = new Set([
   "project_integrity_market_candidate",
   "user_decided_market_shared_edge",
   "named_osm_landuse_market_proxy",
+  "user_decided_market_scope_locked_osm_workpack",
 ]);
 const candidateGeometryStatuses = new Set(["draft", "reviewed", "published"]);
 const knownGeometryStatuses = ["missing", "demo", "admin-reference", ...candidateGeometryStatuses];
@@ -2984,7 +2996,7 @@ for (const anchor of zhongshanParkDefinition?.boundaryAnchors ?? []) {
 if (candidateById.has("sector_xijiao")) {
   error("sector_zhongshangongyuan: 中山公园核心批次不得在联合裁定前自动注册西郊");
 }
-for (const id of ["sector_shanghainan_zhan", "sector_xijiao"]) {
+for (const id of ["sector_xijiao"]) {
   const record = registryById.get(id);
   if (candidateById.has(id)
     || record?.geometry?.status !== "missing"
@@ -2993,6 +3005,41 @@ for (const id of ["sector_shanghainan_zhan", "sector_xijiao"]) {
     || !record?.geometry?.verificationSourceIds?.length) {
     error(`${id}: 已核验但未冻结市场四至的身份必须只在编辑器中以缺失几何出现，不得自动发布候选面`);
   }
+}
+for (const id of ["sector_shanghainan_zhan", "sector_lianyang", "sector_gaodong"]) {
+  if (registryById.has(id) || candidateById.has(id)) {
+    error(`${id}: 已按用户裁定下线，不得继续出现在活动 registry 或候选面`);
+  }
+}
+for (const id of ["sector_jinqiao", "sector_senlan", "sector_gaohang", "sector_waigaoqiao"]) {
+  const record = registryById.get(id);
+  const candidate = candidateById.get(id);
+  if (!record
+    || !candidate
+    || record.reviewStatus !== "draft-medium"
+    || record.definitionStatus !== "user_decided_market_scope"
+    || candidate.properties?.confidence !== "medium"
+    || candidate.properties?.coordinateSystem !== "WGS84") {
+    error(`${id}: 浦东北部用户裁定面必须以 WGS84 medium 内部候选发布`);
+  }
+}
+if (!pudongNorthQa.validGeometry
+  || !pudongNorthQa.selfIntersectionFree
+  || pudongNorthQa.northDomainReconstructionErrorSquareMeters > 1
+  || pudongNorthQa.absorbedGaodongExcludingSenlanCoverageRatio !== 1
+  || Object.values(pudongNorthQa.overlapSquareMeters).some((value) => value > 0.01)
+  || pudongNorthQa.sharedBoundaryMeters.jinqiao_biyun <= 1_000
+  || pudongNorthQa.sharedBoundaryMeters.senlan_gaohang <= 1_000
+  || pudongNorthQa.sharedBoundaryMeters.gaohang_waigaoqiao <= 1_000) {
+  error("浦东北部 workpack 必须保持合法、互斥、无非预期空洞，并完整吸收森兰外的旧高东范围");
+}
+const waigaoqiaoPlanningSubscope = subscopes.find(
+  (feature) => feature.properties?.id === "subscope_waigaoqiao_ftz_10_34",
+);
+if (!waigaoqiaoPlanningSubscope
+  || waigaoqiaoPlanningSubscope.properties?.parentSectorId !== "sector_waigaoqiao"
+  || waigaoqiaoPlanningSubscope.properties?.status !== "official-reference-subscope") {
+  error("外高桥 10.34 平方公里规划代理必须降级为外高桥内部参考子范围");
 }
 
 const qiantanPrimaryCandidate = candidateById.get("sector_qiantan");
@@ -3313,6 +3360,7 @@ for (const subscope of subscopes) {
   const id = subscope.properties?.id ?? "unknown-subscope";
   const properties = subscope.properties ?? {};
   const manifest = subscopeManifestById.get(id);
+  const definition = subscopeDefinitionById.get(id);
   const parent = candidateById.get(properties.parentSectorId);
   if (!manifest) error(`${id}: 子范围缺少 manifest`);
   if (!parent) error(`${id}: 子范围缺少候选主板块 ${properties.parentSectorId}`);
@@ -3324,9 +3372,12 @@ for (const subscope of subscopes) {
   if (manifest?.parentSectorId !== properties.parentSectorId) error(`${id}: 子范围 parentSectorId 与 manifest 不一致`);
   if (!isFinitePositive(properties.areaSquareKilometers)) error(`${id}: 子范围面积无效`);
   if (!isFinitePositive(properties.officialAreaSquareKilometers)) error(`${id}: 子范围官方参考面积无效`);
+  const maximumOutsideParentRatio = Number(
+    definition?.maximumOutsideParentRatio ?? 0.001,
+  );
   if (!Number.isFinite(manifest?.outsideParentAreaRatio)
     || manifest.outsideParentAreaRatio < 0
-    || manifest.outsideParentAreaRatio > 0.001) {
+    || manifest.outsideParentAreaRatio > maximumOutsideParentRatio) {
     error(`${id}: 子范围超出主板块比例无效`);
   }
   validateWgs84PolygonalGeometry(subscope, `${id}: 子范围`, properties.labelPoint);

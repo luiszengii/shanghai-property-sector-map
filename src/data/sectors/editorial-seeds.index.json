@@ -66,14 +66,6 @@
       "status": "editorial-seed"
     },
     {
-      "id": "sector_shanghainan_zhan",
-      "labelPoint": [
-        121.4266,
-        31.1553
-      ],
-      "status": "editorial-seed"
-    },
-    {
       "id": "sector_xijiao",
       "labelPoint": [
         121.356,
@@ -162,34 +154,10 @@
       "status": "editorial-seed"
     },
     {
-      "id": "sector_lianyang",
-      "labelPoint": [
-        121.573,
-        31.232
-      ],
-      "status": "editorial-seed"
-    },
-    {
       "id": "sector_yangdong",
       "labelPoint": [
         121.5283,
         31.2009
-      ],
-      "status": "editorial-seed"
-    },
-    {
-      "id": "sector_senlan",
-      "labelPoint": [
-        121.607,
-        31.292
-      ],
-      "status": "editorial-seed"
-    },
-    {
-      "id": "sector_waigaoqiao",
-      "labelPoint": [
-        121.616,
-        31.343
       ],
       "status": "editorial-seed"
     },

@@ -1,5 +1,15 @@
 # Agent instructions
 
+## 板块边界任务
+
+任何 agent 在新增、调整、拆分、合并、删除板块，或研究板块数据源前，必须先完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。
+
+- `src/data/sectors/registry.json` 是活动板块身份的唯一登记表；身份与几何必须分开处理。
+- 商业地图、看房平台和截图只能帮助确认名称、市场语义、相邻关系和大致形态；没有明确授权时，不得复制、批量抓取、保存或描摹其边界坐标。
+- 可发布候选面的坐标必须来自固定且许可明确的几何来源，当前首选 `data/geo/sources/osm-shanghai-260721.json` 锁定的 OSM/Geofabrik 快照，并保留来源、版本、哈希和生成命令。
+- 不得手改 `src/data/sectors/reviewed-candidates*.json` 等生成产物来“修边”；应修改批次定义或 workpack 生成器后重新生成。
+- 删除、合并或重命名板块时，必须同步处理编辑器草稿迁移、客户端索引和板块观察映射；历史手工草稿应归档，不得静默丢弃。
+
 ## 小红书房产观点数据
 
 本仓库包含一套本地小红书房产研究数据。任何 agent 在读取、扩充或把这批数据用于产品前，必须先阅读 `docs/XHS-DATA-GUIDE.md`。
