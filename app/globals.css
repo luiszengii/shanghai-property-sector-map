@@ -88,6 +88,19 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .sector-label-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 3px; border-radius: 9px; background: rgba(15,118,110,.08); }
 .sector-label-mode button { min-height: 29px; border: 0; border-radius: 7px; color: #64748b; background: transparent; font-size: 10px; cursor: pointer; }
 .sector-label-mode button.is-active { color: #fff; background: #0f766e; box-shadow: 0 3px 9px rgba(15,118,110,.18); }
+.sector-source-options { display: grid; gap: 5px; }
+.sector-source-options button { width: 100%; min-height: 48px; display: grid; grid-template-columns: 22px 1fr; align-items: center; gap: 7px; padding: 7px 9px; color: #64748b; text-align: left; background: #f8fafc; border: 1px solid rgba(15,23,42,.07); border-radius: 10px; cursor: pointer; transition: .18s; }
+.sector-source-options button:hover { color: #0f766e; border-color: rgba(15,118,110,.2); background: #f0fdfa; }
+.sector-source-options button.is-active { color: #5b21b6; border-color: rgba(124,58,237,.24); background: rgba(245,243,255,.9); box-shadow: 0 4px 12px rgba(91,33,182,.07); }
+.sector-source-options button > span { display: grid; gap: 2px; }
+.sector-source-options strong { font-size: 11px; }
+.sector-source-options small { color: #94a3b8; font-size: 9px; font-weight: 500; }
+.sector-source-note { margin: 7px 0 0; color: #8b6f63; font-size: 9px; line-height: 1.45; }
+.sector-source-badge { position: absolute; z-index: 175; top: 150px; right: 16px; max-width: 250px; display: grid; gap: 2px; padding: 8px 10px; color: #5b21b6; background: rgba(255,255,255,.92); border: 1px solid rgba(124,58,237,.2); border-radius: 11px; box-shadow: 0 8px 22px rgba(15,23,42,.12); backdrop-filter: blur(12px); pointer-events: none; }
+.sector-source-badge strong { font-size: 10px; }
+.sector-source-badge span { color: #7c6f8f; font-size: 8px; line-height: 1.4; }
+.sector-source-badge.is-error { color: #b91c1c; border-color: rgba(185,28,28,.22); background: rgba(254,242,242,.94); }
+.sector-source-badge.is-error span { color: #991b1b; }
 .filter-group + .filter-group { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
 .group-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .group-title strong { font-size: 13px; }
@@ -304,6 +317,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .map-tip { display: none; }
   .map-zoom-controls { top: 68px; right: 9px; border-radius: 11px; }
   .map-zoom-controls button { width: 44px; height: 44px; }
+  .sector-source-badge { top: 166px; right: 9px; max-width: min(230px, calc(100vw - 18px)); }
   .mobile-actions { position: absolute; z-index: 190; right: 9px; bottom: 16px; display: flex; gap: 8px; }
   .mobile-actions button { min-width: 67px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; color: #334155; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.95); box-shadow: 0 10px 30px rgba(15,23,42,.16); border-radius: 14px; font-size: 12px; font-weight: 700; backdrop-filter: blur(14px); }
   .mobile-actions b { min-width: 17px; height: 17px; display: grid; place-items: center; padding: 0 4px; color: #fff; background: #0f766e; border-radius: 99px; font-size: 9px; }

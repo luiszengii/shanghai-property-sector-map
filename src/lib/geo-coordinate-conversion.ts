@@ -3,6 +3,8 @@ export type DisplayCoordinateSystem = "WGS84" | "GCJ-02" | "GCJ-02-assumed";
 const gcj02Axis = 6_378_245;
 const gcj02EccentricitySquared = 0.006693421622965943;
 const wgs84PositionCache = new Map<string, [number, number]>();
+const bd09PositionCache = new Map<string, [number, number]>();
+const baiduRadiansFactor = Math.PI * 3_000 / 180;
 
 export function coordinateKey(lng: number, lat: number) {
   return `${lng.toFixed(6)},${lat.toFixed(6)}`;
@@ -51,6 +53,29 @@ export function wgs84ToGcj02Position(position: [number, number]): [number, numbe
     / (gcj02Axis / squareRootMagic * Math.cos(latitudeRadians) * Math.PI);
   const converted: [number, number] = [lng + longitudeDelta, lat + latitudeDelta];
   wgs84PositionCache.set(key, converted);
+  return converted;
+}
+
+/**
+ * Converts Baidu's BD-09 coordinates into GCJ-02 for direct display on AMap.
+ * The source snapshot remains untouched in outputs/*-raw-*.json.
+ */
+export function bd09ToGcj02Position(position: [number, number]): [number, number] {
+  const key = coordinateKey(...position);
+  const cached = bd09PositionCache.get(key);
+  if (cached) return cached;
+
+  const x = position[0] - 0.0065;
+  const y = position[1] - 0.006;
+  const radius = Math.sqrt(x * x + y * y)
+    - 0.00002 * Math.sin(y * baiduRadiansFactor);
+  const theta = Math.atan2(y, x)
+    - 0.000003 * Math.cos(x * baiduRadiansFactor);
+  const converted: [number, number] = [
+    radius * Math.cos(theta),
+    radius * Math.sin(theta),
+  ];
+  bd09PositionCache.set(key, converted);
   return converted;
 }
 

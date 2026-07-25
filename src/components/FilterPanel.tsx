@@ -1,11 +1,11 @@
 "use client";
 
-import { Building2, Check, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import { Building2, Check, Database, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { memo, useId } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
 import categoriesData from "@/src/data/categories.json";
 import { projects } from "@/src/content/project-leads";
-import { useMapStore } from "@/src/store/map-store";
+import { useMapStore, type SectorBoundarySource } from "@/src/store/map-store";
 import type { Category } from "@/src/types/map";
 
 const categories = categoriesData as Category[];
@@ -19,6 +19,12 @@ const categoriesByGroup = new Map(
     categories.filter((category) => category.group === group.id),
   ]),
 );
+const sectorSourceLabels: Record<SectorBoundarySource, string> = {
+  project: "项目研究口径",
+  "hfwgsj-private": "微观世界快照",
+  "anjuke-private": "安居客快照",
+  "fang-private": "房天下快照",
+};
 
 export const FilterPanel = memo(function FilterPanel({
   mobile = false,
@@ -35,6 +41,7 @@ export const FilterPanel = memo(function FilterPanel({
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
   const sectorLabelMode = useMapStore((state) => state.sectorLabelMode);
   const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
+  const sectorBoundarySource = useMapStore((state) => state.sectorBoundarySource);
   const toggleCategory = useMapStore((state) => state.toggleCategory);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
@@ -42,6 +49,7 @@ export const FilterPanel = memo(function FilterPanel({
   const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
   const setSectorLabelMode = useMapStore((state) => state.setSectorLabelMode);
   const setSectorLabelMinZoom = useMapStore((state) => state.setSectorLabelMinZoom);
+  const setSectorBoundarySource = useMapStore((state) => state.setSectorBoundarySource);
   const showAllCategories = useMapStore((state) => state.showAllCategories);
   const clearCategories = useMapStore((state) => state.clearCategories);
   const setMobileFiltersOpen = useMapStore((state) => state.setMobileFiltersOpen);
@@ -57,6 +65,57 @@ export const FilterPanel = memo(function FilterPanel({
       <div className="filter-actions">
         <button onClick={showAllCategories}><Check size={14} /> 显示全部</button>
         <button onClick={clearCategories}><RotateCcw size={14} /> 清空</button>
+      </div>
+      <div className="filter-group sector-source-filter-group">
+        <div className="group-title">
+          <strong>板块边界</strong>
+          <span>{sectorSourceLabels[sectorBoundarySource]}</span>
+        </div>
+        <div className="sector-source-options" role="radiogroup" aria-label="板块边界数据源">
+          <button
+            type="button"
+            className={sectorBoundarySource === "project" ? "is-active" : ""}
+            role="radio"
+            aria-checked={sectorBoundarySource === "project"}
+            onClick={() => setSectorBoundarySource("project")}
+          >
+            <MapPinned size={14} />
+            <span><strong>项目研究边界</strong><small>当前候选面与行政参考层</small></span>
+          </button>
+          <button
+            type="button"
+            className={sectorBoundarySource === "hfwgsj-private" ? "is-active" : ""}
+            role="radio"
+            aria-checked={sectorBoundarySource === "hfwgsj-private"}
+            onClick={() => setSectorBoundarySource("hfwgsj-private")}
+          >
+            <Database size={14} />
+            <span><strong>微观世界私有快照</strong><small>2026-07-25 · 121 个边界</small></span>
+          </button>
+          <button
+            type="button"
+            className={sectorBoundarySource === "anjuke-private" ? "is-active" : ""}
+            role="radio"
+            aria-checked={sectorBoundarySource === "anjuke-private"}
+            onClick={() => setSectorBoundarySource("anjuke-private")}
+          >
+            <Database size={14} />
+            <span><strong>安居客研究快照</strong><small>2026-07-25 · 120 / 141 个边界</small></span>
+          </button>
+          <button
+            type="button"
+            className={sectorBoundarySource === "fang-private" ? "is-active" : ""}
+            role="radio"
+            aria-checked={sectorBoundarySource === "fang-private"}
+            onClick={() => setSectorBoundarySource("fang-private")}
+          >
+            <Database size={14} />
+            <span><strong>房天下研究快照</strong><small>2026-07-25 · 182 / 183 个边界</small></span>
+          </button>
+        </div>
+        <p className="sector-source-note">
+          三套外部快照只从本机忽略文件读取；安居客、房天下已由 BD-09 转为 GCJ-02，许可仍待确认，不进入公开构建。
+        </p>
       </div>
       <div className="filter-group sector-label-filter-group">
         <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>

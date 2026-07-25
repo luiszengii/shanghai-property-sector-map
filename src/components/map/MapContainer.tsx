@@ -10,6 +10,7 @@ import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
+import { PrivateSectorLayer } from "./HfwgsjSectorLayer";
 import { SectorLayer } from "./SectorLayer";
 
 const places = placesData as Place[];
@@ -36,6 +37,7 @@ export function MapContainer() {
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
   const sectorLabelMode = useMapStore((state) => state.sectorLabelMode);
   const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
+  const sectorBoundarySource = useMapStore((state) => state.sectorBoundarySource);
   const focusRequest = useMapStore((state) => state.focusRequest);
   const sectorGeometryFallbacks = useMapStore((state) => state.sectorGeometryFallbacks);
   const setZoom = useMapStore((state) => state.setZoom);
@@ -223,6 +225,13 @@ export function MapContainer() {
     requestFocus("sector", sector.properties.id);
   }, [requestFocus, selectSector]);
 
+  const handleSnapshotSectorSelect = useCallback((sector: SectorFeature) => {
+    // The clicked polygon already supplies the spatial context. Keep the map
+    // on that snapshot geometry instead of jumping to the project's other
+    // candidate or administrative center.
+    selectSector(sector.properties.id);
+  }, [selectSector]);
+
   const handlePlaceSelect = useCallback((place: Place) => {
     selectPlace(place.id);
     requestFocus("place", place.id);
@@ -289,17 +298,32 @@ export function MapContainer() {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
-          <SectorLayer
-            amapApi={amapApi}
-            map={mapInstance}
-            zoom={zoom}
-            viewportVersion={viewportVersion}
-            viewportInteracting={viewportInteracting}
-            labelMode={sectorLabelMode}
-            labelMinZoom={sectorLabelMinZoom}
-            selectedSectorId={selectedSectorId}
-            onSelect={handleSectorSelect}
-          />
+          {sectorBoundarySource === "project" ? (
+            <SectorLayer
+              amapApi={amapApi}
+              map={mapInstance}
+              zoom={zoom}
+              viewportVersion={viewportVersion}
+              viewportInteracting={viewportInteracting}
+              labelMode={sectorLabelMode}
+              labelMinZoom={sectorLabelMinZoom}
+              selectedSectorId={selectedSectorId}
+              onSelect={handleSectorSelect}
+            />
+          ) : (
+            <PrivateSectorLayer
+              amapApi={amapApi}
+              map={mapInstance}
+              source={sectorBoundarySource}
+              zoom={zoom}
+              viewportVersion={viewportVersion}
+              viewportInteracting={viewportInteracting}
+              labelMode={sectorLabelMode}
+              labelMinZoom={sectorLabelMinZoom}
+              selectedSectorId={selectedSectorId}
+              onSelect={handleSnapshotSectorSelect}
+            />
+          )}
           <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
           <ProjectLayer
             amapApi={amapApi}
