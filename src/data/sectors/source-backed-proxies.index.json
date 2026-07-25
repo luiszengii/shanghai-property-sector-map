@@ -16,6 +16,14 @@
         31.2485
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_huangxing_park",
+      "labelPoint": [
+        121.5259,
+        31.2954
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }

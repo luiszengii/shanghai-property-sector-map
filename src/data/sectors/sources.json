@@ -1271,6 +1271,28 @@
       "licenseStatus": "ODbL-1.0",
       "allowedUse": "geometry_with_attribution_and_odbl_compliance",
       "note": "用于苏河湾、不夜城官方文字四至的道路节点重建；固定查询、提取时刻、匹配 way ID 与版本见 data/geo/sources/suhewan-buyecheng-osm-roads-2026-07-25.json，源坐标为 WGS84。"
+    },
+    {
+      "id": "official-yangpu-huangxing-park-four-sides-2025",
+      "title": "黄兴公园四至",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/wlj-lyzy/2025/219/99a184770fa401b763cecdae792c4444.html",
+      "publishedAt": "2025-01-01",
+      "sourceType": "official_park_boundary",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "营口路、双阳北路、走马塘、国顺东路界定的是公园本体，作为黄兴公园楼市板块的核心参考代理，不代表市场边界。"
+    },
+    {
+      "id": "osm-huangxing-park-relation-6262917-2026-07-25",
+      "title": "OpenStreetMap 黄兴公园 relation 6262917",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/relation/6262917",
+      "publishedAt": "2026-07-25",
+      "sourceType": "open_geometry_relation",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "OSM API 0.6 relation/6262917/full 于 2026-07-25 提取；relation version 2，timestamp 2017-04-17T16:14:18Z，坐标为 WGS84。"
     }
   ]
 }
