@@ -761,7 +761,7 @@ export function SectorBoundaryEditor() {
             返回楼盘地图
           </Link>
           <div>
-            <span className={styles.eyebrow}>LOCAL BOUNDARY WORKBENCH</span>
+            <span className={styles.eyebrow}>GCJ-02 · LOCAL BOUNDARY WORKBENCH</span>
             <h1>板块边界编辑器</h1>
           </div>
         </div>

@@ -1480,6 +1480,77 @@
       }
     },
     {
+      "id": "sector_zhongshangongyuan",
+      "scopeVersion": "user-four-sides-suzhou-river-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "central-user-boundaries",
+        "workpackSourceId": "central-user-boundaries-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/central-user-boundaries/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "0dab17d18a23e6df2f80943afe902c6346fde70fffe5b0370ff6dd9b443e80ba",
+        "sourceFeatureId": "sector_zhongshangongyuan",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_zhenning_road",
+          "sector_tianshan"
+        ]
+      }
+    },
+    {
+      "id": "sector_zhenning_road",
+      "scopeVersion": "user-wuding-wanhangdu-yuyuan-four-sides-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "central-user-boundaries",
+        "workpackSourceId": "central-user-boundaries-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/central-user-boundaries/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "0dab17d18a23e6df2f80943afe902c6346fde70fffe5b0370ff6dd9b443e80ba",
+        "sourceFeatureId": "sector_zhenning_road",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_zhongshangongyuan",
+          "sector_wuning"
+        ]
+      }
+    },
+    {
+      "id": "sector_wuning",
+      "scopeVersion": "user-zhongshan-north-zhongtan-suzhou-2026-07",
+      "method": "selected_workpack_candidate_with_shared_topology",
+      "osmRefs": {
+        "workpackId": "central-user-boundaries",
+        "workpackSourceId": "central-user-boundaries-selected-v1",
+        "sourceGeojson": "data/geo/workpacks/central-user-boundaries/candidate.wgs84.geojson",
+        "sourceGeojsonSha256": "0dab17d18a23e6df2f80943afe902c6346fde70fffe5b0370ff6dd9b443e80ba",
+        "sourceFeatureId": "sector_wuning",
+        "sourceFeatureIdProperty": "id",
+        "geometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+        "sourceAdminRelationId": null,
+        "splitEdgeId": null,
+        "splitRoadOsmRefs": [],
+        "assemblyReadiness": null,
+        "projectIntegrityStatus": null,
+        "unfrozenAdjacentSectorIds": [],
+        "sharedEdgeSectorIds": [
+          "sector_zhenning_road"
+        ]
+      }
+    },
+    {
       "id": "sector_huaxin",
       "scopeVersion": "qingpu-songjiang-jinshan-admin-backbone-market-candidate-2026-07",
       "method": "market_admin_candidate_with_shared_topology",
@@ -2608,11 +2679,16 @@
         "adminRelations": [
           "13469232"
         ],
+        "subtractedSectorIds": [
+          "sector_zhongshangongyuan"
+        ],
         "sharedEdgeSectorIds": [
           "sector_xinhualu",
-          "sector_xianxia"
+          "sector_xianxia",
+          "sector_zhongshangongyuan"
         ],
-        "sharedEdgeSnapDistanceMeters": 0.1
+        "sharedEdgeSnapDistanceMeters": 0.1,
+        "protectedSubtractionStage": "post-topology-output-crs"
       }
     },
     {
@@ -3006,281 +3082,6 @@
         ],
         "sharedEdgeSnapDistanceMeters": 0.1,
         "protectedSubtractionStage": "post-topology-output-crs"
-      }
-    },
-    {
-      "id": "sector_zhongshangongyuan",
-      "scopeVersion": "official-landscape-core-four-sides-2026-07",
-      "method": "market_four_sides_osm_linear_component",
-      "osmRefs": {
-        "roads": [
-          "1064853447",
-          "1064853453",
-          "1064853457",
-          "1092040752",
-          "1119184693",
-          "1119184694",
-          "1270386720",
-          "1270386721",
-          "1270411378",
-          "137222717",
-          "227962925",
-          "336887148",
-          "39228163",
-          "400554672",
-          "44479835",
-          "448935268",
-          "45711543",
-          "545482984",
-          "653427062",
-          "686283607",
-          "85686803",
-          "870429013"
-        ],
-        "waterways": [],
-        "boundaryAnchors": [
-          {
-            "side": "east",
-            "featureType": "composite-linear",
-            "expectedIdentity": "华阳路—安西路",
-            "identityStatus": "verified-by-osm-name",
-            "verificationSourceIds": [
-              "official-shanghai-zhongshan-park-landscape-scope-2022",
-              "osm-geofabrik-shanghai-260721"
-            ],
-            "osmRefs": [
-              "1064853457",
-              "137222717",
-              "227962925",
-              "45711543"
-            ],
-            "inputOsmRefs": [
-              "1064853457",
-              "137222717",
-              "137223200",
-              "227962925",
-              "227973998",
-              "45711543"
-            ],
-            "boundaryCoverageWithinToleranceMeters": 1328.6,
-            "centerlineToleranceMeters": 15.0,
-            "components": [
-              {
-                "featureType": "road",
-                "expectedIdentity": "华阳路",
-                "osmRefs": [
-                  "1064853457",
-                  "45711543"
-                ],
-                "inputOsmRefs": [
-                  "1064853457",
-                  "45711543"
-                ]
-              },
-              {
-                "featureType": "road",
-                "expectedIdentity": "安西路",
-                "osmRefs": [
-                  "137222717",
-                  "227962925"
-                ],
-                "inputOsmRefs": [
-                  "137222717",
-                  "137223200",
-                  "227962925",
-                  "227973998"
-                ]
-              }
-            ],
-            "coverageStage": "final-topology"
-          },
-          {
-            "side": "south",
-            "featureType": "road",
-            "expectedIdentity": "安化路",
-            "identityStatus": "verified-by-osm-name",
-            "verificationSourceIds": [
-              "official-shanghai-zhongshan-park-landscape-scope-2022",
-              "osm-geofabrik-shanghai-260721"
-            ],
-            "osmRefs": [
-              "1270386720",
-              "1270411378",
-              "39228163",
-              "85686803"
-            ],
-            "inputOsmRefs": [
-              "1270386720",
-              "1270411378",
-              "39228163",
-              "85686803"
-            ],
-            "boundaryCoverageWithinToleranceMeters": 882.1,
-            "centerlineToleranceMeters": 15.0,
-            "coverageStage": "final-topology"
-          },
-          {
-            "side": "north",
-            "featureType": "road",
-            "expectedIdentity": "万航渡路",
-            "identityStatus": "verified-by-osm-name",
-            "verificationSourceIds": [
-              "official-shanghai-zhongshan-park-landscape-scope-2022",
-              "osm-geofabrik-shanghai-260721"
-            ],
-            "osmRefs": [
-              "1064853447",
-              "1064853453",
-              "336887148",
-              "448935268",
-              "545482984"
-            ],
-            "inputOsmRefs": [
-              "1064853447",
-              "1064853453",
-              "1067852464",
-              "1073926490",
-              "1270581676",
-              "1270581677",
-              "1324706268",
-              "1332905228",
-              "1332905229",
-              "145391392",
-              "145391393",
-              "336887148",
-              "448935268",
-              "47087481",
-              "47087489",
-              "49206236",
-              "49206237",
-              "545482984",
-              "545482985",
-              "72142232",
-              "85796877"
-            ],
-            "boundaryCoverageWithinToleranceMeters": 1019.7,
-            "centerlineToleranceMeters": 15.0,
-            "coverageStage": "final-topology"
-          },
-          {
-            "side": "west",
-            "featureType": "composite-linear",
-            "expectedIdentity": "中山西路—长宁路—凯旋路",
-            "identityStatus": "verified-by-osm-name",
-            "verificationSourceIds": [
-              "official-shanghai-zhongshan-park-landscape-scope-2022",
-              "osm-geofabrik-shanghai-260721"
-            ],
-            "osmRefs": [
-              "1092040752",
-              "1119184693",
-              "1119184694",
-              "1270386721",
-              "400554672",
-              "44479835",
-              "653427062",
-              "686283607",
-              "870429013"
-            ],
-            "inputOsmRefs": [
-              "1092040735",
-              "1092040752",
-              "1092392096",
-              "1100831016",
-              "1119184693",
-              "1119184694",
-              "1270386721",
-              "1324405452",
-              "1327290530",
-              "1337777337",
-              "400554672",
-              "44479835",
-              "493659856",
-              "493659857",
-              "493659859",
-              "493661259",
-              "493663968",
-              "493850418",
-              "493853144",
-              "493855690",
-              "493871615",
-              "50383044",
-              "653427062",
-              "654409978",
-              "68585722",
-              "686118305",
-              "686283607",
-              "870429013"
-            ],
-            "boundaryCoverageWithinToleranceMeters": 1496.1,
-            "centerlineToleranceMeters": 15.0,
-            "components": [
-              {
-                "featureType": "road",
-                "expectedIdentity": "中山西路",
-                "osmRefs": [
-                  "1092040752",
-                  "400554672",
-                  "44479835",
-                  "686283607",
-                  "870429013"
-                ],
-                "inputOsmRefs": [
-                  "1092040735",
-                  "1092040752",
-                  "1092392096",
-                  "1100831016",
-                  "1324405452",
-                  "1327290530",
-                  "1337777337",
-                  "400554672",
-                  "44479835",
-                  "493659856",
-                  "493659857",
-                  "493659859",
-                  "493661259",
-                  "493663968",
-                  "493850418",
-                  "493853144",
-                  "493855690",
-                  "493871615",
-                  "50383044",
-                  "654409978",
-                  "68585722",
-                  "686118305",
-                  "686283607",
-                  "870429013"
-                ]
-              },
-              {
-                "featureType": "road",
-                "expectedIdentity": "长宁路",
-                "osmRefs": [
-                  "653427062"
-                ],
-                "inputOsmRefs": [
-                  "653427062"
-                ]
-              },
-              {
-                "featureType": "road",
-                "expectedIdentity": "凯旋路",
-                "osmRefs": [
-                  "1119184693",
-                  "1119184694",
-                  "1270386721"
-                ],
-                "inputOsmRefs": [
-                  "1119184693",
-                  "1119184694",
-                  "1270386721"
-                ]
-              }
-            ],
-            "coverageStage": "final-topology"
-          }
-        ],
-        "snapDependencySectorIds": []
       }
     },
     {

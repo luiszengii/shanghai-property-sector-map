@@ -233,6 +233,7 @@ const batchPolicies = new Map([
   }],
   ["pudong-inner-five-street-proxies-2026-07", { expectedSectorCount: 5, districtCounts: { 浦东新区: 5 }, catalogMode: "linked-admin-batch" }],
   ["pudong-north-market-repartition-2026-07", { expectedSectorCount: 4, districtCounts: { 浦东新区: 4 }, catalogMode: "market-workpack-batch" }],
+  ["central-user-boundaries-2026-07", { expectedSectorCount: 3, districtCounts: { 长宁区: 2, 普陀区: 1 }, catalogMode: "market-workpack-batch" }],
 ]);
 const batchPolicy = batchPolicies.get(batch.batchId);
 if (!batchPolicy || batch.sectors?.length !== batchPolicy.expectedSectorCount) {
@@ -581,7 +582,9 @@ for (const definition of batch.sectors) {
       featureName: `${definition.canonicalName}联合重构候选范围`,
       status: "candidate_scope_confirmed",
       confidence: "medium",
-      sourceId: "internal-user-pudong-north-repartition-2026-07-25",
+      sourceId: definition.definitionSourceIds.find(
+        (sourceId) => sourceId.startsWith("internal-user-"),
+      ) ?? definition.definitionSourceIds[0],
       supportingSourceIds: [
         ...new Set([
           ...definition.definitionSourceIds,

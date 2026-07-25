@@ -1767,7 +1767,7 @@ for (const forbiddenName of [
     error(`静安—普陀直接骨架批次不得在独立研究前自动注册 ${forbiddenName}`);
   }
 }
-for (const unresolvedName of ["镇宁路", "西藏北路", "闸北公园"]) {
+for (const unresolvedName of ["西藏北路", "闸北公园"]) {
   const record = [...registryById.values()].find(
     (candidate) => candidate.canonicalName === unresolvedName,
   );
@@ -1784,7 +1784,7 @@ for (const id of ["sector_buyecheng", "sector_suhewan"]) {
     error(`${id}: 历史功能片区只可作为人工起画卡，联合道路段未冻结前不得自动发布市场候选面`);
   }
 }
-for (const id of ["sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_wuning", "sector_zhenguang", "sector_guangxin"]) {
+for (const id of ["sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_zhenguang", "sector_guangxin"]) {
   const record = registryById.get(id);
   if (candidateById.has(id)
     || record?.geometry?.status !== "missing"
@@ -2971,27 +2971,19 @@ const zhongshanParkDefinition = candidateDefinitionById.get(
 const zhongshanParkCandidate = candidateById.get("sector_zhongshangongyuan");
 const zhongshanParkRegistry = registryById.get("sector_zhongshangongyuan");
 const zhongshanParkManifest = manifestById.get("sector_zhongshangongyuan");
-if (zhongshanParkDefinition?.method !== "market_four_sides_osm_linear_component"
-  || zhongshanParkCandidate?.properties?.areaSquareKilometers !== 1.0727
+if (zhongshanParkDefinition?.method !== "selected_workpack_candidate_with_shared_topology"
+  || zhongshanParkCandidate?.properties?.areaSquareKilometers !== 3.3562
   || zhongshanParkCandidate?.properties?.confidence !== "medium"
   || zhongshanParkRegistry?.reviewStatus !== "draft-medium"
+  || zhongshanParkRegistry?.definitionStatus !== "user_decided_market_scope"
   || zhongshanParkRegistry?.geometry?.publicationPolicy !== "internal_review") {
-  error("sector_zhongshangongyuan: 必须保持官方道路围合的 medium 内部核心候选");
+  error("sector_zhongshangongyuan: 必须保持用户裁定四至的 medium 内部市场候选");
 }
-if (zhongshanParkDefinition?.boundaryAnchors?.length !== 4) {
-  error("sector_zhongshangongyuan: 必须完整登记四侧官方道路锚点");
-}
-for (const anchor of zhongshanParkDefinition?.boundaryAnchors ?? []) {
-  const manifestAnchor = zhongshanParkManifest?.osmRefs?.boundaryAnchors?.find(
-    (item) => item.side === anchor.side,
-  );
-  if (!manifestAnchor
-    || manifestAnchor.identityStatus !== "verified-by-osm-name"
-    || manifestAnchor.centerlineToleranceMeters !== 15
-    || manifestAnchor.boundaryCoverageWithinToleranceMeters
-      < anchor.minimumBoundaryCoverageMeters) {
-    error(`sector_zhongshangongyuan: ${anchor.side} 侧必须达到声明的官方命名道路覆盖长度`);
-  }
+if (zhongshanParkDefinition?.workpackSourceId
+    !== "central-user-boundaries-selected-v1"
+  || zhongshanParkManifest?.osmRefs?.workpackSourceId
+    !== "central-user-boundaries-selected-v1") {
+  error("sector_zhongshangongyuan: 必须由锁定 central-user-boundaries workpack 复算");
 }
 if (candidateById.has("sector_xijiao")) {
   error("sector_zhongshangongyuan: 中山公园核心批次不得在联合裁定前自动注册西郊");

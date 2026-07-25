@@ -1585,6 +1585,17 @@
       "note": "记录用户裁定：删除上海南站、联洋和高东；高东并入外高桥；金桥保留金杨与碧云；森兰采用四至主包络及五洲大道西侧凸出片；高行保留航津路以南部分。商业截图只作语义参考，不复制其坐标。"
     },
     {
+      "id": "internal-user-central-market-scopes-2026-07-25",
+      "title": "中山公园、镇宁路与武宁市场范围裁定",
+      "publisher": "上海楼盘地图项目用户",
+      "url": null,
+      "sourceType": "internal_user_scope_decision",
+      "publishedAt": "2026-07-25",
+      "licenseStatus": "internal",
+      "allowedUse": "sector_definition_and_geometry_rule",
+      "note": "记录用户裁定的三组道路与水系四至。房天下截图只用于确认市场板块语义与大致形状；候选坐标全部由锁定 OSM 快照重建，不复制或描摹商业平台坐标。"
+    },
+    {
       "id": "seller-fang-jinqiao-market-2015",
       "title": "上海金桥板块公开范围说明",
       "publisher": "房天下",

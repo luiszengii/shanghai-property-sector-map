@@ -411,7 +411,7 @@ test("the Jing'an Putuo direct batch exposes 11 editable low-confidence backbone
       (record: { canonicalName: string }) => record.canonicalName === forbiddenName,
     ));
   }
-  for (const unresolvedName of ["镇宁路", "西藏北路", "闸北公园"]) {
+  for (const unresolvedName of ["西藏北路", "闸北公园"]) {
     assert.equal(registryData.sectors.find(
       (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
     )?.geometry?.status, "missing");
@@ -1060,10 +1060,10 @@ test("the Hongkou Yangpu evidence-backed batch exposes only Anshan and clipped Z
   }
 });
 
-test("the Zhongshan Park official core is editable without inventing a full West Suburb sector", () => {
+test("the user-decided central market scopes are editable without copying seller coordinates", () => {
   const batch = JSON.parse(readFileSync(
     new URL(
-      "../../data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json",
+      "../../data/geo/reviewed-candidate-batches/central-user-boundaries-2026-07.json",
       import.meta.url,
     ),
     "utf8",
@@ -1076,19 +1076,26 @@ test("the Zhongshan Park official core is editable without inventing a full West
     new URL("../data/sectors/reviewed-candidates.wgs84.json", import.meta.url),
     "utf8",
   ));
-  const definition = batch.sectors[0];
-  const record = registryData.sectors.find(
-    (item: { id: string }) => item.id === definition.id,
-  );
-  const candidate = candidateData.features.find(
-    (item: { properties: { id: string } }) => item.properties.id === definition.id,
-  );
-
-  assert.equal(definition.id, "sector_zhongshangongyuan");
-  assert.equal(record?.canonicalName, "中山公园");
-  assert.equal(record?.reviewStatus, "draft-medium");
-  assert.equal(candidate?.properties?.areaSquareKilometers, 1.0727);
-  assert.equal(candidate?.geometry.type, "Polygon");
+  const expectedAreas = new Map([
+    ["sector_zhongshangongyuan", 3.3562],
+    ["sector_zhenning_road", 0.8228],
+    ["sector_wuning", 3.1204],
+  ]);
+  for (const definition of batch.sectors) {
+    const record = registryData.sectors.find(
+      (item: { id: string }) => item.id === definition.id,
+    );
+    const candidate = candidateData.features.find(
+      (item: { properties: { id: string } }) => item.properties.id === definition.id,
+    );
+    assert.equal(record?.reviewStatus, "draft-medium");
+    assert.equal(record?.definitionStatus, "user_decided_market_scope");
+    assert.equal(
+      candidate?.properties?.areaSquareKilometers,
+      expectedAreas.get(definition.id),
+    );
+    assert.ok(["Polygon", "MultiPolygon"].includes(candidate?.geometry.type));
+  }
   assert.equal(registryData.sectors.find(
     (item: { canonicalName: string }) => item.canonicalName === "西郊",
   )?.geometry.status, "missing");

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ChevronDown, ExternalLink, FileText, MessageCircleMore, Search, ShieldCheck, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, ChevronDown, ExternalLink, FileText, Search, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
@@ -148,7 +148,7 @@ export function ObservationExplorer() {
           <span>上海楼市互动地图</span>
         </div>
         <div className="observations-hero">
-          <span className="eyebrow"><MessageCircleMore size={14} /> SOCIAL LISTENING / 2026</span>
+          <span className="observations-kicker"><FileText size={14} /> LOCAL RESEARCH ARCHIVE · 2026</span>
           <h1>板块观察</h1>
           <p>把公开讨论整理成可搜索、可追溯的看房问题库。这里保留正文摘要、脱敏评论和原帖入口，但不把互动量当作可信度。</p>
         </div>
@@ -164,7 +164,7 @@ export function ObservationExplorer() {
         <div className="observations-safety"><ShieldCheck size={18} /><p><strong>阅读边界</strong>：以下均为平台观点样本，不构成事实认定、购房推荐或投资建议。价格、学区、规划、交通、医疗和项目交付需另行核验。</p></div>
         <div className="observations-toolbar">
           <label className="observations-search"><Search size={18} /><input value={query} onChange={(event) => { setQuery(event.target.value); setVisibleCount(PAGE_SIZE); }} placeholder="搜索小区、通勤、噪声、学区……" /></label>
-          <span><SlidersHorizontal size={15} /> {filteredNotes.length} 条结果</span>
+          <span aria-live="polite"><SlidersHorizontal size={15} /> {filteredNotes.length} 条结果</span>
         </div>
         <div className="observations-filter-stack">
           <div className="observations-filter-level"><span>行政区</span><nav className="observations-districts" aria-label="行政区筛选">
