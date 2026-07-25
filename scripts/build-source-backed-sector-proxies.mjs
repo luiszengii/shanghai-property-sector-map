@@ -109,6 +109,52 @@ const sourceBackedProxies = [
       [121.3767, 31.3201], [121.3764, 31.3274],
     ],
   },
+  {
+    id: "sector_yangcheng",
+    name: "阳城",
+    labelPoint: [121.421, 31.287],
+    scopeVersion: "jingan-yangcheng-community-member-reference-2026-07",
+    confidence: "medium",
+    proxyType: "community_member_reference_proxy",
+    definitionSourceIds: ["official-jingan-yangcheng-yonghe-community-notice-2019"],
+    geometryVerificationSourceIds: [
+      "official-jingan-yangcheng-yonghe-community-notice-2019",
+      "osm-yangcheng-yonghe-community-ways-2026-07-25",
+    ],
+    geometryRule: "按静安区公开材料确认的阳城贵都、浦联佳苑住宅成员，以 OSM 住宅地块边界合并为阳城可编辑成员参考；不把彭浦镇行政范围或该成员集直接等同于完整市场面。",
+    ring: [
+      [121.4184013, 31.2859692], [121.4197538, 31.2860127], [121.4232545, 31.2862354], [121.4234491, 31.2865275], [121.4232292, 31.2881942], [121.4193982, 31.2879434], [121.4186349, 31.287894], [121.4183318, 31.2862844], [121.4184013, 31.2859692],
+    ],
+  },
+  {
+    id: "sector_yonghe",
+    name: "永和",
+    labelPoint: [121.424, 31.294],
+    scopeVersion: "jingan-yonghe-community-member-reference-2026-07",
+    confidence: "medium",
+    proxyType: "community_member_reference_proxy",
+    definitionSourceIds: ["official-jingan-yangcheng-yonghe-community-notice-2019"],
+    geometryVerificationSourceIds: [
+      "official-jingan-yangcheng-yonghe-community-notice-2019",
+      "osm-yangcheng-yonghe-community-ways-2026-07-25",
+    ],
+    geometryRule: "按静安区公开材料中的永和二村、永和东村、永和家园成员，用 OSM 住宅地块和相邻公共道路形成可编辑成员参考；该范围仍须与阳城、彭浦及共康联合裁切。",
+    ring: [
+      [121.4191963, 31.2919885], [121.4215241, 31.2915946], [121.4247119, 31.2922535], [121.4270079, 31.2926723], [121.4285233, 31.2926849], [121.4282012, 31.2948927], [121.4266757, 31.2955497], [121.4240482, 31.2951279], [121.4231703, 31.2922408], [121.4191963, 31.2919885],
+    ],
+  },
+  {
+    id: "sector_pengpu",
+    name: "彭浦",
+    labelPoint: [121.44, 31.314],
+    scopeVersion: "jingan-pengpu-xincun-admin-core-reference-2026-07",
+    confidence: "medium",
+    proxyType: "administrative_reference_proxy",
+    definitionSourceIds: ["official-jingan-pengpu-xincun-profile-2016"],
+    geometryVerificationSourceIds: ["official-jingan-pengpu-xincun-profile-2016", "osm-pengpu-xincun-relation-14186008-2026-07-25"],
+    geometryRule: "以静安区公开四至说明和 OSM 彭浦新村街道 relation 14186008 为行政核心代理；卖方彭浦市场可能越过行政东界，因此仍须与阳城、永和、共康和大宁联合裁切。",
+    ring: [[121.4278641,31.320636],[121.4298869,31.3143246],[121.4309835,31.3112067],[121.4310264,31.3081177],[121.4310157,31.306926],[121.4312625,31.3059635],[121.4325285,31.3063118],[121.4349103,31.3068252],[121.4368629,31.3069718],[121.4429569,31.3075768],[121.4440727,31.3076318],[121.4442015,31.3042585],[121.4470553,31.3047718],[121.447463,31.3049093],[121.4501452,31.3053493],[121.4500058,31.3059818],[121.4497375,31.3062202],[121.4495337,31.3064218],[121.4498556,31.3067427],[121.4498448,31.3073568],[121.450789,31.3074027],[121.4507031,31.3153315],[121.4513147,31.3186311],[121.4511767,31.3219314],[121.4507564,31.321645],[121.4487179,31.3202611],[121.4483317,31.3200686],[121.4435145,31.3188404],[121.4432999,31.3187763],[121.4429136,31.3196653],[121.4418541,31.322097],[121.4409902,31.321865],[121.4400208,31.321785],[121.4322277,31.3214938],[121.4319491,31.3226547],[121.4290497,31.322657],[121.4289987,31.3223797],[121.4286686,31.3205232],[121.4280546,31.3206063],[121.4278641,31.320636]],
+  },
 ];
 
 function counterClockwiseRing(ring) {

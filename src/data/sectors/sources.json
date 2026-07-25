@@ -1296,6 +1296,50 @@
       "licenseStatus": "ODbL-1.0",
       "allowedUse": "geometry_with_attribution_and_odbl_compliance",
       "note": "OSM API 0.6 relation/6262917/full 于 2026-07-25 提取；relation version 2，timestamp 2017-04-17T16:14:18Z，坐标为 WGS84。"
+    },
+    {
+      "id": "official-jingan-yangcheng-yonghe-community-notice-2019",
+      "title": "阳城、永和相关文明小区公示",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/zmhd/007008/007008001/20190104/9e5bfd22-28f0-4d15-9cc0-fb2bfb70ead1.html",
+      "publishedAt": "2019-01-04",
+      "sourceType": "official_community_member_list",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于确认阳城贵都、浦联佳苑、永和二村、永和东村、永和家园等住宅成员；不公布市场边界。"
+    },
+    {
+      "id": "osm-yangcheng-yonghe-community-ways-2026-07-25",
+      "title": "OpenStreetMap 阳城、永和住宅成员地块",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/way/1368629655",
+      "publishedAt": "2026-07-25",
+      "sourceType": "open_geometry_way",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "OSM API 0.6 于 2026-07-25 提取：阳城贵都 way/1368629655 v1；浦联佳苑 way/1431631202 v1；永和二村 way/1431631208 v1；永和东村 way/1431631205 v1；永和家园 way/1431631215 v1。坐标 WGS84。"
+    },
+    {
+      "id": "official-jingan-pengpu-xincun-profile-2016",
+      "title": "彭浦新村街道介绍",
+      "publisher": "上海市静安区人民政府",
+      "url": "https://www.jingan.gov.cn/jagl/006001/006001005/006001005002/20160425/7751cb83-debb-4699-a4c2-cce39dd513a4.html",
+      "publishedAt": "2016-04-25",
+      "sourceType": "official_subdistrict_profile",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于核验彭浦新村街道行政四至和行政核心语境；不等同楼市板块边界。"
+    },
+    {
+      "id": "osm-pengpu-xincun-relation-14186008-2026-07-25",
+      "title": "OpenStreetMap 彭浦新村街道 relation 14186008",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/relation/14186008",
+      "publishedAt": "2026-07-25",
+      "sourceType": "open_geometry_relation",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "OSM API 0.6 relation/14186008/full 于 2026-07-25 提取；使用同日固定 relation 几何，WGS84。"
     }
   ]
 }

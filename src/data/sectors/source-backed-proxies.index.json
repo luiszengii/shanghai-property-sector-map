@@ -40,6 +40,30 @@
         31.32
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_yangcheng",
+      "labelPoint": [
+        121.421,
+        31.287
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_yonghe",
+      "labelPoint": [
+        121.424,
+        31.294
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_pengpu",
+      "labelPoint": [
+        121.44,
+        31.314
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }
