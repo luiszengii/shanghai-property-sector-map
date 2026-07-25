@@ -1,0 +1,80 @@
+/* Hallmark · genre: modern-minimal · macrostructure family: Workbench / Long Document
+ * theme: custom · vibe: "industrial precision, cartographic, technical"
+ * paper: oklch(98.2% 0.008 175) · accent: oklch(50% 0.11 174)
+ * display: Geist Mono · body: Geist · axes: light / mono / chromatic-green
+ * designed-as-app · studied: no · context: explicit · v1.1.0
+ * pre-emit critique: P4 H4 E4 S5 R5 V4
+ */
+
+:root {
+  --color-paper: oklch(98.2% 0.008 175);
+  --color-paper-2: oklch(95.4% 0.011 175);
+  --color-paper-3: oklch(91.8% 0.014 175);
+  --color-ink: oklch(20% 0.018 175);
+  --color-ink-2: oklch(34% 0.018 175);
+  --color-muted: oklch(48% 0.014 175);
+  --color-neutral: oklch(57% 0.012 175);
+  --color-rule: oklch(79% 0.014 175);
+  --color-rule-2: oklch(89% 0.012 175);
+  --color-accent: oklch(50% 0.11 174);
+  --color-accent-strong: oklch(40% 0.09 174);
+  --color-accent-soft: oklch(93% 0.025 174);
+  --color-accent-ink: oklch(98.2% 0.008 175);
+  --color-focus: oklch(56% 0.17 174);
+  --color-project: oklch(62% 0.16 52);
+  --color-project-soft: oklch(94% 0.035 52);
+  --color-warning: oklch(60% 0.13 58);
+  --color-warning-soft: oklch(96% 0.025 58);
+  --color-danger: oklch(52% 0.16 28);
+  --color-danger-soft: oklch(96% 0.025 28);
+  --color-success: oklch(47% 0.1 155);
+  --color-success-soft: oklch(95% 0.025 155);
+  --color-overlay: oklch(18% 0.018 175 / 0.48);
+  --color-shadow: oklch(20% 0.018 175 / 0.12);
+
+  --font-display: var(--font-geist-mono), ui-monospace, monospace;
+  --font-body: var(--font-geist-sans), "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-outlier: var(--font-geist-mono), ui-monospace, monospace;
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+  --text-2xl: 2.4414rem;
+  --text-3xl: 3.0518rem;
+  --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  --rule-hairline: 1px solid var(--color-rule-2);
+  --rule-strong: 1px solid var(--color-rule);
+  --radius-control: 0.375rem;
+  --radius-panel: 0.5rem;
+  --radius-round: 999px;
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}

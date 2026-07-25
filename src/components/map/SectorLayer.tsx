@@ -288,8 +288,8 @@ export function SectorLayer({
         adminReferences.map((feature) => [feature.properties.id, feature]),
       );
       researchGeometries = [...reviewedCandidates, ...adminReferences];
-      const reviewedCandidateCenters = reviewedCandidates.map((feature) => ({
-        id: feature.properties.id,
+      const researchLabelCenters = researchGeometries.map((feature) => ({
+        key: `${feature.properties.status}:${feature.properties.id}`,
         center: feature.properties.labelPoint,
       }));
       candidateOnlyReviewedCandidates.forEach((candidate) => {
@@ -305,14 +305,14 @@ export function SectorLayer({
         ),
       ]));
 
-      const displayLabelById = new Map<string, AMap.LngLat>();
+      const displayLabelByGeometryKey = new Map<string, AMap.LngLat>();
       try {
         const displayLabelPositions = await wgs84PointsToDisplayPositions(
           amapApi,
-          reviewedCandidateCenters.map((item) => item.center),
+          researchLabelCenters.map((item) => item.center),
         );
-        reviewedCandidateCenters.forEach((item, index) => {
-          displayLabelById.set(item.id, displayLabelPositions[index]);
+        researchLabelCenters.forEach((item, index) => {
+          displayLabelByGeometryKey.set(item.key, displayLabelPositions[index]);
         });
       } catch (error) {
         if (cancelled) return;
@@ -339,7 +339,9 @@ export function SectorLayer({
             marketOverlay.geometryKind = geometryKind;
             marketOverlay.polygon.setPath(path);
             polygonGroup.addOverlay(marketOverlay.polygon);
-            const displayLabel = displayLabelById.get(id);
+            const displayLabel = displayLabelByGeometryKey.get(
+              `${reviewedCandidate.properties.status}:${id}`,
+            );
             if (displayLabel) marketOverlay.label?.setPosition(displayLabel.toArray());
             marketOverlay.label?.setStyle(labelStyle(geometryKind));
             applyOverlayStyle(
@@ -348,16 +350,32 @@ export function SectorLayer({
               selectedSectorIdRef.current === id,
             );
           } else {
+            if (!adminReference) continue;
             const polygon = new amapApi.Polygon();
             polygon.setOptions({ path, cursor: "pointer" });
+            const displayLabel = displayLabelByGeometryKey.get(
+              `${adminReference.properties.status}:${id}`,
+            );
+            const label = new amapApi.Text({
+              text: marketOverlay.sector.properties.name,
+              position: displayLabel?.toArray() ?? marketOverlay.sector.properties.center,
+              anchor: "center",
+              zIndex: 24,
+              clickable: false,
+              style: labelStyle("administrative-reference"),
+            });
             const administrativeOverlay: SectorOverlay = {
               polygon,
-              label: null,
+              label,
               baseColor: "#60a5fa",
               sector: marketOverlay.sector,
               geometryKind,
               hiddenLegacyDemo: false,
-              labelMounted: false,
+              labelMounted: shouldMountSectorLabel({
+                mode: labelModeRef.current,
+                zoom: zoomRef.current,
+                minZoom: labelMinZoomRef.current,
+              }),
               hoverLeaveTimer: null,
             };
             applyOverlayStyle(
@@ -366,7 +384,7 @@ export function SectorLayer({
               selectedSectorIdRef.current === id,
             );
             bindOverlayInteractions(administrativeOverlay);
-            map.add(polygon);
+            map.add(administrativeOverlay.labelMounted ? [polygon, label] : polygon);
             polygonGroup.addOverlay(polygon);
             overlays.push(administrativeOverlay);
           }
@@ -412,7 +430,9 @@ export function SectorLayer({
           polygon.setOptions({ path, cursor: "pointer" });
           const label = new amapApi.Text({
             text: sector.properties.name,
-            position: displayLabelById.get(id)?.toArray()
+            position: displayLabelByGeometryKey.get(
+              `${reviewedCandidate.properties.status}:${id}`,
+            )?.toArray()
               ?? sector.properties.center,
             anchor: "center",
             zIndex: 25,

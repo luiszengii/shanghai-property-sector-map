@@ -4,6 +4,7 @@
   "outputCrs": "OGC:CRS84",
   "sourceLock": "data/geo/sources/osm-shanghai-260721.json",
   "batchFiles": [
+    "data/geo/reviewed-candidate-batches/central-user-boundaries-2026-07.json",
     "data/geo/reviewed-candidate-batches/qingpu-songjiang-jinshan-thirty-2026-07.json",
     "data/geo/reviewed-candidate-batches/xuhui-twelve-admin-aligned-2026-07.json",
     "data/geo/reviewed-candidate-batches/jingan-putuo-eleven-direct-admin-aligned-2026-07.json",
@@ -11,7 +12,6 @@
     "data/geo/reviewed-candidate-batches/hongkou-yangpu-two-evidence-backed-admin-proxies-2026-07.json",
     "data/geo/reviewed-candidate-batches/changning-four-direct-admin-aligned-2026-07.json",
     "data/geo/reviewed-candidate-batches/changning-gubei-hongqiao-mutually-exclusive-2026-07.json",
-    "data/geo/reviewed-candidate-batches/changning-zhongshan-park-core-2026-07.json",
     "data/geo/reviewed-candidate-batches/putuo-zhongyuan-liangwancheng-ganquan-yichuan-pair-2026-07.json",
     "data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json",
     "data/geo/reviewed-candidate-batches/jiading-eight-direct-admin-proxies-2026-07.json",
@@ -54,6 +54,12 @@
       "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
       "sourceGeojson": "data/geo/workpacks/pudong-north-repartition/candidate.wgs84.geojson",
       "sourceGeojsonSha256": "6835aab8dfd743063b1b270e268b1b6fc33933e04fadf0bba2cddbcae66a815d"
+    },
+    "central-user-boundaries-selected-v1": {
+      "expectedWorkpackId": "central-user-boundaries",
+      "expectedGeometrySourceSnapshotId": "osm-geofabrik-shanghai-260721",
+      "sourceGeojson": "data/geo/workpacks/central-user-boundaries/candidate.wgs84.geojson",
+      "sourceGeojsonSha256": "0dab17d18a23e6df2f80943afe902c6346fde70fffe5b0370ff6dd9b443e80ba"
     }
   },
   "topologyGroups": [

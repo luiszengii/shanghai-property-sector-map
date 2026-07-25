@@ -1,19 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "batchId": "changning-four-direct-admin-aligned-2026-07",
-  "topologyGroups": [
-    {
-      "snapDistanceMeters": 0.1,
-      "prioritySectorIds": [
-        "sector_xinhualu",
-        "sector_tianshan",
-        "sector_xianxia"
-      ],
-      "roundOutputCoordinatesDigits": 7,
-      "canonicalizeAfterProtectedSubtraction": true,
-      "roundAfterProtectedSubtraction": false
-    }
-  ],
+  "topologyGroups": [],
   "sectors": [
     {
       "id": "sector_xinhualu",
@@ -43,13 +31,14 @@
       "osmAdminRelationId": "13469232",
       "expectedOsmName": "天山路街道",
       "insidePoint": [121.4040717, 31.2096186],
-      "sharedEdgeSectorIds": ["sector_xinhualu", "sector_xianxia"],
+      "sharedEdgeSectorIds": ["sector_xinhualu", "sector_xianxia", "sector_zhongshangongyuan"],
+      "subtractSectorIds": ["sector_zhongshangongyuan"],
       "sharedEdgeSnapDistanceMeters": 0.1,
       "preserveTopologyPrecision": true,
-      "areaRangeSquareKilometers": [1.7, 2.1],
+      "areaRangeSquareKilometers": [1.65, 1.85],
       "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025", "official-changning-admin-divisions-2025"],
       "geometryVerificationSourceIds": ["official-tianditu-shanghai-standard-maps-2025", "osm-geofabrik-shanghai-260721"],
-      "geometryRule": "市场天山暂以同名天山路街道固定行政关系作为低置信、可编辑骨架；虹桥—古北商圈等跨街道功能语义不用于改写本轮外框，沿线完整小区归属仍待人工精修。"
+      "geometryRule": "市场天山暂以同名天山路街道固定行政关系作为低置信、可编辑骨架，并扣除用户裁定中山公园四至覆盖的约 0.186 平方公里；虹桥—古北商圈等跨街道功能语义不用于改写本轮外框，沿线完整小区归属仍待人工精修。"
     },
     {
       "id": "sector_xianxia",

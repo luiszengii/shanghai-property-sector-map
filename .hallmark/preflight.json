@@ -1,0 +1,9 @@
+{
+  "scannedAt": "2026-07-25",
+  "framework": "Next.js 16 app router",
+  "fontStack": ["Geist", "Geist Mono"],
+  "palette": "existing mineral teal anchor with cool neutrals",
+  "motion": "motion-cut; no motion library",
+  "spacing": "existing compact app scale, normalized to a named 4-point scale",
+  "preserve": ["font stack", "teal brand anchor", "map interaction behavior", "route ownership"]
+}

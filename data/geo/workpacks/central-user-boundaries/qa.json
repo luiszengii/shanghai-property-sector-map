@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "workpackId": "central-user-boundaries",
+  "generatedAt": "2026-07-25",
+  "workingCrs": "EPSG:32651",
+  "outputCrs": "OGC:CRS84",
+  "sourceSnapshotId": "osm-geofabrik-shanghai-260721",
+  "sourceGeoPackageSha256": "3a45dcc2173cc1e67471e0190564b7f6c19b3655697d0eff830bda48e2dcbba1",
+  "commercialGeometryCopied": false,
+  "areasSquareKilometers": {
+    "sector_zhongshangongyuan": 3.3562,
+    "sector_zhenning_road": 0.8228,
+    "sector_wuning": 3.1204
+  },
+  "overlapSquareMeters": {
+    "sector_zhongshangongyuan/sector_zhenning_road": 0.0,
+    "sector_zhongshangongyuan/sector_wuning": 0.05,
+    "sector_zhenning_road/sector_wuning": 0.0
+  },
+  "validGeometry": true
+}

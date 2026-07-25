@@ -226,6 +226,27 @@
       ]
     },
     {
+      "id": "sector_zhongshangongyuan",
+      "labelPoint": [
+        121.416662,
+        31.219216
+      ]
+    },
+    {
+      "id": "sector_zhenning_road",
+      "labelPoint": [
+        121.428922,
+        31.2221519
+      ]
+    },
+    {
+      "id": "sector_wuning",
+      "labelPoint": [
+        121.4180041,
+        31.2403419
+      ]
+    },
+    {
       "id": "sector_huaxin",
       "labelPoint": [
         121.2277658,
@@ -669,8 +690,8 @@
     {
       "id": "sector_tianshan",
       "labelPoint": [
-        121.4040717,
-        31.2096186
+        121.4018938,
+        31.2116437
       ]
     },
     {
@@ -699,13 +720,6 @@
       "labelPoint": [
         121.4079162,
         31.2003651
-      ]
-    },
-    {
-      "id": "sector_zhongshangongyuan",
-      "labelPoint": [
-        121.4135355,
-        31.2214273
       ]
     },
     {
