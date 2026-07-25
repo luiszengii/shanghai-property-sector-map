@@ -17,6 +17,7 @@ button { color: inherit; }
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid rgba(14, 165, 164, .28); outline-offset: 2px; }
 
 .app-shell { position: relative; width: 100vw; height: 100dvh; isolation: isolate; overflow: hidden; }
+body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .map-stage, .amap-host, .map-fallback { position: absolute; inset: 0; }
 .amap-host { z-index: 0; background: #dbe6e4; touch-action: none; overscroll-behavior: contain; }
 .map-zoom-controls { position: absolute; z-index: 170; top: 98px; right: 16px; display: grid; overflow: hidden; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.95); border-radius: 12px; box-shadow: 0 10px 28px rgba(15,23,42,.16); backdrop-filter: blur(14px); }
@@ -50,8 +51,14 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .data-button { height: 42px; display: inline-flex; align-items: center; gap: 7px; padding: 0 13px; color: #334155; background: #fff; border: 1px solid var(--line); border-radius: 11px; cursor: pointer; transition: .18s; }
 .data-button:hover { color: #0f766e; border-color: rgba(15,118,110,.3); transform: translateY(-1px); }
 .header-actions { display: flex; align-items: center; gap: 8px; }
+.immersive-button { height: 42px; display: inline-flex; align-items: center; gap: 7px; padding: 0 13px; color: #0f5f58; background: #eef8f6; border: 1px solid rgba(15,118,110,.14); border-radius: 11px; cursor: pointer; transition: .18s; }
+.immersive-button:hover { color: #fff; background: #0f766e; border-color: #0f766e; transform: translateY(-1px); }
 .insight-button { height: 42px; display: inline-flex; align-items: center; gap: 7px; padding: 0 13px; color: #fff; background: linear-gradient(135deg, #0f766e, #0d9488); border: 0; border-radius: 11px; box-shadow: 0 8px 18px rgba(15,118,110,.2); cursor: pointer; transition: .18s; }
 .insight-button:hover { transform: translateY(-1px); box-shadow: 0 11px 23px rgba(15,118,110,.27); }
+.immersive-exit { position: absolute; z-index: 400; top: 16px; right: 16px; min-height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 13px; color: #f8fafc; background: rgba(15,23,42,.74); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; box-shadow: 0 10px 28px rgba(15,23,42,.22); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); cursor: pointer; transition: opacity .18s, background .18s, transform .18s; }
+.immersive-exit:hover { background: rgba(15,23,42,.9); transform: translateY(-1px); }
+.immersive-exit span { font-size: 12px; font-weight: 750; }
+.immersive-exit kbd { padding: 3px 5px; color: rgba(248,250,252,.72); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.13); border-radius: 5px; font: 600 9px var(--font-geist-mono), monospace; }
 
 .desktop-filters { position: absolute; z-index: 200; top: 98px; left: 16px; width: 292px; max-height: calc(100dvh - 118px); }
 .filter-panel { max-height: inherit; padding: 18px; overflow: auto; border-radius: 18px; scrollbar-width: thin; }
@@ -308,8 +315,9 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .brand-block > div:last-child { display: none; }
   .search-form { height: 38px; padding-left: 10px; border-radius: 10px; }
   .search-form input { font-size: 13px; }
-  .data-button, .insight-button { width: 38px; height: 38px; justify-content: center; padding: 0; border-radius: 10px; }
-  .data-button span, .insight-button span, .desktop-filters { display: none; }
+  .data-button, .insight-button, .immersive-button { width: 38px; height: 38px; justify-content: center; padding: 0; border-radius: 10px; }
+  .data-button span, .insight-button span, .immersive-button span, .desktop-filters { display: none; }
+  .immersive-exit { top: 9px; right: 9px; }
   .detail-card { right: 8px; bottom: 75px; width: calc(100vw - 16px); max-height: min(55dvh, 460px); overflow: auto; padding: 18px; border-radius: 19px; }
   .detail-card h2 { font-size: 19px; }
   .project-opinion-grid { grid-template-columns: 1fr; }

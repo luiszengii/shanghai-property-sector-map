@@ -17,7 +17,7 @@ const places = placesData as Place[];
 
 type LoadStatus = "loading" | "ready" | "missing-key" | "error";
 
-export function MapContainer() {
+export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<AMap.Map | null>(null);
   const [amapApi, setAmapApi] = useState<typeof AMap | null>(null);
@@ -258,7 +258,7 @@ export function MapContainer() {
         }
       `}</style>
       <div ref={containerRef} className="amap-host" />
-      {status === "ready" && (
+      {status === "ready" && !immersive && (
         <div className="map-zoom-controls" role="group" aria-label="地图缩放控制">
           <button type="button" onClick={() => changeZoom(1)} aria-label="放大地图" title="放大地图">
             <Plus size={19} />
@@ -324,12 +324,12 @@ export function MapContainer() {
               onSelect={handleSnapshotSectorSelect}
             />
           )}
-          <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />
+          {!immersive && <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />}
           <ProjectLayer
             amapApi={amapApi}
             map={mapInstance}
             zoom={zoom}
-            visible={showProjects}
+            visible={immersive || showProjects}
             clusterEnabled={projectClusterEnabled}
             clusterRadius={projectClusterRadius}
             detailMinZoom={projectDetailMinZoom}
