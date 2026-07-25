@@ -80,6 +80,14 @@
         31.215
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_dinghai_road",
+      "labelPoint": [
+        121.553,
+        31.285
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }

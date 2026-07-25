@@ -1340,6 +1340,17 @@
       "licenseStatus": "ODbL-1.0",
       "allowedUse": "geometry_with_attribution_and_odbl_compliance",
       "note": "OSM API 0.6 relation/14186008/full 于 2026-07-25 提取；使用同日固定 relation 几何，WGS84。"
+    },
+    {
+      "id": "official-yangpu-dinghai-road-subdistrict-profile-2018",
+      "title": "定海路街道概况",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/shypq/sqld-sqjs/20180103/53419.html",
+      "publishedAt": "2018-01-03",
+      "sourceType": "official_subdistrict_profile",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于定海路街道行政四至参考，不等同楼市板块。"
     }
   ]
 }

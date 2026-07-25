@@ -1036,6 +1036,98 @@
           ]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "sector_dinghai_road",
+        "name": "定海路",
+        "labelPoint": [
+          121.553,
+          31.285
+        ],
+        "scopeVersion": "yangpu-dinghai-road-admin-reference-2026-07",
+        "confidence": "medium",
+        "proxyType": "administrative_reference_proxy",
+        "definitionSourceIds": [
+          "official-yangpu-dinghai-road-subdistrict-profile-2018"
+        ],
+        "geometryVerificationSourceIds": [
+          "official-yangpu-dinghai-road-subdistrict-profile-2018",
+          "osm-geofabrik-shanghai-260721"
+        ],
+        "geometryRule": "以官方定海路街道四至说明和 OSM relation 13466400 v12（2026-03-09）生成行政参考代理；复兴岛产业空间及东外滩组成部分需在与东外滩联合编辑时继续扣除。",
+        "status": "source-backed-proxy",
+        "coordinateSystem": "WGS84",
+        "method": "official_text_four_sides_osm_road_proxy"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              121.5362109,
+              31.2743104
+            ],
+            [
+              121.5440162,
+              31.2673559
+            ],
+            [
+              121.5454514,
+              31.2684618
+            ],
+            [
+              121.5501162,
+              31.2636017
+            ],
+            [
+              121.562259,
+              31.2749544
+            ],
+            [
+              121.5643049,
+              31.2789793
+            ],
+            [
+              121.5647584,
+              31.2862884
+            ],
+            [
+              121.5574946,
+              31.3055415
+            ],
+            [
+              121.5540036,
+              31.3055053
+            ],
+            [
+              121.5546834,
+              31.2928588
+            ],
+            [
+              121.5497532,
+              31.2911365
+            ],
+            [
+              121.5513517,
+              31.2889665
+            ],
+            [
+              121.5366371,
+              31.2800321
+            ],
+            [
+              121.5393438,
+              31.2764346
+            ],
+            [
+              121.5362109,
+              31.2743104
+            ]
+          ]
+        ]
+      }
     }
   ]
 }
