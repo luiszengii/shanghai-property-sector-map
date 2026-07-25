@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "minhang-pujiang-verified-admin-proxy-2026-07",
+  "topologyGroups": [],
+  "sectors": [{
+    "id":"sector_pujiangzhen", "canonicalName":"浦江镇", "districtName":"闵行区", "scopeVersion":"minhang-current-town-admin-proxy-2026-07", "confidence":"low", "method":"market_admin_candidate_with_shared_topology",
+    "osmAdminRelationId":"14187979", "expectedOsmName":"浦江镇", "adminProxyName":"浦江镇", "adminBoundaryVersion":"2022-12-or-later", "insidePoint":[121.5133237,31.0566695],
+    "sharedEdgeSectorIds":["sector_sanlin","sector_kangqiao","sector_zhoupu","sector_hangtou","sector_fengxianjinhui"], "snapDependencySectorIds":["sector_sanlin","sector_kangqiao","sector_zhoupu","sector_hangtou","sector_fengxianjinhui"], "sharedEdgeSnapDistanceMeters":1,
+    "requiredAdjacencyReviewIds":["unresolved_pujiang_residential_core"], "preserveTopologyPrecision":true, "preserveMultiPolygonSemantics":true, "marketAdminAlignmentUnverified":true, "areaRangeSquareKilometers":[76,82],
+    "riskFlags":["overwide_admin_proxy","mixed_rural_industrial_residential","market_boundary_not_official"],
+    "definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap","official-minhang-current-admin-units-2026"], "geometryVerificationSourceIds":["official-minhang-current-admin-units-2026","official-tianditu-shanghai-standard-maps-2025","osm-geofabrik-shanghai-260721"],
+    "geometryRule":"市场浦江镇暂以现行浦江镇固定 OSM relation 作为低置信、可编辑行政代理。与三林、康桥、周浦、航头、奉贤金汇的固定边界已按同一快照共享并吸附；镇域包含乡村、产业和非连续住宅，不能表述为精确卖方浦江边界。"
+  }],
+  "subscopes": []
+}

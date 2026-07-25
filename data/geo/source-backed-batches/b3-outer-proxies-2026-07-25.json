@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "b3-outer-proxies-2026-07-25",
+  "notice": "B 级行政或公开项目核心参考代理，不等同楼市市场定稿。",
+  "sources": [
+    {
+      "id": "official-jiading-old-city-profile-2024",
+      "title": "嘉定镇街道关于嘉定老城区的会办意见",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://www.jiading.gov.cn/publicity/jggk/dbjyhzxta/bljggk/181933",
+      "sourceType": "official_subdistrict_profile",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only"
+    },
+    {
+      "id": "official-songjiang-university-town-communities-2023",
+      "title": "广富林街道居委会四至和管理范围调整通知",
+      "publisher": "上海市松江区人民政府",
+      "url": "https://www.songjiang.gov.cn/govxxgk/SHSJ70/2023-04-28/4a824af6-0291-4fa4-bae4-2525a08bd347.html",
+      "sourceType": "official_community_boundary_notice",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only"
+    },
+    {
+      "id": "official-chongming-chengqiao-new-city-plan-2019",
+      "title": "城桥新城总体规划（2010—2020）",
+      "publisher": "上海市崇明区人民政府",
+      "url": "https://shcm.gov.cn/govxxgk/qghzyj/2019-09-23/aebe9c18-3fb1-45b3-ad64-5f8ac4d2291d.html",
+      "sourceType": "official_new_city_plan",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only"
+    },
+    {
+      "id": "osm-b3-outer-relations-2026-07-25",
+      "title": "OpenStreetMap 嘉定镇、广富林及城桥新城开放几何",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "sourceType": "open_geometry_objects",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "2026-07-25 提取：嘉定镇街道 relation/17000644 v2；广富林街道 relation/16202387 v8；城桥新城 way/413843891 v1；WGS84。"
+    }
+  ],
+  "features": [
+    {
+      "id": "sector_jiading_old_city",
+      "name": "嘉定老城",
+      "labelPoint": [121.243, 31.384],
+      "scopeVersion": "jiading-old-city-admin-core-reference-2026-07",
+      "confidence": "medium",
+      "proxyType": "administrative_reference_proxy",
+      "definitionSourceIds": ["official-jiading-old-city-profile-2024"],
+      "geometryVerificationSourceIds": ["official-jiading-old-city-profile-2024", "osm-b3-outer-relations-2026-07-25"],
+      "geometryRule": "以官方确认的嘉定老城区语境和嘉定镇街道 relation 17000644 作为强行政核心代理；后续与菊园、新成路、嘉定新城共同裁边。",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[121.228352,31.373717],[121.230994,31.37201],[121.253647,31.379255],[121.255881,31.384616],[121.255684,31.389505],[121.251511,31.394027],[121.24513,31.395114],[121.239237,31.393085],[121.235539,31.38217],[121.229245,31.377143],[121.228352,31.373717]]]
+      }
+    },
+    {
+      "id": "sector_songjiang_university_town",
+      "name": "松江大学城",
+      "labelPoint": [121.199, 31.057],
+      "scopeVersion": "songjiang-university-town-guangfulin-admin-reference-2026-07",
+      "confidence": "medium",
+      "proxyType": "administrative_reference_proxy",
+      "definitionSourceIds": ["official-songjiang-university-town-communities-2023"],
+      "geometryVerificationSourceIds": ["official-songjiang-university-town-communities-2023", "osm-b3-outer-relations-2026-07-25"],
+      "geometryRule": "以官方社区四至通知定位大学城社区成员，以广富林街道 relation 16202387 作为可编辑最大行政包络；校园与非住宅范围需继续排除。",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[121.1656295,31.0698204],[121.1677355,31.0469782],[121.1722432,31.0425371],[121.1891858,31.0453788],[121.235702,31.0450641],[121.2329967,31.0711104],[121.1736598,31.07166],[121.1656295,31.0698204]]]
+      }
+    },
+    {
+      "id": "sector_chongming_new_city",
+      "name": "崇明新城",
+      "labelPoint": [121.437, 31.632],
+      "scopeVersion": "chongming-new-city-open-core-reference-2026-07",
+      "confidence": "medium",
+      "proxyType": "core_reference_proxy",
+      "definitionSourceIds": ["official-chongming-chengqiao-new-city-plan-2019"],
+      "geometryVerificationSourceIds": ["official-chongming-chengqiao-new-city-plan-2019", "osm-b3-outer-relations-2026-07-25"],
+      "geometryRule": "官方总规确认城桥新城由西、中、东区及工业园构成；当前仅以 OSM 同名城桥新城公开面作为可编辑核心锚点，未把城桥镇全域或工业园静默并入住宅市场。",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[121.4340642,31.6308874],[121.436586,31.6292889],[121.4395468,31.6319768],[121.4364179,31.6337979],[121.4340642,31.6308874]]]
+      }
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "schemaVersion": "1.0.0",
+  "batchId": "a7-planning-proxies-2026-07-25",
+  "coordinateSystem": "WGS84",
+  "status": "integration-ready",
+  "notice": "A 级规划/功能范围参考代理。边界只使用官方文字范围与固定版本 OSM 开放几何重建；未描摹规划附图，也未使用商业平台 polygon。规划或行政范围不等同于楼市板块定稿。",
+  "features": [
+    {
+      "id": "sector_xijiao",
+      "name": "西郊",
+      "labelPoint": [121.356, 31.207],
+      "proxyType": "core_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-changning-xijiao-park-city-2024",
+        "title": "上海市长宁区公园城市规划（2024—2035年）",
+        "publisher": "上海市长宁区人民政府",
+        "publishedAt": "2024",
+        "url": "https://zwgk.shcn.gov.cn/xxgk/zdxzjc-2024/2024/92/72630/733d05ebd722401ba49e609c2939df0f.pdf",
+        "sourceType": "official_planning_document",
+        "evidence": "正文确认西郊样板区位于新泾镇与北新泾街道、面积约2.55平方公里，并列出外环绿道片区、新泾港蓝轴、中新泾公园和新泾公园等组成。",
+        "limitation": "正文没有闭合四至；本面只以天山西路、金浜路、新泾港及外环高速/绿道形成约2.55平方公里的道路水系核心，不声称复原规划附图。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["road.name=天山西路", "road.name=金浜路", "waterway.name=新泾港", "road.ref=S20"],
+        "representativeObjectIds": ["way/69547513", "way/45656598", "way/44136471"],
+        "geometryProcessing": "使用固定 GPKG 快照中的道路、河道中心线交点和折点闭合；未读取或描摹 PDF 图像。"
+      },
+      "geometryRule": "以官方2.55平方公里西郊样板区组成描述为定义依据；按天山西路—新泾港—金浜路—外环高速/绿道中心线形成可编辑核心参考面。该范围偏向公园城市样板区，不等同卖方口径的完整西郊住宅板块。",
+      "ring": [
+        [121.351797, 31.200383],
+        [121.3545, 31.2003],
+        [121.3577, 31.2004],
+        [121.3607457, 31.2005397],
+        [121.362, 31.204],
+        [121.365, 31.209],
+        [121.368, 31.214],
+        [121.3712398, 31.2181035],
+        [121.365, 31.2188],
+        [121.359, 31.2195],
+        [121.352, 31.2204],
+        [121.3456719, 31.2208253],
+        [121.3468, 31.215],
+        [121.3483, 31.21],
+        [121.3502, 31.205],
+        [121.351797, 31.200383]
+      ]
+    },
+    {
+      "id": "sector_waigaoqiao",
+      "name": "外高桥",
+      "labelPoint": [121.607, 31.334],
+      "proxyType": "planning_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-pudong-waigaoqiao-free-trade-zone-plan-2009",
+        "title": "上海市外高桥保税区控制性详细规划修编（草案）公示",
+        "publisher": "上海市浦东新区人民政府",
+        "publishedAt": "2009-02-24",
+        "url": "https://www.pudong.gov.cn/zwgk/azt_fzgh/2022/306/263595.html",
+        "sourceType": "official_text_four_sides",
+        "evidence": "协调范围东至港电路、浦东运河，南至五洲大道，西至杨高北路，北至威斯路，面积10.34平方公里，均计至道路或河道中心线。",
+        "limitation": "这是保税区协调/用地规划口径，含产业和港区；不是外高桥住宅市场边界。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["road.name=港电路", "waterway.name=浦东运河", "road.name=五洲大道", "road.name=杨高北路", "road.name=威斯路"],
+        "representativeObjectIds": ["way/47375547", "way/1470423810", "way/10363137", "way/10300456", "way/47375552"],
+        "geometryProcessing": "沿固定快照中的道路和运河中心线折点闭合；港电路与浦东运河之间缺失的开放线段采用相邻端点直连并显式保留为待编辑边。"
+      },
+      "geometryRule": "按官方10.34平方公里协调范围，以五洲大道—浦东运河/港电路—威斯路—杨高北路中心线闭合规划参考面；东侧开放数据未形成连续同名线的段落为待核共享边，不把产业港区静默归入住宅市场。",
+      "ring": [
+        [121.60015, 31.30605],
+        [121.61141, 31.3059],
+        [121.6333, 31.3059],
+        [121.6541053, 31.3026724],
+        [121.642, 31.32],
+        [121.625, 31.338],
+        [121.607, 31.349],
+        [121.593775, 31.363919],
+        [121.5910687, 31.360807],
+        [121.58531, 31.3688841],
+        [121.5830783, 31.365881],
+        [121.581, 31.3577],
+        [121.5832, 31.349],
+        [121.5873, 31.3421],
+        [121.5925, 31.3271],
+        [121.596, 31.3217],
+        [121.60005, 31.315],
+        [121.60015, 31.30605]
+      ]
+    },
+    {
+      "id": "sector_lingang_main_city",
+      "name": "临港主城区",
+      "labelPoint": [121.91, 30.92],
+      "proxyType": "administrative_core_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-shanghai-nanhui-new-city-action-plan-2021",
+        "title": "南汇新城“十四五”规划建设行动方案",
+        "publisher": "上海市规划和自然资源局",
+        "publishedAt": "2021-04-14",
+        "url": "https://ghzyj.sh.gov.cn/gzdt/20210416/6ea147ee40ae4e93bf54311d2b6af0f4.html",
+        "sourceType": "official_text_four_sides",
+        "evidence": "官方明确南汇新城是临港新片区主城区，四至为大治河以南，G1503—瓦洪公路—两港大道—中港以东，规划面积343.3平方公里。",
+        "limitation": "公开规划范围远大于楼市常说的滴水湖主城区；本面采用南汇新城镇行政 relation 作为可编辑核心，而不是把343.3平方公里全域直接作为住宅板块。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["relation/14180411 name=南汇新城镇"],
+        "representativeObjectIds": ["relation/14180411"],
+        "geometryProcessing": "取固定快照 relation 主外环并以0.001度拓扑保持容差简化；Geofabrik GPKG 不保留 OSM relation 版本号。"
+      },
+      "geometryRule": "官方343.3平方公里规划只用于确认临港主城区/南汇新城的上位口径；当前采用 OSM 南汇新城镇 relation 14180411 的行政核心参考面，后续须再与滴水湖、书院、泥城、产业区和滨海生态空间联合裁切。",
+      "ring": [
+        [121.7635429, 30.8661019], [121.7642956, 30.8479478], [121.7835217, 30.8486787], [121.8150887, 30.8462366], [121.8175332, 30.8458812], [121.8173173, 30.8410802], [121.8179435, 30.8410843], [121.8176699, 30.8458714], [121.8351026, 30.8452552], [121.8394405, 30.847601], [121.8482803, 30.8478247], [121.8481488, 30.8504959], [121.8875505, 30.8482001], [121.962297, 30.8770435], [121.9601534, 30.879537], [121.9629434, 30.877436], [121.9648129, 30.8785133], [121.9725671, 30.8850324], [121.9741416, 30.9212881], [121.9399595, 30.9995728], [121.9350671, 31.0023685], [121.9245744, 31.0031041], [121.9246602, 31.0049249], [121.8748569, 31.0067641], [121.886487, 30.9755118], [121.8997264, 30.974178], [121.9047904, 30.9567629], [121.9064212, 30.943734], [121.8909502, 30.9438996], [121.8902206, 30.9262305], [121.8844056, 30.9081163], [121.8784618, 30.8967011], [121.868999, 30.9042684], [121.8437862, 30.8876416], [121.8400526, 30.8916006], [121.8356752, 30.8857817], [121.8373489, 30.8804229], [121.8263411, 30.8802019], [121.8263411, 30.8734982], [121.8088102, 30.8729826], [121.809175, 30.8658364], [121.7956567, 30.8656522], [121.7948627, 30.8711961], [121.7943263, 30.8657075], [121.7745423, 30.8682124], [121.7757869, 30.872338], [121.7674398, 30.8717486], [121.7671354, 30.8774679], [121.7635429, 30.8661019]
+      ]
+    },
+    {
+      "id": "sector_ruihong_new_town",
+      "name": "瑞虹新城",
+      "labelPoint": [121.4962, 31.2652],
+      "proxyType": "core_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-hongkou-zhangjiang-ruihong-parcel-2023",
+        "title": "张江高新区虹口园四至边界范围",
+        "publisher": "上海市虹口区人民政府",
+        "publishedAt": "2023-07-28",
+        "url": "https://www.shhk.gov.cn/xwzx/002008/002008040/20230728/5dee74ee-c47e-4c93-9ed6-bc95187e2af3.html",
+        "sourceType": "official_text_four_sides",
+        "evidence": "官方逐地块边界清单明确“瑞虹地块：天虹路—瑞虹路—虹关路—虹镇老街—飞虹路”。",
+        "limitation": "该四至定义的是张江虹口园瑞虹地块，虽与瑞虹社区高度重合，仍不是全部楼市瑞虹新城的法定边界。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["road.name=天虹路", "road.name=瑞虹路", "road.name=虹关路", "road.name=虹镇老街", "road.name=飞虹路"],
+        "representativeObjectIds": ["way/24465651", "way/24446738", "way/71756390", "way/24577049", "way/144501615"],
+        "geometryProcessing": "按五条道路在固定快照中的共同节点及中心线折点闭合。"
+      },
+      "geometryRule": "严格按官方“天虹路—瑞虹路—虹关路—虹镇老街—飞虹路”顺序复用 OSM 道路中心线节点闭合瑞虹核心参考面；与临平路、北外滩和嘉兴路街道其余部分仍需联合裁切。",
+      "ring": [
+        [121.4966036, 31.2633168], [121.4971399, 31.2641093], [121.497339, 31.2645285], [121.49771, 31.2655872], [121.4979905, 31.2665314], [121.496461, 31.2669215], [121.4954642, 31.2671683], [121.4949709, 31.2660628], [121.4944817, 31.2650599], [121.4956128, 31.2641668], [121.4961869, 31.2636773], [121.4966036, 31.2633168]
+      ]
+    },
+    {
+      "id": "sector_jiading_new_city",
+      "name": "嘉定新城",
+      "labelPoint": [121.281, 31.351],
+      "proxyType": "core_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-shanghai-jiading-new-city-green-core-2025",
+        "title": "嘉定新城绿色生态城区规划建设实施方案",
+        "publisher": "上海市住房和城乡建设管理委员会等",
+        "publishedAt": "2025",
+        "url": "https://www.shanghai.gov.cn/cmsres/f0/f04f2063ea60454c8783a82f7a0ed728/6dc5fa092c6b322e50695822b6fa0b58.pdf",
+        "sourceType": "official_text_four_sides",
+        "evidence": "正文给出领先示范区东至浏翔公路、南至思义路、西至沪嘉高速、北至上海绕城高速，面积约12.5平方公里。",
+        "limitation": "这是嘉定新城159.5平方公里全域中的领先示范核心；采用核心而不是全域，避免吞并嘉定老城、菊园、新成路和马陆其余市场。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["road.name=浏翔公路", "road.name=思义路", "road.ref=S5", "road.ref=G1503"],
+        "representativeObjectIds": [],
+        "geometryProcessing": "浏翔公路、S5、G1503按固定快照折点近似；快照中未检出“思义路”同名要素，南边采用官方方位与相邻道路端点形成待编辑共享线。"
+      },
+      "geometryRule": "采用官方12.5平方公里领先示范区而非159.5平方公里新城全域：浏翔公路—思义路—沪嘉高速S5—上海绕城高速G1503闭合。思义路在固定 OSM 快照缺名，南边明确标为需现场编辑校正。",
+      "ring": [
+        [121.2608, 31.334], [121.272, 31.3345], [121.285, 31.335], [121.297, 31.336], [121.3, 31.348], [121.303, 31.36], [121.305, 31.374], [121.294, 31.375], [121.282, 31.3745], [121.272, 31.374], [121.268, 31.365], [121.265, 31.355], [121.2625, 31.344], [121.2608, 31.334]
+      ]
+    },
+    {
+      "id": "sector_songbao",
+      "name": "淞宝",
+      "labelPoint": [121.492, 31.391],
+      "proxyType": "administrative_core_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-shanghai-songbao-unit-plan-2022",
+        "title": "上海主城区（宝山部分）淞宝单元规划",
+        "publisher": "上海市规划和自然资源局",
+        "publishedAt": "2022-12-24",
+        "url": "https://ghzyj.sh.gov.cn/zcdygh/20231013/73f11a45a0e7451199b0b504b750967b.html",
+        "sourceType": "official_approved_unit_plan",
+        "evidence": "官方页面及沪府规划〔2022〕281号确认淞宝单元规划获批，规划建设用地总规模不超过15.55平方公里。",
+        "limitation": "HTML和批复正文未提供可仅凭文字复原的完整逐边四至；本面使用吴淞街道与友谊路街道开放行政关系并集作为强核心，不描摹规划附图。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["relation/3532319 name=吴淞街道", "relation/3532312 name=友谊路街道"],
+        "representativeObjectIds": ["relation/3532319", "relation/3532312"],
+        "geometryProcessing": "并集两个 relation 的主陆域外环，移除微小离散岛并以0.0006度拓扑保持容差简化；不描摹官方规划图。"
+      },
+      "geometryRule": "获批淞宝单元用于定义上位口径；几何采用 OSM 吴淞街道与友谊路街道 relation 主陆域并集作为可编辑行政核心。港区、水域及产业地块需在后续与高境、宝山老城方向联合裁切。",
+      "ring": [
+        [121.508274, 31.3972752], [121.5034112, 31.4049217], [121.5007918, 31.4069778], [121.4997554, 31.406705], [121.4890641, 31.4164704], [121.4816102, 31.4176859], [121.4697361, 31.4177797], [121.4706731, 31.4189996], [121.4627591, 31.4149536], [121.46307, 31.4125301], [121.4657612, 31.4093335], [121.4678125, 31.4025306], [121.4699611, 31.3992609], [121.4706012, 31.3957005], [121.473398, 31.3924749], [121.4729138, 31.3856223], [121.4765728, 31.3828475], [121.4782035, 31.379637], [121.4772659, 31.3759161], [121.4793158, 31.372569], [121.4777826, 31.3660292], [121.4796102, 31.3657744], [121.4828708, 31.3604956], [121.4866411, 31.3613718], [121.4887623, 31.3603623], [121.4920851, 31.3536216], [121.4968945, 31.3552505], [121.4978143, 31.3533201], [121.5022415, 31.3544334], [121.5054668, 31.3580372], [121.5016268, 31.3620124], [121.5001627, 31.3650892], [121.4992685, 31.3731212], [121.5013638, 31.3809056], [121.5047715, 31.385273], [121.5116147, 31.3905117], [121.5143348, 31.391142], [121.5080595, 31.3943813], [121.508274, 31.3972752]
+      ]
+    },
+    {
+      "id": "sector_jiuting",
+      "name": "九亭",
+      "labelPoint": [121.315, 31.129],
+      "proxyType": "administrative_reference_proxy",
+      "confidence": "medium",
+      "definitionSource": {
+        "suggestedSourceId": "official-songjiang-jiuting-new-town-plan-2019",
+        "title": "松江区九亭新市镇（含九里亭街道）国土空间总体规划（2017—2035）公众参与草案",
+        "publisher": "上海市松江区人民政府",
+        "publishedAt": "2019-11-29",
+        "url": "https://www.songjiang.gov.cn/zmhd/004002/20191129/05526a29-8cac-41dc-b1e4-f01322d42835.html",
+        "sourceType": "official_text_four_sides",
+        "evidence": "官方明确规划由G50、G60、嘉闵高架、淀浦河围合，总面积31.32平方公里，并将九里亭街道6.78平方公里与九亭镇24.54平方公里分别列出。",
+        "limitation": "市场目录已有独立九里亭口径，因此本面只采用九亭镇 relation，未把官方31.32平方公里九亭新市镇全域直接归入九亭。"
+      },
+      "geometryVerificationSource": {
+        "suggestedSourceId": "osm-geofabrik-shanghai-260721",
+        "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+        "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
+        "snapshotAt": "2026-07-21T20:21:50Z",
+        "archiveSha256": "7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b",
+        "crs": "OGC:CRS84",
+        "license": "ODbL-1.0",
+        "attribution": "© OpenStreetMap contributors",
+        "objectSelectors": ["relation/16202386 name=九亭镇"],
+        "representativeObjectIds": ["relation/16202386"],
+        "geometryProcessing": "取固定快照 relation 主外环并以0.001度拓扑保持容差简化；Geofabrik GPKG 不保留 relation 版本号。"
+      },
+      "geometryRule": "官方规划确认G50、G60、嘉闵高架、淀浦河的上位外框；为避免覆盖独立九里亭板块，当前以 OSM 九亭镇 relation 16202386 作为行政参考代理，后续与九里亭、莘闵别墅、泗泾共边精修。",
+      "ring": [
+        [121.2723433, 31.1478468], [121.2728043, 31.146284], [121.2751769, 31.1477505], [121.2775013, 31.1442238], [121.27997, 31.1446114], [121.2833258, 31.1420229], [121.2770228, 31.135206], [121.282978, 31.1338261], [121.2855575, 31.1353199], [121.2884579, 31.1347996], [121.2877881, 31.1327011], [121.2960516, 31.1307461], [121.3002607, 31.1325697], [121.3009469, 31.1296163], [121.2961954, 31.1256153], [121.2940754, 31.1193107], [121.2968999, 31.1097152], [121.2947598, 31.109387], [121.2980626, 31.1082759], [121.2965272, 31.1071866], [121.2983157, 31.1064585], [121.3057591, 31.0933525], [121.3099774, 31.0939424], [121.3180077, 31.0999766], [121.3180628, 31.1014967], [121.3166476, 31.1007807], [121.3156181, 31.1023207], [121.3168977, 31.1030044], [121.319299, 31.1028526], [121.3244315, 31.095601], [121.3297351, 31.0976146], [121.3306424, 31.1017443], [121.3360788, 31.104132], [121.3400912, 31.0983998], [121.3467067, 31.1010308], [121.3427386, 31.1089143], [121.34871, 31.1088607], [121.3484118, 31.1103088], [121.352611, 31.112542], [121.3514742, 31.114522], [121.3491456, 31.1134622], [121.3472606, 31.1151918], [121.3465197, 31.1173444], [121.3491408, 31.1184911], [121.3479059, 31.120366], [121.3446512, 31.1197694], [121.3434561, 31.1216493], [121.3374522, 31.1367505], [121.3325163, 31.1395175], [121.3343479, 31.1425709], [121.3292734, 31.1480615], [121.3297123, 31.1494215], [121.3199082, 31.1441052], [121.3157493, 31.1400943], [121.3002822, 31.1349783], [121.2984099, 31.1398996], [121.2855792, 31.1548279], [121.2785099, 31.1542934], [121.2790822, 31.1531282], [121.2764992, 31.1526692], [121.2742176, 31.1550853], [121.2730207, 31.1544792], [121.2743098, 31.1514472], [121.2729015, 31.1508673], [121.2739586, 31.1485072], [121.2723433, 31.1478468]
+      ]
+    }
+  ]
+}

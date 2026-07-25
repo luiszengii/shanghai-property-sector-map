@@ -8,6 +8,12 @@ import type { Category } from "@/src/types/map";
 
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
+export type SectorBoundarySource =
+  | "project"
+  | "hfwgsj-private"
+  | "anjuke-private"
+  | "fang-private";
+
 interface FocusRequest {
   type: "sector" | "place" | "project";
   id: string;
@@ -25,6 +31,7 @@ interface MapState {
   projectDetailMinZoom: number;
   sectorLabelMode: SectorLabelMode;
   sectorLabelMinZoom: number;
+  sectorBoundarySource: SectorBoundarySource;
   zoom: number;
   center: [number, number];
   mobileFiltersOpen: boolean;
@@ -45,6 +52,7 @@ interface MapState {
   setProjectDetailMinZoom: (zoom: number) => void;
   setSectorLabelMode: (mode: SectorLabelMode) => void;
   setSectorLabelMinZoom: (zoom: number) => void;
+  setSectorBoundarySource: (source: SectorBoundarySource) => void;
   setZoom: (zoom: number) => void;
   setCenter: (center: [number, number]) => void;
   setMobileFiltersOpen: (open: boolean) => void;
@@ -69,6 +77,7 @@ export const useMapStore = create<MapState>()(
       projectDetailMinZoom: 13.8,
       sectorLabelMode: "hover",
       sectorLabelMinZoom: 13,
+      sectorBoundarySource: "project",
       zoom: 10.6,
       center: [121.4737, 31.2304],
       mobileFiltersOpen: false,
@@ -94,6 +103,14 @@ export const useMapStore = create<MapState>()(
       setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
       setSectorLabelMode: (mode) => set({ sectorLabelMode: mode }),
       setSectorLabelMinZoom: (zoom) => set({ sectorLabelMinZoom: zoom }),
+      setSectorBoundarySource: (source) =>
+        set({
+          sectorBoundarySource: source,
+          selectedSectorId: null,
+          focusRequest: null,
+          sectorGeometryLoading: {},
+          sectorGeometryFallbacks: {},
+        }),
       setZoom: (zoom) => set({ zoom }),
       setCenter: (center) => set({ center }),
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),
@@ -130,6 +147,7 @@ export const useMapStore = create<MapState>()(
         projectDetailMinZoom: state.projectDetailMinZoom,
         sectorLabelMode: state.sectorLabelMode,
         sectorLabelMinZoom: state.sectorLabelMinZoom,
+        sectorBoundarySource: state.sectorBoundarySource,
       }),
     },
   ),

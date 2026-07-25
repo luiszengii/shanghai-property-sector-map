@@ -1,18 +1,26 @@
 import { readFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+let cachedPayload: string | null = null;
+let cachedMtimeMs = -1;
+
 export async function GET() {
   const datasetPath = path.join(process.cwd(), "outputs", "xhs_analysis", "web_dataset.json");
   try {
-    const payload = await readFile(datasetPath, "utf8");
-    return new NextResponse(payload, {
+    const fileStat = await stat(datasetPath);
+    if (cachedPayload === null || cachedMtimeMs !== fileStat.mtimeMs) {
+      cachedPayload = await readFile(datasetPath, "utf8");
+      cachedMtimeMs = fileStat.mtimeMs;
+    }
+    return new NextResponse(cachedPayload, {
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Cache-Control": "private, no-store, max-age=0",
+        "Cache-Control": "private, max-age=60, stale-while-revalidate=300",
         "X-Robots-Tag": "noindex, nofollow",
       },
     });

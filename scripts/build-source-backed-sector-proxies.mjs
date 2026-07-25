@@ -1,0 +1,415 @@
+import { readdir, readFile, writeFile } from "node:fs/promises";
+
+// 2017 东/西片区共同以共和新路为界；两个面必须复用这条折线，不能各自近似。
+const canonicalSharedGongheRoad = [
+  [121.45813, 31.24358], [121.45819, 31.24703], [121.45847, 31.2481],
+  [121.45862, 31.24944], [121.45892, 31.25098], [121.45932, 31.252],
+];
+
+const sourceBackedProxies = [
+  {
+    id: "sector_suhewan",
+    name: "苏河湾",
+    labelPoint: [121.468, 31.247],
+    scopeVersion: "jingan-suhewan-east-functional-scope-2017-2026-07",
+    confidence: "medium",
+    proxyType: "historical-functional-proxy",
+    definitionSourceIds: ["official-jingan-suhewan-2017-functional-scope"],
+    geometryVerificationSourceIds: [
+      "official-jingan-suhewan-2017-functional-scope",
+      "osm-overpass-roads-2026-07-25",
+    ],
+    geometryRule: "按静安区 2017 年《苏河湾地区“十三五”规划》东部地区四至闭合：东河南北路，西共和新路，北交通路，南光复路、北苏州路。道路节点取 2026-07-25 OSM Overpass 可复核道路线；这是历史功能范围代理，不宣称等于楼市苏河湾。",
+    ring: [
+      ...canonicalSharedGongheRoad,
+      [121.4692, 31.25269], [121.47206, 31.2541], [121.47468, 31.25226],
+      [121.47512, 31.25183], [121.4769, 31.24969], [121.47723, 31.24842],
+      [121.47776, 31.24572], [121.47843, 31.24435], [121.47631, 31.24252],
+      [121.46734, 31.24235], [121.46577, 31.24156], [121.45824, 31.24291],
+      [121.45813, 31.24358],
+    ],
+  },
+  {
+    id: "sector_buyecheng",
+    name: "不夜城",
+    labelPoint: [121.4515, 31.2485],
+    scopeVersion: "jingan-buyecheng-west-functional-scope-2017-2026-07",
+    confidence: "medium",
+    proxyType: "historical-functional-proxy",
+    definitionSourceIds: ["official-jingan-suhewan-2017-functional-scope"],
+    geometryVerificationSourceIds: [
+      "official-jingan-suhewan-2017-functional-scope",
+      "osm-overpass-roads-2026-07-25",
+    ],
+    geometryRule: "按静安区 2017 年《苏河湾地区“十三五”规划》西部不夜城四至闭合：东共和新路，西恒丰北路、南苏州路，北中华新路—大统路—交通路，南光复路。道路节点取 2026-07-25 OSM Overpass 可复核道路线；这是历史功能范围代理，不宣称等于楼市不夜城。",
+    ring: [
+      [121.44567, 31.24545], [121.44501, 31.25496], [121.44711, 31.25415],
+      [121.45017, 31.25297], [121.45527, 31.25112],
+      ...canonicalSharedGongheRoad.slice().reverse(), [121.45425, 31.24074],
+      [121.44567, 31.24545],
+    ],
+  },
+  {
+    id: "sector_huangxing_park",
+    name: "黄兴公园",
+    labelPoint: [121.5259, 31.2954],
+    scopeVersion: "yangpu-huangxing-park-core-reference-2025-2026-07",
+    confidence: "medium",
+    proxyType: "core_reference_proxy",
+    definitionSourceIds: ["official-yangpu-huangxing-park-four-sides-2025"],
+    geometryVerificationSourceIds: [
+      "official-yangpu-huangxing-park-four-sides-2025",
+      "osm-huangxing-park-relation-6262917-2026-07-25",
+    ],
+    geometryRule: "按杨浦区公开的营口路、双阳北路、走马塘、国顺东路四至，以 OSM 黄兴公园 relation 6262917 的已记录版本闭合公园核心；这是住宅板块的可编辑核心参考，不把公园本体等同于完整楼市市场。",
+    ring: [
+      [121.5217521, 31.2957958], [121.5217633, 31.2957127], [121.5217816, 31.2956438], [121.5223692, 31.2939524], [121.5233811, 31.2911759], [121.5243621, 31.2912276], [121.5250831, 31.2919978], [121.5263024, 31.2926416], [121.5280262, 31.2934212], [121.5278011, 31.294321], [121.5280475, 31.2946692], [121.5280311, 31.294776], [121.5288998, 31.2951272], [121.5290776, 31.2950757], [121.5299227, 31.2955141], [121.5299113, 31.2955557], [121.5296195, 31.296099], [121.5291331, 31.2959129], [121.5277924, 31.2985088], [121.528166, 31.2987286], [121.5278092, 31.2994645], [121.5276973, 31.2997047], [121.5276532, 31.2997079], [121.5244767, 31.2976612], [121.5235596, 31.2970634], [121.5225731, 31.2964198], [121.5218942, 31.2959507], [121.5217521, 31.2957958],
+    ],
+  },
+  {
+    id: "sector_nanda",
+    name: "南大",
+    labelPoint: [121.381, 31.304],
+    scopeVersion: "baoshan-w12-1301-planning-reference-2020-2026-07",
+    confidence: "medium",
+    proxyType: "planning_reference_proxy",
+    definitionSourceIds: ["official-baoshan-w12-1301-nanda-plan-2020"],
+    geometryVerificationSourceIds: [
+      "official-baoshan-w12-1301-nanda-plan-2020",
+      "osm-overpass-nanda-shanghai-university-roads-2026-07-25",
+    ],
+    geometryRule: "按沪府〔2020〕50号公布的南大地区（W12-1301）四至，以南陈路—南秀路、环镇南路—祁连山路—S5、S20、丰翔路—环镇北路的开放道路节点闭合。该面是跨区、产居混合的获批控详规参考范围，不等同住宅市场边界。",
+    ring: [
+      [121.3528, 31.3114], [121.3592, 31.3111], [121.3691, 31.3107],
+      [121.3756, 31.3102], [121.3824, 31.3092], [121.3937, 31.3022],
+      [121.4058, 31.2967], [121.4101, 31.2961], [121.4114, 31.3031],
+      [121.4111, 31.3115], [121.4088, 31.3177], [121.4017, 31.3201],
+      [121.3924, 31.3215], [121.3829, 31.3211], [121.3736, 31.3197],
+      [121.3643, 31.3175], [121.3561, 31.3145], [121.3528, 31.3114],
+    ],
+  },
+  {
+    id: "sector_shanghai_university",
+    name: "上大",
+    labelPoint: [121.394, 31.320],
+    scopeVersion: "baoshan-shanghai-university-surroundings-planning-reference-2021-2026-07",
+    confidence: "medium",
+    proxyType: "planning_reference_proxy",
+    definitionSourceIds: ["official-baoshan-huanshangda-science-park-plan-2021"],
+    geometryVerificationSourceIds: [
+      "official-baoshan-huanshangda-science-park-plan-2021",
+      "osm-overpass-nanda-shanghai-university-roads-2026-07-25",
+    ],
+    geometryRule: "按宝山区《环上大科技园“十四五”规划》上大周边约10平方公里核心区四至，以大场机场界、真大路—环镇南路、祁连山路—环镇北路—南陈路、塘祁路的开放道路节点闭合；这是科技园规划参考面，包含校园、产业及周边社区，不等同住宅市场边界。",
+    ring: [
+      [121.3764, 31.3274], [121.3821, 31.3289], [121.3907, 31.3299],
+      [121.4004, 31.3295], [121.4088, 31.3282], [121.4142, 31.3244],
+      [121.4148, 31.3193], [121.4101, 31.3114], [121.4058, 31.3097],
+      [121.3951, 31.3090], [121.3840, 31.3093], [121.3782, 31.3138],
+      [121.3767, 31.3201], [121.3764, 31.3274],
+    ],
+  },
+  {
+    id: "sector_yangcheng",
+    name: "阳城",
+    labelPoint: [121.421, 31.287],
+    scopeVersion: "jingan-yangcheng-community-member-reference-2026-07",
+    confidence: "medium",
+    proxyType: "community_member_reference_proxy",
+    definitionSourceIds: ["official-jingan-yangcheng-yonghe-community-notice-2019"],
+    geometryVerificationSourceIds: [
+      "official-jingan-yangcheng-yonghe-community-notice-2019",
+      "osm-yangcheng-yonghe-community-ways-2026-07-25",
+    ],
+    geometryRule: "按静安区公开材料确认的阳城贵都、浦联佳苑住宅成员，以 OSM 住宅地块边界合并为阳城可编辑成员参考；不把彭浦镇行政范围或该成员集直接等同于完整市场面。",
+    ring: [
+      [121.4184013, 31.2859692], [121.4197538, 31.2860127], [121.4232545, 31.2862354], [121.4234491, 31.2865275], [121.4232292, 31.2881942], [121.4193982, 31.2879434], [121.4186349, 31.287894], [121.4183318, 31.2862844], [121.4184013, 31.2859692],
+    ],
+  },
+  {
+    id: "sector_yonghe",
+    name: "永和",
+    labelPoint: [121.424, 31.294],
+    scopeVersion: "jingan-yonghe-community-member-reference-2026-07",
+    confidence: "medium",
+    proxyType: "community_member_reference_proxy",
+    definitionSourceIds: ["official-jingan-yangcheng-yonghe-community-notice-2019"],
+    geometryVerificationSourceIds: [
+      "official-jingan-yangcheng-yonghe-community-notice-2019",
+      "osm-yangcheng-yonghe-community-ways-2026-07-25",
+    ],
+    geometryRule: "按静安区公开材料中的永和二村、永和东村、永和家园成员，用 OSM 住宅地块和相邻公共道路形成可编辑成员参考；该范围仍须与阳城、彭浦及共康联合裁切。",
+    ring: [
+      [121.4191963, 31.2919885], [121.4215241, 31.2915946], [121.4247119, 31.2922535], [121.4270079, 31.2926723], [121.4285233, 31.2926849], [121.4282012, 31.2948927], [121.4266757, 31.2955497], [121.4240482, 31.2951279], [121.4231703, 31.2922408], [121.4191963, 31.2919885],
+    ],
+  },
+  {
+    id: "sector_pengpu",
+    name: "彭浦",
+    labelPoint: [121.44, 31.314],
+    scopeVersion: "jingan-pengpu-xincun-admin-core-reference-2026-07",
+    confidence: "medium",
+    proxyType: "administrative_reference_proxy",
+    definitionSourceIds: ["official-jingan-pengpu-xincun-profile-2016"],
+    geometryVerificationSourceIds: ["official-jingan-pengpu-xincun-profile-2016", "osm-pengpu-xincun-relation-14186008-2026-07-25"],
+    geometryRule: "以静安区公开四至说明和 OSM 彭浦新村街道 relation 14186008 为行政核心代理；卖方彭浦市场可能越过行政东界，因此仍须与阳城、永和、共康和大宁联合裁切。",
+    ring: [[121.4278641,31.320636],[121.4298869,31.3143246],[121.4309835,31.3112067],[121.4310264,31.3081177],[121.4310157,31.306926],[121.4312625,31.3059635],[121.4325285,31.3063118],[121.4349103,31.3068252],[121.4368629,31.3069718],[121.4429569,31.3075768],[121.4440727,31.3076318],[121.4442015,31.3042585],[121.4470553,31.3047718],[121.447463,31.3049093],[121.4501452,31.3053493],[121.4500058,31.3059818],[121.4497375,31.3062202],[121.4495337,31.3064218],[121.4498556,31.3067427],[121.4498448,31.3073568],[121.450789,31.3074027],[121.4507031,31.3153315],[121.4513147,31.3186311],[121.4511767,31.3219314],[121.4507564,31.321645],[121.4487179,31.3202611],[121.4483317,31.3200686],[121.4435145,31.3188404],[121.4432999,31.3187763],[121.4429136,31.3196653],[121.4418541,31.322097],[121.4409902,31.321865],[121.4400208,31.321785],[121.4322277,31.3214938],[121.4319491,31.3226547],[121.4290497,31.322657],[121.4289987,31.3223797],[121.4286686,31.3205232],[121.4280546,31.3206063],[121.4278641,31.320636]],
+  },
+  {
+    id: "sector_weifang",
+    name: "潍坊",
+    labelPoint: [121.519, 31.224],
+    scopeVersion: "pudong-weifang-admin-reference-2025-2026-07",
+    confidence: "medium",
+    proxyType: "administrative_reference_proxy",
+    definitionSourceIds: ["official-pudong-boundary-adjustment-2025"],
+    geometryVerificationSourceIds: ["official-pudong-boundary-adjustment-2025", "osm-geofabrik-shanghai-260721"],
+    geometryRule: "以 OSM 潍坊新村街道 relation 12867311 v5（2025-09-22）为可编辑行政参考；官方公告确认与花木应以杨高中路、杨高南路为界，但未公开端点，故不伪造全段共享线，留待联合编辑精修。",
+    ring: [[121.5025807,31.2254751],[121.5059457,31.2175022],[121.5143785,31.2168291],[121.5216963,31.2176079],[121.524908,31.2210638],[121.5315466,31.2202828],[121.5347796,31.2247441],[121.5293907,31.2348826],[121.5025807,31.2254751]],
+  },
+  {
+    id: "sector_huamu",
+    name: "花木",
+    labelPoint: [121.55, 31.215],
+    scopeVersion: "pudong-huamu-admin-reference-2025-2026-07",
+    confidence: "medium",
+    proxyType: "administrative_reference_proxy",
+    definitionSourceIds: ["official-pudong-boundary-adjustment-2025"],
+    geometryVerificationSourceIds: ["official-pudong-boundary-adjustment-2025", "osm-geofabrik-shanghai-260721"],
+    geometryRule: "以 OSM 花木街道 relation 12867438 v8（2025-09-22）为可编辑行政参考；官方公告确认与潍坊的杨高中路、杨高南路界，未公开端点，故市场共享边仍标为待联合裁切。",
+    ring: [[121.5193629,31.1897636],[121.5286608,31.1870461],[121.5332276,31.1897068],[121.5635276,31.1925024],[121.5744924,31.195274],[121.5730977,31.2099569],[121.5745997,31.2145999],[121.5705549,31.2300779],[121.57902,31.2338484],[121.5736821,31.243296],[121.564856,31.2393925],[121.5609503,31.2405261],[121.5596113,31.2367047],[121.5335129,31.223705],[121.525149,31.2041317],[121.5224303,31.2015462],[121.5230375,31.1990927],[121.5193629,31.1897636]],
+  },
+  {
+    id: "sector_dinghai_road",
+    name: "定海路",
+    labelPoint: [121.553, 31.285],
+    scopeVersion: "yangpu-dinghai-road-admin-reference-2026-07",
+    confidence: "medium",
+    proxyType: "administrative_reference_proxy",
+    definitionSourceIds: ["official-yangpu-dinghai-road-subdistrict-profile-2018"],
+    geometryVerificationSourceIds: ["official-yangpu-dinghai-road-subdistrict-profile-2018", "osm-geofabrik-shanghai-260721"],
+    geometryRule: "以官方定海路街道四至说明和 OSM relation 13466400 v12（2026-03-09）生成行政参考代理；复兴岛产业空间及东外滩组成部分需在与东外滩联合编辑时继续扣除。",
+    ring: [[121.5362109,31.2743104],[121.5440162,31.2673559],[121.5454514,31.2684618],[121.5501162,31.2636017],[121.562259,31.2749544],[121.5643049,31.2789793],[121.5647584,31.2862884],[121.5574946,31.3055415],[121.5540036,31.3055053],[121.5546834,31.2928588],[121.5497532,31.2911365],[121.5513517,31.2889665],[121.5366371,31.2800321],[121.5393438,31.2764346],[121.5362109,31.2743104]],
+  },
+];
+
+function orientRing(ring, counterClockwise = true) {
+  const signedArea = ring.slice(0, -1).reduce((area, point, index) => {
+    const next = ring[index + 1];
+    return area + point[0] * next[1] - next[0] * point[1];
+  }, 0) / 2;
+  if ((signedArea >= 0) === counterClockwise) return ring;
+  const openRing = ring.slice(0, -1).reverse();
+  return [...openRing, openRing[0]];
+}
+
+const inlineFeatures = sourceBackedProxies.map(({ ring, ...proxy }) => ({
+  type: "Feature",
+  properties: {
+    ...proxy,
+    status: "source-backed-proxy",
+    coordinateSystem: "WGS84",
+    method: "official_text_four_sides_osm_road_proxy",
+  },
+  geometry: { type: "Polygon", coordinates: [orientRing(ring)] },
+}));
+
+const batchDirectory = new URL("../data/geo/source-backed-batches/", import.meta.url);
+const batchFileNames = (await readdir(batchDirectory))
+  .filter((name) => name.endsWith(".json"))
+  .sort();
+const batches = await Promise.all(batchFileNames.map(async (name) => JSON.parse(
+  await readFile(new URL(name, batchDirectory), "utf8"),
+)));
+
+function normalizeGeometry(geometry) {
+  const normalizePolygon = (polygon) => polygon.map((ring, index) =>
+    orientRing(ring, index === 0));
+  if (geometry.type === "Polygon") {
+    return {
+      type: "Polygon",
+      coordinates: normalizePolygon(geometry.coordinates),
+    };
+  }
+  if (geometry.type === "MultiPolygon") {
+    return {
+      type: "MultiPolygon",
+      coordinates: geometry.coordinates.map(normalizePolygon),
+    };
+  }
+  throw new Error(`unsupported batch geometry: ${geometry.type}`);
+}
+
+function embeddedSourceRecord(source, role) {
+  if (!source?.suggestedSourceId) return undefined;
+  return {
+    id: source.suggestedSourceId,
+    title: source.title ?? `${source.provider} 开放几何快照`,
+    publisher: source.publisher ?? source.provider,
+    url: source.url ?? source.resolvedUrl ?? null,
+    sourceType: source.sourceType ?? (
+      role === "definition" ? "official_planning_document" : "open_geometry_snapshot"
+    ),
+    ...(source.publishedAt ? { publishedAt: source.publishedAt } : {}),
+    licenseStatus: role === "definition" ? "reference_only" : (source.license ?? "unverified"),
+    allowedUse: role === "definition"
+      ? "boundary_definition_only"
+      : "geometry_with_attribution_and_odbl_compliance",
+    note: [
+      source.evidence,
+      source.limitation,
+      source.snapshotAt ? `固定快照时间：${source.snapshotAt}。` : undefined,
+      source.archiveSha256 ? `归档 SHA-256：${source.archiveSha256}。` : undefined,
+      source.attribution,
+    ].filter(Boolean).join(" "),
+  };
+}
+
+function normalizeBatchSourceRecord(source) {
+  if (source.id) {
+    return {
+      ...source,
+      note: source.note
+        ?? "用于本批次公开范围代理的定义或空间核验；不表示楼市板块法定边界。",
+    };
+  }
+  const isOpenGeometry = [
+    source.sourceType,
+    source.licenseStatus,
+  ].some((value) => /osm|openstreetmap|odbl/i.test(value ?? ""));
+  return {
+    id: source.suggestedId,
+    title: source.title,
+    publisher: source.publisher,
+    url: source.url ?? null,
+    sourceType: source.sourceType,
+    ...(source.publishedAt ? { publishedAt: source.publishedAt } : {}),
+    licenseStatus: source.licenseStatus ?? (isOpenGeometry ? "ODbL-1.0" : "reference_only"),
+    allowedUse: isOpenGeometry
+      ? "geometry_with_attribution_and_odbl_compliance"
+      : "spatial_relationship_only",
+    note: [
+      source.geometryUse,
+      source.extractedAt ? `提取时间：${source.extractedAt}。` : undefined,
+      source.attribution,
+      source.query
+        ? `查询：${typeof source.query === "string" ? source.query : JSON.stringify(source.query)}`
+        : undefined,
+    ].filter(Boolean).join(" "),
+  };
+}
+
+function normalizeBatchFeature(feature) {
+  if (feature.geometry) {
+    return {
+      properties: feature.properties ?? Object.fromEntries(
+        Object.entries(feature).filter(([key]) => key !== "geometry"),
+      ),
+      geometry: feature.geometry,
+    };
+  }
+  const {
+    ring,
+    definitionSource,
+    geometryVerificationSource,
+    ...properties
+  } = feature;
+  return {
+    properties: {
+      ...properties,
+      definitionSourceIds: [definitionSource.suggestedSourceId],
+      geometryVerificationSourceIds: [
+        definitionSource.suggestedSourceId,
+        geometryVerificationSource.suggestedSourceId,
+      ],
+      method: "official_text_and_fixed_open_geometry_snapshot_proxy",
+      limitations: [
+        definitionSource.limitation,
+        geometryVerificationSource.geometryProcessing,
+      ].filter(Boolean),
+    },
+    geometry: { type: "Polygon", coordinates: [ring] },
+  };
+}
+
+const batchFeatures = batches.flatMap((batch) => batch.features.map((feature) => {
+  const normalizedFeature = normalizeBatchFeature(feature);
+  const rawProperties = normalizedFeature.properties;
+  return {
+    type: "Feature",
+    properties: {
+      ...rawProperties,
+      status: "source-backed-proxy",
+      coordinateSystem: "WGS84",
+      method: rawProperties.method ?? "official_or_open_geometry_reference_proxy",
+      geometryVerificationSourceIds: [...new Set([
+        ...(rawProperties.definitionSourceIds ?? []),
+        ...(rawProperties.geometryVerificationSourceIds ?? []),
+      ])],
+    },
+    geometry: normalizeGeometry(normalizedFeature.geometry),
+  };
+}));
+
+const embeddedBatchSources = batches.flatMap((batch) => batch.features.flatMap((feature) => [
+  embeddedSourceRecord(feature.definitionSource, "definition"),
+  embeddedSourceRecord(feature.geometryVerificationSource, "verification"),
+].filter(Boolean)));
+const allBatchSources = [
+  ...batches.flatMap((batch) => batch.sources ?? []).map(normalizeBatchSourceRecord),
+  ...embeddedBatchSources,
+];
+
+const features = [...inlineFeatures, ...batchFeatures];
+const duplicateIds = features
+  .map((feature) => feature.properties.id)
+  .filter((id, index, ids) => ids.indexOf(id) !== index);
+if (duplicateIds.length > 0) {
+  throw new Error(`duplicate source-backed proxy ids: ${[...new Set(duplicateIds)].join(", ")}`);
+}
+
+const collection = {
+  type: "FeatureCollection",
+  name: "source-backed-sector-proxies-wgs84",
+  schemaVersion: "1.0.0",
+  status: "internal-review",
+  notice: "依据公开规划文字四至和 OSM 道路节点重建的参考代理，非行政区划、非法定界址、非商业平台原始边界。",
+  features,
+};
+const index = {
+  schemaVersion: "1.0.0",
+  features: features.map((feature) => ({
+    id: feature.properties.id,
+    labelPoint: feature.properties.labelPoint,
+    status: feature.properties.status,
+  })),
+};
+
+await writeFile(
+  new URL("../src/data/sectors/source-backed-proxies.wgs84.json", import.meta.url),
+  `${JSON.stringify(collection, null, 2)}\n`,
+);
+await writeFile(
+  new URL("../src/data/sectors/source-backed-proxies.index.json", import.meta.url),
+  `${JSON.stringify(index, null, 2)}\n`,
+);
+
+const sourcesUrl = new URL("../src/data/sectors/sources.json", import.meta.url);
+const sourcesDocument = JSON.parse(await readFile(sourcesUrl, "utf8"));
+const sourceById = new Map(
+  sourcesDocument.sources
+    .filter((source) => source.id)
+    .map((source) => [source.id, source]),
+);
+for (const source of allBatchSources) {
+  sourceById.set(source.id, {
+    ...(sourceById.get(source.id) ?? {}),
+    ...source,
+  });
+}
+await writeFile(
+  sourcesUrl,
+  `${JSON.stringify({ ...sourcesDocument, sources: [...sourceById.values()] }, null, 2)}\n`,
+);
+
+console.log(`built ${features.length} source-backed sector proxies from ${batchFileNames.length} batch files`);

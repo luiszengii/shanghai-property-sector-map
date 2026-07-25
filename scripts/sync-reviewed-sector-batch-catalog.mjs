@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -716,5 +717,11 @@ upsertJsonArrayItems({
   getId: ({ id }) => id,
   compact: true,
 });
+
+execFileSync(
+  process.execPath,
+  [resolveRepoFile("scripts/build-sector-client-index.mjs")],
+  { cwd: repoRoot, stdio: "inherit" },
+);
 
 console.log(`同步 ${registryRecords.length} 个 registry 记录和 ${evidenceRecords.length} 条逐边证据`);

@@ -1,6 +1,8 @@
 "use client";
 
 import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { useMemo } from "react";
+import { CategoryIcon } from "@/src/components/CategoryIcon";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
@@ -11,8 +13,10 @@ import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
 const places = placesData as Place[];
-const sectors = sectorCatalog.features;
 const categories = categoriesData as Category[];
+const placeById = new Map(places.map((place) => [place.id, place]));
+const projectById = new Map(projects.map((project) => [project.id, project]));
+const categoryById = new Map(categories.map((category) => [category.id, category]));
 const boundarySideLabels: Record<SectorBoundarySide, string> = { north: "北", east: "东", south: "南", west: "西" };
 const evidenceStatusLabels: Record<SectorBoundaryStatus, string> = {
   definition_confirmed: "已确认",
@@ -37,22 +41,43 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
-  const {
-    selectedSectorId,
-    selectedPlaceId,
-    selectedProjectId,
-    zoom,
-    projectDetailMinZoom,
-    center,
-    closeDetail,
-    requestFocus,
-    selectSector,
-    sectorGeometryLoading,
-    sectorGeometryFallbacks,
-  } = useMapStore();
-  const place = places.find((item) => item.id === selectedPlaceId);
-  const project = projects.find((item) => item.id === selectedProjectId);
-  const sector = sectors.find((item) => item.properties.id === selectedSectorId);
+  const selectedSectorId = useMapStore((state) => state.selectedSectorId);
+  const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
+  const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const zoom = useMapStore((state) => state.zoom);
+  const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
+  const center = useMapStore((state) => state.center);
+  const closeDetail = useMapStore((state) => state.closeDetail);
+  const requestFocus = useMapStore((state) => state.requestFocus);
+  const selectSector = useMapStore((state) => state.selectSector);
+  const isRuntimeLoading = useMapStore((state) => (
+    selectedSectorId
+      ? Boolean(state.sectorGeometryLoading[selectedSectorId])
+      : false
+  ));
+  const isRuntimeFallback = useMapStore((state) => (
+    selectedSectorId
+      ? Boolean(state.sectorGeometryFallbacks[selectedSectorId])
+      : false
+  ));
+  const place = selectedPlaceId ? placeById.get(selectedPlaceId) : undefined;
+  const project = selectedProjectId ? projectById.get(selectedProjectId) : undefined;
+  const sector = selectedSectorId
+    ? sectorCatalog.getFeature(selectedSectorId)
+    : undefined;
+  const sectorMetadata = useMemo(() => {
+    if (!sector) return null;
+    const id = sector.properties.id;
+    return {
+      sectorRecord: sectorCatalog.getRecord(id),
+      definitionSources: sectorCatalog.getSources(id),
+      geometrySources: sectorCatalog.getGeometrySources(id),
+      geometryVerificationSources: sectorCatalog.getGeometryVerificationSources(id),
+      boundaryEvidence: sectorCatalog.getBoundaryEvidence(id),
+      referenceCheck: sectorCatalog.getReferenceCheck(id),
+      subscopes: sectorCatalog.getSubscopesForSector(id),
+    };
+  }, [sector]);
 
   if (!place && !project && !sector) return null;
 
@@ -90,11 +115,11 @@ export function DetailCard() {
   }
 
   if (place) {
-    const category = categories.find((item) => item.id === place.category);
+    const category = categoryById.get(place.category);
     const activeGeometry = sector
-      ? sectorCatalog.resolveActiveGeometry(
+      ? sectorCatalog.resolveActiveLocation(
         sector.properties.id,
-        Boolean(sectorGeometryFallbacks[sector.properties.id]),
+        isRuntimeFallback,
       )
       : undefined;
     const origin = activeGeometry
@@ -105,7 +130,7 @@ export function DetailCard() {
       <article className="detail-card glass-panel" aria-label={`${place.name}详情`}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
         <div className="detail-topline">
-          <span className="category-icon large" style={{ "--category-color": category?.color ?? "#0f766e" } as React.CSSProperties}>{category?.icon ?? "•"}</span>
+          <span className="category-icon large" style={{ "--category-color": category?.color ?? "#0f766e" } as React.CSSProperties}>{category ? <CategoryIcon name={category.icon} size={22} /> : "•"}</span>
           <div><span className="eyebrow">{category?.name}</span><h2>{place.name}</h2></div>
         </div>
         <span className="mock-badge">演示数据</span>
@@ -121,24 +146,34 @@ export function DetailCard() {
   }
 
   if (!sector) return null;
-  const sectorRecord = sectorCatalog.getRecord(sector.properties.id);
-  const definitionSources = sectorCatalog.getSources(sector.properties.id);
-  const geometrySources = sectorCatalog.getGeometrySources(sector.properties.id);
-  const geometryVerificationSources = sectorCatalog.getGeometryVerificationSources(sector.properties.id);
-  const boundaryEvidence = sectorCatalog.getBoundaryEvidence(sector.properties.id);
-  const referenceCheck = sectorCatalog.getReferenceCheck(sector.properties.id);
-  const subscopes = sectorCatalog.getSubscopesForSector(sector.properties.id);
-  const isRuntimeLoading = Boolean(sectorGeometryLoading[sector.properties.id]);
-  const isRuntimeFallback = Boolean(sectorGeometryFallbacks[sector.properties.id]);
+  const {
+    sectorRecord,
+    definitionSources,
+    geometrySources,
+    geometryVerificationSources,
+    boundaryEvidence,
+    referenceCheck,
+    subscopes,
+  } = sectorMetadata!;
   const geometryStatus = sectorRecord?.geometry.status;
+  const isEditorialSeed = sectorCatalog.hasEditorialSeed(sector.properties.id)
+    && !isRuntimeLoading
+    && !isRuntimeFallback;
+  const isSourceBackedProxy = sectorCatalog.hasSourceBackedProxy(sector.properties.id)
+    && !isRuntimeLoading
+    && !isRuntimeFallback;
   const usesAdministrativeReference = geometryStatus === "admin-reference";
   const isAdministrativeReference = usesAdministrativeReference
     && !isRuntimeLoading
     && !isRuntimeFallback;
-  const isReviewedCandidate = geometryStatus !== undefined
-    && ["draft", "reviewed", "published"].includes(geometryStatus)
-    && !isRuntimeLoading
-    && !isRuntimeFallback;
+  const isReviewedCandidate = (
+    isEditorialSeed
+    || isSourceBackedProxy
+    || (
+      geometryStatus !== undefined
+      && ["draft", "reviewed", "published"].includes(geometryStatus)
+    )
+  ) && !isRuntimeLoading && !isRuntimeFallback;
   const geometrySourceRows: Array<{
     label: string;
     sources: typeof geometrySources;
@@ -146,7 +181,7 @@ export function DetailCard() {
   if (geometryStatus === "demo" || isRuntimeFallback) {
     geometrySourceRows.push({ label: "楼市演示面来源", sources: sectorCatalog.marketDemoSources });
   }
-  if (geometryStatus !== undefined && geometryStatus !== "demo") {
+  if (isSourceBackedProxy || (geometryStatus !== undefined && geometryStatus !== "demo")) {
     geometrySourceRows.push({
       label: usesAdministrativeReference ? "行政参考层来源" : "候选面来源",
       sources: geometrySources,
@@ -160,6 +195,10 @@ export function DetailCard() {
       ? usesAdministrativeReference
         ? "行政参考层转换失败 · 楼市演示面可见"
         : "演示几何 · 候选面转换失败"
+      : isSourceBackedProxy
+        ? "公开范围参考代理"
+      : isEditorialSeed
+        ? "低置信可编辑覆盖初稿"
       : isReviewedCandidate
         ? "楼市研究候选面"
       : isAdministrativeReference
@@ -173,6 +212,10 @@ export function DetailCard() {
     ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
+    : isSourceBackedProxy
+      ? "公开文字四至已重建 · 仍须按相邻市场板块精修"
+    : isEditorialSeed
+      ? "覆盖初稿 · 待按道路、水系和邻接关系逐边精修"
     : sectorRecord?.definitionStatus === "market_scope_candidate"
       ? "身份已裁定 · 待第二来源、东界身份、南界中位线与沿线项目核验"
     : sectorRecord?.reviewStatus === "reviewed-high"
@@ -181,7 +224,11 @@ export function DetailCard() {
         ? "口径待选择"
         : "定义草案 · 暂不发布";
   const baseDescription = sector.properties.description.replace(/演示范围。?$/, "");
-  const description = isReviewedCandidate
+  const description = isSourceBackedProxy
+    ? `${baseDescription}；当前显示按公开规划文字四至与开放道路节点重建的参考代理，不把功能区范围直接等同于楼市板块。`
+    : isEditorialSeed
+    ? `${baseDescription}；当前显示按公开地名与相邻板块位置起画的低置信可编辑初稿，用于先补覆盖，不代表边界已经核验。`
+    : isReviewedCandidate
     ? `${baseDescription}；当前显示按可追溯文字四至与开放地物独立重建的研究候选面。`
     : isAdministrativeReference
       ? `${baseDescription}；当前只显示蓝色虚线${referenceCheck?.comparableAdminName ?? sector.properties.name}行政参考层，不把旧演示面当作楼市主板块。`

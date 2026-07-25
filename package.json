@@ -13,6 +13,10 @@
     "check:editor": "node --test src/lib/sector-editor-drafts.test.ts src/lib/sector-editor-catalog.test.ts src/lib/sector-editor-layout.test.ts src/lib/sector-editor-map-options.test.ts",
     "check:map-performance": "node --test src/lib/project-marker-clustering.test.ts src/lib/sector-display-lod.test.ts src/lib/sector-label-visibility.test.ts",
     "check:sectors": "node scripts/check-sector-data.mjs",
+    "perf:baseline": "node scripts/report-performance-baseline.mjs",
+    "build:sector-client-index": "node scripts/build-sector-client-index.mjs",
+    "build:private-sector-snapshots": "node scripts/build-private-sector-snapshots.mjs",
+    "check:sector-client-index": "node scripts/build-sector-client-index.mjs --check",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "typecheck": "tsc --noEmit"
   },
