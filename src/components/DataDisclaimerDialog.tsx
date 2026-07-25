@@ -7,6 +7,7 @@ import { useMapStore } from "@/src/store/map-store";
 
 const candidateSectors = sectorCatalog.candidateGeometryRecords;
 const editorialSeedSectors = sectorCatalog.editorialSeedRecords;
+const sourceBackedProxySectors = sectorCatalog.sourceBackedProxyRecords;
 const administrativeReferenceSectors = sectorCatalog.administrativeReferenceRecords;
 const administrativeReferenceSectorNames = administrativeReferenceSectors.map((record) => record.canonicalName).join("、");
 const unresolvedMarketSectorCount = sectorCatalog.unresolvedGeometryRecords.length;
@@ -34,6 +35,7 @@ export function DataDisclaimerDialog() {
           <li>46 个新盘点位已于 2026-07-22 按项目 POI、公开地址逐项核对并固定，不再使用板块近似点。</li>
           <li>多期或多组团项目采用主地块/整体代表点，详情卡会单独标注；中等置信点位建议看房前再次确认具体入口。</li>
           <li>当前共 {candidateSectors.length} 个板块已按可追溯文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线研究候选面。</li>
+          <li>其中 {sourceBackedProxySectors.length} 个板块已按公开文字四至和开放道路节点重建为参考代理，仍需与相邻市场板块共同精修，不能直接视为法定或行业统一界线。</li>
           <li>另有 {editorialSeedSectors.length} 个板块先按登记行政区、公开地名的大致中心和相邻板块位置生成低置信覆盖性初稿；这些初稿可在板块编辑器中直接拖点修改，不代表已完成边界核验。</li>
           <li>前滩与杨思现为两个互斥一级板块：前滩采用 Z000801 / ES4 四至候选，杨思为原合并候选面扣除前滩后的差集。</li>
           <li>黄浦十板块采用同名街道开放关系作为可编辑骨架；新天地填合完整淮海中路街道缺口，但不代表狭义官方新天地范围。</li>

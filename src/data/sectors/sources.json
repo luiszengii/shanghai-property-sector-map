@@ -1260,6 +1260,17 @@
       "licenseStatus": "ODbL-1.0",
       "allowedUse": "geometry_with_attribution_and_odbl_compliance",
       "note": "归档 SHA-256 为 7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b；详细锁定信息见 data/geo/sources/osm-shanghai-260721.json。"
+    },
+    {
+      "id": "osm-overpass-roads-2026-07-25",
+      "title": "OpenStreetMap road geometries queried through Overpass",
+      "publisher": "OpenStreetMap contributors / Overpass API",
+      "url": "https://overpass-api.de/api/interpreter",
+      "publishedAt": "2026-07-25",
+      "sourceType": "open_geometry_query",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "用于苏河湾、不夜城官方文字四至的道路节点重建；固定查询、提取时刻、匹配 way ID 与版本见 data/geo/sources/suhewan-buyecheng-osm-roads-2026-07-25.json，源坐标为 WGS84。"
     }
   ]
 }

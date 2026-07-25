@@ -1,6 +1,7 @@
 import adminReferencesData from "@/src/data/sectors/admin-references.wgs84.json";
 import editorialSeedsData from "@/src/data/sectors/editorial-seeds.wgs84.json";
 import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84.json";
+import sourceBackedProxiesData from "@/src/data/sectors/source-backed-proxies.wgs84.json";
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import { selectPreferredEditorGeometry } from "@/src/lib/sector-editor-catalog";
@@ -15,6 +16,7 @@ export interface SectorActiveGeometry {
     | "market-demo"
     | "reviewed-market-candidate"
     | "editorial-seed"
+    | "source-backed-proxy"
     | "administrative-reference";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
   geometry: SectorGeometry;
@@ -26,12 +28,21 @@ const legacyFeatureById = new Map(
   legacyFeatures.map((feature) => [feature.properties.id, feature]),
 );
 
+const sourceBackedProxies = sourceBackedProxiesData.features as unknown as SectorResearchGeometryFeature[];
+const sourceBackedProxyIds = new Set(
+  sourceBackedProxies.map((feature) => feature.properties.id),
+);
+
 export const sectorGeometryCatalog = {
   reviewedCandidates: [
     ...reviewedCandidatesData.features,
-    ...editorialSeedsData.features,
+    ...editorialSeedsData.features.filter(
+      (feature) => !sourceBackedProxyIds.has(feature.properties.id),
+    ),
+    ...sourceBackedProxies,
   ] as unknown as SectorResearchGeometryFeature[],
   editorialSeeds: editorialSeedsData.features as unknown as SectorResearchGeometryFeature[],
+  sourceBackedProxies,
   administrativeReferences: adminReferencesData.features as unknown as SectorResearchGeometryFeature[],
   subscopes: subscopesData.features as unknown as SectorSubscopeFeature[],
 };
@@ -57,9 +68,11 @@ export function resolveLoadedActiveGeometry(
   const legacyFeature = legacyFeatureById.get(id);
   if (activeMarketGeometry && (!fallbackToDemo || !legacyFeature)) {
     return {
-      kind: activeMarketGeometry.properties.status === "editorial-seed"
-        ? "editorial-seed"
-        : "reviewed-market-candidate",
+      kind: activeMarketGeometry.properties.status === "source-backed-proxy"
+        ? "source-backed-proxy"
+        : activeMarketGeometry.properties.status === "editorial-seed"
+          ? "editorial-seed"
+          : "reviewed-market-candidate",
       coordinateSystem: "WGS84",
       geometry: activeMarketGeometry.geometry,
       center: activeMarketGeometry.properties.labelPoint,
@@ -83,9 +96,11 @@ export function resolveLoadedEditorGeometry(
   return selectPreferredEditorGeometry({
     reviewedCandidate: activeMarketGeometry
       ? {
-        kind: activeMarketGeometry.properties.status === "editorial-seed"
-          ? "editorial-seed" as const
-          : "reviewed-market-candidate" as const,
+        kind: activeMarketGeometry.properties.status === "source-backed-proxy"
+          ? "source-backed-proxy" as const
+          : activeMarketGeometry.properties.status === "editorial-seed"
+            ? "editorial-seed" as const
+            : "reviewed-market-candidate" as const,
         coordinateSystem: "WGS84" as const,
         geometry: activeMarketGeometry.geometry,
         center: activeMarketGeometry.properties.labelPoint,

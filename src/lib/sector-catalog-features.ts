@@ -8,7 +8,7 @@ interface MarketGeometryEntry {
   properties: {
     id: string;
     labelPoint: [number, number];
-    status?: "reviewed-candidate" | "editorial-seed";
+    status?: "reviewed-candidate" | "editorial-seed" | "source-backed-proxy";
   };
   geometry?: SectorGeometry;
 }
@@ -32,9 +32,11 @@ export function buildCandidateOnlySectorFeatures(
         name: record.canonicalName,
         district: record.districtNames.join(" / "),
         description: record.definitionCandidate,
-        sourceName: candidate.properties.status === "editorial-seed"
-          ? "覆盖优先的低置信可编辑初稿"
-          : "登记证据与开放几何生成的研究候选",
+        sourceName: candidate.properties.status === "source-backed-proxy"
+          ? "公开文字四至与开放道路重建的参考代理"
+          : candidate.properties.status === "editorial-seed"
+            ? "覆盖优先的低置信可编辑初稿"
+            : "登记证据与开放几何生成的研究候选",
         boundaryBasis: record.definitionCandidate,
         isMock: false,
         center: candidate.properties.labelPoint,

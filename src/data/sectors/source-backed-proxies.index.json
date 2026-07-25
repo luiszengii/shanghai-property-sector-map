@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "features": [
+    {
+      "id": "sector_suhewan",
+      "labelPoint": [
+        121.468,
+        31.247
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_buyecheng",
+      "labelPoint": [
+        121.4515,
+        31.2485
+      ],
+      "status": "source-backed-proxy"
+    }
+  ]
+}

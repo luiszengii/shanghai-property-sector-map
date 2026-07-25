@@ -159,12 +159,16 @@ export function DetailCard() {
   const isEditorialSeed = sectorCatalog.hasEditorialSeed(sector.properties.id)
     && !isRuntimeLoading
     && !isRuntimeFallback;
+  const isSourceBackedProxy = sectorCatalog.hasSourceBackedProxy(sector.properties.id)
+    && !isRuntimeLoading
+    && !isRuntimeFallback;
   const usesAdministrativeReference = geometryStatus === "admin-reference";
   const isAdministrativeReference = usesAdministrativeReference
     && !isRuntimeLoading
     && !isRuntimeFallback;
   const isReviewedCandidate = (
     isEditorialSeed
+    || isSourceBackedProxy
     || (
       geometryStatus !== undefined
       && ["draft", "reviewed", "published"].includes(geometryStatus)
@@ -177,7 +181,7 @@ export function DetailCard() {
   if (geometryStatus === "demo" || isRuntimeFallback) {
     geometrySourceRows.push({ label: "楼市演示面来源", sources: sectorCatalog.marketDemoSources });
   }
-  if (geometryStatus !== undefined && geometryStatus !== "demo") {
+  if (isSourceBackedProxy || (geometryStatus !== undefined && geometryStatus !== "demo")) {
     geometrySourceRows.push({
       label: usesAdministrativeReference ? "行政参考层来源" : "候选面来源",
       sources: geometrySources,
@@ -191,6 +195,8 @@ export function DetailCard() {
       ? usesAdministrativeReference
         ? "行政参考层转换失败 · 楼市演示面可见"
         : "演示几何 · 候选面转换失败"
+      : isSourceBackedProxy
+        ? "公开范围参考代理"
       : isEditorialSeed
         ? "低置信可编辑覆盖初稿"
       : isReviewedCandidate
@@ -206,6 +212,8 @@ export function DetailCard() {
     ? referenceCheck?.verdict === "standard_map_superseded_in_segments"
       ? "行政参考面已复核 · 浦东调整段以后续公告为准"
       : "行政参考面已与标准图、官方面积和邻接关系复核"
+    : isSourceBackedProxy
+      ? "公开文字四至已重建 · 仍须按相邻市场板块精修"
     : isEditorialSeed
       ? "覆盖初稿 · 待按道路、水系和邻接关系逐边精修"
     : sectorRecord?.definitionStatus === "market_scope_candidate"
@@ -216,7 +224,9 @@ export function DetailCard() {
         ? "口径待选择"
         : "定义草案 · 暂不发布";
   const baseDescription = sector.properties.description.replace(/演示范围。?$/, "");
-  const description = isEditorialSeed
+  const description = isSourceBackedProxy
+    ? `${baseDescription}；当前显示按公开规划文字四至与开放道路节点重建的参考代理，不把功能区范围直接等同于楼市板块。`
+    : isEditorialSeed
     ? `${baseDescription}；当前显示按公开地名与相邻板块位置起画的低置信可编辑初稿，用于先补覆盖，不代表边界已经核验。`
     : isReviewedCandidate
     ? `${baseDescription}；当前显示按可追溯文字四至与开放地物独立重建的研究候选面。`

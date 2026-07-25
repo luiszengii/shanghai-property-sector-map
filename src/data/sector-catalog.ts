@@ -1,6 +1,8 @@
 import boundaryEvidenceData from "@/src/data/sectors/boundary-evidence.json";
 import candidateIndexData from "@/src/data/sectors/reviewed-candidates.index.json";
 import editorialSeedIndexData from "@/src/data/sectors/editorial-seeds.index.json";
+import sourceBackedProxyData from "@/src/data/sectors/source-backed-proxies.wgs84.json";
+import sourceBackedProxyIndexData from "@/src/data/sectors/source-backed-proxies.index.json";
 import referenceChecksData from "@/src/data/sectors/reference-checks.json";
 import registryData from "@/src/data/sectors/registry.json";
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
@@ -21,7 +23,7 @@ export interface SectorResearchGeometryFeature {
   properties: {
     id: string;
     coordinateSystem: "WGS84";
-    status: "reviewed-candidate" | "administrative-reference" | "editorial-seed";
+    status: "reviewed-candidate" | "administrative-reference" | "editorial-seed" | "source-backed-proxy";
     labelPoint: [number, number];
   };
   geometry: SectorGeometry;
@@ -44,6 +46,7 @@ export interface SectorActiveLocation {
     | "market-demo"
     | "reviewed-market-candidate"
     | "editorial-seed"
+    | "source-backed-proxy"
     | "administrative-reference";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
   center: [number, number];
@@ -63,6 +66,10 @@ const activeMarketGeometryIndex = [
     ...feature,
     status: "editorial-seed" as const,
   })),
+  ...sourceBackedProxyIndexData.features.map((feature) => ({
+    ...feature,
+    status: "source-backed-proxy" as const,
+  })),
 ].map((feature) => ({
   properties: {
     ...feature,
@@ -76,6 +83,9 @@ const legacyFeatureById = new Map(
 );
 const recordById = new Map(registry.map((record) => [record.id, record]));
 const sourceById = new Map(sources.map((source) => [source.id, source]));
+const sourceBackedProxyById = new Map(
+  sourceBackedProxyData.features.map((feature) => [feature.properties.id, feature]),
+);
 const referenceCheckById = new Map(referenceChecks.map((check) => [check.sectorId, check]));
 const boundaryEvidenceBySectorId = new Map<string, SectorBoundaryEvidence[]>();
 for (const edge of boundaryEvidence) {
@@ -118,8 +128,12 @@ const administrativeReferenceRecords = registry.filter(
 const editorialSeedIds = new Set(
   editorialSeedIndexData.features.map((feature) => feature.id),
 );
+const sourceBackedProxyIds = new Set(sourceBackedProxyById.keys());
 const editorialSeedRecords = registry.filter((record) =>
-  editorialSeedIds.has(record.id)
+  editorialSeedIds.has(record.id) && !sourceBackedProxyIds.has(record.id)
+);
+const sourceBackedProxyRecords = registry.filter((record) =>
+  sourceBackedProxyIds.has(record.id),
 );
 const unresolvedGeometryRecords = registry.filter(
   (record) =>
@@ -151,6 +165,12 @@ function getSourcesForSector(id: string) {
 }
 
 function getGeometrySourcesForSector(id: string) {
+  const sourceBackedProxy = sourceBackedProxyById.get(id);
+  if (sourceBackedProxy) {
+    return sourceBackedProxy.properties.definitionSourceIds
+      .map((sourceId) => sourceById.get(sourceId))
+      .filter((source): source is SectorSourceRecord => Boolean(source));
+  }
   const record = recordById.get(id);
   if (!record) return [];
   return record.geometry.sourceIds
@@ -159,6 +179,12 @@ function getGeometrySourcesForSector(id: string) {
 }
 
 function getGeometryVerificationSourcesForSector(id: string) {
+  const sourceBackedProxy = sourceBackedProxyById.get(id);
+  if (sourceBackedProxy) {
+    return sourceBackedProxy.properties.geometryVerificationSourceIds
+      .map((sourceId) => sourceById.get(sourceId))
+      .filter((source): source is SectorSourceRecord => Boolean(source));
+  }
   const record = recordById.get(id);
   if (!record) return [];
   return (record.geometry.verificationSourceIds ?? [])
@@ -184,9 +210,11 @@ function resolveActiveLocation(id: string, fallbackToDemo = false): SectorActive
   const legacyFeature = legacyFeatureById.get(id);
   if (activeMarketGeometry && (!fallbackToDemo || !legacyFeature)) {
     return {
-      kind: activeMarketGeometry.properties.status === "editorial-seed"
-        ? "editorial-seed"
-        : "reviewed-market-candidate",
+      kind: activeMarketGeometry.properties.status === "source-backed-proxy"
+        ? "source-backed-proxy"
+        : activeMarketGeometry.properties.status === "editorial-seed"
+          ? "editorial-seed"
+          : "reviewed-market-candidate",
       coordinateSystem: "WGS84",
       center: activeMarketGeometry.properties.labelPoint,
     };
@@ -210,6 +238,7 @@ export const sectorCatalog = {
   researchGeometryRecords,
   candidateGeometryRecords,
   editorialSeedRecords,
+  sourceBackedProxyRecords,
   unresolvedGeometryRecords,
   administrativeReferenceRecords,
   marketDemoSources,
@@ -218,6 +247,7 @@ export const sectorCatalog = {
   referenceChecks,
   getFeature: (id: string) => featureById.get(id),
   hasEditorialSeed: (id: string) => editorialSeedIds.has(id),
+  hasSourceBackedProxy: (id: string) => sourceBackedProxyById.has(id),
   hasLegacyFeature: (id: string) => legacyFeatureById.has(id),
   getRecord: (id: string) => recordById.get(id),
   resolveActiveLocation,
