@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 
 // 2017 东/西片区共同以共和新路为界；两个面必须复用这条折线，不能各自近似。
 const canonicalSharedGongheRoad = [
@@ -193,17 +193,17 @@ const sourceBackedProxies = [
   },
 ];
 
-function counterClockwiseRing(ring) {
+function orientRing(ring, counterClockwise = true) {
   const signedArea = ring.slice(0, -1).reduce((area, point, index) => {
     const next = ring[index + 1];
     return area + point[0] * next[1] - next[0] * point[1];
   }, 0) / 2;
-  if (signedArea >= 0) return ring;
+  if ((signedArea >= 0) === counterClockwise) return ring;
   const openRing = ring.slice(0, -1).reverse();
   return [...openRing, openRing[0]];
 }
 
-const features = sourceBackedProxies.map(({ ring, ...proxy }) => ({
+const inlineFeatures = sourceBackedProxies.map(({ ring, ...proxy }) => ({
   type: "Feature",
   properties: {
     ...proxy,
@@ -211,8 +211,162 @@ const features = sourceBackedProxies.map(({ ring, ...proxy }) => ({
     coordinateSystem: "WGS84",
     method: "official_text_four_sides_osm_road_proxy",
   },
-  geometry: { type: "Polygon", coordinates: [counterClockwiseRing(ring)] },
+  geometry: { type: "Polygon", coordinates: [orientRing(ring)] },
 }));
+
+const batchDirectory = new URL("../data/geo/source-backed-batches/", import.meta.url);
+const batchFileNames = (await readdir(batchDirectory))
+  .filter((name) => name.endsWith(".json"))
+  .sort();
+const batches = await Promise.all(batchFileNames.map(async (name) => JSON.parse(
+  await readFile(new URL(name, batchDirectory), "utf8"),
+)));
+
+function normalizeGeometry(geometry) {
+  const normalizePolygon = (polygon) => polygon.map((ring, index) =>
+    orientRing(ring, index === 0));
+  if (geometry.type === "Polygon") {
+    return {
+      type: "Polygon",
+      coordinates: normalizePolygon(geometry.coordinates),
+    };
+  }
+  if (geometry.type === "MultiPolygon") {
+    return {
+      type: "MultiPolygon",
+      coordinates: geometry.coordinates.map(normalizePolygon),
+    };
+  }
+  throw new Error(`unsupported batch geometry: ${geometry.type}`);
+}
+
+function embeddedSourceRecord(source, role) {
+  if (!source?.suggestedSourceId) return undefined;
+  return {
+    id: source.suggestedSourceId,
+    title: source.title ?? `${source.provider} 开放几何快照`,
+    publisher: source.publisher ?? source.provider,
+    url: source.url ?? source.resolvedUrl ?? null,
+    sourceType: source.sourceType ?? (
+      role === "definition" ? "official_planning_document" : "open_geometry_snapshot"
+    ),
+    ...(source.publishedAt ? { publishedAt: source.publishedAt } : {}),
+    licenseStatus: role === "definition" ? "reference_only" : (source.license ?? "unverified"),
+    allowedUse: role === "definition"
+      ? "boundary_definition_only"
+      : "geometry_with_attribution_and_odbl_compliance",
+    note: [
+      source.evidence,
+      source.limitation,
+      source.snapshotAt ? `固定快照时间：${source.snapshotAt}。` : undefined,
+      source.archiveSha256 ? `归档 SHA-256：${source.archiveSha256}。` : undefined,
+      source.attribution,
+    ].filter(Boolean).join(" "),
+  };
+}
+
+function normalizeBatchSourceRecord(source) {
+  if (source.id) {
+    return {
+      ...source,
+      note: source.note
+        ?? "用于本批次公开范围代理的定义或空间核验；不表示楼市板块法定边界。",
+    };
+  }
+  const isOpenGeometry = [
+    source.sourceType,
+    source.licenseStatus,
+  ].some((value) => /osm|openstreetmap|odbl/i.test(value ?? ""));
+  return {
+    id: source.suggestedId,
+    title: source.title,
+    publisher: source.publisher,
+    url: source.url ?? null,
+    sourceType: source.sourceType,
+    ...(source.publishedAt ? { publishedAt: source.publishedAt } : {}),
+    licenseStatus: source.licenseStatus ?? (isOpenGeometry ? "ODbL-1.0" : "reference_only"),
+    allowedUse: isOpenGeometry
+      ? "geometry_with_attribution_and_odbl_compliance"
+      : "spatial_relationship_only",
+    note: [
+      source.geometryUse,
+      source.extractedAt ? `提取时间：${source.extractedAt}。` : undefined,
+      source.attribution,
+      source.query
+        ? `查询：${typeof source.query === "string" ? source.query : JSON.stringify(source.query)}`
+        : undefined,
+    ].filter(Boolean).join(" "),
+  };
+}
+
+function normalizeBatchFeature(feature) {
+  if (feature.geometry) {
+    return {
+      properties: feature.properties ?? Object.fromEntries(
+        Object.entries(feature).filter(([key]) => key !== "geometry"),
+      ),
+      geometry: feature.geometry,
+    };
+  }
+  const {
+    ring,
+    definitionSource,
+    geometryVerificationSource,
+    ...properties
+  } = feature;
+  return {
+    properties: {
+      ...properties,
+      definitionSourceIds: [definitionSource.suggestedSourceId],
+      geometryVerificationSourceIds: [
+        definitionSource.suggestedSourceId,
+        geometryVerificationSource.suggestedSourceId,
+      ],
+      method: "official_text_and_fixed_open_geometry_snapshot_proxy",
+      limitations: [
+        definitionSource.limitation,
+        geometryVerificationSource.geometryProcessing,
+      ].filter(Boolean),
+    },
+    geometry: { type: "Polygon", coordinates: [ring] },
+  };
+}
+
+const batchFeatures = batches.flatMap((batch) => batch.features.map((feature) => {
+  const normalizedFeature = normalizeBatchFeature(feature);
+  const rawProperties = normalizedFeature.properties;
+  return {
+    type: "Feature",
+    properties: {
+      ...rawProperties,
+      status: "source-backed-proxy",
+      coordinateSystem: "WGS84",
+      method: rawProperties.method ?? "official_or_open_geometry_reference_proxy",
+      geometryVerificationSourceIds: [...new Set([
+        ...(rawProperties.definitionSourceIds ?? []),
+        ...(rawProperties.geometryVerificationSourceIds ?? []),
+      ])],
+    },
+    geometry: normalizeGeometry(normalizedFeature.geometry),
+  };
+}));
+
+const embeddedBatchSources = batches.flatMap((batch) => batch.features.flatMap((feature) => [
+  embeddedSourceRecord(feature.definitionSource, "definition"),
+  embeddedSourceRecord(feature.geometryVerificationSource, "verification"),
+].filter(Boolean)));
+const allBatchSources = [
+  ...batches.flatMap((batch) => batch.sources ?? []).map(normalizeBatchSourceRecord),
+  ...embeddedBatchSources,
+];
+
+const features = [...inlineFeatures, ...batchFeatures];
+const duplicateIds = features
+  .map((feature) => feature.properties.id)
+  .filter((id, index, ids) => ids.indexOf(id) !== index);
+if (duplicateIds.length > 0) {
+  throw new Error(`duplicate source-backed proxy ids: ${[...new Set(duplicateIds)].join(", ")}`);
+}
 
 const collection = {
   type: "FeatureCollection",
@@ -240,4 +394,22 @@ await writeFile(
   `${JSON.stringify(index, null, 2)}\n`,
 );
 
-console.log(`built ${features.length} source-backed sector proxies`);
+const sourcesUrl = new URL("../src/data/sectors/sources.json", import.meta.url);
+const sourcesDocument = JSON.parse(await readFile(sourcesUrl, "utf8"));
+const sourceById = new Map(
+  sourcesDocument.sources
+    .filter((source) => source.id)
+    .map((source) => [source.id, source]),
+);
+for (const source of allBatchSources) {
+  sourceById.set(source.id, {
+    ...(sourceById.get(source.id) ?? {}),
+    ...source,
+  });
+}
+await writeFile(
+  sourcesUrl,
+  `${JSON.stringify({ ...sourcesDocument, sources: [...sourceById.values()] }, null, 2)}\n`,
+);
+
+console.log(`built ${features.length} source-backed sector proxies from ${batchFileNames.length} batch files`);

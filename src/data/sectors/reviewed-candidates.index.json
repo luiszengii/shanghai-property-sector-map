@@ -968,6 +968,83 @@
       ]
     },
     {
+      "id": "sector_gaodong",
+      "labelPoint": [
+        121.6352557,
+        31.3274213
+      ]
+    },
+    {
+      "id": "sector_datun",
+      "labelPoint": [
+        121.7516209,
+        30.9782386
+      ]
+    },
+    {
+      "id": "sector_changxing_island",
+      "labelPoint": [
+        121.692772,
+        31.4026721
+      ]
+    },
+    {
+      "id": "sector_hengsha_island",
+      "labelPoint": [
+        121.8423682,
+        31.3391277
+      ]
+    },
+    {
+      "id": "sector_bao_town",
+      "labelPoint": [
+        121.6419567,
+        31.5487186
+      ]
+    },
+    {
+      "id": "sector_chenjia_town",
+      "labelPoint": [
+        121.9169524,
+        31.5218541
+      ]
+    },
+    {
+      "id": "sector_pujiangzhen",
+      "labelPoint": [
+        121.5136609,
+        31.0569714
+      ]
+    },
+    {
+      "id": "sector_wujing",
+      "labelPoint": [
+        121.4495326,
+        31.0579283
+      ]
+    },
+    {
+      "id": "sector_huacao",
+      "labelPoint": [
+        121.2788424,
+        31.2308302
+      ]
+    },
+    {
+      "id": "sector_fengcheng",
+      "labelPoint": [
+        121.6504107,
+        30.930534
+      ]
+    },
+    {
+      "id": "sector_biyun",
+      "labelPoint": [
+        121.5848807,
+        31.2424466
+      ]
+    },
+    {
       "id": "sector_lujiazui",
       "labelPoint": [
         121.5087338,

@@ -160,11 +160,60 @@
       "allowedUse": "boundary_definition_only",
       "note": "调整周家渡—上钢新村、北蔡—张江、金桥—张江、川沙—祝桥和北蔡—康桥等部分界线；世博候选的场馆红线段及任何更早街镇面都必须先做版本核验。"
     },
-    {"id":"official-xuhui-shanghai-south-station-context-2026","title":"徐汇区漕河泾街道年鉴与上海综合客运交通枢纽布局规划","publisher":"徐汇区人民政府、上海市人民政府","url":"https://www.xuhui.gov.cn/xhda/xhda/xhbl/xhnj/2021/01/26/9f8086927641192c01773dbbcf3b33f9.html","sourceType":"official_facility_context","licenseStatus":"reference_only","allowedUse":"name_verification_only","note":"确认铁路上海南站位于漕河泾街道、并属交通枢纽语境；不提供楼市板块边界。"},
-    {"id":"official-changning-xijiao-park-city-2024","title":"长宁区公园城市规划（2024—2035年）","publisher":"上海市长宁区人民政府","url":"https://zwgk.shcn.gov.cn/xxgk/zdxzjc-2024/2024/92/72630/733d05ebd722401ba49e609c2939df0f.pdf","sourceType":"official_functional_area_plan","publishedAt":"2024-01-01","licenseStatus":"reference_only","allowedUse":"spatial_relationship_only","note":"西郊样板区是公园城市功能对象，不等同楼市西郊边界。"},
-    {"id":"official-baoshan-w12-1301-nanda-plan-2020","title":"上海市人民政府关于同意《上海市宝山区W12—1301单元（祁连敏感区）控制性详细规划（修编）》的批复","publisher":"上海市人民政府","url":"https://www.shanghai.gov.cn/nw12344/20200910/0001-12344_65634.html","sourceType":"official_planning_approval","publishedAt":"2020-09-08","licenseStatus":"reference_only","allowedUse":"boundary_definition_only","note":"正式公开文本列出南大地区东至南陈路—南秀路、南至环镇南路—祁连山路—S5、西至S20、北至丰翔路—环镇北路；为跨区、产居混合规划参考范围。"},
-    {"id":"official-baoshan-huanshangda-science-park-plan-2021","title":"环上大科技园“十四五”规划（征求意见稿）","publisher":"上海市宝山区科学技术委员会","url":"https://apps.shbsq.gov.cn/attr/ueditor/da134fd8-aefd-4a04-8eed-db36f1e884d0.pdf","sourceType":"official_functional_area_plan","publishedAt":"2021-01-01","licenseStatus":"reference_only","allowedUse":"boundary_definition_only","note":"公开文本给出上大周边约10平方公里核心区四至：东大场机场界、南真大路—环镇南路、西祁连山路—环镇北路—南陈路、北塘祁路；科技园范围不等同住宅市场。"},
-    {"id":"osm-overpass-nanda-shanghai-university-roads-2026-07-25","title":"OpenStreetMap 南大与上大规划四至道路查询","publisher":"OpenStreetMap contributors / Overpass API","url":"https://overpass.kumi.systems/api/interpreter","sourceType":"open_geometry_query","publishedAt":"2026-07-25","licenseStatus":"ODbL-1.0","allowedUse":"geometry_with_attribution_and_odbl_compliance","note":"用于按公开文字四至重建南大、上大规划参考代理；固定查询和 way 版本见 data/geo/sources/nanda-shanghai-university-osm-roads-2026-07-25.json。"},
+    {
+      "id": "official-xuhui-shanghai-south-station-context-2026",
+      "title": "徐汇区漕河泾街道年鉴与上海综合客运交通枢纽布局规划",
+      "publisher": "徐汇区人民政府、上海市人民政府",
+      "url": "https://www.xuhui.gov.cn/xhda/xhda/xhbl/xhnj/2021/01/26/9f8086927641192c01773dbbcf3b33f9.html",
+      "sourceType": "official_facility_context",
+      "licenseStatus": "reference_only",
+      "allowedUse": "name_verification_only",
+      "note": "确认铁路上海南站位于漕河泾街道、并属交通枢纽语境；不提供楼市板块边界。"
+    },
+    {
+      "id": "official-changning-xijiao-park-city-2024",
+      "title": "上海市长宁区公园城市规划（2024—2035年）",
+      "publisher": "上海市长宁区人民政府",
+      "url": "https://zwgk.shcn.gov.cn/xxgk/zdxzjc-2024/2024/92/72630/733d05ebd722401ba49e609c2939df0f.pdf",
+      "sourceType": "official_planning_document",
+      "publishedAt": "2024",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "正文确认西郊样板区位于新泾镇与北新泾街道、面积约2.55平方公里，并列出外环绿道片区、新泾港蓝轴、中新泾公园和新泾公园等组成。 正文没有闭合四至；本面只以天山西路、金浜路、新泾港及外环高速/绿道形成约2.55平方公里的道路水系核心，不声称复原规划附图。"
+    },
+    {
+      "id": "official-baoshan-w12-1301-nanda-plan-2020",
+      "title": "上海市人民政府关于同意《上海市宝山区W12—1301单元（祁连敏感区）控制性详细规划（修编）》的批复",
+      "publisher": "上海市人民政府",
+      "url": "https://www.shanghai.gov.cn/nw12344/20200910/0001-12344_65634.html",
+      "sourceType": "official_planning_approval",
+      "publishedAt": "2020-09-08",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "正式公开文本列出南大地区东至南陈路—南秀路、南至环镇南路—祁连山路—S5、西至S20、北至丰翔路—环镇北路；为跨区、产居混合规划参考范围。"
+    },
+    {
+      "id": "official-baoshan-huanshangda-science-park-plan-2021",
+      "title": "环上大科技园“十四五”规划（征求意见稿）",
+      "publisher": "上海市宝山区科学技术委员会",
+      "url": "https://apps.shbsq.gov.cn/attr/ueditor/da134fd8-aefd-4a04-8eed-db36f1e884d0.pdf",
+      "sourceType": "official_functional_area_plan",
+      "publishedAt": "2021-01-01",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "公开文本给出上大周边约10平方公里核心区四至：东大场机场界、南真大路—环镇南路、西祁连山路—环镇北路—南陈路、北塘祁路；科技园范围不等同住宅市场。"
+    },
+    {
+      "id": "osm-overpass-nanda-shanghai-university-roads-2026-07-25",
+      "title": "OpenStreetMap 南大与上大规划四至道路查询",
+      "publisher": "OpenStreetMap contributors / Overpass API",
+      "url": "https://overpass.kumi.systems/api/interpreter",
+      "sourceType": "open_geometry_query",
+      "publishedAt": "2026-07-25",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "用于按公开文字四至重建南大、上大规划参考代理；固定查询和 way 版本见 data/geo/sources/nanda-shanghai-university-osm-roads-2026-07-25.json。"
+    },
     {
       "id": "official-shanghai-biyun-international-community-scope-2024",
       "title": "2023年上海市高标准保洁区域清单",
@@ -1255,14 +1304,14 @@
     },
     {
       "id": "osm-geofabrik-shanghai-260721",
-      "title": "Geofabrik Shanghai OSM snapshot 2026-07-21",
+      "title": "Geofabrik GmbH / OpenStreetMap contributors 开放几何快照",
       "publisher": "Geofabrik GmbH / OpenStreetMap contributors",
       "url": "https://download.geofabrik.de/asia/china/shanghai-260721-free.gpkg.zip",
       "sourceType": "open_geometry_snapshot",
       "publishedAt": "2026-07-21T20:21:50Z",
       "licenseStatus": "ODbL-1.0",
       "allowedUse": "geometry_with_attribution_and_odbl_compliance",
-      "note": "归档 SHA-256 为 7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b；详细锁定信息见 data/geo/sources/osm-shanghai-260721.json。"
+      "note": "固定快照时间：2026-07-21T20:21:50Z。 归档 SHA-256：7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b。 © OpenStreetMap contributors"
     },
     {
       "id": "osm-overpass-roads-2026-07-25",
@@ -1351,6 +1400,189 @@
       "licenseStatus": "reference_only",
       "allowedUse": "spatial_relationship_only",
       "note": "用于定海路街道行政四至参考，不等同楼市板块。"
+    },
+    {
+      "id": "official-jiading-old-city-profile-2024",
+      "title": "嘉定镇街道关于嘉定老城区的会办意见",
+      "publisher": "上海市嘉定区人民政府",
+      "url": "https://www.jiading.gov.cn/publicity/jggk/dbjyhzxta/bljggk/181933",
+      "sourceType": "official_subdistrict_profile",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于本批次公开范围代理的定义或空间核验；不表示楼市板块法定边界。"
+    },
+    {
+      "id": "official-songjiang-university-town-communities-2023",
+      "title": "广富林街道居委会四至和管理范围调整通知",
+      "publisher": "上海市松江区人民政府",
+      "url": "https://www.songjiang.gov.cn/govxxgk/SHSJ70/2023-04-28/4a824af6-0291-4fa4-bae4-2525a08bd347.html",
+      "sourceType": "official_community_boundary_notice",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于本批次公开范围代理的定义或空间核验；不表示楼市板块法定边界。"
+    },
+    {
+      "id": "official-chongming-chengqiao-new-city-plan-2019",
+      "title": "城桥新城总体规划（2010—2020）",
+      "publisher": "上海市崇明区人民政府",
+      "url": "https://shcm.gov.cn/govxxgk/qghzyj/2019-09-23/aebe9c18-3fb1-45b3-ad64-5f8ac4d2291d.html",
+      "sourceType": "official_new_city_plan",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "用于本批次公开范围代理的定义或空间核验；不表示楼市板块法定边界。"
+    },
+    {
+      "id": "osm-b3-outer-relations-2026-07-25",
+      "title": "OpenStreetMap 嘉定镇、广富林及城桥新城开放几何",
+      "publisher": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "sourceType": "open_geometry_objects",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "2026-07-25 提取：嘉定镇街道 relation/17000644 v2；广富林街道 relation/16202387 v8；城桥新城 way/413843891 v1；WGS84。"
+    },
+    {
+      "id": "official-pudong-waigaoqiao-free-trade-zone-plan-2009",
+      "title": "上海市外高桥保税区控制性详细规划修编（草案）公示",
+      "publisher": "上海市浦东新区人民政府",
+      "url": "https://www.pudong.gov.cn/zwgk/azt_fzgh/2022/306/263595.html",
+      "sourceType": "official_text_four_sides",
+      "publishedAt": "2009-02-24",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "协调范围东至港电路、浦东运河，南至五洲大道，西至杨高北路，北至威斯路，面积10.34平方公里，均计至道路或河道中心线。 这是保税区协调/用地规划口径，含产业和港区；不是外高桥住宅市场边界。"
+    },
+    {
+      "id": "official-shanghai-nanhui-new-city-action-plan-2021",
+      "title": "南汇新城“十四五”规划建设行动方案",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/gzdt/20210416/6ea147ee40ae4e93bf54311d2b6af0f4.html",
+      "sourceType": "official_text_four_sides",
+      "publishedAt": "2021-04-14",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "官方明确南汇新城是临港新片区主城区，四至为大治河以南，G1503—瓦洪公路—两港大道—中港以东，规划面积343.3平方公里。 公开规划范围远大于楼市常说的滴水湖主城区；本面采用南汇新城镇行政 relation 作为可编辑核心，而不是把343.3平方公里全域直接作为住宅板块。"
+    },
+    {
+      "id": "official-hongkou-zhangjiang-ruihong-parcel-2023",
+      "title": "张江高新区虹口园四至边界范围",
+      "publisher": "上海市虹口区人民政府",
+      "url": "https://www.shhk.gov.cn/xwzx/002008/002008040/20230728/5dee74ee-c47e-4c93-9ed6-bc95187e2af3.html",
+      "sourceType": "official_text_four_sides",
+      "publishedAt": "2023-07-28",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "官方逐地块边界清单明确“瑞虹地块：天虹路—瑞虹路—虹关路—虹镇老街—飞虹路”。 该四至定义的是张江虹口园瑞虹地块，虽与瑞虹社区高度重合，仍不是全部楼市瑞虹新城的法定边界。"
+    },
+    {
+      "id": "official-shanghai-jiading-new-city-green-core-2025",
+      "title": "嘉定新城绿色生态城区规划建设实施方案",
+      "publisher": "上海市住房和城乡建设管理委员会等",
+      "url": "https://www.shanghai.gov.cn/cmsres/f0/f04f2063ea60454c8783a82f7a0ed728/6dc5fa092c6b322e50695822b6fa0b58.pdf",
+      "sourceType": "official_text_four_sides",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "正文给出领先示范区东至浏翔公路、南至思义路、西至沪嘉高速、北至上海绕城高速，面积约12.5平方公里。 这是嘉定新城159.5平方公里全域中的领先示范核心；采用核心而不是全域，避免吞并嘉定老城、菊园、新成路和马陆其余市场。"
+    },
+    {
+      "id": "official-shanghai-songbao-unit-plan-2022",
+      "title": "上海主城区（宝山部分）淞宝单元规划",
+      "publisher": "上海市规划和自然资源局",
+      "url": "https://ghzyj.sh.gov.cn/zcdygh/20231013/73f11a45a0e7451199b0b504b750967b.html",
+      "sourceType": "official_approved_unit_plan",
+      "publishedAt": "2022-12-24",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "官方页面及沪府规划〔2022〕281号确认淞宝单元规划获批，规划建设用地总规模不超过15.55平方公里。 HTML和批复正文未提供可仅凭文字复原的完整逐边四至；本面使用吴淞街道与友谊路街道开放行政关系并集作为强核心，不描摹规划附图。"
+    },
+    {
+      "id": "official-songjiang-jiuting-new-town-plan-2019",
+      "title": "松江区九亭新市镇（含九里亭街道）国土空间总体规划（2017—2035）公众参与草案",
+      "publisher": "上海市松江区人民政府",
+      "url": "https://www.songjiang.gov.cn/zmhd/004002/20191129/05526a29-8cac-41dc-b1e4-f01322d42835.html",
+      "sourceType": "official_text_four_sides",
+      "publishedAt": "2019-11-29",
+      "licenseStatus": "reference_only",
+      "allowedUse": "boundary_definition_only",
+      "note": "官方明确规划由G50、G60、嘉闵高架、淀浦河围合，总面积31.32平方公里，并将九里亭街道6.78平方公里与九亭镇24.54平方公里分别列出。 市场目录已有独立九里亭口径，因此本面只采用九亭镇 relation，未把官方31.32平方公里九亭新市镇全域直接归入九亭。"
+    },
+    {
+      "id": "official-putuo-zhenru-zhenguang-block-communities-2024",
+      "title": "真如镇街道居民区基本情况（真光块17个居民区）",
+      "publisher": "上海市普陀区人民政府 真如镇街道",
+      "url": "https://www.shpt.gov.cn/zrzjd-jiedaozhen/bmfw-zrzjd/20220801/848477.html",
+      "sourceType": "official-community-member-list",
+      "publishedAt": "2024-09-03",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "defines the 17-member set; does not publish community polygons"
+    },
+    {
+      "id": "official-pudong-lianyang-community-service-list-2021",
+      "title": "上海市浦东新区花木街道公共法律服务一览表（联洋一至七居委）",
+      "publisher": "上海市浦东新区人民政府 花木街道",
+      "url": "https://www.pudong.gov.cn/zwgk/qt-hmjd/2022/286/33685.html",
+      "sourceType": "official-community-address-and-member-list",
+      "publishedAt": "2021-10-27",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "defines named residential members and addresses; does not publish community polygons"
+    },
+    {
+      "id": "official-yangpu-riverside-key-functional-area-2025",
+      "title": "杨浦区重点功能区发展十四五规划（杨浦滨江功能区）",
+      "publisher": "上海市杨浦区人民政府",
+      "url": "https://www.shyp.gov.cn/zhengwu/zwgk-qzfwj/2025/220/ea2d2053c6de6337ba1ac7992724c6d1.html",
+      "sourceType": "official-functional-area-description",
+      "publishedAt": "2025",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "riverside location constraint only; 15.6 km² functional area is not the market polygon"
+    },
+    {
+      "id": "official-baoshan-dahua-1v6-community-four-sides-2011",
+      "title": "大华一村第六居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=51ed4693-937a-4e72-82ed-ca12ac887199",
+      "sourceType": "official-community-four-sides",
+      "publishedAt": "2011-09-19",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "two-block community boundary reference"
+    },
+    {
+      "id": "official-baoshan-dahua-2-binjiangyayuan-four-sides-2011",
+      "title": "大华二村滨江雅苑居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=65671f0e-daff-4a5c-a7b8-57a7caeb70c5",
+      "sourceType": "official-community-four-sides",
+      "publishedAt": "2011-09-19",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "community boundary reference around the named residential member"
+    },
+    {
+      "id": "official-baoshan-dahua-5v1-community-four-sides-2011",
+      "title": "大华五村第一居民委员会管辖范围批复",
+      "publisher": "上海市宝山区人民政府",
+      "url": "https://xxgk.shbsq.gov.cn/article.html?infoid=1da8da4c-d24a-4caa-ae68-dc5d01119c99",
+      "sourceType": "official-community-four-sides",
+      "publishedAt": "2011-09-19",
+      "licenseStatus": "reference_only",
+      "allowedUse": "spatial_relationship_only",
+      "note": "two-block community boundary reference"
+    },
+    {
+      "id": "osm-overpass-b4-community-proxies-2026-07-25",
+      "title": "OpenStreetMap residential ways and Pingliang Road Subdistrict relation queried through Overpass",
+      "publisher": "OpenStreetMap contributors / Overpass API",
+      "url": "https://overpass-api.de/api/interpreter",
+      "sourceType": "open-geometry-query",
+      "publishedAt": "2026-07-25",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "提取时间：2026-07-25T04:43:33.141Z。 © OpenStreetMap contributors 查询：{\"residentialWays\":\"[out:json][timeout:180];way(id:1431067082,1431067081,1431067080,1431067069,956596812,957024133,957024135,957024145,1431067085,957024141,957024143,957025218,1431067083,1431067079,872868842,1435592515,709159322,851368750,872868846,13038758,13038757,851368751,407606425,302865540,851371552,586076252,940758604,1431653618,1431653621,1431653623,1431653622,1431653624,1431653614,1368070500);out meta geom;\",\"pingliangRelation\":\"[out:json][timeout:180];rel(13464332);out meta geom;way(r);out meta geom;\"}"
     }
   ]
 }

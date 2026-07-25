@@ -24,19 +24,40 @@ for (const feature of collection.features) {
   const { properties, geometry } = feature;
   assert.equal(properties.status, "source-backed-proxy");
   assert.equal(properties.coordinateSystem, "WGS84");
-  assert.equal(properties.method, "official_text_four_sides_osm_road_proxy");
+  assert.ok(
+    typeof properties.method === "string" && properties.method.length >= 8,
+    `${properties.id} 必须声明可复核的代理构建方法`,
+  );
   assert.equal(properties.confidence, "medium");
   assert.ok(properties.definitionSourceIds.length > 0);
   assert.ok(properties.geometryVerificationSourceIds.length >= 2);
-  assert.equal(geometry.type, "Polygon");
-  const ring = geometry.coordinates[0];
-  assert.ok(ring.length >= 5, `${properties.id} 至少应包含四条来源边`);
-  assert.deepEqual(ring[0], ring.at(-1), `${properties.id} 边界必须闭合`);
-  const signedArea = ring.slice(0, -1).reduce((area, point, index) => {
-    const next = ring[index + 1];
-    return area + point[0] * next[1] - next[0] * point[1];
-  }, 0) / 2;
-  assert.ok(signedArea > 0, `${properties.id} 外环应为 RFC 7946 逆时针方向`);
+  assert.ok(
+    geometry.type === "Polygon" || geometry.type === "MultiPolygon",
+    `${properties.id} 必须是 Polygon 或 MultiPolygon`,
+  );
+  const polygons = geometry.type === "Polygon"
+    ? [geometry.coordinates]
+    : geometry.coordinates;
+  for (const [polygonIndex, polygon] of polygons.entries()) {
+    const exteriorRing = polygon[0];
+    assert.ok(
+      exteriorRing.length >= 5,
+      `${properties.id} 第 ${polygonIndex + 1} 个外环至少应包含四条来源边`,
+    );
+    assert.deepEqual(
+      exteriorRing[0],
+      exteriorRing.at(-1),
+      `${properties.id} 第 ${polygonIndex + 1} 个外环必须闭合`,
+    );
+    const signedArea = exteriorRing.slice(0, -1).reduce((area, point, index) => {
+      const next = exteriorRing[index + 1];
+      return area + point[0] * next[1] - next[0] * point[1];
+    }, 0) / 2;
+    assert.ok(
+      signedArea > 0,
+      `${properties.id} 第 ${polygonIndex + 1} 个外环应为 RFC 7946 逆时针方向`,
+    );
+  }
 }
 
 function containsChain(ring, chain) {

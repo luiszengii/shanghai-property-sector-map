@@ -88,6 +88,118 @@
         31.285
       ],
       "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_xijiao",
+      "labelPoint": [
+        121.356,
+        31.207
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_waigaoqiao",
+      "labelPoint": [
+        121.607,
+        31.334
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_lingang_main_city",
+      "labelPoint": [
+        121.91,
+        30.92
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_ruihong_new_town",
+      "labelPoint": [
+        121.4962,
+        31.2652
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_jiading_new_city",
+      "labelPoint": [
+        121.281,
+        31.351
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_songbao",
+      "labelPoint": [
+        121.492,
+        31.391
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_jiuting",
+      "labelPoint": [
+        121.315,
+        31.129
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_jiading_old_city",
+      "labelPoint": [
+        121.243,
+        31.384
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_songjiang_university_town",
+      "labelPoint": [
+        121.199,
+        31.057
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_chongming_new_city",
+      "labelPoint": [
+        121.437,
+        31.632
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_zhenguang",
+      "labelPoint": [
+        121.3808,
+        31.2581
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_lianyang",
+      "labelPoint": [
+        121.5562,
+        31.2265
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_yangpu_dongwaitan",
+      "labelPoint": [
+        121.5224,
+        31.2592
+      ],
+      "status": "source-backed-proxy"
+    },
+    {
+      "id": "sector_dahua",
+      "labelPoint": [
+        121.4128,
+        31.2776
+      ],
+      "status": "source-backed-proxy"
     }
   ]
 }
