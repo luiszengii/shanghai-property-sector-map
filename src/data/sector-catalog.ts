@@ -6,6 +6,7 @@ import sourceBackedProxyIndexData from "@/src/data/sectors/source-backed-proxies
 import referenceChecksData from "@/src/data/sectors/reference-checks.json";
 import registryData from "@/src/data/sectors/registry.json";
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
+import userReviewedOverridesData from "@/src/data/sectors/user-reviewed-overrides.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
 import { buildCandidateOnlySectorFeatures } from "@/src/lib/sector-catalog-features";
@@ -23,7 +24,12 @@ export interface SectorResearchGeometryFeature {
   properties: {
     id: string;
     coordinateSystem: "WGS84";
-    status: "reviewed-candidate" | "administrative-reference" | "editorial-seed" | "source-backed-proxy";
+    status:
+      | "reviewed-candidate"
+      | "administrative-reference"
+      | "editorial-seed"
+      | "source-backed-proxy"
+      | "user-reviewed-override";
     labelPoint: [number, number];
   };
   geometry: SectorGeometry;
@@ -47,6 +53,7 @@ export interface SectorActiveLocation {
     | "reviewed-market-candidate"
     | "editorial-seed"
     | "source-backed-proxy"
+    | "user-reviewed-override"
     | "administrative-reference";
   coordinateSystem: "GCJ-02-assumed" | "WGS84";
   center: [number, number];
@@ -57,7 +64,7 @@ const registry = registryData.sectors as SectorRegistryEntry[];
 const sources = sourcesData.sources as SectorSourceRecord[];
 const boundaryEvidence = boundaryEvidenceData.edges as SectorBoundaryEvidence[];
 const referenceChecks = referenceChecksData.checks as SectorReferenceCheck[];
-const activeMarketGeometryIndex = [
+const baseActiveMarketGeometryIndex = [
   ...candidateIndexData.features.map((feature) => ({
     ...feature,
     status: "reviewed-candidate" as const,
@@ -76,6 +83,22 @@ const activeMarketGeometryIndex = [
     labelPoint: feature.labelPoint as [number, number],
   },
 }));
+const userReviewedOverrideFeatures =
+  userReviewedOverridesData.features as unknown as SectorResearchGeometryFeature[];
+const userReviewedOverrideIndex = userReviewedOverrideFeatures.map((feature) => ({
+  properties: {
+    id: feature.properties.id,
+    status: "user-reviewed-override" as const,
+    labelPoint: feature.properties.labelPoint as [number, number],
+  },
+}));
+const activeMarketGeometryIndex = [
+  ...new Map(
+    [...baseActiveMarketGeometryIndex, ...userReviewedOverrideIndex].map(
+      (feature) => [feature.properties.id, feature],
+    ),
+  ).values(),
+];
 const subscopes = subscopesData.features as unknown as SectorSubscopeFeature[];
 
 const legacyFeatureById = new Map(
@@ -214,7 +237,9 @@ function resolveActiveLocation(id: string, fallbackToDemo = false): SectorActive
         ? "source-backed-proxy"
         : activeMarketGeometry.properties.status === "editorial-seed"
           ? "editorial-seed"
-          : "reviewed-market-candidate",
+          : activeMarketGeometry.properties.status === "user-reviewed-override"
+            ? "user-reviewed-override"
+            : "reviewed-market-candidate",
       coordinateSystem: "WGS84",
       center: activeMarketGeometry.properties.labelPoint,
     };

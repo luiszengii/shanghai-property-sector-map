@@ -3,6 +3,7 @@ export type DisplayCoordinateSystem = "WGS84" | "GCJ-02" | "GCJ-02-assumed";
 const gcj02Axis = 6_378_245;
 const gcj02EccentricitySquared = 0.006693421622965943;
 const wgs84PositionCache = new Map<string, [number, number]>();
+const gcj02PositionCache = new Map<string, [number, number]>();
 const bd09PositionCache = new Map<string, [number, number]>();
 const baiduRadiansFactor = Math.PI * 3_000 / 180;
 
@@ -43,6 +44,14 @@ export function wgs84ToGcj02Position(position: [number, number]): [number, numbe
   const cached = wgs84PositionCache.get(key);
   if (cached) return cached;
 
+  const converted = calculateWgs84ToGcj02(position);
+  wgs84PositionCache.set(key, converted);
+  return converted;
+}
+
+function calculateWgs84ToGcj02(position: [number, number]): [number, number] {
+  const [lng, lat] = position;
+  if (isOutsideMainlandChina(lng, lat)) return [lng, lat];
   const latitudeRadians = lat / 180 * Math.PI;
   const sinLatitude = Math.sin(latitudeRadians);
   const magic = 1 - gcj02EccentricitySquared * sinLatitude ** 2;
@@ -51,8 +60,41 @@ export function wgs84ToGcj02Position(position: [number, number]): [number, numbe
     / ((gcj02Axis * (1 - gcj02EccentricitySquared)) / (magic * squareRootMagic) * Math.PI);
   const longitudeDelta = transformLongitude(lng - 105, lat - 35) * 180
     / (gcj02Axis / squareRootMagic * Math.cos(latitudeRadians) * Math.PI);
-  const converted: [number, number] = [lng + longitudeDelta, lat + latitudeDelta];
-  wgs84PositionCache.set(key, converted);
+  return [lng + longitudeDelta, lat + latitudeDelta];
+}
+
+/**
+ * Iteratively inverts the local WGS84 → GCJ-02 display transform. Editor
+ * drafts use GCJ-02 because they are drawn on AMap; project geometry is stored
+ * as WGS84, so an explicit user save crosses this seam before publication.
+ */
+export function gcj02ToWgs84Position(position: [number, number]): [number, number] {
+  const [lng, lat] = position;
+  if (isOutsideMainlandChina(lng, lat)) return [lng, lat];
+  const key = coordinateKey(lng, lat);
+  const cached = gcj02PositionCache.get(key);
+  if (cached) return cached;
+
+  let longitude = lng;
+  let latitude = lat;
+  for (let iteration = 0; iteration < 6; iteration += 1) {
+    const [displayLongitude, displayLatitude] = calculateWgs84ToGcj02([
+      longitude,
+      latitude,
+    ]);
+    const longitudeError = displayLongitude - lng;
+    const latitudeError = displayLatitude - lat;
+    longitude -= longitudeError;
+    latitude -= latitudeError;
+    if (
+      Math.abs(longitudeError) <= 1e-10
+      && Math.abs(latitudeError) <= 1e-10
+    ) {
+      break;
+    }
+  }
+  const converted: [number, number] = [longitude, latitude];
+  gcj02PositionCache.set(key, converted);
   return converted;
 }
 

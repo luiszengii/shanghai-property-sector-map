@@ -8,7 +8,11 @@ interface MarketGeometryEntry {
   properties: {
     id: string;
     labelPoint: [number, number];
-    status?: "reviewed-candidate" | "editorial-seed" | "source-backed-proxy";
+    status?:
+      | "reviewed-candidate"
+      | "editorial-seed"
+      | "source-backed-proxy"
+      | "user-reviewed-override";
   };
   geometry?: SectorGeometry;
 }
@@ -36,6 +40,8 @@ export function buildCandidateOnlySectorFeatures(
           ? "公开文字四至与开放道路重建的参考代理"
           : candidate.properties.status === "editorial-seed"
             ? "覆盖优先的低置信可编辑初稿"
+            : candidate.properties.status === "user-reviewed-override"
+              ? "边界编辑器明确保存的用户裁定版本"
             : "登记证据与开放几何生成的研究候选",
         boundaryBasis: record.definitionCandidate,
         isMock: false,
