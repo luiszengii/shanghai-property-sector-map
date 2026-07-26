@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { projects } from "@/src/content/project-leads";
 import {
   clusterMapPoints,
   shouldShowProjectLabel,
   zoomToSeparatePoints,
 } from "@/src/lib/project-marker-clustering";
 import { projectHouseIconSvg } from "@/src/lib/category-icon-svg";
+import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import type { PropertyProject } from "@/src/types/map";
 
 interface ProjectLayerProps {
@@ -45,12 +45,14 @@ function projectMarkerContent(
   showLabel: boolean,
 ) {
   const displayName = project.officialName ?? project.name;
-  const price = project.averagePrice
-    .toFixed(project.averagePrice % 1 ? 2 : 0)
-    .replace(/0$/, "") + "万";
+  const price = project.research
+    ? project.research.averagePrice
+      .toFixed(project.research.averagePrice % 1 ? 2 : 0)
+      .replace(/0$/, "") + "万/㎡"
+    : "";
   const label = showLabel
     ? '<span class="project-label"><b>' + escapeHtml(displayName)
-      + "</b><small>" + price + "/㎡</small></span>"
+      + "</b>" + (price ? "<small>" + price + "</small>" : "") + "</span>"
     : "";
   return '<button class="project-marker'
     + (selected ? " is-selected" : "")
@@ -70,6 +72,7 @@ export function ProjectLayer({
   selectedProjectId,
   onSelect,
 }: ProjectLayerProps) {
+  const projects = useProjectCatalog();
   const markersRef = useRef<AMap.Marker[]>([]);
   const markerByProjectIdRef = useRef(new Map<string, AMap.Marker>());
   const selectedProjectIdRef = useRef(selectedProjectId);
@@ -99,7 +102,7 @@ export function ProjectLayer({
       marker.setContent(projectMarkerContent(project, selected, showDetailLabels));
       marker.setzIndex(selected ? 210 : 145);
     }
-  }, [selectedProjectId, showDetailLabels]);
+  }, [projects, selectedProjectId, showDetailLabels]);
 
   useEffect(() => {
     markersRef.current.forEach((marker) => map.remove(marker));
@@ -163,6 +166,7 @@ export function ProjectLayer({
     clusterEnabled,
     clusterRadius,
     map,
+    projects,
     projectsVisibleAtZoom,
     showDetailLabels,
     visible,

@@ -2,6 +2,7 @@
 
 import { Database, X } from "lucide-react";
 import { useEffect } from "react";
+import { LocalDataDisclosures } from "@/src/components/local-research-features";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
 
@@ -33,13 +34,7 @@ export function DataDisclaimerDialog() {
         <span className="eyebrow">DATA NOTE</span>
         <h2 id="data-dialog-title">数据说明</h2>
         <ul>
-          {sectorBoundarySource === "hfwgsj-private" && (
-            <li>
-              当前板块边界已切换为 2026-07-25 从微观世界登录页面单次导出的本地私有快照；
-              该快照共 121 个多边形，来源许可与坐标系尚未独立确认，不进入公开构建，也不作为法定或行业统一边界。
-            </li>
-          )}
-          <li>500–800 万新盘清单由用户提供；均价、优劣势、教育与推荐指数尚未独立核验，仅作为看盘线索。</li>
+          <LocalDataDisclosures source={sectorBoundarySource} />
           <li>46 个新盘点位已于 2026-07-22 按项目 POI、公开地址逐项核对并固定，不再使用板块近似点。</li>
           <li>多期或多组团项目采用主地块/整体代表点，详情卡会单独标注；中等置信点位建议看房前再次确认具体入口。</li>
           <li>当前共 {candidateSectors.length} 个板块已按可追溯文字四至与固定日期 OpenStreetMap 开放地物生成青绿实线研究候选面。</li>

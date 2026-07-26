@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import categoriesData from "@/src/data/categories.json";
 import type { SectorLabelMode } from "@/src/lib/sector-label-visibility";
 import type { Category } from "@/src/types/map";
+import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
@@ -105,7 +106,7 @@ export const useMapStore = create<MapState>()(
       setSectorLabelMinZoom: (zoom) => set({ sectorLabelMinZoom: zoom }),
       setSectorBoundarySource: (source) =>
         set({
-          sectorBoundarySource: source,
+          sectorBoundarySource: isLocalResearchMode ? source : "project",
           selectedSectorId: null,
           focusRequest: null,
           sectorGeometryLoading: {},
@@ -139,6 +140,16 @@ export const useMapStore = create<MapState>()(
     {
       name: "shanghai-sector-map-session",
       storage: createJSONStorage(() => sessionStorage),
+      merge: (persisted, current) => {
+        const stored = persisted as Partial<MapState>;
+        return {
+          ...current,
+          ...stored,
+          sectorBoundarySource: isLocalResearchMode
+            ? stored.sectorBoundarySource ?? "project"
+            : "project",
+        };
+      },
       partialize: (state) => ({
         enabledCategories: state.enabledCategories,
         showProjects: state.showProjects,

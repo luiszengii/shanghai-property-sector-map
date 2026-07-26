@@ -6,11 +6,12 @@ import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
+import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
-import { PrivateSectorLayer } from "./HfwgsjSectorLayer";
+import { PrivateSectorLayer } from "@/src/components/map/HfwgsjSectorLayer";
 import { SectorLayer } from "./SectorLayer";
 
 const places = placesData as Place[];
@@ -298,7 +299,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
-          {sectorBoundarySource === "project" ? (
+          {!isLocalResearchMode || sectorBoundarySource === "project" ? (
             <SectorLayer
               amapApi={amapApi}
               map={mapInstance}

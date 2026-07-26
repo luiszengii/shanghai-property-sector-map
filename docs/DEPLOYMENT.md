@@ -17,6 +17,25 @@ standalone 服务。
 6. 原子切换 `/opt/shfang/current` 并重启 `shfang-map.service`；
 7. 先检查本机服务，再检查 `https://shfang.xyz/`。
 
+生产构建是“公开展示模式”：只开放 `/` 与 `/observations`。板块编辑器、
+持久版本 API、本地私有边界快照、待核验项目资料和详细小红书研究数据只在 `next dev`
+开发模式可用；正式构建缺少任何额外环境变量时也会默认关闭这些能力。
+部署激活脚本会验证公开页面为 200、内部页面/API 为 404，并检查首页没有
+私有入口或数据源名称；任一条件失败都会回滚到前一个版本。
+
+`/observations` 使用仓库内经过审查的聚合快照
+`src/data/public-observations.json`，不读取生产服务器上的 `outputs/`。
+生成命令是：
+
+```bash
+pnpm build:public-observations
+pnpm check:public
+```
+
+生成前需要本地存在 `outputs/xhs_analysis/web_dataset.json`。提交前应查看
+公开快照差异；发布检查会拒绝身份字段、评论/帖子内部 ID、临时来源链接、
+研究专用项目字段或任何被 Git 跟踪的 `outputs/` 文件。
+
 同一时间只允许一个生产发布运行。服务器保留最近五个版本；新版本
 健康检查失败时，`scripts/activate-release.sh` 会切回前一个版本。
 

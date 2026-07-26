@@ -36,7 +36,8 @@
 | `outputs/xhs_analysis/relevant_notes.csv` | 相关正文的隐私降敏索引、摘要、互动量与来源链接 | 仅供研究 |
 | `outputs/xhs_analysis/sanitized_comments.jsonl` | 去除昵称、用户标识和评论 ID 的评论样本 | 仅供研究 |
 | `outputs/xhs_analysis/batch_manifest.json` | 批次目录、去重前后数量和各板块覆盖统计 | 仅供研究 |
-| `outputs/xhs_analysis/web_dataset.json` | 独立“板块观察”页面使用的本地脱敏数据包 | 仅供本地网站读取，不提交仓库 |
+| `outputs/xhs_analysis/web_dataset.json` | 本地“板块观察”页面使用的详细脱敏数据包 | 仅供本地网站读取，不提交仓库 |
+| `src/data/public-observations.json` | 公开“板块观察”使用的聚合快照与少量稳定来源链接 | 可以；须通过 `pnpm check:public` |
 | `outputs/xhs_analysis/REPORT.md` | 统一 12 板块的利好/利空观点报告 | 可做研究入口，不是事实数据 |
 | `scripts/xhs_property_report.py` | 从原始 JSONL 重新生成清洗数据和报告 | 可复用 |
 
@@ -73,9 +74,14 @@
 ### 网站中的浏览入口
 
 - 地图首页的“板块观察”先显示聚合概览，点击“进入完整板块观察”进入 `/observations` 独立页面。
-- 独立页面通过 `/api/xhs-observations` 读取本地 `web_dataset.json`，支持按行政区与板块二级筛选、正文/评论关键词搜索及高亮、展开脱敏评论和跳转小红书原帖。
-- 数据包位于已忽略的 `outputs/`，不会随代码进入新克隆或公开构建；新环境需要先运行清洗脚本生成。
-- 页面显示正文摘要和脱敏评论，不显示作者身份、评论标识或临时访问参数。原帖链接是否可打开取决于平台当时的登录与访问状态。
+- `next dev` 本地研究模式通过 `/api/xhs-observations` 读取 `web_dataset.json`，支持正文/评论关键词搜索、脱敏评论浏览和原帖追溯。
+- 正式构建不开放上述 API，不打包帖子摘要或评论语料；公开页面只读取 `src/data/public-observations.json` 中的聚合结论、看房核验清单与每板块不超过两条稳定原帖链接。
+- 用 `pnpm build:public-observations` 从本地数据重新生成公开快照，再运行 `pnpm check:public`。公开快照必须作为普通 Git 差异人工复核后才能发布。
+- 原帖链接是否可打开取决于平台当时的登录与访问状态。
+
+待核验项目价格、学区、优劣势和推荐指数同样不进入仓库，保存在
+`outputs/local-project-research.json`。本地开发页通过
+`/api/local-project-research` 读取；正式构建中该接口返回 404。
 
 ## 5. 如何重新采集同类数据
 

@@ -29,12 +29,6 @@ export interface PropertyProject {
   district: string;
   sector: string;
   name: string;
-  unitType: string;
-  averagePrice: number;
-  advantages: string[];
-  disadvantages: string[];
-  education: string[];
-  rating: number | null;
   officialName?: string;
   locationAddress: string;
   position: [number, number];
@@ -43,9 +37,17 @@ export interface PropertyProject {
   locationVerifiedAt: string;
   locationConfidence: "high" | "medium";
   locationNote?: string;
-  sourceName: string;
-  sourceDate: string;
-  verificationStatus: "unverified";
+  research?: {
+    unitType: string;
+    averagePrice: number;
+    advantages: string[];
+    disadvantages: string[];
+    education: string[];
+    rating: number | null;
+    sourceName: string;
+    sourceDate: string;
+    verificationStatus: "unverified";
+  };
 }
 
 export interface ProjectLocation {

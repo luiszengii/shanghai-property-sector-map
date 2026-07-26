@@ -51,12 +51,18 @@ jobs:
           pnpm lint
           pnpm typecheck
           pnpm check:map-performance
+          pnpm check:public
 
       - name: Build standalone application
         env:
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY_JS_CODE: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY_JS_CODE }}
         run: pnpm build
+
+      - name: Verify production client artifact
+        run: |
+          pnpm check:public --artifact .next/static
+          pnpm check:public --artifact .next/standalone
 
       - name: Package release
         run: |
@@ -103,14 +109,4 @@ jobs:
              \"\${release_dir}/activate-release.sh\" '${GITHUB_SHA}'"
 
       - name: Verify public endpoint
-        run: |
-          curl \
-            --fail \
-            --silent \
-            --show-error \
-            --location \
-            --retry 6 \
-            --retry-delay 5 \
-            --retry-all-errors \
-            --output /dev/null \
-            https://shfang.xyz/
+        run: pnpm verify:public https://shfang.xyz

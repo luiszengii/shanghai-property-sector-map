@@ -2,6 +2,10 @@
 
 import { ChevronUp } from "lucide-react";
 import { useState } from "react";
+import {
+  getLocalExternalLegend,
+  projectLegendLabel,
+} from "@/src/components/local-research-features";
 import { useMapStore } from "@/src/store/map-store";
 
 export function MapLegend() {
@@ -9,13 +13,7 @@ export function MapLegend() {
   const zoom = useMapStore((state) => state.zoom);
   const sectorBoundarySource = useMapStore((state) => state.sectorBoundarySource);
   const mode = zoom < 11.7 ? "板块总览" : zoom < 14 ? "板块 + 主要设施" : "详细设施";
-  const externalLegend = sectorBoundarySource === "hfwgsj-private"
-    ? { color: "#7c3aed", label: "紫色实线：微观世界快照边界", note: "私有研究快照 · 坐标系尚未独立确认" }
-    : sectorBoundarySource === "anjuke-private"
-      ? { color: "#ea580c", label: "橙色实线：安居客板块边界", note: "BD-09 已转 GCJ-02 · 120 / 141 个边界" }
-      : sectorBoundarySource === "fang-private"
-        ? { color: "#1d4ed8", label: "蓝色实线：房天下板块边界", note: "BD-09 已转 GCJ-02 · 182 / 183 个边界" }
-        : null;
+  const externalLegend = getLocalExternalLegend(sectorBoundarySource);
   return (
     <div className={`map-legend glass-panel ${open ? "is-open" : ""}`}>
       <button onClick={() => setOpen((value) => !value)} aria-expanded={open}><span className="legend-dot" />{mode}<ChevronUp size={15} /></button>
@@ -33,7 +31,7 @@ export function MapLegend() {
               <span><i aria-hidden="true" style={{ borderTop: "2px dashed #2563eb", width: 24 }} />蓝色虚线：独立行政参考层</span>
             </>
           )}
-          <span><i className="project-swatch" />500–800 万新盘</span>
+          <span><i className="project-swatch" />{projectLegendLabel}</span>
           <span><i className="place-swatch" />设施点位</span>
           {externalLegend ? (
             <small>{externalLegend.note} · 许可未知 · 仅限本机研究</small>
