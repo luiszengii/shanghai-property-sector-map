@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <MapExperience />
-      <Link href="/sector-editor" className={styles.editorShortcut}>
+      <Link href="/sector-editor" prefetch={false} className={styles.editorShortcut}>
         <PencilRuler size={17} />
         自己画板块
       </Link>
