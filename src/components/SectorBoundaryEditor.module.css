@@ -143,7 +143,7 @@
   min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto minmax(120px, .7fr) minmax(250px, 1.3fr);
+  grid-template-rows: auto auto auto auto minmax(0, 1fr);
   gap: 11px;
   padding: 16px;
   overflow: hidden;
@@ -224,6 +224,7 @@
 }
 
 .draftList {
+  grid-row: -2 / -1;
   min-height: 0;
   display: grid;
   align-content: start;
@@ -580,6 +581,51 @@
   inset: 0;
 }
 
+.detailFloat {
+  position: absolute;
+  z-index: 95;
+  top: var(--space-3xl);
+  right: var(--space-md);
+  bottom: var(--space-md);
+  width: min(22rem, calc(100% - var(--space-xl)));
+  min-height: 0;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule-2) transparent;
+  pointer-events: auto;
+  touch-action: pan-y;
+}
+
+.detailFloat .form {
+  max-height: none;
+  padding: var(--space-md);
+  overflow: visible;
+  background: var(--color-paper);
+  border: var(--rule-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 8px 24px var(--color-shadow);
+}
+
+.detailFloat .form textarea {
+  min-height: 4rem;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+}
+
+.detailFloat .form textarea[rows="2"] {
+  min-height: 3.25rem;
+}
+
+.detailFloat .emptyEditor {
+  min-height: 12rem;
+  background: var(--color-paper);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 8px 24px var(--color-shadow);
+}
+
 .mapToolbar {
   position: absolute;
   z-index: 100;
@@ -815,6 +861,10 @@
     padding: 12px;
   }
 
+  .detailFloat {
+    width: min(18rem, calc(100% - var(--space-md)));
+  }
+
   .notice {
     top: auto;
     right: 10px;
@@ -858,15 +908,42 @@
   .sidebar {
     min-height: 650px;
     display: grid;
-    grid-template-rows: auto auto auto 180px minmax(300px, 1fr);
+    grid-template-rows: auto auto auto auto minmax(300px, 1fr);
     overflow: visible;
     border-top: 1px solid rgba(15, 118, 110, .13);
     border-right: 0;
   }
 
   .mapPanel {
-    min-height: 52dvh;
+    min-height: 0;
+    padding-block-start: 52dvh;
     order: -1;
+    overflow: visible;
+  }
+
+  .mapHost {
+    inset: 0 0 auto;
+    height: 52dvh;
+  }
+
+  .detailFloat {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
+    padding: var(--space-sm);
+    background: var(--color-paper-3);
+    overflow: visible;
+  }
+
+  .detailFloat .form {
+    max-height: none;
+  }
+
+  .detailFloat .emptyEditor {
+    min-height: 10rem;
   }
 
   .mapToolbar {
@@ -877,7 +954,8 @@
   .notice {
     left: 10px;
     right: 10px;
-    bottom: 10px;
+    top: calc(52dvh - 58px);
+    bottom: auto;
   }
 }
 
@@ -1614,7 +1692,8 @@
   .mapPanel {
     width: 100%;
     min-width: 0;
-    min-height: 54dvh;
+    min-height: 0;
+    padding-block-start: 54dvh;
     order: -1;
   }
 
@@ -1622,7 +1701,7 @@
     width: 100%;
     min-width: 0;
     min-height: 660px;
-    grid-template-rows: auto auto auto 190px minmax(300px, 1fr);
+    grid-template-rows: auto auto auto auto minmax(300px, 1fr);
     padding: var(--space-sm);
     overflow: visible;
     border-block-start: var(--rule-strong);
@@ -1650,10 +1729,15 @@
     left: var(--space-xs);
   }
 
+  .mapHost {
+    height: 54dvh;
+  }
+
   .notice {
     left: var(--space-xs);
     right: var(--space-xs);
-    bottom: var(--space-xs);
+    top: calc(54dvh - 60px);
+    bottom: auto;
   }
 }
 
