@@ -1,6 +1,7 @@
 "use client";
 
 import { Database, Expand, Layers3, Map as MapIcon, MessageCircleMore, Minimize2, Navigation } from "lucide-react";
+import dynamic from "next/dynamic";
 import { memo, useCallback, useEffect, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
@@ -11,7 +12,11 @@ import { MapLegend } from "./MapLegend";
 import { MobileBottomSheet } from "./MobileBottomSheet";
 import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
-import { XhsInsightPanel } from "./XhsInsightPanel";
+
+const XhsInsightPanel = dynamic(
+  () => import("./XhsInsightPanel").then((module) => module.XhsInsightPanel),
+  { ssr: false },
+);
 
 const CurrentSectorName = memo(function CurrentSectorName() {
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
@@ -104,7 +109,7 @@ export function MapExperience() {
           <div className="map-tip"><Navigation size={14} /><span>点击板块进入，放大查看设施</span></div>
           <MobileBottomSheet />
           <DataDisclaimerDialog />
-          <XhsInsightPanel open={isInsightOpen} onClose={closeInsight} />
+          {isInsightOpen && <XhsInsightPanel open onClose={closeInsight} />}
         </>
       )}
       {isImmersive && (
