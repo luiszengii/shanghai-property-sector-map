@@ -1682,8 +1682,19 @@ export function SectorBoundaryEditor() {
             )}
           </div>
 
+        </aside>
+
+        <div className={styles.mapPanel} data-map-zoom={mapZoom.toFixed(1)}>
+          <div ref={mapHostRef} className={styles.mapHost} aria-label="板块边界绘制地图" />
+
+          <aside
+            key={activeDraft?.id ?? "empty"}
+            className={styles.detailFloat}
+            aria-label="当前板块详情"
+            onWheel={(event) => event.stopPropagation()}
+          >
           {activeDraft ? (
-            <div className={styles.form}>
+            <div key={activeDraft.id} className={styles.form}>
               <div className={styles.formHeading}>
                 <div>
                   <span>{activeDraft.sourceSectorId ? "已有板块副本" : "自建板块"}</span>
@@ -1843,10 +1854,7 @@ export function SectorBoundaryEditor() {
               <span>点击左侧已有板块即可载入可编辑副本</span>
             </button>
           )}
-        </aside>
-
-        <div className={styles.mapPanel} data-map-zoom={mapZoom.toFixed(1)}>
-          <div ref={mapHostRef} className={styles.mapHost} aria-label="板块边界绘制地图" />
+          </aside>
 
           {status === "ready" && (
             <div className={styles.mapToolbar}>
