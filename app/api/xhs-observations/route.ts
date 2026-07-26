@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { stat } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import { isLocalRouteEnabled, localRouteNotFound } from "@/src/lib/local-route-guard";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,6 +11,7 @@ let cachedPayload: string | null = null;
 let cachedMtimeMs = -1;
 
 export async function GET() {
+  if (!isLocalRouteEnabled()) return localRouteNotFound();
   const datasetPath = path.join(process.cwd(), "outputs", "xhs_analysis", "web_dataset.json");
   try {
     const fileStat = await stat(datasetPath);

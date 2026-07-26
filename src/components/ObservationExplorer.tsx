@@ -74,7 +74,7 @@ function Highlight({ children, query }: { children: string; query: string }) {
   return <>{parts.map((part, index) => part.toLocaleLowerCase("zh-CN") === needle.toLocaleLowerCase("zh-CN") ? <mark key={index}>{part}</mark> : <Fragment key={index}>{part}</Fragment>)}</>;
 }
 
-export function ObservationExplorer() {
+export function LocalObservationExplorer() {
   const [dataset, setDataset] = useState<ResearchDataset | null>(null);
   const [error, setError] = useState("");
   const [district, setDistrict] = useState("全部行政区");
@@ -148,7 +148,7 @@ export function ObservationExplorer() {
           <span>上海楼市互动地图</span>
         </div>
         <div className="observations-hero">
-          <span className="observations-kicker"><FileText size={14} /> LOCAL RESEARCH ARCHIVE · 2026</span>
+          <span className="observations-kicker"><FileText size={14} /> 仅本地 · LOCAL RESEARCH ARCHIVE · 2026</span>
           <h1>板块观察</h1>
           <p>把公开讨论整理成可搜索、可追溯的看房问题库。这里保留正文摘要、脱敏评论和原帖入口，但不把互动量当作可信度。</p>
         </div>

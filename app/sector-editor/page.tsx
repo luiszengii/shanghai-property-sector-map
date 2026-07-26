@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { SectorBoundaryEditor } from "@/src/components/SectorBoundaryEditor";
+import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 
 export const metadata: Metadata = {
   title: "板块边界编辑器｜上海楼市互动地图",
@@ -7,5 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default function SectorEditorPage() {
+  if (!isLocalResearchMode) notFound();
   return <SectorBoundaryEditor />;
 }

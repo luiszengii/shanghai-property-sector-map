@@ -18,6 +18,7 @@ import {
   type SectorEditorVersionStore,
   type UserReviewedOverrideCollection,
 } from "@/src/lib/sector-editor-versions";
+import { isLocalRouteEnabled, localRouteNotFound } from "@/src/lib/local-route-guard";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -128,6 +129,7 @@ async function readRegisteredSectorIds() {
 }
 
 export async function GET(request: NextRequest) {
+  if (!isLocalRouteEnabled()) return localRouteNotFound();
   if (!isLocalRequest(request)) return localOnlyResponse();
   try {
     const store = await readStore();
@@ -162,6 +164,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!isLocalRouteEnabled()) return localRouteNotFound();
   if (!isLocalRequest(request)) return localOnlyResponse();
   try {
     const input: unknown = await request.json();

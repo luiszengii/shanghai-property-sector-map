@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { parseHfwgsjSectorSnapshot } from "@/src/lib/hfwgsj-sector-snapshot";
+import { isLocalRouteEnabled, localRouteNotFound } from "@/src/lib/local-route-guard";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -32,6 +33,7 @@ const privateHeaders = {
 };
 
 export async function GET(request: NextRequest) {
+  if (!isLocalRouteEnabled()) return localRouteNotFound();
   const requestedSource = request.nextUrl.searchParams.get("source")
     ?? "hfwgsj-private";
   if (!(requestedSource in snapshotPaths)) {

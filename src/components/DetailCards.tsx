@@ -1,21 +1,25 @@
 "use client";
 
-import { ArrowRight, Building2, CalendarClock, ExternalLink, GraduationCap, MapPin, Route, Ruler, Star, ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Route, Ruler, X } from "lucide-react";
 import { useMemo } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
+import {
+  LocalProjectResearchMetadata,
+  LocalProjectResearchSummary,
+  projectDetailDisclaimer,
+} from "@/src/components/local-research-features";
 import categoriesData from "@/src/data/categories.json";
 import placesData from "@/src/data/places.json";
-import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { formatSectorRiskFlags } from "@/src/lib/sector-risk-flags";
+import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
 
 const places = placesData as Place[];
 const categories = categoriesData as Category[];
 const placeById = new Map(places.map((place) => [place.id, place]));
-const projectById = new Map(projects.map((project) => [project.id, project]));
 const categoryById = new Map(categories.map((category) => [category.id, category]));
 const boundarySideLabels: Record<SectorBoundarySide, string> = { north: "北", east: "东", south: "南", west: "西" };
 const evidenceStatusLabels: Record<SectorBoundaryStatus, string> = {
@@ -41,6 +45,11 @@ function distanceKm(a: [number, number], b: [number, number]) {
 }
 
 export function DetailCard() {
+  const projects = useProjectCatalog();
+  const projectById = useMemo(
+    () => new Map(projects.map((project) => [project.id, project])),
+    [projects],
+  );
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
   const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
@@ -84,32 +93,22 @@ export function DetailCard() {
   if (project) {
     if (zoom < projectDetailMinZoom) return null;
     const displayName = project.officialName ?? project.name;
+    const research = project.research;
     return (
       <article className="detail-card project-detail-card glass-panel" aria-label={displayName + "详情"}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
-        <span className="eyebrow">{project.district} · {project.sector} · 500–800 万新盘</span>
+        <span className="eyebrow">{project.district} · {project.sector} · 已核验项目点位</span>
         <h2>{displayName}</h2>
         {project.officialName && project.officialName !== project.name && <p className="project-original-name">清单原名：{project.name}</p>}
-        <div className="project-summary">
-          <strong>{project.averagePrice} 万元/㎡</strong>
-          <span>{project.unitType}</span>
-          <span className="project-rating"><Star size={13} fill="currentColor" />{project.rating === null ? "暂无推荐指数" : project.rating + "/5"}</span>
-        </div>
-        <span className="unverified-badge">用户观点 · 待核验</span>
-        <div className="project-opinion-grid">
-          <section><h3><ThumbsUp size={14} /> 项目优势</h3><ul>{project.advantages.map((item) => <li key={item}>{item}</li>)}</ul></section>
-          <section className="is-caution"><h3><ThumbsDown size={14} /> 项目劣势</h3><ul>{project.disadvantages.map((item) => <li key={item}>{item}</li>)}</ul></section>
-        </div>
+        <LocalProjectResearchSummary research={research} />
         <dl className="detail-list project-meta">
           <div><dt><MapPin size={15} /> 项目地址</dt><dd>{project.locationAddress}</dd></div>
           <div><dt><Building2 size={15} /> 点位来源</dt><dd>{project.locationSourceName}<a href={project.locationSourceUrl} target="_blank" rel="noreferrer" aria-label="在高德地图查看项目"><ExternalLink size={13} /></a></dd></div>
           <div><dt><CalendarClock size={15} /> 点位核对</dt><dd>{project.locationVerifiedAt} · {project.locationConfidence === "high" ? "高置信" : "中等置信"}</dd></div>
           {project.locationNote && <div><dt><MapPin size={15} /> 点位说明</dt><dd>{project.locationNote}</dd></div>}
-          <div><dt><GraduationCap size={15} /> 周边教育</dt><dd>{project.education.join("、")}</dd></div>
-          <div><dt><Building2 size={15} /> 观点来源</dt><dd>{project.sourceName}</dd></div>
-          <div><dt><CalendarClock size={15} /> 收录日期</dt><dd>{project.sourceDate}</dd></div>
+          <LocalProjectResearchMetadata research={research} />
         </dl>
-        <p className="project-disclaimer">项目点位已于 2026-07-22 逐项核对并固化；价格、交通、学校、规划及周边风险仍未独立核验。</p>
+        <p className="project-disclaimer">{projectDetailDisclaimer}</p>
       </article>
     );
   }
