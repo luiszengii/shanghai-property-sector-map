@@ -58,7 +58,7 @@ if [[ "${healthy}" != "true" ]]; then
   exit 1
 fi
 
-sudo systemctl is-active --quiet shfang-map.service
+systemctl is-active --quiet shfang-map.service
 printf 'DEPLOYED_SHA=%s\n' "${release_sha}"
 
 find "${deploy_root}/releases" \
