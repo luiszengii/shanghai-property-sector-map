@@ -23,6 +23,7 @@ interface EditorActiveGeometry {
     | "reviewed-market-candidate"
     | "editorial-seed"
     | "source-backed-proxy"
+    | "user-reviewed-override"
     | "administrative-reference"
     | "official-subscope-reference";
   coordinateSystem: "WGS84" | "GCJ-02-assumed";
@@ -133,6 +134,8 @@ export function buildSectorEditorTemplates(
     const riskReview = formatSectorRiskFlags(record.riskFlags);
     const baseNote = geometryStatus === "missing"
       ? "板块身份与定义已登记，尚未绘制边界；请在地图上人工绘制并逐边核验。"
+      : activeGeometry?.kind === "user-reviewed-override"
+        ? "从项目当前生效的用户裁定版本载入；再次保存后会更新主页地图数据。"
       : activeGeometry?.kind === "source-backed-proxy"
         ? "从公开文字四至与道路节点重建的参考代理载入；请根据相邻市场板块继续精修。"
       : activeGeometry?.kind === "editorial-seed"

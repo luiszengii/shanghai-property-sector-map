@@ -122,6 +122,12 @@
   background: rgba(255, 255, 255, .15);
 }
 
+.secondaryButton:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .hiddenInput {
   display: none;
 }
@@ -133,9 +139,11 @@
 }
 
 .sidebar {
+  min-width: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: auto auto minmax(120px, .7fr) minmax(250px, 1.3fr);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(120px, .7fr) minmax(250px, 1.3fr);
   gap: 11px;
   padding: 16px;
   overflow: hidden;
@@ -143,6 +151,10 @@
   border-right: 1px solid rgba(15, 118, 110, .12);
   box-shadow: 12px 0 30px rgba(15, 55, 50, .05);
   z-index: 3;
+}
+
+.sidebar > * {
+  min-width: 0;
 }
 
 .sidebarIntro {
@@ -168,7 +180,8 @@
 .sidebarIntro strong {
   color: #0f766e;
   font: 700 10px var(--font-geist-mono), monospace;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .newButton {
@@ -375,7 +388,8 @@
 }
 
 .form input,
-.form textarea {
+.form textarea,
+.form select {
   width: 100%;
   padding: 9px 10px;
   color: #173331;
@@ -388,7 +402,8 @@
 }
 
 .form input:focus,
-.form textarea:focus {
+.form textarea:focus,
+.form select:focus {
   background: #fff;
   border-color: rgba(15, 118, 110, .45);
   box-shadow: 0 0 0 3px rgba(15, 118, 110, .07);
@@ -408,6 +423,125 @@
 
 .coordinateNote svg {
   color: #0f766e;
+}
+
+.topologyPanel {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(15, 118, 110, .11);
+}
+
+.topologyHeading {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 8px;
+}
+
+.topologyHeading > svg {
+  margin-top: 2px;
+  color: #0f766e;
+}
+
+.topologyHeading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.topologyHeading strong {
+  color: #244942;
+  font-size: 11px;
+}
+
+.topologyHeading span,
+.topologyPanel p {
+  margin: 0;
+  color: #7b918d;
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.topologyButton,
+.topologyButtonActive,
+.sharedEdgeButton,
+.sharedEdgeButtonActive {
+  min-height: 37px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.topologyButton {
+  color: #315b54;
+  background: #f1f7f5;
+  border: 1px solid rgba(15, 118, 110, .14);
+}
+
+.topologyButtonActive {
+  color: #fff;
+  background: #0f766e;
+  border: 1px solid #0f766e;
+}
+
+.topologyPairActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.topologyPairActions button {
+  min-height: 48px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  padding: 7px;
+  color: #365d57;
+  background: #f8fbfa;
+  border: 1px solid rgba(15, 118, 110, .14);
+  border-radius: 9px;
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.topologyPairActions small {
+  color: #8a9d99;
+  font-size: 7px;
+  font-weight: 560;
+}
+
+.topologyPairActions button:hover:not(:disabled),
+.topologyButton:hover,
+.sharedEdgeButton:hover {
+  color: #0f766e;
+  background: #edf8f5;
+  border-color: rgba(15, 118, 110, .32);
+}
+
+.topologyPairActions button:disabled,
+.sharedEdgeButton:disabled {
+  opacity: .46;
+  cursor: not-allowed;
+}
+
+.sharedEdgeButton {
+  color: #81572e;
+  background: #fff8ed;
+  border: 1px solid rgba(180, 112, 43, .2);
+}
+
+.sharedEdgeButtonActive {
+  color: #fff;
+  background: #b66b2e;
+  border: 1px solid #b66b2e;
 }
 
 .emptyEditor {
@@ -724,7 +858,7 @@
   .sidebar {
     min-height: 650px;
     display: grid;
-    grid-template-rows: auto auto 180px minmax(300px, 1fr);
+    grid-template-rows: auto auto auto 180px minmax(300px, 1fr);
     overflow: visible;
     border-top: 1px solid rgba(15, 118, 110, .13);
     border-right: 0;
@@ -927,6 +1061,86 @@
 .newButton {
   min-height: 40px;
   padding-inline: var(--space-xs);
+}
+
+.versionPanel {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background: var(--color-paper-2);
+  border: var(--rule-strong);
+  border-radius: var(--radius-control);
+}
+
+.versionHeading {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  color: var(--color-accent-strong);
+}
+
+.versionHeading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.versionHeading strong {
+  color: var(--color-ink);
+  font: 700 var(--text-sm) var(--font-display);
+}
+
+.versionHeading span {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.versionSaveRow,
+.versionRestoreRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-xs);
+}
+
+.versionHint {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+.versionPanel input,
+.versionPanel select {
+  min-width: 0;
+  min-height: 38px;
+  padding-inline: var(--space-xs);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: var(--rule-strong);
+  border-radius: var(--radius-control);
+  font-size: var(--text-xs);
+}
+
+.versionPanel button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding-inline: var(--space-xs);
+  color: var(--color-accent-strong);
+  background: var(--color-paper);
+  border: var(--rule-strong);
+  border-radius: var(--radius-control);
+  font: 700 var(--text-xs) var(--font-display);
+}
+
+.versionPanel button:hover:not(:disabled) {
+  background: var(--color-accent-soft);
+}
+
+.versionPanel button:disabled,
+.versionPanel select:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .searchBox {
@@ -1286,6 +1500,19 @@
   font: 700 var(--text-xs) var(--font-outlier);
 }
 
+.gapMapGuide {
+  color: var(--color-ink-2);
+  border-color: #7c3aed;
+}
+
+.gapGuideSwatch {
+  width: 18px;
+  height: 14px;
+  border: 2px dashed #7c3aed;
+  border-radius: 3px;
+  background: rgb(139 92 246 / 28%);
+}
+
 @media (max-width: 56.25rem) {
   .header {
     min-height: 68px;
@@ -1395,7 +1622,7 @@
     width: 100%;
     min-width: 0;
     min-height: 660px;
-    grid-template-rows: auto auto 190px minmax(300px, 1fr);
+    grid-template-rows: auto auto auto 190px minmax(300px, 1fr);
     padding: var(--space-sm);
     overflow: visible;
     border-block-start: var(--rule-strong);

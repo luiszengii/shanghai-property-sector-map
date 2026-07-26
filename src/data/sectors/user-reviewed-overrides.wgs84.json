@@ -1,0 +1,14 @@
+{
+  "type": "FeatureCollection",
+  "name": "shanghai-user-reviewed-sector-overrides",
+  "metadata": {
+    "schemaVersion": 1,
+    "coordinateSystem": "WGS84",
+    "source": "sector-boundary-editor-explicit-save",
+    "currentVersionId": null,
+    "currentVersionNumber": null,
+    "savedAt": null,
+    "warning": "用户在高德地图编辑器中明确保存的市场板块裁定；由 GCJ-02 迭代转换为 WGS84，不是行政或法定边界。"
+  },
+  "features": []
+}
