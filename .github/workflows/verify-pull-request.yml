@@ -1,0 +1,43 @@
+name: Verify pull request
+
+on:
+  pull_request:
+    branches:
+      - pre-prod
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify source
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: "11.9.0"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22.23.1"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          pnpm lint
+          pnpm typecheck
+          pnpm check:map-performance
+          pnpm check:public
+
+  promotion-source:
+    name: Verify promotion source
+    if: github.base_ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require the pre-production branch
+        run: |
+          test "${{ github.head_ref }}" = "pre-prod" || {
+            echo "main only accepts pull requests from pre-prod" >&2
+            exit 1
+          }
