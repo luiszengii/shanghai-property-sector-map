@@ -8,7 +8,9 @@ import {
 import path from "node:path";
 import {
   emptySourceLedger,
+  parsePublicProjectProjection,
   parseSourceLedger,
+  type PublicProjectProjection,
   type SourceLedger,
 } from "@/src/lib/source-ledger";
 
@@ -19,6 +21,26 @@ function ledgerPath() {
     "source-ledger",
     "ledger.json",
   );
+}
+
+function publicProjectionPath() {
+  return path.join(
+    /* turbopackIgnore: true */ process.cwd(),
+    "src",
+    "data",
+    "project-public-projection.json",
+  );
+}
+
+async function writeJsonAtomic(filePath: string, value: unknown) {
+  const directory = path.dirname(filePath);
+  await mkdir(directory, { recursive: true });
+  const temporary = path.join(
+    directory,
+    `.${path.basename(filePath)}-${randomUUID()}.tmp`,
+  );
+  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+  await rename(temporary, filePath);
 }
 
 export async function readSourceLedger(): Promise<SourceLedger> {
@@ -39,13 +61,20 @@ export async function readSourceLedger(): Promise<SourceLedger> {
 
 export async function writeSourceLedger(ledger: SourceLedger) {
   const validated = parseSourceLedger(ledger);
-  const target = ledgerPath();
-  const directory = path.dirname(target);
-  await mkdir(directory, { recursive: true });
-  const temporary = path.join(
-    directory,
-    `.${path.basename(target)}-${randomUUID()}.tmp`,
+  await writeJsonAtomic(ledgerPath(), validated);
+}
+
+export async function readPublicProjectProjection() {
+  return parsePublicProjectProjection(
+    JSON.parse(await readFile(publicProjectionPath(), "utf8")),
   );
-  await writeFile(temporary, `${JSON.stringify(validated, null, 2)}\n`, "utf8");
-  await rename(temporary, target);
+}
+
+export async function writePublicProjectProjection(
+  projection: PublicProjectProjection,
+) {
+  await writeJsonAtomic(
+    publicProjectionPath(),
+    parsePublicProjectProjection(projection),
+  );
 }

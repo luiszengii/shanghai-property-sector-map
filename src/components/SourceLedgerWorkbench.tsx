@@ -5,13 +5,17 @@ import {
   ArrowLeft,
   CheckCircle2,
   ClipboardList,
+  Eye,
   ExternalLink,
+  FileCheck2,
   FilePenLine,
   Link2,
   LoaderCircle,
+  LockKeyhole,
   Plus,
   Save,
   Search,
+  ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -25,9 +29,11 @@ import {
   evidenceConfidences,
   getCurrentEvidenceRevision,
   getCurrentSourceRevision,
+  getPublicProjectionBlockers,
   publicationStatuses,
   sourceAllowedUses,
   type PublicProjectProjection,
+  type SnapshotProjectionPreview,
   type SourceLedger,
 } from "@/src/lib/source-ledger";
 
@@ -44,7 +50,9 @@ interface ProjectOption {
 
 interface LedgerPayload {
   ledger: SourceLedger;
-  projection: PublicProjectProjection;
+  candidateProjection: PublicProjectProjection;
+  publishedProjection: PublicProjectProjection;
+  snapshotPreviews: SnapshotProjectionPreview[];
 }
 
 interface SourceDraft {
@@ -118,6 +126,8 @@ export function SourceLedgerWorkbench({
   const [sourceDraft, setSourceDraft] = useState<SourceDraft>(emptySourceDraft);
   const [evidenceDraft, setEvidenceDraft] = useState<EvidenceDraft>(emptyEvidenceDraft);
   const [snapshotLabel, setSnapshotLabel] = useState("");
+  const [selectedSnapshotId, setSelectedSnapshotId] = useState("");
+  const [publishConfirmed, setPublishConfirmed] = useState(false);
   const [busyAction, setBusyAction] = useState("");
   const [notice, setNotice] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
 
@@ -130,7 +140,12 @@ export function SourceLedgerWorkbench({
         return value as LedgerPayload;
       })
       .then((value) => {
-        if (!cancelled) setPayload(value);
+        if (!cancelled) {
+          setPayload(value);
+          setSelectedSnapshotId((current) => (
+            current || value.ledger.snapshots.at(-1)?.id || ""
+          ));
+        }
       })
       .catch((error) => {
         if (!cancelled) {
@@ -158,6 +173,9 @@ export function SourceLedgerWorkbench({
       revision: getCurrentEvidenceRevision(evidence),
     })) ?? []
   ), [payload]);
+  const currentSourceById = useMemo(() => new Map(
+    currentSources.map(({ record, revision }) => [record.id, revision]),
+  ), [currentSources]);
   const evidenceByProject = useMemo(() => {
     const counts = new Map<string, number>();
     for (const evidence of currentEvidence) {
@@ -190,8 +208,20 @@ export function SourceLedgerWorkbench({
       )
     ));
   }).length;
+  const selectedSnapshot = payload?.snapshotPreviews.find(
+    (snapshot) => snapshot.snapshotId === selectedSnapshotId,
+  ) ?? payload?.snapshotPreviews.at(-1);
+  const selectedSnapshotFieldCount = selectedSnapshot
+    ? Object.values(selectedSnapshot.projection.projects).reduce(
+      (total, project) => total + project.fields.length,
+      0,
+    )
+    : 0;
+  const publishedFieldCount = Object.values(
+    payload?.publishedProjection.projects ?? {},
+  ).reduce((total, project) => total + project.fields.length, 0);
 
-  async function mutate(action: string, data: object) {
+  async function mutate(action: string, data: object, successText = "已保存到本地资料库") {
     setBusyAction(action);
     setNotice(null);
     try {
@@ -202,15 +232,16 @@ export function SourceLedgerWorkbench({
       });
       const value = await response.json();
       if (!response.ok) throw new Error(value.message ?? "保存失败");
-      setPayload(value as LedgerPayload);
-      setNotice({ tone: "ok", text: "已保存到本地资料库" });
-      return true;
+      const nextPayload = value as LedgerPayload;
+      setPayload(nextPayload);
+      setNotice({ tone: "ok", text: successText });
+      return nextPayload;
     } catch (error) {
       setNotice({
         tone: "error",
         text: error instanceof Error ? error.message : "保存失败",
       });
-      return false;
+      return null;
     } finally {
       setBusyAction("");
     }
@@ -244,8 +275,29 @@ export function SourceLedgerWorkbench({
 
   async function createSnapshot(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const saved = await mutate("createSnapshot", { label: snapshotLabel });
-    if (saved) setSnapshotLabel("");
+    const saved = await mutate(
+      "createSnapshot",
+      { label: snapshotLabel },
+      "已冻结当前研究版本；请选择该版本检查公开预览",
+    );
+    if (saved) {
+      setSnapshotLabel("");
+      setSelectedSnapshotId(saved.ledger.snapshots.at(-1)?.id ?? "");
+      setPublishConfirmed(false);
+    }
+  }
+
+  async function generatePublicProjection() {
+    if (!selectedSnapshot) return;
+    const saved = await mutate(
+      "generatePublicProjection",
+      {
+        snapshotId: selectedSnapshot.snapshotId,
+        confirmReviewed: publishConfirmed,
+      },
+      "已生成公开数据文件；楼盘详情页刷新后即可读取",
+    );
+    if (saved) setPublishConfirmed(false);
   }
 
   function editSource(sourceId: string) {
@@ -317,22 +369,6 @@ export function SourceLedgerWorkbench({
           <div><strong>{currentEvidence.length}</strong><span>字段证据</span></div>
           <div><strong>{pendingCount}</strong><span>待处理楼盘</span></div>
         </div>
-        <form className={styles.snapshotForm} onSubmit={createSnapshot}>
-          <label htmlFor="snapshot-label">保存资料版本</label>
-          <div>
-            <input
-              id="snapshot-label"
-              value={snapshotLabel}
-              onChange={(event) => setSnapshotLabel(event.target.value)}
-              placeholder="例如：完成青浦项目首轮整理"
-              required
-            />
-            <button type="submit" disabled={busyAction === "createSnapshot"}>
-              <Archive size={14} /> 保存版本
-            </button>
-          </div>
-          <small>已有 {payload.ledger.snapshots.length} 个资料版本（暂不支持恢复）</small>
-        </form>
       </header>
 
       {notice && (
@@ -341,6 +377,157 @@ export function SourceLedgerWorkbench({
           {notice.text}
         </div>
       )}
+
+      <section className={styles.releaseFlow} aria-labelledby="release-flow-title">
+        <div className={styles.releaseFlowHeading}>
+          <div>
+            <span>从研究底稿到公开页面</span>
+            <h2 id="release-flow-title">资料发布流程</h2>
+          </div>
+          <p>保存字段不会发布；只有人工复核过的冻结版本才能生成公开数据。</p>
+        </div>
+
+        <ol className={styles.releaseSteps}>
+          <li>
+            <b>1</b>
+            <span><strong>记录证据</strong><small>{currentEvidence.length} 条私有记录</small></span>
+          </li>
+          <li>
+            <b>2</b>
+            <span><strong>完成裁定</strong><small>字段与来源分别判断</small></span>
+          </li>
+          <li>
+            <b>3</b>
+            <span><strong>冻结版本</strong><small>{payload.ledger.snapshots.length} 个可复现版本</small></span>
+          </li>
+          <li>
+            <b>4</b>
+            <span><strong>生成公开数据</strong><small>{publishedFieldCount} 个已生成字段</small></span>
+          </li>
+        </ol>
+
+        <div className={styles.releaseWorkbench}>
+          <form className={styles.snapshotForm} onSubmit={createSnapshot}>
+            <div className={styles.releaseColumnTitle}>
+              <Archive size={17} />
+              <div><strong>冻结当前研究版本</strong><small>保存当前所有来源和证据的修订 ID</small></div>
+            </div>
+            <label htmlFor="snapshot-label">版本名称</label>
+            <div className={styles.inlineControl}>
+              <input
+                id="snapshot-label"
+                value={snapshotLabel}
+                onChange={(event) => setSnapshotLabel(event.target.value)}
+                placeholder="例如：青浦项目首轮复核"
+                required
+              />
+              <button type="submit" disabled={busyAction === "createSnapshot"}>
+                {busyAction === "createSnapshot" ? <LoaderCircle className={styles.spinner} size={14} /> : <Archive size={14} />}
+                冻结版本
+              </button>
+            </div>
+            <small>冻结用于复现，不会自动发布，也不会覆盖后续修订。</small>
+          </form>
+
+          <div className={styles.versionPreview}>
+            <div className={styles.releaseColumnTitle}>
+              <Eye size={17} />
+              <div><strong>检查版本与公开预览</strong><small>逐条查看纳入结果和阻止原因</small></div>
+            </div>
+            {payload.snapshotPreviews.length === 0 ? (
+              <div className={styles.releaseEmpty}>
+                <LockKeyhole size={18} />
+                <span>还没有冻结版本。完成一个明确研究范围后先冻结。</span>
+              </div>
+            ) : (
+              <>
+                <label htmlFor="snapshot-browser">资料版本</label>
+                <select
+                  id="snapshot-browser"
+                  value={selectedSnapshot?.snapshotId ?? ""}
+                  onChange={(event) => {
+                    setSelectedSnapshotId(event.target.value);
+                    setPublishConfirmed(false);
+                  }}
+                >
+                  {payload.snapshotPreviews.toReversed().map((snapshot) => (
+                    <option value={snapshot.snapshotId} key={snapshot.snapshotId}>
+                      {snapshot.label} · {new Date(snapshot.createdAt).toLocaleString("zh-CN")}
+                    </option>
+                  ))}
+                </select>
+                {selectedSnapshot && (
+                  <>
+                    <dl className={styles.versionFacts}>
+                      <div><dt>版本 ID</dt><dd>{selectedSnapshot.snapshotId}</dd></div>
+                      <div><dt>冻结内容</dt><dd>{selectedSnapshot.sourceRevisionCount} 个来源 · {selectedSnapshot.evidenceRevisionCount} 条证据</dd></div>
+                      <div><dt>可公开</dt><dd>{selectedSnapshotFieldCount} 个字段</dd></div>
+                    </dl>
+                    <div className={styles.eligibilityList}>
+                      {selectedSnapshot.eligibility.length === 0 ? (
+                        <p>该版本没有字段证据。</p>
+                      ) : selectedSnapshot.eligibility.map((item) => (
+                        <div key={item.evidenceId}>
+                          {item.eligible
+                            ? <FileCheck2 aria-label="满足公开条件" size={15} />
+                            : <ShieldAlert aria-label="尚未满足公开条件" size={15} />}
+                          <span>
+                            <strong>{projects.find((project) => project.id === item.objectId)?.name ?? item.objectId} · {item.field}</strong>
+                            <small>{item.eligible ? "将进入公开数据" : item.blockers.join("；")}</small>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+
+          <div className={styles.publishColumn}>
+            <div className={styles.releaseColumnTitle}>
+              <FileCheck2 size={17} />
+              <div><strong>生成公开数据</strong><small>写入受 Git 管理的最小公开投射</small></div>
+            </div>
+            <dl className={styles.publishedFacts}>
+              <div><dt>当前公开版本</dt><dd>{payload.publishedProjection.sourceSnapshotId ?? "尚未发布资料中心字段"}</dd></div>
+              <div><dt>当前公开字段</dt><dd>{publishedFieldCount} 个</dd></div>
+            </dl>
+            <label className={styles.confirmation}>
+              <input
+                type="checkbox"
+                checked={publishConfirmed}
+                onChange={(event) => setPublishConfirmed(event.target.checked)}
+                disabled={!selectedSnapshot || selectedSnapshotFieldCount === 0}
+              />
+              <span>我已人工复核这个版本中的字段、来源许可和复核日期。</span>
+            </label>
+            <button
+              type="button"
+              className={styles.publishButton}
+              onClick={generatePublicProjection}
+              disabled={
+                !selectedSnapshot
+                || selectedSnapshotFieldCount === 0
+                || !publishConfirmed
+                || busyAction === "generatePublicProjection"
+              }
+            >
+              {busyAction === "generatePublicProjection"
+                ? <LoaderCircle className={styles.spinner} size={15} />
+                : <FileCheck2 size={15} />}
+              生成公开数据
+            </button>
+            <small className={styles.publishHint}>
+              {!selectedSnapshot
+                ? "先冻结一个研究版本。"
+                : selectedSnapshotFieldCount === 0
+                  ? "该版本没有合格字段；请按左侧原因完成裁定。"
+                  : "生成后请检查 Git diff，再提交和部署。"}
+            </small>
+          </div>
+        </div>
+      </section>
 
       <div className={styles.workspace}>
         <aside className={styles.projectRail}>
@@ -400,7 +587,8 @@ export function SourceLedgerWorkbench({
                 <div><dt>位置来源</dt><dd><a href={selectedProject.locationSourceUrl} target="_blank" rel="noreferrer">{selectedProject.locationSourceName} <ExternalLink size={11} /></a></dd></div>
                 <div><dt>核对日期</dt><dd>{selectedProject.locationVerifiedAt}</dd></div>
                 <div><dt>资料记录</dt><dd>{selectedEvidence.length} 条</dd></div>
-                <div><dt>公开投射</dt><dd>{payload.projection.projects[selectedProject.id]?.fields.length ?? 0} 个字段</dd></div>
+                <div><dt>当前候选</dt><dd>{payload.candidateProjection.projects[selectedProject.id]?.fields.length ?? 0} 个字段</dd></div>
+                <div><dt>已生成公开数据</dt><dd>{payload.publishedProjection.projects[selectedProject.id]?.fields.length ?? 0} 个字段</dd></div>
               </dl>
             </section>
 
@@ -417,16 +605,28 @@ export function SourceLedgerWorkbench({
                       <strong>这个楼盘还没有资料记录</strong>
                       <p>先登记一个来源，再为开发商、项目阶段、交通或其他字段创建证据。</p>
                     </div>
-                  ) : selectedEvidence.map(({ record, revision }) => (
-                    <button type="button" key={record.id} onClick={() => editEvidence(record.id)}>
-                      <span className={styles.evidenceTopline}>
-                        <strong>{revision.field}</strong>
-                        <i className={revision.publicationStatus === "可公开投射" ? styles.publicStatus : ""}>{revision.publicationStatus}</i>
-                      </span>
-                      <p>{revision.value}</p>
-                      <small>{revision.confidence}置信 · 观察于 {revision.observedAt} · 修订 {revision.revisionNumber}</small>
-                    </button>
-                  ))}
+                  ) : selectedEvidence.map(({ record, revision }) => {
+                    const blockers = getPublicProjectionBlockers(
+                      revision,
+                      currentSourceById.get(revision.sourceId),
+                      payload.candidateProjection.generatedAt,
+                    );
+                    return (
+                      <button type="button" key={record.id} onClick={() => editEvidence(record.id)}>
+                        <span className={styles.evidenceTopline}>
+                          <strong>{revision.field}</strong>
+                          <i className={blockers.length === 0 ? styles.publicStatus : ""}>{revision.publicationStatus}</i>
+                        </span>
+                        <p>{revision.value}</p>
+                        <small>{revision.confidence}置信 · 观察于 {revision.observedAt} · 修订 {revision.revisionNumber}</small>
+                        <span className={blockers.length === 0 ? styles.eligibleReason : styles.blockedReason}>
+                          {blockers.length === 0
+                            ? <><FileCheck2 size={13} /> 满足公开条件，冻结版本后可生成</>
+                            : <><ShieldAlert size={13} /> 未公开：{blockers.join("；")}</>}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </section>
 
