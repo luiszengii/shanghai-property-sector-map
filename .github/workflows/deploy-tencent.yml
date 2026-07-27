@@ -57,6 +57,8 @@ jobs:
         env:
           NEXT_PUBLIC_AMAP_KEY: ${{ secrets.NEXT_PUBLIC_AMAP_KEY }}
           NEXT_PUBLIC_AMAP_SECURITY_JS_CODE: ${{ secrets.NEXT_PUBLIC_AMAP_SECURITY_JS_CODE }}
+          NEXT_PUBLIC_UMAMI_SCRIPT_URL: https://analytics.shfang.xyz/script.js
+          NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.NEXT_PUBLIC_UMAMI_WEBSITE_ID }}
         run: pnpm build
 
       - name: Verify production client artifact
