@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LocalResearchBanner } from "@/src/components/LocalResearchBanner";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
+import { Analytics } from "@/src/components/Analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
       >
         {isLocalResearchMode && <LocalResearchBanner />}
         {children}
+        <Analytics />
       </body>
     </html>
   );
