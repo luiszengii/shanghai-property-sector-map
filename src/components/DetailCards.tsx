@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Route, Ruler, X } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
 import {
@@ -109,6 +110,9 @@ export function DetailCard() {
           <LocalProjectResearchMetadata research={research} />
         </dl>
         <p className="project-disclaimer">{projectDetailDisclaimer}</p>
+        <Link href={`/projects/${encodeURIComponent(project.id)}`} className="primary-action full">
+          查看完整楼盘资料 <ArrowRight size={16} />
+        </Link>
       </article>
     );
   }
