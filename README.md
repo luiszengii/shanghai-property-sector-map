@@ -69,6 +69,21 @@ pnpm typecheck
 pnpm build
 ```
 
+## 线上环境与访问数据
+
+- 生产站：[`https://shfang.xyz`](https://shfang.xyz)
+- 预生产：[`https://pre-prod.shfang.xyz`](https://pre-prod.shfang.xyz)
+- 访问统计后台：[`https://analytics.shfang.xyz`](https://analytics.shfang.xyz)
+
+生产站使用自建 Umami 查看匿名访问数据。登录后台后进入
+`Websites → shfang.xyz → 概览`，可以查看访客、访问次数、浏览量、来源、
+浏览器、设备、地域和页面路径；“实时”页面用于确认当前上报是否正常。
+预生产默认不写入生产统计。
+
+账号、查看步骤、无数据排查和服务器运维边界见
+[`docs/ANALYTICS.md`](docs/ANALYTICS.md)。管理员密码和数据库密钥不得写入
+仓库、Issue、PR 或 Actions 日志。
+
 ## 部署到 Vercel
 
 1. 将项目推送到 GitHub / GitLab / Bitbucket。

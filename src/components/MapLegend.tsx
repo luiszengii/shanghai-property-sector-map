@@ -33,14 +33,6 @@ export function MapLegend() {
           )}
           <span><i className="project-swatch" />{projectLegendLabel}</span>
           <span><i className="place-swatch" />设施点位</span>
-          {externalLegend ? (
-            <small>{externalLegend.note} · 许可未知 · 仅限本机研究</small>
-          ) : (
-            <small>
-              研究几何含 <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a> 数据；
-              <a href="https://shanghai.tianditu.gov.cn/map/views/standardMap.html" target="_blank" rel="noreferrer">天地图标准图</a>仅作视觉复核
-            </small>
-          )}
         </div>
       )}
     </div>

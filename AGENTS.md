@@ -1,5 +1,34 @@
 # Agent instructions
 
+## 线上访问数据与 Umami
+
+任何 agent 在回答“网站流量、访客、浏览量、来源、实时在线、性能数据在哪看”
+或排查统计为空前，必须先完整阅读 `docs/ANALYTICS.md`。
+
+- 生产统计后台是 `https://analytics.shfang.xyz`，Website 为 `shfang.xyz`，
+  Website ID 为 `d200b8a0-893a-443a-81f4-634fe5897d60`。
+- Umami 用户名是 `admin`；管理员密码不进入 Git。优先复用用户已登录的
+  Chrome 会话，未登录时请用户本人输入当前密码，不得猜测、读取浏览器密码库
+  或把密码写进仓库、日志和对话总结。
+- 查看数据的固定入口是 `Websites → shfang.xyz → 概览`；实时采集检查使用
+  “实时”。生产统计默认不包含 `pre-prod.shfang.xyz`。
+- 若数据为空，先验证生产 HTML 是否包含
+  `https://analytics.shfang.xyz/script.js` 和正确 Website ID，再在真实页面
+  的网络请求中确认 `/api/send` 返回 200，最后刷新 Umami 最近 24 小时数据。
+- 不得给整个 Umami 站点重新添加 Nginx HTTP Basic Auth；它会和 Umami 自身
+  的 `Authorization` 登录令牌冲突，造成登录成功后仍被拦截。
+
+## 楼盘资料与公开数据
+
+任何 agent 在读取、录入、修改、批量研究或发布楼盘资料前，必须先完整阅读 `docs/PROPERTY-DATA-GUIDE.md`。
+
+- 用户界面称“楼盘资料中心”；代码中的 `source-ledger` 指私有来源、证据、修订与发布裁定模型。
+- `outputs/source-ledger/ledger.json` 是被 Git 忽略的本地研究底稿，不是公开产品数据库。不得提交该文件、私有备注、受限来源摘录或未裁定候选。
+- 地图 APP 使用的核心公开楼盘资料应由已裁定记录生成到受版本控制的 `src/data/`，而不是让生产代码读取 `outputs/`。
+- Agent 可以登记研究候选，但不得自行把候选改为 `可公开投射`，不得绕过人工裁定，也不得手工复制私有台账来伪造公开投射。
+- 来源许可、证据置信度、复核期限和发布状态必须分别判断；“已核验”不自动代表“允许公开”。
+- 当前批次审核和快照恢复尚未实现。公开投射只能通过 `npm run build:public-project-data -- --snapshot <id> --confirm-reviewed` 生成；不得用直接改 JSON 的方式替代。
+
 ## 板块边界任务
 
 任何 agent 在新增、调整、拆分、合并、删除板块，或研究板块数据源前，必须先完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。

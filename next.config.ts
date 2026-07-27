@@ -12,6 +12,9 @@ const aliases = {
   "@/src/components/SectorBoundaryEditor": development
     ? "./src/components/SectorBoundaryEditor.tsx"
     : "./src/components/sector-editor.disabled.tsx",
+  "@/src/components/SourceLedgerWorkbench": development
+    ? "./src/components/SourceLedgerWorkbench.tsx"
+    : "./src/components/source-ledger-workbench.disabled.tsx",
   "@/src/components/map/HfwgsjSectorLayer": development
     ? "./src/components/map/HfwgsjSectorLayer.tsx"
     : "./src/components/map/private-sector-layer.disabled.tsx",

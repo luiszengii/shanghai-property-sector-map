@@ -1,7 +1,7 @@
 "use client";
 
-import { Building2, Check, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
-import { memo, useId } from "react";
+import { Building2, Check, ChevronDown, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import { memo, useId, useState } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
 import {
   LocalSectorSourceControls,
@@ -18,6 +18,7 @@ const groups = [
   { id: "benefit", label: "有利配套", helper: "生活与通勤资源" },
   { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
 ] as const;
+type CategoryGroupId = (typeof groups)[number]["id"];
 const categoriesByGroup = new Map(
   groups.map((group) => [
     group.id,
@@ -30,9 +31,14 @@ export const FilterPanel = memo(function FilterPanel({
   mobile?: boolean;
 }) {
   const projects = useProjectCatalog();
+  const [expandedGroups, setExpandedGroups] = useState<Record<CategoryGroupId, boolean>>({
+    benefit: true,
+    attention: true,
+  });
   const clusterRadiusId = useId();
   const detailZoomId = useId();
   const sectorLabelZoomId = useId();
+  const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const showProjects = useMapStore((state) => state.showProjects);
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
@@ -41,6 +47,7 @@ export const FilterPanel = memo(function FilterPanel({
   const sectorLabelMode = useMapStore((state) => state.sectorLabelMode);
   const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
   const toggleCategory = useMapStore((state) => state.toggleCategory);
+  const setCategoryGroup = useMapStore((state) => state.setCategoryGroup);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
   const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
@@ -160,23 +167,52 @@ export const FilterPanel = memo(function FilterPanel({
           </div>
         </details>
       </div>
-      {groups.map((group) => (
-        <div className="filter-group" key={group.id}>
-          <div className="group-title"><strong>{group.label}</strong><span>{group.helper}</span></div>
-          <div className="filter-list">
-            {(categoriesByGroup.get(group.id) ?? []).map((category) => {
-              const checked = enabledCategories.includes(category.id);
-              return (
-                <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
-                  <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
-                  <span>{category.name}</span>
-                  <span className="toggle"><span /></span>
-                </button>
-              );
-            })}
+      {groups.map((group) => {
+        const groupCategories = categoriesByGroup.get(group.id) ?? [];
+        const groupCategoryIds = groupCategories.map((category) => category.id);
+        const groupContentId = `${categoryGroupIdPrefix}-${group.id}`;
+        const expanded = expandedGroups[group.id];
+        return (
+          <div className="filter-group category-filter-group" key={group.id}>
+            <div className="category-group-header">
+              <button
+                type="button"
+                className={`category-group-toggle ${expanded ? "is-open" : ""}`}
+                onClick={() => setExpandedGroups((current) => ({
+                  ...current,
+                  [group.id]: !current[group.id],
+                }))}
+                aria-expanded={expanded}
+                aria-controls={groupContentId}
+              >
+                <span className="category-group-copy">
+                  <strong>{group.label}</strong>
+                  <small>{group.helper}</small>
+                </span>
+                <ChevronDown aria-hidden="true" size={15} />
+              </button>
+              <span className="category-group-actions" role="group" aria-label={`${group.label}批量设置`}>
+                <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, true)}>全开</button>
+                <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, false)}>全关</button>
+              </span>
+            </div>
+            {expanded && (
+              <div className="filter-list" id={groupContentId}>
+                {groupCategories.map((category) => {
+                  const checked = enabledCategories.includes(category.id);
+                  return (
+                    <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
+                      <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
+                      <span>{category.name}</span>
+                      <span className="toggle"><span /></span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
       <p className="panel-footnote">{projectFootnote}</p>
     </section>
   );
