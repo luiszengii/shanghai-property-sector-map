@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, CalendarClock, Database, GraduationCap, MapPinned, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Building2, CalendarClock, ClipboardList, Database, GraduationCap, MapPinned, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import { useMapStore, type SectorBoundarySource } from "@/src/store/map-store";
 import type { PropertyProject } from "@/src/types/map";
@@ -17,6 +17,15 @@ export function LocalEditorShortcut({ className }: { className: string }) {
     <Link href="/sector-editor" prefetch={false} className={className}>
       <PencilRuler size={17} />
       自己画板块
+    </Link>
+  );
+}
+
+export function LocalSourceLedgerShortcut() {
+  return (
+    <Link href="/sources" prefetch={false} className="data-button source-ledger-button">
+      <ClipboardList size={16} />
+      <span>楼盘资料中心</span>
     </Link>
   );
 }

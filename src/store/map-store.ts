@@ -42,6 +42,7 @@ interface MapState {
   sectorGeometryLoading: Record<string, boolean>;
   sectorGeometryFallbacks: Record<string, boolean>;
   toggleCategory: (id: string) => void;
+  setCategoryGroup: (ids: string[], enabled: boolean) => void;
   showAllCategories: () => void;
   clearCategories: () => void;
   selectSector: (id: string | null) => void;
@@ -93,6 +94,15 @@ export const useMapStore = create<MapState>()(
             ? state.enabledCategories.filter((item) => item !== id)
             : [...state.enabledCategories, id],
         })),
+      setCategoryGroup: (ids, enabled) =>
+        set((state) => {
+          const groupIds = new Set(ids);
+          return {
+            enabledCategories: enabled
+              ? [...new Set([...state.enabledCategories, ...ids])]
+              : state.enabledCategories.filter((id) => !groupIds.has(id)),
+          };
+        }),
       showAllCategories: () => set({ enabledCategories: allCategoryIds }),
       clearCategories: () => set({ enabledCategories: [] }),
       selectSector: (id) => set({ selectedSectorId: id, selectedPlaceId: null, selectedProjectId: null }),

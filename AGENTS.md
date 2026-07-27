@@ -1,5 +1,16 @@
 # Agent instructions
 
+## 楼盘资料与公开数据
+
+任何 agent 在读取、录入、修改、批量研究或发布楼盘资料前，必须先完整阅读 `docs/PROPERTY-DATA-GUIDE.md`。
+
+- 用户界面称“楼盘资料中心”；代码中的 `source-ledger` 指私有来源、证据、修订与发布裁定模型。
+- `outputs/source-ledger/ledger.json` 是被 Git 忽略的本地研究底稿，不是公开产品数据库。不得提交该文件、私有备注、受限来源摘录或未裁定候选。
+- 地图 APP 使用的核心公开楼盘资料应由已裁定记录生成到受版本控制的 `src/data/`，而不是让生产代码读取 `outputs/`。
+- Agent 可以登记研究候选，但不得自行把候选改为 `可公开投射`，不得绕过人工裁定，也不得手工复制私有台账来伪造公开投射。
+- 来源许可、证据置信度、复核期限和发布状态必须分别判断；“已核验”不自动代表“允许公开”。
+- 当前批次审核和快照恢复尚未实现。公开投射只能通过 `npm run build:public-project-data -- --snapshot <id> --confirm-reviewed` 生成；不得用直接改 JSON 的方式替代。
+
 ## 板块边界任务
 
 任何 agent 在新增、调整、拆分、合并、删除板块，或研究板块数据源前，必须先完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。

@@ -5,10 +5,10 @@ import dynamic from "next/dynamic";
 import { memo, useCallback, useEffect, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useMapStore } from "@/src/store/map-store";
+import { LocalSourceLedgerShortcut } from "@/src/components/local-research-features";
 import { DataDisclaimerDialog } from "./DataDisclaimerDialog";
 import { DetailCard } from "./DetailCards";
 import { FilterPanel } from "./FilterPanel";
-import { MapLegend } from "./MapLegend";
 import { MobileBottomSheet } from "./MobileBottomSheet";
 import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
@@ -52,6 +52,7 @@ const AppHeader = memo(function AppHeader({
         <ZoomPill />
       </div>
       <div className="header-actions">
+        <LocalSourceLedgerShortcut />
         <button className="immersive-button" onClick={onEnterImmersive} title="只显示地图板块和新盘 Pin"><Expand size={16} /><span>沉浸模式</span></button>
         <button className="insight-button" onClick={onOpenInsight}><MessageCircleMore size={16} /><span>板块观察</span></button>
         <button className="data-button" onClick={() => setDisclaimerOpen(true)}><Database size={16} /><span>数据说明</span></button>
@@ -102,7 +103,6 @@ export function MapExperience() {
         <>
           <aside className="desktop-filters"><FilterPanel /></aside>
           <DetailCard />
-          <MapLegend />
 
           <MobileActions onOpenInsight={openInsight} />
 

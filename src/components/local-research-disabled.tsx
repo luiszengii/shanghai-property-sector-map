@@ -15,6 +15,10 @@ export function LocalEditorShortcut(_props: { className: string }) {
   return null;
 }
 
+export function LocalSourceLedgerShortcut() {
+  return null;
+}
+
 export function LocalSectorSourceControls() {
   return null;
 }

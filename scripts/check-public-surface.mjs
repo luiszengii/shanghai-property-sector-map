@@ -6,6 +6,13 @@ import process from "node:process";
 const root = process.cwd();
 const snapshotPath = path.join(root, "src/data/public-observations.json");
 const snapshot = JSON.parse(readFileSync(snapshotPath, "utf8"));
+const projectProjectionPath = path.join(
+  root,
+  "src/data/project-public-projection.json",
+);
+const projectProjection = JSON.parse(
+  readFileSync(projectProjectionPath, "utf8"),
+);
 const failures = [];
 const forbiddenKeys = new Set([
   "author",
@@ -19,6 +26,12 @@ const forbiddenKeys = new Set([
   "xsec_token",
   "source_keywords",
   "batch_ids",
+  "note",
+  "revisions",
+  "revisionid",
+  "currentrevisionid",
+  "researchbatches",
+  "licensestatus",
 ]);
 const entryKeys = [
   "sector",
@@ -31,6 +44,7 @@ const entryKeys = [
   "checklist",
   "sources",
 ].toSorted();
+const evidenceConfidences = new Set(["已核验", "高", "中", "低/线索"]);
 
 function visit(value, location = "snapshot") {
   if (Array.isArray(value)) {
@@ -47,6 +61,7 @@ function visit(value, location = "snapshot") {
 }
 
 visit(snapshot);
+visit(projectProjection, "projectProjection");
 const snapshotText = JSON.stringify(snapshot);
 for (const pattern of [
   /\b(?:nickname|creator_hash|comment_id|note_id|user_id|cookie|xsec_token)\b/i,
@@ -75,6 +90,98 @@ for (const [index, entry] of (snapshot.entries ?? []).entries()) {
       || !/^https:\/\/www\.xiaohongshu\.com\/explore\/[A-Za-z0-9]+$/.test(source.url)
     ) {
       failures.push(`entry ${index} contains a non-stable source URL`);
+    }
+  }
+}
+
+const projectionRootKeys = [
+  "generatedAt",
+  "projects",
+  "schemaVersion",
+  "sourceSnapshotId",
+].toSorted();
+if (
+  JSON.stringify(Object.keys(projectProjection).toSorted())
+  !== JSON.stringify(projectionRootKeys)
+) {
+  failures.push("public project projection has unexpected root fields");
+}
+if (projectProjection.schemaVersion !== 1) {
+  failures.push("public project projection schemaVersion must be 1");
+}
+if (Number.isNaN(Date.parse(projectProjection.generatedAt))) {
+  failures.push("public project projection generatedAt must be a valid date");
+}
+if (
+  projectProjection.sourceSnapshotId !== null
+  && typeof projectProjection.sourceSnapshotId !== "string"
+) {
+  failures.push("public project projection sourceSnapshotId must be string or null");
+}
+if (
+  !projectProjection.projects
+  || typeof projectProjection.projects !== "object"
+  || Array.isArray(projectProjection.projects)
+) {
+  failures.push("public project projection projects must be an object");
+}
+const publicFieldKeys = [
+  "confidence",
+  "evidenceId",
+  "field",
+  "observedAt",
+  "source",
+  "value",
+].toSorted();
+const publicSourceKeys = ["publisher", "title", "url"].toSorted();
+for (const [projectId, project] of Object.entries(projectProjection.projects ?? {})) {
+  if (!projectId.startsWith("project_")) {
+    failures.push(`public project projection contains invalid project ID ${projectId}`);
+  }
+  if (
+    !project
+    || typeof project !== "object"
+    || Array.isArray(project)
+    || JSON.stringify(Object.keys(project).toSorted()) !== JSON.stringify(["fields"])
+    || !Array.isArray(project.fields)
+  ) {
+    failures.push(`public project projection ${projectId} must contain only fields[]`);
+    continue;
+  }
+  const evidenceIds = new Set();
+  for (const [index, field] of project.fields.entries()) {
+    const location = `${projectId}.fields[${index}]`;
+    if (
+      !field
+      || typeof field !== "object"
+      || Array.isArray(field)
+      || JSON.stringify(Object.keys(field).toSorted()) !== JSON.stringify(publicFieldKeys)
+    ) {
+      failures.push(`${location} has unexpected fields`);
+      continue;
+    }
+    if (evidenceIds.has(field.evidenceId)) {
+      failures.push(`${location} repeats evidenceId ${field.evidenceId}`);
+    }
+    evidenceIds.add(field.evidenceId);
+    if (!evidenceConfidences.has(field.confidence)) {
+      failures.push(`${location} has invalid confidence`);
+    }
+    if (Number.isNaN(Date.parse(field.observedAt))) {
+      failures.push(`${location} has invalid observedAt`);
+    }
+    if (
+      !field.source
+      || typeof field.source !== "object"
+      || Array.isArray(field.source)
+      || JSON.stringify(Object.keys(field.source).toSorted()) !== JSON.stringify(publicSourceKeys)
+    ) {
+      failures.push(`${location}.source has unexpected fields`);
+    } else if (
+      typeof field.source.url !== "string"
+      || !/^https?:\/\//.test(field.source.url)
+    ) {
+      failures.push(`${location}.source has invalid URL`);
     }
   }
 }
@@ -131,4 +238,6 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`PUBLIC_SURFACE_GREEN: ${snapshot.entryCount} public observation entries validated`);
+console.log(
+  `PUBLIC_SURFACE_GREEN: ${snapshot.entryCount} public observation entries and ${Object.keys(projectProjection.projects ?? {}).length} public project entries validated`,
+);
