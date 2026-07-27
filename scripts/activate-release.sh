@@ -8,7 +8,10 @@ if [[ $# -ne 1 ]]; then
 fi
 
 release_sha="$1"
-deploy_root="/opt/shfang"
+deploy_root="${SHFANG_DEPLOY_ROOT:-/opt/shfang}"
+service_name="${SHFANG_SERVICE_NAME:-shfang-map.service}"
+health_host="${SHFANG_HEALTH_HOST:-shfang.xyz}"
+health_url="${SHFANG_HEALTH_URL:-http://127.0.0.1:3000}"
 release_dir="${deploy_root}/releases/${release_sha}"
 current_link="${deploy_root}/current"
 next_link="${deploy_root}/.current-${release_sha}"
@@ -30,16 +33,16 @@ fi
 
 ln -sfn "${release_dir}" "${next_link}"
 mv -Tf "${next_link}" "${current_link}"
-sudo systemctl restart shfang-map.service
+sudo systemctl restart "${service_name}"
 
 healthy=false
 for _ in {1..60}; do
   if curl --fail --silent --show-error \
     --connect-timeout 2 \
     --max-time 5 \
-    --header "Host: shfang.xyz" \
+    --header "Host: ${health_host}" \
     --output /dev/null \
-    http://127.0.0.1:3000/; then
+    "${health_url}/"; then
     healthy=true
     break
   fi
@@ -48,11 +51,11 @@ done
 
 if [[ "${healthy}" != "true" ]]; then
   echo "release ${release_sha} failed its health check" >&2
-  journalctl -u shfang-map.service --no-pager -n 80 >&2 || true
+  journalctl -u "${service_name}" --no-pager -n 80 >&2 || true
   if [[ -n "${previous_release}" && -d "${previous_release}" ]]; then
     ln -sfn "${previous_release}" "${next_link}"
     mv -Tf "${next_link}" "${current_link}"
-    sudo systemctl restart shfang-map.service
+    sudo systemctl restart "${service_name}"
     echo "rolled back to ${previous_release}" >&2
   fi
   exit 1
@@ -68,10 +71,10 @@ check_status() {
       --connect-timeout 2 \
       --max-time 10 \
       --request "${method}" \
-      --header "Host: shfang.xyz" \
+      --header "Host: ${health_host}" \
       --output /dev/null \
       --write-out '%{http_code}' \
-      "http://127.0.0.1:3000${path}"
+      "${health_url}${path}"
   )"
   [[ "${actual_status}" == "${expected_status}" ]]
 }
@@ -90,15 +93,15 @@ home_body="$(
   curl --fail --silent --show-error \
     --connect-timeout 2 \
     --max-time 10 \
-    --header "Host: shfang.xyz" \
-    http://127.0.0.1:3000/
+    --header "Host: ${health_host}" \
+    "${health_url}/"
 )" || surface_healthy=false
 observations_body="$(
   curl --fail --silent --show-error \
     --connect-timeout 2 \
     --max-time 10 \
-    --header "Host: shfang.xyz" \
-    http://127.0.0.1:3000/observations
+    --header "Host: ${health_host}" \
+    "${health_url}/observations"
 )" || surface_healthy=false
 
 for forbidden_text in \
@@ -121,13 +124,13 @@ if [[ "${surface_healthy}" != "true" ]]; then
   if [[ -n "${previous_release}" && -d "${previous_release}" ]]; then
     ln -sfn "${previous_release}" "${next_link}"
     mv -Tf "${next_link}" "${current_link}"
-    sudo systemctl restart shfang-map.service
+    sudo systemctl restart "${service_name}"
     echo "rolled back to ${previous_release}" >&2
   fi
   exit 1
 fi
 
-systemctl is-active --quiet shfang-map.service
+systemctl is-active --quiet "${service_name}"
 printf 'DEPLOYED_SHA=%s\n' "${release_sha}"
 
 find "${deploy_root}/releases" \

@@ -1,4 +1,4 @@
-# 腾讯云首尔生产部署
+# 腾讯云首尔生产与预生产部署
 
 生产站点运行在腾讯云轻量应用服务器 `43.155.217.8`，域名为
 `https://shfang.xyz`。阿里云 DNS 中的 `@` 与 `www` A 记录均指向该
@@ -39,6 +39,22 @@ pnpm check:public
 同一时间只允许一个生产发布运行。服务器保留最近五个版本；新版本
 健康检查失败时，`scripts/activate-release.sh` 会切回前一个版本。
 
+## 预生产发布与晋级
+
+`pre-prod` 是唯一的预生产集成分支。功能 PR 先合入该分支，
+`.github/workflows/deploy-preprod.yml` 随即将同一公开构建发布到
+`https://pre-prod.shfang.xyz`。预生产和生产共用首尔实例，但分别使用：
+
+- `/opt/shfang-preprod/` 与 `/opt/shfang/` 发布目录；
+- `shfang-preprod.service`（`127.0.0.1:3001`）与 `shfang-map.service`（`127.0.0.1:3000`）；
+- `pre-prod.shfang.xyz` 与 `shfang.xyz` Nginx 虚拟主机。
+
+预生产只用于人工验收，使用 HTTP Basic Auth，且由 Nginx 返回
+`X-Robots-Tag: noindex, nofollow`。确认后必须创建 `pre-prod` 到 `main` 的
+PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
+
+预生产构建沿用公开展示模式，不能从远程入口写入本地编辑器版本或读取本地研究数据。
+
 ## GitHub Actions Secrets
 
 仓库需要以下 Secrets，值不得提交：
@@ -47,13 +63,15 @@ pnpm check:public
 - `NEXT_PUBLIC_AMAP_SECURITY_JS_CODE`
 - `TENCENT_SSH_PRIVATE_KEY`
 - `TENCENT_SSH_KNOWN_HOSTS`
+- `PREPROD_BASIC_AUTH`（HTTP Basic Auth 的 `用户名:密码`）
 
 SSH 私钥只用于 GitHub Actions。服务器端 `deploy` 用户只允许公钥登录，
-并且只能免密重启和检查 `shfang-map.service`。
+并且只能免密重启和检查两个应用服务。`PREPROD_BASIC_AUTH` 仅用于
+Actions 的外网验收，不得写入仓库或日志。
 
 ## 服务器路径与服务
 
-- 发布包：`/opt/shfang/releases/`
+- 生产发布包：`/opt/shfang/releases/`
 - 上传暂存：`/opt/shfang/incoming/`
 - 当前版本：`/opt/shfang/current`
 - systemd：`shfang-map.service`
