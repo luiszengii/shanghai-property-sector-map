@@ -62,12 +62,12 @@
 
 - `CONTEXT.md` and ADRs 0040–0043 contain the approved terminology and architecture decisions and remain uncommitted.
 - A first project-detail route, page, map component, styles, and map-card link exist as uncommitted work. They currently use the fixed public project catalog.
-- `/sources` is now an implemented local-development workbench, with a map-header shortcut, 46-project queue/search, reusable source editor, field-level evidence editor, publication/confidence/review fields, immutable revisions, public-projection preview counts, and explicit ledger snapshots.
+- `/sources` is now an implemented local-development workbench, with a map-header shortcut, 46-project queue/search, reusable source editor, field-level evidence editor, publication/confidence/review fields, immutable revisions, explicit ledger snapshots, version browsing, per-field publication blockers, public preview, and a guarded public-data generation action.
 - `app/api/source-ledger/route.ts` and `src/lib/source-ledger-storage.ts` persist the private ledger atomically under ignored `outputs/source-ledger/ledger.json`. The route accepts only development-mode localhost requests.
 - Production uses a disabled component alias; both `/sources` and `/api/source-ledger` were verified to return 404 from a production build.
 - The first local seed covers `恒文璞悦江南`’s address evidence. Its current revision records observation date `2026-07-22`, next review `2027-07-22`, publication state `待裁定`, and remains private. A first recoverable ledger snapshot was saved.
 - Domain tests cover strict parsing, immutable source revisions, registered-source requirements, publication/freshness gating with private-field redaction, and snapshot revision freezing.
-- The explicit reviewed generator now writes `src/data/project-public-projection.json`, `check:public` validates its public shape, and project detail pages consume its fields. Remaining ledger work is batch-review UI and snapshot restore/version browsing. Do not bypass review gates by copying private ledger data into public files.
+- The explicit reviewed generator now writes `src/data/project-public-projection.json`, `check:public` validates its public shape, and project detail pages consume its fields. The workbench distinguishes live candidates from the actual tracked public file; a selected snapshot must contain eligible fields and the user must tick the manual-review confirmation before generation. Remaining ledger work is batch-review UI and snapshot restore. Do not bypass review gates by copying private ledger data into public files.
 - Main-map search suggestions and the latest map/filter UI refinements remain uncommitted.
 - The old map legend is no longer rendered.
 - `有利配套` and `需要关注` can each be collapsed and can independently enable or disable all categories.

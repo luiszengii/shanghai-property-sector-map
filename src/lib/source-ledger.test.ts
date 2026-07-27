@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   buildPublicProjectProjection,
   buildPublicProjectProjectionFromSnapshot,
+  buildSnapshotProjectionPreview,
   createLedgerSnapshot,
   emptySourceLedger,
   parsePublicProjectProjection,
@@ -327,4 +328,54 @@ test("从资料版本生成公开投射时使用冻结修订而不是当前修�
     projection.projects["project_恒文璞悦江南"].fields[0].value,
     "待售",
   );
+});
+
+test("资料版本预览逐条解释字段为什么没有进入公开数据", () => {
+  const withSource = saveSourceRevision(emptySourceLedger(), {
+    id: "source-1",
+    title: "项目页面",
+    publisher: "开发企业",
+    url: "https://example.com/project",
+    sourceType: "开发商页面",
+    licenseStatus: "待核验",
+    allowedUse: "仅限事实核验",
+    note: "",
+  }, {
+    revisionId: "source-revision-1",
+    recordedAt: "2026-07-27T00:00:00.000Z",
+  });
+  const withEvidence = saveEvidenceRevision(withSource, {
+    id: "evidence-1",
+    objectType: "project",
+    objectId: "project_东岸观邸",
+    field: "test",
+    value: "test",
+    sourceId: "source-1",
+    confidence: "中",
+    publicationStatus: "待裁定",
+    observedAt: "2026-07-27",
+    reviewDueAt: null,
+    note: "",
+  }, {
+    revisionId: "evidence-revision-1",
+    recordedAt: "2026-07-27T00:00:00.000Z",
+  });
+  const ledger = createLedgerSnapshot(withEvidence, {
+    id: "snapshot-test",
+    label: "测试版本",
+    createdAt: "2026-07-27T01:00:00.000Z",
+  });
+
+  const preview = buildSnapshotProjectionPreview(
+    ledger,
+    "snapshot-test",
+    "2026-07-27T12:00:00.000Z",
+  );
+
+  assert.deepEqual(preview.projection.projects, {});
+  assert.deepEqual(preview.eligibility[0].blockers, [
+    "发布状态为「待裁定」",
+    "来源用途为「仅限事实核验」",
+  ]);
+  assert.equal(preview.eligibility[0].eligible, false);
 });
