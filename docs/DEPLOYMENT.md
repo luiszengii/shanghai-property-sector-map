@@ -11,7 +11,7 @@ standalone 服务。
 
 1. 使用锁文件安装依赖；
 2. 运行 lint、TypeScript 与地图性能测试；
-3. 使用生产高德 Key 构建 Next.js standalone 产物；
+3. 使用生产高德 Key 与 Umami Website ID 构建 Next.js standalone 产物；
 4. 排除仅允许本地读取的 `outputs/` 数据；
 5. 通过专用 SSH 账号上传到 `/opt/shfang/releases/<commit-sha>`；
 6. 原子切换 `/opt/shfang/current` 并重启 `shfang-map.service`；
@@ -54,6 +54,7 @@ pnpm check:public
 PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 
 预生产构建沿用公开展示模式，不能从远程入口写入本地编辑器版本或读取本地研究数据。
+预生产默认不注入 Umami Website ID，因此不会污染生产访问统计。
 
 ## GitHub Actions Secrets
 
@@ -61,6 +62,7 @@ PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 
 - `NEXT_PUBLIC_AMAP_KEY`
 - `NEXT_PUBLIC_AMAP_SECURITY_JS_CODE`
+- `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
 - `TENCENT_SSH_PRIVATE_KEY`
 - `TENCENT_SSH_KNOWN_HOSTS`
 - `PREPROD_BASIC_AUTH`（HTTP Basic Auth 的 `用户名:密码`）
@@ -68,6 +70,9 @@ PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 SSH 私钥只用于 GitHub Actions。服务器端 `deploy` 用户只允许公钥登录，
 并且只能免密重启和检查两个应用服务。`PREPROD_BASIC_AUTH` 仅用于
 Actions 的外网验收，不得写入仓库或日志。
+
+访问统计后台、登录入口、数据查看和无数据排查见
+[`docs/ANALYTICS.md`](ANALYTICS.md)。
 
 ## 服务器路径与服务
 
