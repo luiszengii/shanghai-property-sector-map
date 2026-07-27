@@ -1,5 +1,23 @@
 # Agent instructions
 
+## 线上访问数据与 Umami
+
+任何 agent 在回答“网站流量、访客、浏览量、来源、实时在线、性能数据在哪看”
+或排查统计为空前，必须先完整阅读 `docs/ANALYTICS.md`。
+
+- 生产统计后台是 `https://analytics.shfang.xyz`，Website 为 `shfang.xyz`，
+  Website ID 为 `d200b8a0-893a-443a-81f4-634fe5897d60`。
+- Umami 用户名是 `admin`；管理员密码不进入 Git。优先复用用户已登录的
+  Chrome 会话，未登录时请用户本人输入当前密码，不得猜测、读取浏览器密码库
+  或把密码写进仓库、日志和对话总结。
+- 查看数据的固定入口是 `Websites → shfang.xyz → 概览`；实时采集检查使用
+  “实时”。生产统计默认不包含 `pre-prod.shfang.xyz`。
+- 若数据为空，先验证生产 HTML 是否包含
+  `https://analytics.shfang.xyz/script.js` 和正确 Website ID，再在真实页面
+  的网络请求中确认 `/api/send` 返回 200，最后刷新 Umami 最近 24 小时数据。
+- 不得给整个 Umami 站点重新添加 Nginx HTTP Basic Auth；它会和 Umami 自身
+  的 `Authorization` 登录令牌冲突，造成登录成功后仍被拦截。
+
 ## 楼盘资料与公开数据
 
 任何 agent 在读取、录入、修改、批量研究或发布楼盘资料前，必须先完整阅读 `docs/PROPERTY-DATA-GUIDE.md`。
