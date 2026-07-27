@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import { type NextRequest, NextResponse } from "next/server";
 import {
   buildPublicProjectProjection,
+  buildPublicProjectProjectionFromSnapshot,
+  buildSnapshotProjectionPreview,
   createLedgerSnapshot,
   saveEvidenceRevision,
   saveSourceRevision,
@@ -11,6 +13,8 @@ import {
 } from "@/src/lib/source-ledger";
 import {
   readSourceLedger,
+  readPublicProjectProjection,
+  writePublicProjectProjection,
   writeSourceLedger,
 } from "@/src/lib/source-ledger-storage";
 import {
@@ -68,9 +72,14 @@ function nullableString(body: Record<string, unknown>, key: string) {
 
 async function currentPayload() {
   const ledger = await readSourceLedger();
+  const generatedAt = new Date().toISOString();
   return {
     ledger,
-    projection: buildPublicProjectProjection(ledger, new Date().toISOString()),
+    candidateProjection: buildPublicProjectProjection(ledger, generatedAt),
+    publishedProjection: await readPublicProjectProjection(),
+    snapshotPreviews: ledger.snapshots.map((snapshot) => (
+      buildSnapshotProjectionPreview(ledger, snapshot.id, generatedAt)
+    )),
   };
 }
 
@@ -142,15 +151,34 @@ export async function POST(request: NextRequest) {
         label: stringValue(body, "label"),
         createdAt: now,
       });
+    } else if (action === "generatePublicProjection") {
+      const snapshotId = stringValue(body, "snapshotId");
+      if (body.confirmReviewed !== true) {
+        throw new Error("生成公开数据前必须确认已人工复核该资料版本");
+      }
+      const projection = buildPublicProjectProjectionFromSnapshot(
+        ledger,
+        snapshotId,
+        now,
+      );
+      const fieldCount = Object.values(projection.projects).reduce(
+        (total, project) => total + project.fields.length,
+        0,
+      );
+      if (fieldCount === 0) {
+        throw new Error("该资料版本没有满足公开条件的字段，未修改公开数据");
+      }
+      await writePublicProjectProjection(projection);
+      return NextResponse.json(await currentPayload(), {
+        status: 201,
+        headers: privateHeaders,
+      });
     } else {
       throw new Error(`未知操作 ${action}`);
     }
 
     await writeSourceLedger(next);
-    return NextResponse.json({
-      ledger: next,
-      projection: buildPublicProjectProjection(next, now),
-    }, {
+    return NextResponse.json(await currentPayload(), {
       status: 201,
       headers: privateHeaders,
     });

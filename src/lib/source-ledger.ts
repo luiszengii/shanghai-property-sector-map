@@ -145,6 +145,25 @@ export interface PublicProjectProjection {
   }>;
 }
 
+export interface ProjectionEligibility {
+  evidenceId: string;
+  objectId: string;
+  field: string;
+  value: string;
+  eligible: boolean;
+  blockers: string[];
+}
+
+export interface SnapshotProjectionPreview {
+  snapshotId: string;
+  label: string;
+  createdAt: string;
+  sourceRevisionCount: number;
+  evidenceRevisionCount: number;
+  projection: PublicProjectProjection;
+  eligibility: ProjectionEligibility[];
+}
+
 const publicFieldKeys = [
   "evidenceId",
   "field",
@@ -486,13 +505,39 @@ export function getCurrentEvidenceRevision(evidence: VersionedEvidence) {
   return currentRevision(evidence);
 }
 
+export function getPublicProjectionBlockers(
+  evidence: EvidenceRevision,
+  source: SourceRevision | undefined,
+  generatedAt: string,
+) {
+  const generatedTimestamp = Date.parse(generatedAt);
+  if (Number.isNaN(generatedTimestamp)) throw new Error("公开投射时间无效");
+  const blockers: string[] = [];
+  if (evidence.publicationStatus !== "可公开投射") {
+    blockers.push(`发布状态为「${evidence.publicationStatus}」`);
+  }
+  if (!source) {
+    blockers.push("资料版本未包含对应来源修订");
+  } else if (source.allowedUse !== "可公开引用") {
+    blockers.push(`来源用途为「${source.allowedUse}」`);
+  }
+  if (
+    evidence.reviewDueAt !== null
+    && Date.parse(evidence.reviewDueAt) < generatedTimestamp
+  ) {
+    blockers.push(`已超过复核日期 ${evidence.reviewDueAt}`);
+  }
+  return blockers;
+}
+
 export function buildPublicProjectProjection(
   ledger: SourceLedger,
   generatedAt: string,
   sourceSnapshotId: string | null = null,
 ): PublicProjectProjection {
-  const generatedTimestamp = Date.parse(generatedAt);
-  if (Number.isNaN(generatedTimestamp)) throw new Error("公开投射时间无效");
+  if (Number.isNaN(Date.parse(generatedAt))) {
+    throw new Error("公开投射时间无效");
+  }
   const sources = new Map(
     ledger.sources.map((source) => [source.id, currentRevision(source)]),
   );
@@ -500,13 +545,9 @@ export function buildPublicProjectProjection(
   for (const evidenceRecord of ledger.evidence) {
     const evidence = currentRevision(evidenceRecord);
     const source = sources.get(evidence.sourceId);
-    const stale = evidence.reviewDueAt !== null
-      && Date.parse(evidence.reviewDueAt) < generatedTimestamp;
     if (
-      evidence.publicationStatus !== "可公开投射"
-      || stale
-      || !source
-      || source.allowedUse !== "可公开引用"
+      !source
+      || getPublicProjectionBlockers(evidence, source, generatedAt).length > 0
     ) {
       continue;
     }
@@ -564,6 +605,57 @@ export function buildPublicProjectProjectionFromSnapshot(
     }),
   };
   return buildPublicProjectProjection(frozenLedger, generatedAt, snapshot.id);
+}
+
+export function buildSnapshotProjectionPreview(
+  ledger: SourceLedger,
+  snapshotId: string,
+  generatedAt: string,
+): SnapshotProjectionPreview {
+  const snapshot = ledger.snapshots.find((item) => item.id === snapshotId);
+  if (!snapshot) throw new Error(`资料版本不存在 ${snapshotId}`);
+  const sourceRevisionIds = new Set(snapshot.sourceRevisionIds);
+  const evidenceRevisionIds = new Set(snapshot.evidenceRevisionIds);
+  const sources = new Map<string, SourceRevision>();
+  for (const source of ledger.sources) {
+    const revision = source.revisions.find((item) => (
+      sourceRevisionIds.has(item.revisionId)
+    ));
+    if (revision) sources.set(source.id, revision);
+  }
+  const eligibility: ProjectionEligibility[] = [];
+  for (const evidence of ledger.evidence) {
+    const revision = evidence.revisions.find((item) => (
+      evidenceRevisionIds.has(item.revisionId)
+    ));
+    if (!revision) continue;
+    const blockers = getPublicProjectionBlockers(
+      revision,
+      sources.get(revision.sourceId),
+      generatedAt,
+    );
+    eligibility.push({
+      evidenceId: evidence.id,
+      objectId: revision.objectId,
+      field: revision.field,
+      value: revision.value,
+      eligible: blockers.length === 0,
+      blockers,
+    });
+  }
+  return {
+    snapshotId: snapshot.id,
+    label: snapshot.label,
+    createdAt: snapshot.createdAt,
+    sourceRevisionCount: snapshot.sourceRevisionIds.length,
+    evidenceRevisionCount: snapshot.evidenceRevisionIds.length,
+    projection: buildPublicProjectProjectionFromSnapshot(
+      ledger,
+      snapshot.id,
+      generatedAt,
+    ),
+    eligibility,
+  };
 }
 
 export function createLedgerSnapshot(
