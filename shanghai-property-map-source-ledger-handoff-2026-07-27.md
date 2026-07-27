@@ -9,6 +9,7 @@
 ## Read first
 
 - Workspace instructions: `AGENTS.md`
+- Property data operations: `docs/PROPERTY-DATA-GUIDE.md`
 - Domain language: `CONTEXT.md`
 - Decisions: `docs/adr/0040-keep-source-ledger-local-until-authenticated.md` through `docs/adr/0043-keep-private-ledger-and-generate-public-projection.md`
 - Sector changes or sector-source research: read `docs/SECTOR-BOUNDARY-PLAYBOOK.md` in full first.
@@ -66,7 +67,7 @@
 - Production uses a disabled component alias; both `/sources` and `/api/source-ledger` were verified to return 404 from a production build.
 - The first local seed covers `恒文璞悦江南`’s address evidence. Its current revision records observation date `2026-07-22`, next review `2027-07-22`, publication state `待裁定`, and remains private. A first recoverable ledger snapshot was saved.
 - Domain tests cover strict parsing, immutable source revisions, registered-source requirements, publication/freshness gating with private-field redaction, and snapshot revision freezing.
-- Remaining ledger work is batch-review UI, snapshot restore/version browsing, and an explicit user-reviewed generator that writes the narrow tracked projection under `src/data/`. Do not bypass those review gates by copying private ledger data into public files.
+- The explicit reviewed generator now writes `src/data/project-public-projection.json`, `check:public` validates its public shape, and project detail pages consume its fields. Remaining ledger work is batch-review UI and snapshot restore/version browsing. Do not bypass review gates by copying private ledger data into public files.
 - Main-map search suggestions and the latest map/filter UI refinements remain uncommitted.
 - The old map legend is no longer rendered.
 - `有利配套` and `需要关注` can each be collapsed and can independently enable or disable all categories.

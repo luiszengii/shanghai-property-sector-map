@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   buildPublicProjectProjection,
+  buildPublicProjectProjectionFromSnapshot,
   createLedgerSnapshot,
   emptySourceLedger,
+  parsePublicProjectProjection,
   parseSourceLedger,
   saveEvidenceRevision,
   saveSourceRevision,
@@ -176,8 +178,37 @@ test("公开投射只包含未过复核期的公开证据并删除私有备注",
       }],
     },
   });
+  assert.equal(projection.sourceSnapshotId, null);
   assert.equal(JSON.stringify(projection).includes("本地审核备注"), false);
   assert.equal(JSON.stringify(projection).includes("revision"), false);
+});
+
+test("公开投射拒绝私有字段或其他未声明字段", () => {
+  assert.throws(
+    () => parsePublicProjectProjection({
+      schemaVersion: 1,
+      generatedAt: "2026-07-27T12:00:00.000Z",
+      sourceSnapshotId: null,
+      projects: {
+        "project_恒文璞悦江南": {
+          fields: [{
+            evidenceId: "evidence-1",
+            field: "项目地址",
+            value: "青浦区珠湖路889弄",
+            confidence: "已核验",
+            observedAt: "2026-07-22",
+            note: "不得公开的本地备注",
+            source: {
+              title: "项目官方页面",
+              publisher: "开发企业",
+              url: "https://example.com/project",
+            },
+          }],
+        },
+      },
+    }),
+    /未允许字段/,
+  );
 });
 
 test("台账版本冻结保存时的当前修订", () => {
@@ -231,4 +262,69 @@ test("台账版本冻结保存时的当前修订", () => {
 
   assert.equal(revised.snapshots[0].sourceRevisionIds[0], "source-revision-1");
   assert.equal(revised.snapshots[0].evidenceRevisionIds[0], "evidence-revision-1");
+});
+
+test("从资料版本生成公开投射时使用冻结修订而不是当前修订", () => {
+  const withSource = saveSourceRevision(emptySourceLedger(), {
+    id: "source-1",
+    title: "项目官方页面",
+    publisher: "开发企业",
+    url: "https://example.com/project",
+    sourceType: "开发商页面",
+    licenseStatus: "公开网页",
+    allowedUse: "可公开引用",
+    note: "",
+  }, {
+    revisionId: "source-revision-1",
+    recordedAt: "2026-07-27T00:00:00.000Z",
+  });
+  const withEvidence = saveEvidenceRevision(withSource, {
+    id: "evidence-1",
+    objectType: "project",
+    objectId: "project_恒文璞悦江南",
+    field: "项目阶段",
+    value: "待售",
+    sourceId: "source-1",
+    confidence: "高",
+    publicationStatus: "可公开投射",
+    observedAt: "2026-07-27",
+    reviewDueAt: "2027-07-27",
+    note: "",
+  }, {
+    revisionId: "evidence-revision-1",
+    recordedAt: "2026-07-27T00:00:00.000Z",
+  });
+  const snapshotted = createLedgerSnapshot(withEvidence, {
+    id: "snapshot-reviewed",
+    label: "人工审核版本",
+    createdAt: "2026-07-27T01:00:00.000Z",
+  });
+  const revised = saveEvidenceRevision(snapshotted, {
+    id: "evidence-1",
+    objectType: "project",
+    objectId: "project_恒文璞悦江南",
+    field: "项目阶段",
+    value: "已售罄",
+    sourceId: "source-1",
+    confidence: "高",
+    publicationStatus: "禁止公开",
+    observedAt: "2026-07-28",
+    reviewDueAt: "2027-07-28",
+    note: "",
+  }, {
+    revisionId: "evidence-revision-2",
+    recordedAt: "2026-07-28T00:00:00.000Z",
+  });
+
+  const projection = buildPublicProjectProjectionFromSnapshot(
+    revised,
+    "snapshot-reviewed",
+    "2026-07-29T00:00:00.000Z",
+  );
+
+  assert.equal(projection.sourceSnapshotId, "snapshot-reviewed");
+  assert.equal(
+    projection.projects["project_恒文璞悦江南"].fields[0].value,
+    "待售",
+  );
 });

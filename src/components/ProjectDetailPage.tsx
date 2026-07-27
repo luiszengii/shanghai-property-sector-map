@@ -16,7 +16,10 @@ import {
 import Link from "next/link";
 import type { PropertyProject } from "@/src/types/map";
 import { ProjectDetailMap } from "@/src/components/ProjectDetailMap";
+import type { PublicProjectProjection } from "@/src/lib/source-ledger";
 import styles from "@/app/projects/[id]/page.module.css";
+
+type PublicProjectData = PublicProjectProjection["projects"][string];
 
 const cautionTasks = [
   {
@@ -41,9 +44,46 @@ const facilityTasks = [
   { label: "公园绿地", icon: Trees },
 ];
 
-export function ProjectDetailPage({ project }: { project: PropertyProject }) {
+export function ProjectDetailPage({
+  project,
+  publicProject,
+}: {
+  project: PropertyProject;
+  publicProject: PublicProjectData | null;
+}) {
   const displayName = project.officialName ?? project.name;
   const confidenceLabel = project.locationConfidence === "high" ? "高" : "中";
+  const publicFields = publicProject?.fields ?? [];
+  const fieldValue = (name: string) => (
+    publicFields.find((item) => item.field === name)?.value
+  );
+  const publicPrice = fieldValue("公开报价");
+  const transitFields = {
+    station: fieldValue("附近地铁站"),
+    line: fieldValue("所属线路"),
+    distance: fieldValue("直线距离"),
+    route: fieldValue("步行路线状态"),
+  };
+  const hasTransitData = Object.values(transitFields).some(Boolean);
+  const overviewFieldNames = new Set([
+    "项目名称",
+    "行政区 / 板块",
+    "项目地址",
+    "点位置信度",
+    "开发企业",
+    "项目阶段",
+    "公开报价",
+    "附近地铁站",
+    "所属线路",
+    "直线距离",
+    "步行路线状态",
+  ]);
+  const extraOverviewFields = publicFields.filter(
+    (item) => !overviewFieldNames.has(item.field),
+  );
+  const additionalSources = Array.from(new Map(
+    publicFields.map((item) => [item.source.url, item.source]),
+  ).values()).filter((source) => source.url !== project.locationSourceUrl);
 
   return (
     <main className={`${styles.page} project-detail-page`}>
@@ -75,8 +115,10 @@ export function ProjectDetailPage({ project }: { project: PropertyProject }) {
             </div>
             <div className={styles.pricePanel}>
               <span>价格快照</span>
-              <strong>暂无可公开报价</strong>
-              <p>报价需在来源台账中完成口径、日期和发布裁定后显示。</p>
+              <strong>{publicPrice ?? "暂无可公开报价"}</strong>
+              <p>{publicPrice
+                ? "显示已完成来源、日期与发布裁定的公开报价。"
+                : "报价需在楼盘资料中心完成口径、日期和发布裁定后显示。"}</p>
             </div>
           </div>
         </section>
@@ -97,16 +139,18 @@ export function ProjectDetailPage({ project }: { project: PropertyProject }) {
             <small>仅显示已核验字段</small>
           </div>
           <div className={styles.transitBody}>
-            <div className={styles.transitPending}>
-              <TrainFront aria-hidden="true" size={30} />
-              <strong>最近轨道站待 agent 核验</strong>
-              <span>需补充线路、直线距离、步行路线与来源日期。</span>
-            </div>
+            {!hasTransitData && (
+              <div className={styles.transitPending}>
+                <TrainFront aria-hidden="true" size={30} />
+                <strong>最近轨道站待 agent 核验</strong>
+                <span>需补充线路、直线距离、步行路线与来源日期。</span>
+              </div>
+            )}
             <dl className={styles.factRows}>
-              <div><dt>附近地铁站</dt><dd>待核验</dd></div>
-              <div><dt>所属线路</dt><dd>待核验</dd></div>
-              <div><dt>直线距离</dt><dd>未发布</dd></div>
-              <div><dt>步行路线状态</dt><dd className={styles.pendingText}>待核验</dd></div>
+              <div><dt>附近地铁站</dt><dd>{transitFields.station ?? "待核验"}</dd></div>
+              <div><dt>所属线路</dt><dd>{transitFields.line ?? "待核验"}</dd></div>
+              <div><dt>直线距离</dt><dd>{transitFields.distance ?? "未发布"}</dd></div>
+              <div><dt>步行路线状态</dt><dd className={transitFields.route ? "" : styles.pendingText}>{transitFields.route ?? "待核验"}</dd></div>
             </dl>
           </div>
         </section>
@@ -169,8 +213,14 @@ export function ProjectDetailPage({ project }: { project: PropertyProject }) {
               <div><dt>行政区 / 板块</dt><dd>{project.district} · {project.sector}</dd></div>
               <div><dt>项目地址</dt><dd>{project.locationAddress}</dd></div>
               <div><dt>点位置信度</dt><dd>{confidenceLabel}置信</dd></div>
-              <div><dt>开发企业</dt><dd>待核验</dd></div>
-              <div><dt>项目阶段</dt><dd>待核验</dd></div>
+              <div><dt>开发企业</dt><dd>{fieldValue("开发企业") ?? "待核验"}</dd></div>
+              <div><dt>项目阶段</dt><dd>{fieldValue("项目阶段") ?? "待核验"}</dd></div>
+              {extraOverviewFields.map((item) => (
+                <div key={item.evidenceId}>
+                  <dt>{item.field}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))}
             </dl>
             {project.locationNote && (
               <p className={styles.locationNote}><Info aria-hidden="true" size={15} /> {project.locationNote}</p>
@@ -218,6 +268,12 @@ export function ProjectDetailPage({ project }: { project: PropertyProject }) {
             <a href={project.locationSourceUrl} target="_blank" rel="noreferrer">
               查看原始链接 <ExternalLink aria-hidden="true" size={12} />
             </a>
+            {additionalSources.map((source) => (
+              <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>
+                {source.title} · {source.publisher}
+                <ExternalLink aria-hidden="true" size={12} />
+              </a>
+            ))}
           </p>
         </div>
         <div>
@@ -228,7 +284,7 @@ export function ProjectDetailPage({ project }: { project: PropertyProject }) {
         <div>
           <CheckCircle2 aria-hidden="true" size={18} />
           <h2>公开范围</h2>
-          <p>当前仅公开项目身份、地址、代表点和来源，不公开未裁定研究信息。</p>
+          <p>公开项目身份、地址、代表点及 {publicFields.length} 个已裁定资料字段，不公开未裁定研究信息。</p>
         </div>
         <div>
           <Info aria-hidden="true" size={18} />

@@ -128,6 +128,7 @@ export interface CreateLedgerSnapshotInput {
 export interface PublicProjectProjection {
   schemaVersion: 1;
   generatedAt: string;
+  sourceSnapshotId: string | null;
   projects: Record<string, {
     fields: Array<{
       evidenceId: string;
@@ -142,6 +143,27 @@ export interface PublicProjectProjection {
       };
     }>;
   }>;
+}
+
+const publicFieldKeys = [
+  "evidenceId",
+  "field",
+  "value",
+  "confidence",
+  "observedAt",
+  "source",
+] as const;
+
+function requireExactKeys(
+  value: Record<string, unknown>,
+  expected: readonly string[],
+  path: string,
+) {
+  const actual = Object.keys(value).toSorted();
+  const sortedExpected = [...expected].toSorted();
+  if (JSON.stringify(actual) !== JSON.stringify(sortedExpected)) {
+    throw new Error(`${path} 包含未允许字段`);
+  }
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -313,6 +335,57 @@ export function parseSourceLedger(value: unknown): SourceLedger {
   return value as unknown as SourceLedger;
 }
 
+export function parsePublicProjectProjection(
+  value: unknown,
+): PublicProjectProjection {
+  const projection = requireRecord(value, "publicProjection");
+  requireExactKeys(
+    projection,
+    ["schemaVersion", "generatedAt", "sourceSnapshotId", "projects"],
+    "publicProjection",
+  );
+  if (projection.schemaVersion !== 1) {
+    throw new Error("公开投射 schemaVersion 必须为 1");
+  }
+  requireIsoDate(projection.generatedAt, "publicProjection.generatedAt");
+  if (
+    projection.sourceSnapshotId !== null
+    && typeof projection.sourceSnapshotId !== "string"
+  ) {
+    throw new Error("publicProjection.sourceSnapshotId 必须是字符串或 null");
+  }
+  const projects = requireRecord(projection.projects, "publicProjection.projects");
+  for (const [projectId, projectValue] of Object.entries(projects)) {
+    const projectPath = `publicProjection.projects.${projectId}`;
+    const project = requireRecord(projectValue, projectPath);
+    requireExactKeys(project, ["fields"], projectPath);
+    if (!Array.isArray(project.fields)) {
+      throw new Error(`${projectPath}.fields 必须是数组`);
+    }
+    const evidenceIds = new Set<string>();
+    for (const [index, fieldValue] of project.fields.entries()) {
+      const fieldPath = `${projectPath}.fields[${index}]`;
+      const field = requireRecord(fieldValue, fieldPath);
+      requireExactKeys(field, publicFieldKeys, fieldPath);
+      const evidenceId = requireString(field.evidenceId, `${fieldPath}.evidenceId`);
+      if (evidenceIds.has(evidenceId)) {
+        throw new Error(`${projectPath} 包含重复 evidenceId ${evidenceId}`);
+      }
+      evidenceIds.add(evidenceId);
+      requireString(field.field, `${fieldPath}.field`);
+      requireString(field.value, `${fieldPath}.value`);
+      requireEnum(field.confidence, evidenceConfidences, `${fieldPath}.confidence`);
+      requireIsoDate(field.observedAt, `${fieldPath}.observedAt`);
+      const source = requireRecord(field.source, `${fieldPath}.source`);
+      requireExactKeys(source, ["title", "publisher", "url"], `${fieldPath}.source`);
+      requireString(source.title, `${fieldPath}.source.title`);
+      requireString(source.publisher, `${fieldPath}.source.publisher`);
+      requireString(source.url, `${fieldPath}.source.url`);
+    }
+  }
+  return value as PublicProjectProjection;
+}
+
 export function emptySourceLedger(): SourceLedger {
   return {
     schemaVersion: 1,
@@ -416,6 +489,7 @@ export function getCurrentEvidenceRevision(evidence: VersionedEvidence) {
 export function buildPublicProjectProjection(
   ledger: SourceLedger,
   generatedAt: string,
+  sourceSnapshotId: string | null = null,
 ): PublicProjectProjection {
   const generatedTimestamp = Date.parse(generatedAt);
   if (Number.isNaN(generatedTimestamp)) throw new Error("公开投射时间无效");
@@ -454,8 +528,42 @@ export function buildPublicProjectProjection(
   return {
     schemaVersion: 1,
     generatedAt,
+    sourceSnapshotId,
     projects,
   };
+}
+
+export function buildPublicProjectProjectionFromSnapshot(
+  ledger: SourceLedger,
+  snapshotId: string,
+  generatedAt: string,
+) {
+  const snapshot = ledger.snapshots.find((item) => item.id === snapshotId);
+  if (!snapshot) throw new Error(`资料版本不存在 ${snapshotId}`);
+  const sourceRevisionIds = new Set(snapshot.sourceRevisionIds);
+  const evidenceRevisionIds = new Set(snapshot.evidenceRevisionIds);
+  const frozenLedger: SourceLedger = {
+    ...ledger,
+    sources: ledger.sources.flatMap((source) => {
+      const revision = source.revisions.find((item) => (
+        sourceRevisionIds.has(item.revisionId)
+      ));
+      return revision ? [{
+        ...source,
+        currentRevisionId: revision.revisionId,
+      }] : [];
+    }),
+    evidence: ledger.evidence.flatMap((evidence) => {
+      const revision = evidence.revisions.find((item) => (
+        evidenceRevisionIds.has(item.revisionId)
+      ));
+      return revision ? [{
+        ...evidence,
+        currentRevisionId: revision.revisionId,
+      }] : [];
+    }),
+  };
+  return buildPublicProjectProjection(frozenLedger, generatedAt, snapshot.id);
 }
 
 export function createLedgerSnapshot(

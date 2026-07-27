@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectDetailPage } from "@/src/components/ProjectDetailPage";
 import { projects } from "@/src/content/project-leads";
+import publicProjectProjectionJson from "@/src/data/project-public-projection.json";
+import { parsePublicProjectProjection } from "@/src/lib/source-ledger";
+
+const publicProjectProjection = parsePublicProjectProjection(
+  publicProjectProjectionJson,
+);
 
 export const dynamicParams = false;
 
@@ -37,5 +43,10 @@ export default async function ProjectPage({
   const { id } = await params;
   const project = resolveProject(id);
   if (!project) notFound();
-  return <ProjectDetailPage project={project} />;
+  return (
+    <ProjectDetailPage
+      project={project}
+      publicProject={publicProjectProjection.projects[project.id] ?? null}
+    />
+  );
 }

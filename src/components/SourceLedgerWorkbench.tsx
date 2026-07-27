@@ -331,7 +331,7 @@ export function SourceLedgerWorkbench({
               <Archive size={14} /> 保存版本
             </button>
           </div>
-          <small>已有 {payload.ledger.snapshots.length} 个可恢复快照</small>
+          <small>已有 {payload.ledger.snapshots.length} 个资料版本（暂不支持恢复）</small>
         </form>
       </header>
 
