@@ -255,7 +255,9 @@ export function buildUserReviewedOverrideCollection(input: {
 }) {
   const previous = input.previous ?? emptyUserReviewedOverrideCollection();
   const featureById = new Map(
-    previous.features.map((feature) => [feature.properties.id, feature]),
+    previous.features
+      .filter((feature) => input.registeredSectorIds.has(feature.properties.id))
+      .map((feature) => [feature.properties.id, feature]),
   );
   const skippedUnregisteredDraftIds: string[] = [];
   let publishedDraftCount = 0;
