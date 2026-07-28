@@ -5625,28 +5625,6 @@
       }
     },
     {
-      "id": "sector_minhangjinhui",
-      "canonicalName": "闵行金汇",
-      "aliases": ["金汇", "金汇华光城"],
-      "riskFlags": ["market_boundary_not_official", "independent_market_scope_required", "must_not_merge_with_fengxian_jinhui", "inside_hongqiao_town"],
-      "districtNames": ["闵行区"],
-      "kind": "market_sector",
-      "reviewStatus": "needs-research",
-      "definitionStatus": "market_identity_verified_geometry_blocked",
-      "definitionCandidate": "闵行金汇与已登记的奉贤金汇必须严格消歧。官方材料只将金汇华光城等成员定位于虹桥镇内，不能把完整虹桥镇或奉贤金汇边界替代为闵行金汇市场范围。保留为可人工起画的待绘制身份。",
-      "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-minhang-hongqiao-jinhui-and-jinhongqiao"],
-      "adminProxyName": "虹桥镇内独立市场身份（待定义）",
-      "adminBoundaryVersion": "independent-market-scope-required-2026-07",
-      "marketAdminAlignmentUnverified": true,
-      "requiredAdjacencyReviewIds": ["sector_hongqiao", "sector_fengxianjinhui", "unresolved_jinhongqiao", "unresolved_longbai"],
-      "geometry": {
-        "status": "missing", "confidence": "low", "coordinateSystem": "unknown", "coordinateSystemVerified": false,
-        "version": "independent-market-scope-research-required-2026-07", "sourceIds": [],
-        "verificationSourceIds": ["official-minhang-hongqiao-jinhui-and-jinhongqiao"], "publicationPolicy": "internal_review",
-        "note": "官方材料只提供成员定位。禁止复用奉贤金汇、完整虹桥镇或行政残余面；允许用户在编辑器人工起画。"
-      }
-    },
-    {
       "id": "sector_longbai",
       "canonicalName": "龙柏",
       "aliases": ["龙柏新村", "龙柏二村"],
@@ -6616,7 +6594,6 @@
     },
     {"id":"sector_zhenguang","canonicalName":"真光","aliases":[],"riskFlags":["inside_zhenru_changzheng_admin_proxies","market_boundary_not_official"],"districtNames":["普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"真光市场身份及17居委成员已核验，未取得居委边界前不生成道路猜测面。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"17-community-boundaries-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"取得17居委边界后与真如、长征联合裁切。"}},
     {"id":"sector_guangxin","canonicalName":"光新","aliases":[],"riskFlags":["market_boundary_not_official","insufficient_closed_scope"],"districtNames":["普陀区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"光新市场身份已核验，但缺少可闭合外边界，不能用石泉路或光新路名称外推。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"member-boundary-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"保留人工起画，待补正反例和片区成员表。"}},
-    {"id":"sector_meiyuan","canonicalName":"梅园","aliases":[],"riskFlags":["inside_lujiazui_admin_proxy","name_ambiguity","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"梅园是陆家嘴内独立市场/社区语义，不能以同名村或完整陆家嘴街道替代。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
     {"id":"sector_yuanshen","canonicalName":"源深","aliases":[],"riskFlags":["inside_weifang_admin_context","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"源深小区语义不能替代完整潍坊街道或市场范围。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"independent-market-scope-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"允许人工起画。"}},
     {"id":"sector_yangdong","canonicalName":"杨东","aliases":[],"riskFlags":["dual_official_homonym","market_boundary_not_official"],"districtNames":["浦东新区"],"kind":"market_sector","reviewStatus":"needs-research","definitionStatus":"market_identity_verified_geometry_blocked","definitionCandidate":"花木与三林存在不同杨东官方语境，须先解歧后绘制。","definitionSourceIds":["seller-lianjia-shanghai-sector-sitemap"],"geometry":{"status":"missing","confidence":"low","coordinateSystem":"unknown","coordinateSystemVerified":false,"version":"disambiguation-required-2026-07","sourceIds":[],"verificationSourceIds":["osm-geofabrik-shanghai-260721"],"publicationPolicy":"internal_review","note":"禁止自动取同名行政或社区面。"}},
     {

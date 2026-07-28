@@ -10,14 +10,6 @@
       "status": "editorial-seed"
     },
     {
-      "id": "sector_minhangjinhui",
-      "labelPoint": [
-        121.375,
-        31.178
-      ],
-      "status": "editorial-seed"
-    },
-    {
       "id": "sector_longbai",
       "labelPoint": [
         121.366,
@@ -134,14 +126,6 @@
       "labelPoint": [
         121.432,
         31.25
-      ],
-      "status": "editorial-seed"
-    },
-    {
-      "id": "sector_meiyuan",
-      "labelPoint": [
-        121.515,
-        31.238
       ],
       "status": "editorial-seed"
     },

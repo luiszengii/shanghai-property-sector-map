@@ -2529,7 +2529,6 @@ for (const [id, relation, requiredRiskFlag] of [
 }
 for (const id of [
   "sector_jinganxincheng",
-  "sector_minhangjinhui",
   "sector_longbai",
   "sector_hanghua",
   "sector_jinhongqiao",

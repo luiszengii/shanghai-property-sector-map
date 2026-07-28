@@ -805,7 +805,7 @@ test("the Minhang batch exposes four editable town proxies and keeps independent
   const batchIds = batch.sectors.map((sector: { id: string }) => sector.id);
   const blockedIds = [
     "sector_huacao", "sector_wujing", "sector_pujiangzhen", "sector_jinganxincheng",
-    "sector_minhangjinhui", "sector_longbai", "sector_hanghua", "sector_jinhongqiao", "sector_laominhang",
+    "sector_longbai", "sector_hanghua", "sector_jinhongqiao", "sector_laominhang",
   ];
   const records = registryData.sectors.filter(
     (record: { id: string }) => [...batchIds, ...blockedIds].includes(record.id),
@@ -836,7 +836,7 @@ test("the Minhang batch exposes four editable town proxies and keeps independent
     "sector_zhuanqiao",
     "sector_maqiao",
   ]);
-  assert.equal(records.length, 13);
+  assert.equal(records.length, 12);
   assert.ok(batchIds.every((id: string) => (
     (candidateById.get(id) as { geometry: { type: string } }).geometry.type
       === "MultiPolygon"

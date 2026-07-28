@@ -612,6 +612,52 @@ test("drafts for removed sector identities are archived and cannot be exported",
   assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
 });
 
+test("a historical Minhang Jinhui draft is retained as a read-only archive", () => {
+  const historicalDraft = createDraftFromExistingSector({
+    id: "sector_minhangjinhui",
+    name: "闵行金汇",
+    district: "闵行区",
+    boundaryBasis: "历史人工起画",
+    note: "身份下线前的本机草稿",
+    geometryStatus: "candidate",
+    geometryFingerprint: "historical-minhang-jinhui",
+    ring: [[121.36, 31.17], [121.39, 31.17], [121.39, 31.19]],
+  });
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([historicalDraft], []);
+
+  assert.equal(synced.drafts.length, 1);
+  assert.equal(synced.drafts[0].name, "闵行金汇（已下线草稿备份）");
+  assert.equal(synced.drafts[0].sourceSectorId, undefined);
+  assert.equal(synced.drafts[0].archived, true);
+  assert.equal(synced.drafts[0].referenceOnly, true);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[0].id]);
+  assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
+});
+
+test("a historical Meiyuan seed is retained as a read-only archive", () => {
+  const historicalDraft = createDraftFromExistingSector({
+    id: "sector_meiyuan",
+    name: "梅园",
+    district: "浦东新区",
+    boundaryBasis: "历史覆盖性编辑种子",
+    note: "身份下线前由编辑器自动带入",
+    geometryStatus: "candidate",
+    geometryFingerprint: "historical-meiyuan-seed",
+    ring: [[121.5, 31.23], [121.53, 31.23], [121.53, 31.25]],
+  });
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([historicalDraft], []);
+
+  assert.equal(synced.drafts.length, 1);
+  assert.equal(synced.drafts[0].name, "梅园（已下线草稿备份）");
+  assert.equal(synced.drafts[0].sourceSectorId, undefined);
+  assert.equal(synced.drafts[0].archived, true);
+  assert.equal(synced.drafts[0].referenceOnly, true);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[0].id]);
+  assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
+});
+
 test("stored source fingerprints update untouched drafts and preserve modified drafts", () => {
   const oldRing = [
     [121.57, 31.27],

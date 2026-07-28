@@ -2,7 +2,6 @@ import { writeFile } from "node:fs/promises";
 
 const seeds = [
   { id: "sector_jinganxincheng", name: "静安新城", center: [121.3775, 31.1615], radii: [0.018, 0.014], rotationDegrees: -8 },
-  { id: "sector_minhangjinhui", name: "闵行金汇", center: [121.375, 31.178], radii: [0.018, 0.014], rotationDegrees: 8 },
   { id: "sector_longbai", name: "龙柏", center: [121.366, 31.187], radii: [0.017, 0.014], rotationDegrees: -12 },
   { id: "sector_hanghua", name: "航华", center: [121.354, 31.177], radii: [0.018, 0.014], rotationDegrees: 14 },
   { id: "sector_jinhongqiao", name: "金虹桥", center: [121.394, 31.185], radii: [0.018, 0.014], rotationDegrees: -8 },
@@ -18,7 +17,6 @@ const seeds = [
   { id: "sector_wuning", name: "武宁", center: [121.425, 31.241], radii: [0.016, 0.013], rotationDegrees: -10 },
   { id: "sector_zhenguang", name: "真光", center: [121.382, 31.251], radii: [0.022, 0.017], rotationDegrees: 7 },
   { id: "sector_guangxin", name: "光新", center: [121.432, 31.25], radii: [0.014, 0.012], rotationDegrees: -5 },
-  { id: "sector_meiyuan", name: "梅园", center: [121.515, 31.238], radii: [0.015, 0.014], rotationDegrees: 6 },
   { id: "sector_yuanshen", name: "源深", center: [121.541, 31.239], radii: [0.015, 0.014], rotationDegrees: -7 },
   { id: "sector_yangdong", name: "杨东", center: [121.5283, 31.2009], radii: [0.015, 0.013], rotationDegrees: -5 },
   { id: "sector_lingang_main_city", name: "临港主城区", center: [121.905, 30.9], radii: [0.07, 0.055], rotationDegrees: 8 },
