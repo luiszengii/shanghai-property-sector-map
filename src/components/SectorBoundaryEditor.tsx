@@ -82,6 +82,7 @@ import {
   applyPairTopologyOperation,
   applySharedEdgeEdit,
   createPairSharedEdgeSession,
+  geometryOverlapAreaSquareMeters,
   geometryProximityMeters,
   scanClosedGaps,
   type ClosedGapCandidate,
@@ -289,34 +290,54 @@ export function SectorBoundaryEditor() {
     const activeSourceId = activeDraft.sourceSectorId;
     const linkedIds = new Set(activeDraft.linkedTopologySectorIds ?? []);
     return existingSectorTemplates
-      .filter((template) => (
-        template.id !== activeSourceId
-        && template.ring.length >= 3
-        && (
-          linkedIds.has(template.id)
-          || geometryProximityMeters(activeDraft, template) <= 2_000
-        )
-      ))
+      .flatMap((template) => {
+        if (template.id === activeSourceId || template.ring.length < 3) return [];
+        const currentGeometry = existingDraftBySourceId.get(template.id) ?? template;
+        const proximityMeters = geometryProximityMeters(activeDraft, currentGeometry);
+        if (!linkedIds.has(template.id) && proximityMeters > 2_000) return [];
+        const overlapAreaSquareMeters = geometryOverlapAreaSquareMeters(
+          activeDraft,
+          currentGeometry,
+        );
+        return [{
+          template,
+          overlapAreaSquareMeters: overlapAreaSquareMeters ?? 0,
+          overlapInspectionValid: overlapAreaSquareMeters !== null,
+          proximityMeters,
+        }];
+      })
       .toSorted((first, second) => {
-        const firstLinked = linkedIds.has(first.id) ? 0 : 1;
-        const secondLinked = linkedIds.has(second.id) ? 0 : 1;
+        const firstLinked = linkedIds.has(first.template.id) ? 0 : 1;
+        const secondLinked = linkedIds.has(second.template.id) ? 0 : 1;
         return firstLinked - secondLinked
-          || first.district.localeCompare(second.district, "zh-CN")
-          || first.name.localeCompare(second.name, "zh-CN");
+          || Number(second.overlapAreaSquareMeters > 0.01)
+            - Number(first.overlapAreaSquareMeters > 0.01)
+          || first.proximityMeters - second.proximityMeters
+          || first.template.district.localeCompare(second.template.district, "zh-CN")
+          || first.template.name.localeCompare(second.template.name, "zh-CN");
       });
-  }, [activeDraft]);
+  }, [activeDraft, existingDraftBySourceId]);
   const effectiveSelectedNeighborId = topologyNeighborTemplates.some(
-    (template) => template.id === selectedNeighborId,
+    (option) => option.template.id === selectedNeighborId,
   )
     ? selectedNeighborId
     : activeDraft?.linkedTopologySectorIds?.find(
-      (sectorId) => topologyNeighborTemplates.some((template) => template.id === sectorId),
-    ) ?? topologyNeighborTemplates[0]?.id ?? "";
-  const selectedNeighborTemplate = useMemo(
+      (sectorId) => topologyNeighborTemplates.some(
+        (option) => option.template.id === sectorId,
+      ),
+    ) ?? topologyNeighborTemplates[0]?.template.id ?? "";
+  const selectedNeighborOption = useMemo(
     () => topologyNeighborTemplates.find(
-      (template) => template.id === effectiveSelectedNeighborId,
+      (option) => option.template.id === effectiveSelectedNeighborId,
     ) ?? null,
     [effectiveSelectedNeighborId, topologyNeighborTemplates],
+  );
+  const selectedNeighborTemplate = selectedNeighborOption?.template ?? null;
+  const selectedPairHasOverlap = (
+    selectedNeighborOption?.overlapAreaSquareMeters ?? 0
+  ) > 0.01;
+  const selectedPairGeometryValid = (
+    selectedNeighborOption?.overlapInspectionValid ?? true
   );
   const outdatedSourceIds = useMemo(
     () => new Set(drafts.flatMap((draft) => {
@@ -1805,10 +1826,15 @@ export function SectorBoundaryEditor() {
                       setSelectedNeighborId(event.target.value);
                     }}
                   >
-                    {topologyNeighborTemplates.map((template) => (
-                      <option key={template.id} value={template.id}>
-                        {activeDraft.linkedTopologySectorIds?.includes(template.id) ? "关联 · " : ""}
-                        {template.district} · {template.name}
+                    {topologyNeighborTemplates.map((option) => (
+                      <option key={option.template.id} value={option.template.id}>
+                        {activeDraft.linkedTopologySectorIds?.includes(option.template.id) ? "关联 · " : ""}
+                        {!option.overlapInspectionValid
+                          ? "几何待修复 · "
+                          : option.overlapAreaSquareMeters > 0.01
+                          ? `重叠 ${formatArea(option.overlapAreaSquareMeters)} · `
+                          : "已无重叠 · "}
+                        {option.template.district} · {option.template.name}
                       </option>
                     ))}
                   </select>
@@ -1817,7 +1843,12 @@ export function SectorBoundaryEditor() {
                   <button
                     type="button"
                     onClick={() => applySelectedPairOperation("target-wins")}
-                    disabled={!selectedNeighborTemplate || draftParts(activeDraft).length === 0}
+                    disabled={
+                      !selectedNeighborTemplate
+                      || !selectedPairGeometryValid
+                      || !selectedPairHasOverlap
+                      || draftParts(activeDraft).length === 0
+                    }
                   >
                     当前板块优先
                     <small>从邻块扣除重叠</small>
@@ -1825,7 +1856,12 @@ export function SectorBoundaryEditor() {
                   <button
                     type="button"
                     onClick={() => applySelectedPairOperation("neighbor-wins")}
-                    disabled={!selectedNeighborTemplate || draftParts(activeDraft).length === 0}
+                    disabled={
+                      !selectedNeighborTemplate
+                      || !selectedPairGeometryValid
+                      || !selectedPairHasOverlap
+                      || draftParts(activeDraft).length === 0
+                    }
                   >
                     保护所选邻块
                     <small>修剪当前板块</small>
@@ -1843,7 +1879,11 @@ export function SectorBoundaryEditor() {
                     : "开启共享边联动拖动"}
                 </button>
                 <p>
-                  联动模式固定两块原有联合范围：当前板块拖入的区域会从邻块扣除，拖出的区域自动归还邻块。
+                  {selectedNeighborTemplate && !selectedPairGeometryValid
+                    ? "当前组合包含无法安全裁剪的历史几何片段，已停止自动取差集；原草稿保持不变。"
+                    : selectedNeighborTemplate && !selectedPairHasOverlap
+                    ? "当前两块已无面积重叠，两个差集按钮无需再执行；如需移动共同边界，请开启共享边联动拖动。"
+                    : "检测到面积重叠时可选择归属；联动模式固定两块原有联合范围，当前板块拖入的区域会从邻块扣除，拖出的区域自动归还邻块。"}
                 </p>
               </div>
             </div>
