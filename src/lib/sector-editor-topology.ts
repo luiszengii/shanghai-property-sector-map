@@ -86,11 +86,16 @@ export function geometryToMultiPolygon(
   const parts = draftParts(geometry);
   if (!parts.length) return [];
   const additionalHoles = draftAdditionalHoles(geometry);
-  return parts.map((outer, index): Polygon => [
-    closeRing(outer),
-    ...(index === 0 ? draftHoles(geometry) : (additionalHoles[index - 1] ?? []))
-      .map(closeRing),
-  ]);
+  return parts.flatMap((outer, index): MultiPolygon => {
+    const exteriorRing = closeRing(outer);
+    if (exteriorRing.length < 4) return [];
+    const holeRings = (
+      index === 0 ? draftHoles(geometry) : (additionalHoles[index - 1] ?? [])
+    )
+      .map(closeRing)
+      .filter((ring) => ring.length >= 4);
+    return [[exteriorRing, ...holeRings]];
+  });
 }
 
 function openRing(ring: Pair[]): DraftPosition[] {
@@ -249,6 +254,22 @@ function localAreaSquareMeters(multiPolygon: MultiPolygon) {
   ), 0);
 }
 
+export function geometryOverlapAreaSquareMeters(
+  first: EditableSectorGeometry,
+  second: EditableSectorGeometry,
+) {
+  const firstMultiPolygon = geometryToMultiPolygon(first);
+  const secondMultiPolygon = geometryToMultiPolygon(second);
+  if (!firstMultiPolygon.length || !secondMultiPolygon.length) return 0;
+  try {
+    return localAreaSquareMeters(
+      polygonClipping.intersection(firstMultiPolygon, secondMultiPolygon),
+    );
+  } catch {
+    return null;
+  }
+}
+
 export function scanClosedGaps(input: {
   viewport: TopologyViewport;
   occupied: EditableSectorGeometry[];
@@ -362,7 +383,7 @@ export function applyPairTopologyOperation(input: {
   if (!target.length || !neighbor.length) {
     throw new Error("成对拓扑操作要求两块板块都已有边界");
   }
-  if (!polygonClipping.intersection(target, neighbor).length) {
+  if (localAreaSquareMeters(polygonClipping.intersection(target, neighbor)) <= 0.01) {
     throw new Error("当前板块与所选邻块没有重叠，不需要执行取差集");
   }
   if (input.operation === "target-wins") {

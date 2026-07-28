@@ -9,10 +9,13 @@ import {
   Focus,
   GitMerge,
   History,
+  Layers3,
   Link2,
   LoaderCircle,
   MapPinned,
   Minus,
+  MousePointer2,
+  Move,
   PencilLine,
   Plus,
   Redo2,
@@ -32,6 +35,7 @@ import {
   useRef,
   useState,
   type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
 } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import {
@@ -65,6 +69,15 @@ import {
   type ExistingSectorDraftTemplate,
   type SectorBoundaryDraft,
 } from "@/src/lib/sector-editor-drafts";
+import {
+  listDraftVertices,
+  moveDraftVertices,
+  removeDraftPolygonPart,
+  removeDraftVertices,
+  selectDraftVertexKeysInRectangle,
+  type DraftVertexRef,
+  type EditableDraftGeometry,
+} from "@/src/lib/sector-editor-geometry-edit";
 import { mapZoomDeltaForShortcut } from "@/src/lib/map-keyboard-shortcuts";
 import { sectorEditorMapOptions } from "@/src/lib/sector-editor-map-options";
 import {
@@ -82,6 +95,7 @@ import {
   applyPairTopologyOperation,
   applySharedEdgeEdit,
   createPairSharedEdgeSession,
+  geometryOverlapAreaSquareMeters,
   geometryProximityMeters,
   scanClosedGaps,
   type ClosedGapCandidate,
@@ -114,6 +128,31 @@ interface ActiveSharedEdgeSession {
   neighborDraftId: string;
   neighborName: string;
   topology: PairSharedEdgeSession;
+}
+
+interface VertexMarkerEntry {
+  marker: AMap.Marker;
+  clickHandler: () => void;
+  dragStartHandler: () => void;
+  draggingHandler: () => void;
+  dragEndHandler: () => void;
+}
+
+interface ActiveVertexDragSession {
+  draftId: string;
+  origin: [number, number];
+  geometry: EditableDraftGeometry;
+  references: DraftVertexRef[];
+  keys: string[];
+  replaceSelectionOnEnd: boolean;
+}
+
+interface VertexSelectionDragSession {
+  pointerId: number;
+  start: [number, number];
+  current: [number, number];
+  append: boolean;
+  mapDragWasEnabled: boolean;
 }
 
 interface SectorEditorSnapshot {
@@ -225,6 +264,11 @@ export function SectorBoundaryEditor() {
   const mouseToolRef = useRef<AMap.MouseTool | null>(null);
   const referencePolygonsRef = useRef(new Map<string, ReferencePolygonEntry>());
   const gapPreviewPolygonsRef = useRef<GapPreviewPolygonEntry[]>([]);
+  const vertexMarkersRef = useRef(new Map<string, VertexMarkerEntry>());
+  const vertexDragSessionRef = useRef<ActiveVertexDragSession | null>(null);
+  const vertexSelectionDragRef = useRef<VertexSelectionDragSession | null>(null);
+  const suppressVertexClickRef = useRef(false);
+  const batchEscapeArmedRef = useRef(false);
   const sharedEdgeSessionRef = useRef<ActiveSharedEdgeSession | null>(null);
   const historyRef = useRef<EditorHistory<SectorEditorSnapshot>>(
     createEditorHistory<SectorEditorSnapshot>(50),
@@ -248,6 +292,14 @@ export function SectorBoundaryEditor() {
   const [isRestoringPersistentVersion, setIsRestoringPersistentVersion] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isClaimingGap, setIsClaimingGap] = useState(false);
+  const [isBatchEditingVertices, setIsBatchEditingVertices] = useState(false);
+  const [selectedVertexKeys, setSelectedVertexKeys] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [vertexSelectionBox, setVertexSelectionBox] = useState<{
+    start: [number, number];
+    end: [number, number];
+  } | null>(null);
   const [gapPreviewCount, setGapPreviewCount] = useState(0);
   const [hoveredGapArea, setHoveredGapArea] = useState<number | null>(null);
   const [selectedNeighborId, setSelectedNeighborId] = useState("");
@@ -267,6 +319,27 @@ export function SectorBoundaryEditor() {
   const activeDraft = useMemo(
     () => drafts.find((draft) => !draft.archived && draft.id === activeId) ?? null,
     [activeId, drafts],
+  );
+  const activeDraftVertices = useMemo(
+    () => activeDraft ? listDraftVertices(activeDraft) : [],
+    [activeDraft],
+  );
+  const activeDraftParts = useMemo(
+    () => activeDraft ? draftParts(activeDraft) : [],
+    [activeDraft],
+  );
+  const activeDraftPartHoleCounts = useMemo(() => {
+    if (!activeDraft) return [];
+    const additionalHoles = draftAdditionalHoles(activeDraft);
+    return activeDraftParts.map((_, index) => (
+      index === 0 ? draftHoles(activeDraft).length : (additionalHoles[index - 1]?.length ?? 0)
+    ));
+  }, [activeDraft, activeDraftParts]);
+  const selectedVertexReferences = useMemo(
+    () => activeDraftVertices
+      .filter((vertex) => selectedVertexKeys.has(vertex.key))
+      .map((vertex) => vertex.reference),
+    [activeDraftVertices, selectedVertexKeys],
   );
   const existingDraftBySourceId = useMemo(
     () => new Map(
@@ -289,34 +362,54 @@ export function SectorBoundaryEditor() {
     const activeSourceId = activeDraft.sourceSectorId;
     const linkedIds = new Set(activeDraft.linkedTopologySectorIds ?? []);
     return existingSectorTemplates
-      .filter((template) => (
-        template.id !== activeSourceId
-        && template.ring.length >= 3
-        && (
-          linkedIds.has(template.id)
-          || geometryProximityMeters(activeDraft, template) <= 2_000
-        )
-      ))
+      .flatMap((template) => {
+        if (template.id === activeSourceId || template.ring.length < 3) return [];
+        const currentGeometry = existingDraftBySourceId.get(template.id) ?? template;
+        const proximityMeters = geometryProximityMeters(activeDraft, currentGeometry);
+        if (!linkedIds.has(template.id) && proximityMeters > 2_000) return [];
+        const overlapAreaSquareMeters = geometryOverlapAreaSquareMeters(
+          activeDraft,
+          currentGeometry,
+        );
+        return [{
+          template,
+          overlapAreaSquareMeters: overlapAreaSquareMeters ?? 0,
+          overlapInspectionValid: overlapAreaSquareMeters !== null,
+          proximityMeters,
+        }];
+      })
       .toSorted((first, second) => {
-        const firstLinked = linkedIds.has(first.id) ? 0 : 1;
-        const secondLinked = linkedIds.has(second.id) ? 0 : 1;
+        const firstLinked = linkedIds.has(first.template.id) ? 0 : 1;
+        const secondLinked = linkedIds.has(second.template.id) ? 0 : 1;
         return firstLinked - secondLinked
-          || first.district.localeCompare(second.district, "zh-CN")
-          || first.name.localeCompare(second.name, "zh-CN");
+          || Number(second.overlapAreaSquareMeters > 0.01)
+            - Number(first.overlapAreaSquareMeters > 0.01)
+          || first.proximityMeters - second.proximityMeters
+          || first.template.district.localeCompare(second.template.district, "zh-CN")
+          || first.template.name.localeCompare(second.template.name, "zh-CN");
       });
-  }, [activeDraft]);
+  }, [activeDraft, existingDraftBySourceId]);
   const effectiveSelectedNeighborId = topologyNeighborTemplates.some(
-    (template) => template.id === selectedNeighborId,
+    (option) => option.template.id === selectedNeighborId,
   )
     ? selectedNeighborId
     : activeDraft?.linkedTopologySectorIds?.find(
-      (sectorId) => topologyNeighborTemplates.some((template) => template.id === sectorId),
-    ) ?? topologyNeighborTemplates[0]?.id ?? "";
-  const selectedNeighborTemplate = useMemo(
+      (sectorId) => topologyNeighborTemplates.some(
+        (option) => option.template.id === sectorId,
+      ),
+    ) ?? topologyNeighborTemplates[0]?.template.id ?? "";
+  const selectedNeighborOption = useMemo(
     () => topologyNeighborTemplates.find(
-      (template) => template.id === effectiveSelectedNeighborId,
+      (option) => option.template.id === effectiveSelectedNeighborId,
     ) ?? null,
     [effectiveSelectedNeighborId, topologyNeighborTemplates],
+  );
+  const selectedNeighborTemplate = selectedNeighborOption?.template ?? null;
+  const selectedPairHasOverlap = (
+    selectedNeighborOption?.overlapAreaSquareMeters ?? 0
+  ) > 0.01;
+  const selectedPairGeometryValid = (
+    selectedNeighborOption?.overlapInspectionValid ?? true
   );
   const outdatedSourceIds = useMemo(
     () => new Set(drafts.flatMap((draft) => {
@@ -396,6 +489,15 @@ export function SectorBoundaryEditor() {
     setDrafts((current) => current.map((draft) => (
       draft.id === id ? { ...draft, ...patch, updatedAt } : draft
     )));
+  }, []);
+
+  const cancelVertexSelectionDrag = useCallback(() => {
+    const session = vertexSelectionDragRef.current;
+    if (session) {
+      mapRef.current?.setStatus({ dragEnable: session.mapDragWasEnabled });
+    }
+    vertexSelectionDragRef.current = null;
+    setVertexSelectionBox(null);
   }, []);
 
   const syncPolygonToDraft = useCallback((polygon: AMap.Polygon) => {
@@ -716,6 +818,23 @@ export function SectorBoundaryEditor() {
   }, [activeId]);
 
   useEffect(() => {
+    vertexDragSessionRef.current = null;
+    const selectionSession = vertexSelectionDragRef.current;
+    if (selectionSession) {
+      mapRef.current?.setStatus({
+        dragEnable: selectionSession.mapDragWasEnabled,
+      });
+    }
+    vertexSelectionDragRef.current = null;
+    suppressVertexClickRef.current = false;
+    batchEscapeArmedRef.current = false;
+    queueMicrotask(() => {
+      setVertexSelectionBox(null);
+      setSelectedVertexKeys(new Set());
+    });
+  }, [activeId]);
+
+  useEffect(() => {
     if (!hydrated) return;
     try {
       localStorage.setItem(SECTOR_EDITOR_STORAGE_KEY, serializeSectorEditorState(drafts));
@@ -819,6 +938,8 @@ export function SectorBoundaryEditor() {
     activePolygonRef.current = polygon;
     queueMicrotask(() => setArea(polygon.getArea()));
 
+    if (isBatchEditingVertices) return;
+
     const editor = new api.PolygonEditor(map, polygon, {
       controlPoint: {
         content: '<span style="display:block;width:13px;height:13px;border:3px solid #fff;border-radius:50%;background:#e46f32;box-shadow:0 2px 7px rgba(15,23,42,.3)"></span>',
@@ -849,7 +970,210 @@ export function SectorBoundaryEditor() {
       editor.off("end", finish);
       editor.close();
     };
-  }, [geometryRevision, status, syncPolygonToDraft, activeId]);
+  }, [
+    activeId,
+    geometryRevision,
+    isBatchEditingVertices,
+    status,
+    syncPolygonToDraft,
+  ]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const api = amapApiRef.current;
+    const clearMarkers = () => {
+      const entries = Array.from(vertexMarkersRef.current.values());
+      entries.forEach((entry) => {
+        entry.marker.off("click", entry.clickHandler);
+        entry.marker.off("dragstart", entry.dragStartHandler);
+        entry.marker.off("dragging", entry.draggingHandler);
+        entry.marker.off("dragend", entry.dragEndHandler);
+      });
+      if (map && entries.length) {
+        map.remove(entries.map((entry) => entry.marker));
+      }
+      vertexMarkersRef.current.clear();
+    };
+
+    clearMarkers();
+    if (
+      status !== "ready"
+      || !map
+      || !api
+      || !isBatchEditingVertices
+      || !activeDraft
+      || !activeDraftVertices.length
+    ) return clearMarkers;
+
+    const selectedKeys = new Set(selectedVertexKeys);
+    const selectedReferences = activeDraftVertices
+      .filter((vertex) => selectedKeys.has(vertex.key))
+      .map((vertex) => vertex.reference);
+    const previewMovedGeometry = (marker: AMap.Marker) => {
+      const session = vertexDragSessionRef.current;
+      if (!session || session.draftId !== activeDraft.id) return null;
+      const position = marker.getPosition();
+      if (!position) return null;
+      const moved = moveDraftVertices(
+        session.geometry,
+        session.references,
+        [
+          position.getLng() - session.origin[0],
+          position.getLat() - session.origin[1],
+        ],
+      );
+      const movedVertices = new Map(
+        listDraftVertices(moved).map((vertex) => [vertex.key, vertex.position]),
+      );
+      const movingKeys = new Set(session.keys);
+      for (const [key, entry] of vertexMarkersRef.current) {
+        if (!movingKeys.has(key)) continue;
+        const movedPosition = movedVertices.get(key);
+        if (movedPosition) entry.marker.setPosition(movedPosition);
+      }
+      activePolygonRef.current?.setPath(polygonPath(moved));
+      if (activePolygonRef.current) setArea(activePolygonRef.current.getArea());
+      return moved;
+    };
+
+    activeDraftVertices.forEach((vertex) => {
+      const isSelected = selectedKeys.has(vertex.key);
+      const marker = new api.Marker({
+        position: vertex.position,
+        content: `<span class="${styles.vertexMarker} ${
+          isSelected ? styles.vertexMarkerSelected : ""
+        }" aria-hidden="true"></span>`,
+        offset: new api.Pixel(-10, -10),
+        title: isSelected
+          ? "已选择；拖动可移动全部已选顶点，单击取消选择"
+          : "单击加入选择；直接拖动只移动这个点并清空原选择",
+        clickable: true,
+        draggable: true,
+        cursor: isSelected ? "move" : "pointer",
+        bubble: false,
+        zIndex: isSelected ? 145 : 135,
+      });
+      const clickHandler = () => {
+        if (vertexDragSessionRef.current || suppressVertexClickRef.current) return;
+        batchEscapeArmedRef.current = false;
+        setSelectedVertexKeys((current) => {
+          const next = new Set(current);
+          if (next.has(vertex.key)) next.delete(vertex.key);
+          else next.add(vertex.key);
+          return next;
+        });
+      };
+      const dragStartHandler = () => {
+        const position = marker.getPosition();
+        if (!position) return;
+        const movingReferences = isSelected
+          ? selectedReferences
+          : [vertex.reference];
+        const movingKeys = isSelected
+          ? [...selectedKeys]
+          : [vertex.key];
+        batchEscapeArmedRef.current = false;
+        suppressVertexClickRef.current = true;
+        vertexDragSessionRef.current = {
+          draftId: activeDraft.id,
+          origin: [position.getLng(), position.getLat()],
+          geometry: structuredClone(geometryPatch(activeDraft)),
+          references: movingReferences,
+          keys: movingKeys,
+          replaceSelectionOnEnd: !isSelected,
+        };
+      };
+      const draggingHandler = () => {
+        try {
+          previewMovedGeometry(marker);
+        } catch (error) {
+          setNotice({
+            tone: "warning",
+            message: error instanceof Error ? error.message : "无法批量移动所选顶点",
+          });
+        }
+      };
+      const dragEndHandler = () => {
+        const session = vertexDragSessionRef.current;
+        if (!session) return;
+        try {
+          const finalPosition = marker.getPosition();
+          if (
+            !finalPosition
+            || (
+              Math.abs(finalPosition.getLng() - session.origin[0]) < 1e-12
+              && Math.abs(finalPosition.getLat() - session.origin[1]) < 1e-12
+            )
+          ) {
+            activePolygonRef.current?.setPath(polygonPath(session.geometry));
+            return;
+          }
+          const moved = previewMovedGeometry(marker);
+          if (moved) {
+            captureHistory(`批量移动“${activeDraft.name}”的 ${session.references.length} 个顶点`);
+            updateDraft(activeDraft.id, moved);
+            if (session.replaceSelectionOnEnd) {
+              setSelectedVertexKeys(new Set(session.keys));
+            }
+            setGeometryRevision((value) => value + 1);
+            const warning = linkedTopologyWarning(activeDraft);
+            setNotice(warning
+              ? { tone: "warning", message: warning }
+              : {
+                tone: "success",
+                message: `已一起移动 ${session.references.length} 个顶点；可继续选择、拖动或撤回。`,
+              });
+          }
+        } catch (error) {
+          activePolygonRef.current?.setPath(polygonPath(session.geometry));
+          const originalVertices = new Map(
+            listDraftVertices(session.geometry).map(
+              (vertex) => [vertex.key, vertex.position],
+            ),
+          );
+          for (const [key, entry] of vertexMarkersRef.current) {
+            const originalPosition = originalVertices.get(key);
+            if (originalPosition) entry.marker.setPosition(originalPosition);
+          }
+          if (activePolygonRef.current) setArea(activePolygonRef.current.getArea());
+          if (session.replaceSelectionOnEnd) {
+            setSelectedVertexKeys(new Set(session.keys));
+          }
+          setNotice({
+            tone: "warning",
+            message: error instanceof Error ? error.message : "无法批量移动所选顶点",
+          });
+        } finally {
+          vertexDragSessionRef.current = null;
+          window.setTimeout(() => {
+            suppressVertexClickRef.current = false;
+          }, 80);
+        }
+      };
+      marker.on("click", clickHandler);
+      marker.on("dragstart", dragStartHandler);
+      marker.on("dragging", draggingHandler);
+      marker.on("dragend", dragEndHandler);
+      vertexMarkersRef.current.set(vertex.key, {
+        marker,
+        clickHandler,
+        dragStartHandler,
+        draggingHandler,
+        dragEndHandler,
+      });
+    });
+    map.add(Array.from(vertexMarkersRef.current.values()).map((entry) => entry.marker));
+
+    return clearMarkers;
+  }, [
+    activeDraft,
+    activeDraftVertices,
+    captureHistory,
+    isBatchEditingVertices,
+    selectedVertexKeys,
+    status,
+    updateDraft,
+  ]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -986,6 +1310,7 @@ export function SectorBoundaryEditor() {
     captureHistory(isExistingSectorCopy ? `放弃“${draft.name}”修改` : `删除“${draft.name}”草稿`);
     setDrafts(remaining);
     setActiveId(remaining[0]?.id ?? null);
+    setSelectedVertexKeys(new Set());
     setGeometryRevision((value) => value + 1);
     setNotice({
       tone: "neutral",
@@ -1001,6 +1326,273 @@ export function SectorBoundaryEditor() {
     polygonEditorRef.current?.clearAdsorbPolygons();
     if (message) setNotice({ tone: "neutral", message });
   }, []);
+
+  const toggleBatchVertexEditing = useCallback(() => {
+    if (isBatchEditingVertices) {
+      vertexDragSessionRef.current = null;
+      cancelVertexSelectionDrag();
+      suppressVertexClickRef.current = false;
+      batchEscapeArmedRef.current = false;
+      setSelectedVertexKeys(new Set());
+      setIsBatchEditingVertices(false);
+      setNotice({ tone: "neutral", message: "已退出批量选点，恢复单点边界编辑。" });
+      return;
+    }
+    const draft = draftsRef.current.find(
+      (item) => !item.archived && item.id === activeIdRef.current,
+    );
+    if (!draft || !draftPointCount(draft)) {
+      setNotice({ tone: "warning", message: "当前板块还没有可选择的顶点。" });
+      return;
+    }
+    stopSharedEdgeEditing();
+    mouseToolRef.current?.close(true);
+    mouseToolRef.current = null;
+    polygonEditorRef.current?.close();
+    setIsDrawing(false);
+    setIsClaimingGap(false);
+    suppressVertexClickRef.current = false;
+    batchEscapeArmedRef.current = false;
+    cancelVertexSelectionDrag();
+    setSelectedVertexKeys(new Set());
+    setIsBatchEditingVertices(true);
+    setNotice({
+      tone: "neutral",
+      message: "批量选点已开启：按住 Shift 后左键拖框；Command + Shift 拖框可追加选择。",
+    });
+  }, [cancelVertexSelectionDrag, isBatchEditingVertices, stopSharedEdgeEditing]);
+
+  const removePolygonPart = useCallback((partIndex: number) => {
+    const draft = draftsRef.current.find(
+      (item) => !item.archived && item.id === activeIdRef.current,
+    );
+    if (!draft) return;
+    const parts = draftParts(draft);
+    const part = parts[partIndex];
+    if (!part || parts.length <= 1) {
+      setNotice({ tone: "warning", message: "板块至少需要保留一个闭环。" });
+      return;
+    }
+    const partLabel = partIndex === 0 ? "主闭环" : `闭环 ${partIndex + 1}`;
+    if (!window.confirm(
+      `确定删除“${draft.name}”的${partLabel}吗？其中 ${part.length} 个外环顶点及其孔洞会一起删除；删除后仍可撤回。`,
+    )) return;
+    try {
+      const nextGeometry = removeDraftPolygonPart(draft, partIndex);
+      captureHistory(`删除“${draft.name}”的${partLabel}`);
+      stopSharedEdgeEditing();
+      updateDraft(draft.id, nextGeometry);
+      setSelectedVertexKeys(new Set());
+      setGeometryRevision((value) => value + 1);
+      const warning = linkedTopologyWarning(draft);
+      setNotice(warning
+        ? { tone: "warning", message: warning }
+        : {
+          tone: "success",
+          message: `已删除${partLabel}，其余 ${parts.length - 1} 个闭环保持不变。`,
+        });
+    } catch (error) {
+      setNotice({
+        tone: "warning",
+        message: error instanceof Error ? error.message : "无法删除该闭环",
+      });
+    }
+  }, [captureHistory, stopSharedEdgeEditing, updateDraft]);
+
+  const removeSelectedVertices = useCallback(() => {
+    const draft = draftsRef.current.find(
+      (item) => !item.archived && item.id === activeIdRef.current,
+    );
+    if (!draft || !selectedVertexReferences.length) return;
+    const affectedRingCount = new Set(selectedVertexReferences.map(
+      (reference) => `${reference.partIndex}:${reference.ringIndex}`,
+    )).size;
+    if (!window.confirm(
+      `确定一起删除“${draft.name}”中选中的 ${selectedVertexReferences.length} 个顶点吗？本次会影响 ${affectedRingCount} 个闭环；每个闭环会至少保留 3 个顶点，且删除后仍可撤回。`,
+    )) return;
+    try {
+      const nextGeometry = removeDraftVertices(draft, selectedVertexReferences);
+      captureHistory(`批量删除“${draft.name}”的 ${selectedVertexReferences.length} 个顶点`);
+      updateDraft(draft.id, nextGeometry);
+      setSelectedVertexKeys(new Set());
+      setGeometryRevision((value) => value + 1);
+      const warning = linkedTopologyWarning(draft);
+      setNotice(warning
+        ? { tone: "warning", message: warning }
+        : {
+          tone: "success",
+          message: `已一起删除 ${selectedVertexReferences.length} 个顶点；可继续选择或撤回。`,
+        });
+    } catch (error) {
+      setNotice({
+        tone: "warning",
+        message: error instanceof Error ? error.message : "无法批量删除所选顶点",
+      });
+    }
+  }, [captureHistory, selectedVertexReferences, updateDraft]);
+
+  const handleVertexSelectionPointerDown = useCallback((
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    if (
+      status !== "ready"
+      || !isBatchEditingVertices
+      || !activeDraftVertices.length
+      || !event.shiftKey
+      || event.button !== 0
+    ) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const start: [number, number] = [
+      Math.max(0, Math.min(rect.width, event.clientX - rect.left)),
+      Math.max(0, Math.min(rect.height, event.clientY - rect.top)),
+    ];
+    const map = mapRef.current;
+    const mapDragWasEnabled = map?.getStatus().dragEnable ?? true;
+    map?.setStatus({ dragEnable: false });
+    event.currentTarget.setPointerCapture(event.pointerId);
+    vertexSelectionDragRef.current = {
+      pointerId: event.pointerId,
+      start,
+      current: start,
+      append: event.metaKey || event.ctrlKey,
+      mapDragWasEnabled,
+    };
+    batchEscapeArmedRef.current = false;
+    setVertexSelectionBox({ start, end: start });
+  }, [activeDraftVertices.length, isBatchEditingVertices, status]);
+
+  const handleVertexSelectionPointerMove = useCallback((
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    const session = vertexSelectionDragRef.current;
+    if (!session || session.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const current: [number, number] = [
+      Math.max(0, Math.min(rect.width, event.clientX - rect.left)),
+      Math.max(0, Math.min(rect.height, event.clientY - rect.top)),
+    ];
+    session.current = current;
+    setVertexSelectionBox({ start: session.start, end: current });
+  }, []);
+
+  const finishVertexSelectionDrag = useCallback((
+    event: ReactPointerEvent<HTMLDivElement>,
+    cancelled = false,
+  ) => {
+    const session = vertexSelectionDragRef.current;
+    if (!session || session.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    mapRef.current?.setStatus({ dragEnable: session.mapDragWasEnabled });
+    vertexSelectionDragRef.current = null;
+    setVertexSelectionBox(null);
+    if (cancelled) return;
+    const dragDistance = Math.hypot(
+      session.current[0] - session.start[0],
+      session.current[1] - session.start[1],
+    );
+    if (dragDistance < 4) {
+      setNotice({
+        tone: "neutral",
+        message: "框选范围太小，未改变选择；请按住 Shift 后拖出一个矩形。",
+      });
+      return;
+    }
+    const host = mapHostRef.current;
+    if (!host) return;
+    const hostRect = host.getBoundingClientRect();
+    const projectedVertices = activeDraftVertices.flatMap((vertex) => {
+      const marker = vertexMarkersRef.current.get(vertex.key)?.marker;
+      if (!marker) return [];
+      const markerRect = marker.dom.getBoundingClientRect();
+      return [{
+        key: vertex.key,
+        point: [
+          markerRect.left + markerRect.width / 2 - hostRect.left,
+          markerRect.top + markerRect.height / 2 - hostRect.top,
+        ] as [number, number],
+      }];
+    });
+    const next = selectDraftVertexKeysInRectangle(
+      projectedVertices,
+      { start: session.start, end: session.current },
+      selectedVertexKeys,
+      session.append,
+    );
+    setSelectedVertexKeys(next);
+    setNotice({
+      tone: "neutral",
+      message: session.append
+        ? `已追加框选，现在共选择 ${next.size} 个顶点。`
+        : `已框选 ${next.size} 个顶点；拖动任一蓝点可整体移动。`,
+    });
+  }, [activeDraftVertices, selectedVertexKeys]);
+
+  const handleVertexSelectionPointerUp = useCallback((
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    finishVertexSelectionDrag(event);
+  }, [finishVertexSelectionDrag]);
+
+  const handleVertexSelectionPointerCancel = useCallback((
+    event: ReactPointerEvent<HTMLDivElement>,
+  ) => {
+    finishVertexSelectionDrag(event, true);
+  }, [finishVertexSelectionDrag]);
+
+  useEffect(() => {
+    if (!isBatchEditingVertices) return;
+    const handleBatchShortcut = (event: KeyboardEvent) => {
+      if (
+        event.isComposing
+        || event.target instanceof HTMLInputElement
+        || event.target instanceof HTMLTextAreaElement
+        || event.target instanceof HTMLSelectElement
+      ) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!batchEscapeArmedRef.current) {
+          cancelVertexSelectionDrag();
+          setSelectedVertexKeys(new Set());
+          batchEscapeArmedRef.current = true;
+          setNotice({
+            tone: "neutral",
+            message: "已清空选择；再按一次 Esc 可退出批量选点。",
+          });
+          return;
+        }
+        toggleBatchVertexEditing();
+        return;
+      }
+      if (
+        (event.key === "Delete" || event.key === "Backspace")
+        && selectedVertexReferences.length
+      ) {
+        event.preventDefault();
+        event.stopPropagation();
+        removeSelectedVertices();
+      }
+    };
+    window.addEventListener("keydown", handleBatchShortcut, { capture: true });
+    return () => window.removeEventListener("keydown", handleBatchShortcut, true);
+  }, [
+    cancelVertexSelectionDrag,
+    isBatchEditingVertices,
+    removeSelectedVertices,
+    selectedVertexReferences.length,
+    toggleBatchVertexEditing,
+  ]);
 
   const refreshPersistentVersions = useCallback(async () => {
     const response = await fetch("/api/sector-editor-versions", {
@@ -1088,8 +1680,11 @@ export function SectorBoundaryEditor() {
       }));
       captureHistory(`恢复持久版本 v${payload.version.versionNumber}`);
       stopSharedEdgeEditing();
+      cancelVertexSelectionDrag();
+      batchEscapeArmedRef.current = false;
       setIsClaimingGap(false);
       setIsDrawing(false);
+      setSelectedVertexKeys(new Set());
       setDrafts(restoredDrafts);
       setActiveId(
         restoredDrafts.some((draft) => draft.id === payload.version?.activeId)
@@ -1111,6 +1706,7 @@ export function SectorBoundaryEditor() {
     }
   }, [
     captureHistory,
+    cancelVertexSelectionDrag,
     isRestoringPersistentVersion,
     selectedPersistentVersionId,
     stopSharedEdgeEditing,
@@ -1134,16 +1730,20 @@ export function SectorBoundaryEditor() {
     sharedEdgeSessionRef.current = null;
     polygonGestureCapturedRef.current = false;
     formHistoryKeyRef.current = null;
+    vertexDragSessionRef.current = null;
+    cancelVertexSelectionDrag();
+    batchEscapeArmedRef.current = false;
     polygonEditorRef.current?.clearAdsorbPolygons();
     mouseToolRef.current?.close(false);
     setSharedEdgeNeighborId(null);
     setIsClaimingGap(false);
     setIsDrawing(false);
+    setSelectedVertexKeys(new Set());
     setDrafts(structuredClone(snapshot.drafts));
     setActiveId(snapshot.activeId);
     setGeometryRevision((value) => value + 1);
     setNotice({ tone: "success", message });
-  }, []);
+  }, [cancelVertexSelectionDrag]);
 
   const undoLastChange = useCallback(() => {
     const transition = undoEditorHistory(
@@ -1330,6 +1930,10 @@ export function SectorBoundaryEditor() {
     if (!map || !api || !activeIdRef.current) return;
     polygonEditorRef.current?.close();
     mouseToolRef.current?.close(false);
+    cancelVertexSelectionDrag();
+    batchEscapeArmedRef.current = false;
+    setIsBatchEditingVertices(false);
+    setSelectedVertexKeys(new Set());
     const mouseTool = new api.MouseTool(map);
     mouseToolRef.current = mouseTool;
     setIsDrawing(true);
@@ -1371,7 +1975,7 @@ export function SectorBoundaryEditor() {
       fillOpacity: 0.19,
       zIndex: 85,
     });
-  }, [captureHistory, updateDraft]);
+  }, [cancelVertexSelectionDrag, captureHistory, updateDraft]);
 
   const stopDrawing = useCallback(() => {
     mouseToolRef.current?.close(true);
@@ -1465,6 +2069,9 @@ export function SectorBoundaryEditor() {
         `导入会用文件中的 ${imported.length} 个板块替换当前浏览器里的 ${draftsRef.current.length} 个草稿，是否继续？`,
       )) return;
       captureHistory(`导入 ${imported.length} 个板块草稿`);
+      cancelVertexSelectionDrag();
+      batchEscapeArmedRef.current = false;
+      setSelectedVertexKeys(new Set());
       setDrafts(imported);
       setActiveId(imported[0].id);
       setGeometryRevision((value) => value + 1);
@@ -1477,7 +2084,7 @@ export function SectorBoundaryEditor() {
     } finally {
       if (importInputRef.current) importInputRef.current.value = "";
     }
-  }, [captureHistory]);
+  }, [cancelVertexSelectionDrag, captureHistory]);
 
   return (
     <main className={styles.page}>
@@ -1685,7 +2292,34 @@ export function SectorBoundaryEditor() {
         </aside>
 
         <div className={styles.mapPanel} data-map-zoom={mapZoom.toFixed(1)}>
-          <div ref={mapHostRef} className={styles.mapHost} aria-label="板块边界绘制地图" />
+          <div
+            ref={mapHostRef}
+            className={`${styles.mapHost} ${
+              isBatchEditingVertices ? styles.mapHostBatchSelection : ""
+            }`}
+            aria-label="板块边界绘制地图"
+            data-batch-vertex-mode={isBatchEditingVertices ? "active" : "inactive"}
+            title={isBatchEditingVertices
+              ? "批量选点：Shift + 左键拖动框选；Command + Shift + 左键拖动追加"
+              : undefined}
+            onPointerDownCapture={handleVertexSelectionPointerDown}
+            onPointerMoveCapture={handleVertexSelectionPointerMove}
+            onPointerUpCapture={handleVertexSelectionPointerUp}
+            onPointerCancelCapture={handleVertexSelectionPointerCancel}
+          />
+          {vertexSelectionBox ? (
+            <div
+              className={styles.vertexSelectionBox}
+              data-vertex-selection-box="active"
+              style={{
+                left: Math.min(vertexSelectionBox.start[0], vertexSelectionBox.end[0]),
+                top: Math.min(vertexSelectionBox.start[1], vertexSelectionBox.end[1]),
+                width: Math.abs(vertexSelectionBox.end[0] - vertexSelectionBox.start[0]),
+                height: Math.abs(vertexSelectionBox.end[1] - vertexSelectionBox.start[1]),
+              }}
+              aria-hidden="true"
+            />
+          ) : null}
 
           <aside
             key={activeDraft?.id ?? "empty"}
@@ -1768,6 +2402,96 @@ export function SectorBoundaryEditor() {
                 <MapPinned size={14} />
                 <span>绘制坐标：GCJ‑02（高德）。这是市场板块草稿，不是行政区或官方规划边界。</span>
               </div>
+              <div className={styles.geometryEditPanel}>
+                <div className={styles.geometryEditHeading}>
+                  <Layers3 size={15} />
+                  <div>
+                    <strong>闭环与顶点</strong>
+                    <span>管理多闭环分片，或批量选择坐标点一起移动、删除。</span>
+                  </div>
+                </div>
+                {activeDraftParts.length > 1 ? (
+                  <div className={styles.polygonPartList} aria-label="当前板块闭环列表">
+                    {activeDraftParts.map((part, index) => (
+                      <div key={`part-${index}`} className={styles.polygonPartRow}>
+                        <div>
+                          <strong>{index === 0 ? "主闭环" : `闭环 ${index + 1}`}</strong>
+                          <span>
+                            {part.length} 个顶点
+                            {activeDraftPartHoleCounts[index]
+                              ? ` · ${activeDraftPartHoleCounts[index]} 个孔洞`
+                              : ""}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removePolygonPart(index)}
+                          aria-label={`删除${index === 0 ? "主闭环" : `闭环 ${index + 1}`}`}
+                          title="删除整个闭环（需要确认）"
+                        >
+                          <Trash2 size={14} />
+                          删除
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={styles.geometryEditHint}>
+                    当前只有一个闭环；增加到两个以上后可以在这里整环删除。
+                  </p>
+                )}
+                <button
+                  type="button"
+                  className={isBatchEditingVertices
+                    ? styles.batchVertexButtonActive
+                    : styles.batchVertexButton}
+                  onClick={toggleBatchVertexEditing}
+                  disabled={!activeDraftVertices.length || isDrawing}
+                  aria-pressed={isBatchEditingVertices}
+                  title={isBatchEditingVertices
+                    ? "退出批量选点；Esc 先清空选择，再按一次退出"
+                    : "开启后按住 Shift + 左键拖动框选；Command + Shift 可追加"}
+                >
+                  <MousePointer2 size={15} />
+                  {isBatchEditingVertices ? "退出批量选点" : "开启批量选点"}
+                </button>
+                {isBatchEditingVertices ? (
+                  <div className={styles.batchVertexControls}>
+                    <div>
+                      <Move size={14} />
+                      <span>
+                        已选择 <strong>{selectedVertexReferences.length}</strong> 个点
+                      </span>
+                    </div>
+                    <div className={styles.batchVertexActions}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          batchEscapeArmedRef.current = false;
+                          setSelectedVertexKeys(new Set());
+                        }}
+                        disabled={!selectedVertexReferences.length}
+                        title="清空当前选择，但继续保持批量选点模式（Esc）"
+                      >
+                        清空选择
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.batchDeleteButton}
+                        onClick={removeSelectedVertices}
+                        disabled={!selectedVertexReferences.length}
+                        title="二次确认后删除所选顶点（Delete / Backspace）"
+                      >
+                        <Trash2 size={13} />
+                        删除所选点
+                      </button>
+                    </div>
+                    <p>
+                      Shift + 左键拖框会替换当前选择；Command + Shift + 左键拖框会追加。拖动蓝点可整体移动，直接拖动未选点只移动该点。
+                    </p>
+                  </div>
+                ) : null}
+              </div>
               <div className={styles.topologyPanel}>
                 <div className={styles.topologyHeading}>
                   <GitMerge size={15} />
@@ -1792,6 +2516,7 @@ export function SectorBoundaryEditor() {
                       return next;
                     });
                   }}
+                  disabled={isBatchEditingVertices}
                 >
                   <ScanSearch size={15} />
                   {isClaimingGap ? "取消认领空白" : "识别并认领闭合空白"}
@@ -1800,15 +2525,21 @@ export function SectorBoundaryEditor() {
                   <span>成对处理的邻块</span>
                   <select
                     value={effectiveSelectedNeighborId}
+                    disabled={isBatchEditingVertices}
                     onChange={(event) => {
                       stopSharedEdgeEditing();
                       setSelectedNeighborId(event.target.value);
                     }}
                   >
-                    {topologyNeighborTemplates.map((template) => (
-                      <option key={template.id} value={template.id}>
-                        {activeDraft.linkedTopologySectorIds?.includes(template.id) ? "关联 · " : ""}
-                        {template.district} · {template.name}
+                    {topologyNeighborTemplates.map((option) => (
+                      <option key={option.template.id} value={option.template.id}>
+                        {activeDraft.linkedTopologySectorIds?.includes(option.template.id) ? "关联 · " : ""}
+                        {!option.overlapInspectionValid
+                          ? "几何待修复 · "
+                          : option.overlapAreaSquareMeters > 0.01
+                          ? `重叠 ${formatArea(option.overlapAreaSquareMeters)} · `
+                          : "已无重叠 · "}
+                        {option.template.district} · {option.template.name}
                       </option>
                     ))}
                   </select>
@@ -1817,7 +2548,13 @@ export function SectorBoundaryEditor() {
                   <button
                     type="button"
                     onClick={() => applySelectedPairOperation("target-wins")}
-                    disabled={!selectedNeighborTemplate || draftParts(activeDraft).length === 0}
+                    disabled={
+                      !selectedNeighborTemplate
+                      || isBatchEditingVertices
+                      || !selectedPairGeometryValid
+                      || !selectedPairHasOverlap
+                      || draftParts(activeDraft).length === 0
+                    }
                   >
                     当前板块优先
                     <small>从邻块扣除重叠</small>
@@ -1825,7 +2562,13 @@ export function SectorBoundaryEditor() {
                   <button
                     type="button"
                     onClick={() => applySelectedPairOperation("neighbor-wins")}
-                    disabled={!selectedNeighborTemplate || draftParts(activeDraft).length === 0}
+                    disabled={
+                      !selectedNeighborTemplate
+                      || isBatchEditingVertices
+                      || !selectedPairGeometryValid
+                      || !selectedPairHasOverlap
+                      || draftParts(activeDraft).length === 0
+                    }
                   >
                     保护所选邻块
                     <small>修剪当前板块</small>
@@ -1835,7 +2578,11 @@ export function SectorBoundaryEditor() {
                   type="button"
                   className={sharedEdgeNeighborId ? styles.sharedEdgeButtonActive : styles.sharedEdgeButton}
                   onClick={toggleSharedEdgeEditing}
-                  disabled={!selectedNeighborTemplate || draftParts(activeDraft).length === 0}
+                  disabled={
+                    isBatchEditingVertices
+                    || !selectedNeighborTemplate
+                    || draftParts(activeDraft).length === 0
+                  }
                 >
                   {sharedEdgeNeighborId ? <Unlink size={15} /> : <Link2 size={15} />}
                   {sharedEdgeNeighborId
@@ -1843,7 +2590,11 @@ export function SectorBoundaryEditor() {
                     : "开启共享边联动拖动"}
                 </button>
                 <p>
-                  联动模式固定两块原有联合范围：当前板块拖入的区域会从邻块扣除，拖出的区域自动归还邻块。
+                  {selectedNeighborTemplate && !selectedPairGeometryValid
+                    ? "当前组合包含无法安全裁剪的历史几何片段，已停止自动取差集；原草稿保持不变。"
+                    : selectedNeighborTemplate && !selectedPairHasOverlap
+                    ? "当前两块已无面积重叠，两个差集按钮无需再执行；如需移动共同边界，请开启共享边联动拖动。"
+                    : "检测到面积重叠时可选择归属；联动模式固定两块原有联合范围，当前板块拖入的区域会从邻块扣除，拖出的区域自动归还邻块。"}
                 </p>
               </div>
             </div>
@@ -1947,6 +2698,12 @@ export function SectorBoundaryEditor() {
                     ? "悬停高亮，点击认领"
                     : `当前高亮：${formatArea(hoveredGapArea)}`}
                 </span>
+              </>
+            ) : isBatchEditingVertices ? (
+              <>
+                <span><b>1</b> Shift + 左键拖框 · 已选 {selectedVertexReferences.length}</span>
+                <span><b>2</b> Command + Shift 追加</span>
+                <span><b>3</b> 拖动蓝点整体移动 · Delete 删除</span>
               </>
             ) : (
               <>

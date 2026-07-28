@@ -426,6 +426,210 @@
   color: #0f766e;
 }
 
+.geometryEditPanel {
+  display: grid;
+  gap: 8px;
+  padding: 11px;
+  background: #f7faf9;
+  border: 1px solid rgba(15, 118, 110, .12);
+  border-radius: 11px;
+}
+
+.geometryEditHeading {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+
+.geometryEditHeading > svg {
+  margin-top: 2px;
+  color: #0f766e;
+}
+
+.geometryEditHeading > div {
+  display: grid;
+  gap: 2px;
+}
+
+.geometryEditHeading strong {
+  color: #244942;
+  font-size: 11px;
+}
+
+.geometryEditHeading span,
+.geometryEditHint,
+.batchVertexControls p {
+  margin: 0;
+  color: #7b918d;
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.polygonPartList {
+  max-height: 156px;
+  display: grid;
+  gap: 5px;
+  overflow-y: auto;
+}
+
+.polygonPartRow {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  background: #fff;
+  border: 1px solid rgba(15, 118, 110, .1);
+  border-radius: 8px;
+}
+
+.polygonPartRow > div {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.polygonPartRow strong {
+  color: #315b54;
+  font-size: 9px;
+}
+
+.polygonPartRow span {
+  color: #8a9d99;
+  font-size: 8px;
+}
+
+.polygonPartRow button,
+.batchVertexActions button {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 8px;
+  color: #8f4638;
+  background: #fff5f1;
+  border: 1px solid rgba(167, 92, 75, .16);
+  border-radius: 7px;
+  font-size: 8px;
+  font-weight: 730;
+  cursor: pointer;
+}
+
+.polygonPartRow button:hover,
+.batchVertexActions .batchDeleteButton:hover:not(:disabled) {
+  color: #733629;
+  background: #ffe9e1;
+}
+
+.batchVertexButton,
+.batchVertexButtonActive {
+  min-height: 37px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: 9px;
+  font-size: 9px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.batchVertexButton {
+  color: #315b54;
+  background: #fff;
+  border: 1px solid rgba(15, 118, 110, .17);
+}
+
+.batchVertexButton:hover {
+  color: #0f766e;
+  background: #edf8f5;
+}
+
+.batchVertexButtonActive {
+  color: #fff;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.batchVertexButton:disabled {
+  opacity: .46;
+  cursor: not-allowed;
+}
+
+.batchVertexControls {
+  display: grid;
+  gap: 7px;
+  padding: 8px;
+  background: #eff6ff;
+  border: 1px solid rgba(37, 99, 235, .14);
+  border-radius: 9px;
+}
+
+.batchVertexControls > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #38598f;
+  font-size: 9px;
+}
+
+.batchVertexControls > div:first-child strong {
+  color: #1d4ed8;
+  font: 750 10px var(--font-geist-mono), monospace;
+}
+
+.batchVertexActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.batchVertexActions button {
+  color: #38598f;
+  background: #fff;
+  border-color: rgba(37, 99, 235, .15);
+}
+
+.batchVertexActions button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+
+.batchVertexActions .batchDeleteButton {
+  color: #8f4638;
+  background: #fff5f1;
+  border-color: rgba(167, 92, 75, .16);
+}
+
+.vertexMarker,
+.vertexMarkerSelected {
+  width: 20px;
+  height: 20px;
+  display: block;
+  box-sizing: border-box;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #e46f32;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .32);
+  transition: transform .12s ease, background .12s ease;
+}
+
+.vertexMarker:hover {
+  transform: scale(1.12);
+}
+
+.vertexMarkerSelected {
+  background: #2563eb;
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, .22),
+    0 3px 9px rgba(15, 23, 42, .36);
+  transform: scale(1.12);
+}
+
 .topologyPanel {
   display: grid;
   gap: 8px;
@@ -579,6 +783,23 @@
 .mapHost {
   position: absolute;
   inset: 0;
+}
+
+.mapHostBatchSelection {
+  user-select: none;
+}
+
+.vertexSelectionBox {
+  position: absolute;
+  z-index: 94;
+  box-sizing: border-box;
+  pointer-events: none;
+  background: rgba(37, 99, 235, .14);
+  border: 1px solid rgba(37, 99, 235, .92);
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .72),
+    inset 0 0 18px rgba(37, 99, 235, .08);
 }
 
 .detailFloat {
