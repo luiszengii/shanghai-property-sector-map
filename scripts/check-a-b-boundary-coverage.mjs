@@ -13,10 +13,10 @@ const sourcesDocument = JSON.parse(await readFile(
 
 const targets = {
   A: [
-    "sector_xijiao", "sector_buyecheng", "sector_suhewan",
+    "sector_xijiao", "sector_buyecheng",
     "sector_lingang_main_city", "sector_ruihong_new_town", "sector_huangxing_park",
-    "sector_jiading_new_city", "sector_shanghai_university", "sector_nanda",
-    "sector_songbao", "sector_jiuting",
+    "sector_jiading_new_city", "sector_shanghai_university", "sector_songbao",
+    "sector_jiuting",
   ],
   B: [
     "sector_yangcheng", "sector_yonghe", "sector_pengpu", "sector_zhenguang",
@@ -42,7 +42,7 @@ const missing = Object.fromEntries(Object.entries(targets).map(([level, ids]) =>
   ids.filter((id) => !proxyIds.has(id)),
 ]));
 
-assert.equal(targets.A.length, 11, "A 级代理目标应为 11 个；外高桥已升级为 reviewed candidate");
+assert.equal(targets.A.length, 9, "A 级代理目标应为 9 个；外高桥已升级且南大、苏河湾已下线");
 assert.equal(targets.B.length, 12, "B 级代理目标应为 12 个；联洋已按用户裁定下线");
 assert.deepEqual(missing, { A: [], B: [] }, `A/B 级仍未替换的椭圆：${JSON.stringify(missing)}`);
 
@@ -60,4 +60,4 @@ for (const id of targetIds) {
   }
 }
 
-console.log("A/B boundary coverage check passed: A=11, B=12");
+console.log("A/B boundary coverage check passed: A=9, B=12");

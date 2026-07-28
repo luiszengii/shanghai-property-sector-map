@@ -74,14 +74,6 @@
       "status": "editorial-seed"
     },
     {
-      "id": "sector_suhewan",
-      "labelPoint": [
-        121.476,
-        31.246
-      ],
-      "status": "editorial-seed"
-    },
-    {
       "id": "sector_yangcheng",
       "labelPoint": [
         121.435,
@@ -230,14 +222,6 @@
       "labelPoint": [
         121.4,
         31.32
-      ],
-      "status": "editorial-seed"
-    },
-    {
-      "id": "sector_nanda",
-      "labelPoint": [
-        121.385,
-        31.3
       ],
       "status": "editorial-seed"
     },

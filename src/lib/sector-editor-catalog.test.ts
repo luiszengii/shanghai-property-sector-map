@@ -528,7 +528,7 @@ test("the Putuo pair preserves five Liangwancheng parts and five Ganquan Yichuan
   ).length, 5);
 });
 
-test("the Baoshan direct batch exposes eight editable low-confidence backbones without inventing five complex markets", () => {
+test("the Baoshan direct batch exposes eight editable low-confidence backbones without inventing retired or unresolved complex markets", () => {
   const batch = JSON.parse(readFileSync(
     new URL(
       "../../data/geo/reviewed-candidate-batches/baoshan-eight-direct-admin-aligned-2026-07.json",
@@ -594,10 +594,34 @@ test("the Baoshan direct batch exposes eight editable low-confidence backbones w
       ?.linkedTopologySectorIds,
     ["sector_zhangmiao", "sector_yanghang", "sector_luodian"],
   );
-  for (const unresolvedName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+  for (const unresolvedName of ["大华", "上大", "共康", "淞宝"]) {
     assert.equal(registryData.sectors.find(
       (record: { canonicalName: string }) => record.canonicalName === unresolvedName,
     )?.geometry?.status, "missing");
+  }
+});
+
+test("retired sectors are absent from every active editor geometry layer", () => {
+  const files = [
+    "../data/sectors/registry.json",
+    "../data/sectors/reviewed-candidates.wgs84.json",
+    "../data/sectors/editorial-seeds.wgs84.json",
+    "../data/sectors/source-backed-proxies.wgs84.json",
+    "../data/sectors/user-reviewed-overrides.wgs84.json",
+  ];
+  for (const relativePath of files) {
+    const value = JSON.parse(readFileSync(
+      new URL(relativePath, import.meta.url),
+      "utf8",
+    ));
+    const ids = Array.isArray(value.sectors)
+      ? value.sectors.map((record: { id: string }) => record.id)
+      : value.features.map((feature: { properties: { id: string } }) => (
+        feature.properties.id
+      ));
+    for (const id of ["sector_nanda", "sector_suhewan"]) {
+      assert.equal(ids.includes(id), false, `${relativePath}: ${id}`);
+    }
   }
 });
 

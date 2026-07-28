@@ -658,6 +658,52 @@ test("a historical Meiyuan seed is retained as a read-only archive", () => {
   assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
 });
 
+test("a historical Nanda planning proxy is retained as a read-only archive", () => {
+  const historicalDraft = createDraftFromExistingSector({
+    id: "sector_nanda",
+    name: "南大",
+    district: "宝山区、普陀区",
+    boundaryBasis: "历史 W12-1301 规划参考代理",
+    note: "身份下线前由编辑器自动带入",
+    geometryStatus: "candidate",
+    geometryFingerprint: "historical-nanda-planning-proxy",
+    ring: [[121.36, 31.3], [121.4, 31.3], [121.4, 31.32]],
+  });
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([historicalDraft], []);
+
+  assert.equal(synced.drafts.length, 1);
+  assert.equal(synced.drafts[0].name, "南大（已下线草稿备份）");
+  assert.equal(synced.drafts[0].sourceSectorId, undefined);
+  assert.equal(synced.drafts[0].archived, true);
+  assert.equal(synced.drafts[0].referenceOnly, true);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[0].id]);
+  assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
+});
+
+test("a historical Suhewan functional proxy is retained as a read-only archive", () => {
+  const historicalDraft = createDraftFromExistingSector({
+    id: "sector_suhewan",
+    name: "苏河湾",
+    district: "静安区",
+    boundaryBasis: "历史苏河湾东部功能片区参考代理",
+    note: "身份下线前由编辑器自动带入",
+    geometryStatus: "candidate",
+    geometryFingerprint: "historical-suhewan-functional-proxy",
+    ring: [[121.46, 31.24], [121.48, 31.24], [121.48, 31.25]],
+  });
+
+  const synced = syncUntouchedDraftsToCurrentTemplates([historicalDraft], []);
+
+  assert.equal(synced.drafts.length, 1);
+  assert.equal(synced.drafts[0].name, "苏河湾（已下线草稿备份）");
+  assert.equal(synced.drafts[0].sourceSectorId, undefined);
+  assert.equal(synced.drafts[0].archived, true);
+  assert.equal(synced.drafts[0].referenceOnly, true);
+  assert.deepEqual(synced.archivedDraftIds, [synced.drafts[0].id]);
+  assert.equal(buildSectorDraftFeatureCollection(synced.drafts).features.length, 0);
+});
+
 test("stored source fingerprints update untouched drafts and preserve modified drafts", () => {
   const oldRing = [
     [121.57, 31.27],
