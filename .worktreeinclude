@@ -1,0 +1,2 @@
+# Copy the local-only map credentials into new Codex-managed worktrees.
+.env.local
