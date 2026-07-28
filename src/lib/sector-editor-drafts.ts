@@ -92,6 +92,10 @@ const retiredRemovedSectorNamesBySourceId = new Map<string, string>([
   ["sector_shanghainan_zhan", "上海南站"],
   ["sector_lianyang", "联洋"],
   ["sector_gaodong", "高东"],
+  ["sector_minhangjinhui", "闵行金汇"],
+  ["sector_meiyuan", "梅园"],
+  ["sector_nanda", "南大"],
+  ["sector_suhewan", "苏河湾"],
 ]);
 
 function isFinitePosition(value: unknown): value is DraftPosition {

@@ -1,0 +1,5 @@
+# Copy local-only credentials and private research snapshots into new Codex worktrees.
+.env.local
+outputs/hfwgsj/shanghai-market-sectors-2026-07-25.geojson
+outputs/anjuke/shanghai-sector-boundaries-gcj02-2026-07-25.geojson
+outputs/fang/shanghai-sector-boundaries-gcj02-2026-07-25.geojson

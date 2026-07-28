@@ -66,17 +66,14 @@ function containsChain(ring, chain) {
   ));
 }
 
-const suhewan = collection.features.find((feature) => feature.properties.id === "sector_suhewan");
 const buyecheng = collection.features.find((feature) => feature.properties.id === "sector_buyecheng");
-if (suhewan && buyecheng) {
-  const suhewanRing = suhewan.geometry.coordinates[0];
+if (buyecheng) {
   const buyechengRing = buyecheng.geometry.coordinates[0];
   const sharedRoad = [
     [121.45813, 31.24358], [121.45819, 31.24703], [121.45847, 31.2481],
     [121.45862, 31.24944], [121.45892, 31.25098], [121.45932, 31.252],
   ];
-  assert.ok(containsChain(suhewanRing, sharedRoad.slice().reverse()), "苏河湾必须包含完整的共和新路共享折线");
-  assert.ok(containsChain(buyechengRing, sharedRoad), "不夜城必须反向复用完整的共和新路共享折线");
+  assert.ok(containsChain(buyechengRing, sharedRoad), "不夜城必须包含完整的共和新路东界折线");
 }
 
 console.log(`source-backed proxy check passed: ${collection.features.length} proxies`);
