@@ -13,7 +13,8 @@ export type SectorBoundarySource =
   | "project"
   | "hfwgsj-private"
   | "anjuke-private"
-  | "fang-private";
+  | "fang-private"
+  | "realtynavi-private";
 
 interface FocusRequest {
   type: "sector" | "place" | "project";
@@ -33,6 +34,7 @@ interface MapState {
   sectorLabelMode: SectorLabelMode;
   sectorLabelMinZoom: number;
   sectorBoundarySource: SectorBoundarySource;
+  showRealtynaviDistrictOutlineDifferences: boolean;
   zoom: number;
   center: [number, number];
   mobileFiltersOpen: boolean;
@@ -55,6 +57,7 @@ interface MapState {
   setSectorLabelMode: (mode: SectorLabelMode) => void;
   setSectorLabelMinZoom: (zoom: number) => void;
   setSectorBoundarySource: (source: SectorBoundarySource) => void;
+  setShowRealtynaviDistrictOutlineDifferences: (show: boolean) => void;
   setZoom: (zoom: number) => void;
   setCenter: (center: [number, number]) => void;
   setMobileFiltersOpen: (open: boolean) => void;
@@ -80,6 +83,7 @@ export const useMapStore = create<MapState>()(
       sectorLabelMode: "hover",
       sectorLabelMinZoom: 13,
       sectorBoundarySource: "project",
+      showRealtynaviDistrictOutlineDifferences: false,
       zoom: 10.6,
       center: [121.4737, 31.2304],
       mobileFiltersOpen: false,
@@ -122,6 +126,8 @@ export const useMapStore = create<MapState>()(
           sectorGeometryLoading: {},
           sectorGeometryFallbacks: {},
         }),
+      setShowRealtynaviDistrictOutlineDifferences: (show) =>
+        set({ showRealtynaviDistrictOutlineDifferences: show }),
       setZoom: (zoom) => set({ zoom }),
       setCenter: (center) => set({ center }),
       setMobileFiltersOpen: (open) => set({ mobileFiltersOpen: open }),

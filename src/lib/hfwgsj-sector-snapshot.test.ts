@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  getSnapshotDisplayFeatures,
   isPlaceholderSectorName,
   normalizeSectorSnapshotName,
   parseHfwgsjSectorSnapshot,
+  type HfwgsjSectorSnapshotFeature,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./hfwgsj-sector-snapshot.ts";
 
@@ -40,6 +42,52 @@ const validSnapshot = {
   }],
 };
 
+const square = {
+  type: "Polygon" as const,
+  coordinates: [[
+    [121, 31],
+    [122, 31],
+    [122, 32],
+    [121, 31],
+  ]],
+};
+
+const features: HfwgsjSectorSnapshotFeature[] = [
+  {
+    type: "Feature",
+    id: "named-a",
+    properties: {
+      sourceId: "named-a",
+      name: "板块 A",
+      centroid: [121.5, 31.5],
+      classification: "named_sector",
+    },
+    geometry: square,
+  },
+  {
+    type: "Feature",
+    id: "named-b",
+    properties: {
+      sourceId: "named-b",
+      name: "板块 B",
+      centroid: [121.7, 31.7],
+      classification: "named_sector",
+    },
+    geometry: square,
+  },
+  {
+    type: "Feature",
+    id: "district-outline-difference",
+    properties: {
+      sourceId: "district-outline-difference",
+      name: "区级外轮廓差异范围",
+      centroid: null,
+      classification: "district_outline_difference",
+    },
+    geometry: square,
+  },
+];
+
 test("parses a sanitized private sector snapshot", () => {
   const snapshot = parseHfwgsjSectorSnapshot(validSnapshot);
   assert.equal(snapshot.features.length, 1);
@@ -60,4 +108,22 @@ test("normalizes names and detects numeric placeholders", () => {
   assert.equal(normalizeSectorSnapshotName(" 杨思 前滩 "), "杨思前滩");
   assert.equal(isPlaceholderSectorName(" 2 "), true);
   assert.equal(isPlaceholderSectorName("东平"), false);
+});
+
+test("RealtyNavi comparison displays only named sectors by default", () => {
+  assert.deepEqual(
+    getSnapshotDisplayFeatures(features, {
+      includeDistrictOutlineDifferences: false,
+    }).map((feature) => feature.id),
+    ["named-a", "named-b"],
+  );
+});
+
+test("district outline differences appear only after explicit opt-in", () => {
+  assert.deepEqual(
+    getSnapshotDisplayFeatures(features, {
+      includeDistrictOutlineDifferences: true,
+    }).map((feature) => feature.id),
+    ["named-a", "named-b", "district-outline-difference"],
+  );
 });
