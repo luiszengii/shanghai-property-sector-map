@@ -558,6 +558,82 @@
   margin-top: var(--space-xs);
 }
 
+.officialLookup {
+  display: grid;
+  grid-template-columns: minmax(220px, .9fr) minmax(360px, 1.4fr) minmax(210px, .7fr);
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-xs);
+  border-color: var(--color-accent);
+}
+
+.officialLookup > div:first-child > span,
+.officialLookup dt {
+  color: var(--color-muted);
+  font: 400 var(--text-xs)/1.4 var(--font-outlier);
+}
+
+.officialLookup h2 {
+  margin: var(--space-3xs) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+}
+
+.officialLookup p {
+  margin: var(--space-xs) 0 0;
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+.officialLookup dl {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  margin: 0;
+  border: var(--rule-hairline);
+}
+
+.officialLookup dl > div {
+  min-width: 0;
+  padding: var(--space-sm);
+}
+
+.officialLookup dl > div + div {
+  border-left: var(--rule-hairline);
+}
+
+.officialLookup dd {
+  margin: var(--space-3xs) 0 0;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.officialLookupAction {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.officialLookupAction a {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding-inline: var(--space-sm);
+  color: var(--color-paper);
+  background: var(--color-accent-strong);
+  border-radius: var(--radius-control);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.officialLookupAction small {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
 .sources > div {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -687,8 +763,18 @@
   }
 
   .overviewGrid,
+  .officialLookup,
   .sources {
     grid-template-columns: 1fr;
+  }
+
+  .officialLookup dl {
+    grid-template-columns: 1fr;
+  }
+
+  .officialLookup dl > div + div {
+    border-top: var(--rule-hairline);
+    border-left: 0;
   }
 
   .sources > div {

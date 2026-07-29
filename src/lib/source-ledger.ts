@@ -79,6 +79,15 @@ export interface ResearchBatch {
   createdAt: string;
   sourceIds: string[];
   evidenceIds: string[];
+  sourceCandidates: SaveSourceRevisionInput[];
+  evidenceCandidates: SaveEvidenceRevisionInput[];
+  reviews: ResearchBatchEvidenceReview[];
+}
+
+export interface ResearchBatchEvidenceReview {
+  evidenceId: string;
+  decision: "验收通过";
+  reviewedAt: string;
 }
 
 export interface SourceLedger {
@@ -123,6 +132,28 @@ export interface CreateLedgerSnapshotInput {
   id: string;
   label: string;
   createdAt: string;
+}
+
+export interface CreateResearchBatchInput {
+  id: string;
+  label: string;
+  createdAt: string;
+  sources: SaveSourceRevisionInput[];
+  evidence: SaveEvidenceRevisionInput[];
+}
+
+export interface ReviewResearchBatchEvidenceInput {
+  batchId: string;
+  evidenceId: string;
+  reviewed: boolean;
+  reviewedAt: string;
+}
+
+export interface MergeResearchBatchInput {
+  batchId: string;
+  mergedAt: string;
+  sourceRevisionIds: Record<string, string>;
+  evidenceRevisionIds: Record<string, string>;
 }
 
 export interface PublicProjectProjection {
@@ -308,6 +339,44 @@ function validateVersionedEvidence(value: unknown, index: number) {
   return id;
 }
 
+function validateSourceCandidate(value: unknown, path: string) {
+  const candidate = requireRecord(value, path);
+  const id = requireString(candidate.id, `${path}.id`);
+  requireString(candidate.title, `${path}.title`);
+  requireString(candidate.publisher, `${path}.publisher`);
+  requireString(candidate.url, `${path}.url`, true);
+  requireString(candidate.sourceType, `${path}.sourceType`);
+  requireString(candidate.licenseStatus, `${path}.licenseStatus`);
+  requireEnum(candidate.allowedUse, sourceAllowedUses, `${path}.allowedUse`);
+  requireString(candidate.note, `${path}.note`, true);
+  return id;
+}
+
+function validateEvidenceCandidate(value: unknown, path: string) {
+  const candidate = requireRecord(value, path);
+  const id = requireString(candidate.id, `${path}.id`);
+  if (candidate.objectType !== "project") {
+    throw new Error(`${path}.objectType 无效`);
+  }
+  requireString(candidate.objectId, `${path}.objectId`);
+  requireString(candidate.field, `${path}.field`);
+  requireString(candidate.value, `${path}.value`);
+  const sourceId = requireString(candidate.sourceId, `${path}.sourceId`);
+  requireEnum(candidate.confidence, evidenceConfidences, `${path}.confidence`);
+  const publicationStatus = requireEnum(
+    candidate.publicationStatus,
+    publicationStatuses,
+    `${path}.publicationStatus`,
+  );
+  if (publicationStatus !== "待裁定") {
+    throw new Error(`${path}.publicationStatus 必须为待裁定`);
+  }
+  requireIsoDate(candidate.observedAt, `${path}.observedAt`);
+  requireIsoDate(candidate.reviewDueAt, `${path}.reviewDueAt`, true);
+  requireString(candidate.note, `${path}.note`, true);
+  return { id, sourceId };
+}
+
 export function parseSourceLedger(value: unknown): SourceLedger {
   if (!isRecord(value) || value.schemaVersion !== 1) {
     throw new Error("来源台账 schemaVersion 必须为 1");
@@ -348,8 +417,69 @@ export function parseSourceLedger(value: unknown): SourceLedger {
     requireString(batch.label, `${path}.label`);
     requireEnum(batch.status, ["待裁定", "已合并", "已退回"] as const, `${path}.status`);
     requireIsoDate(batch.createdAt, `${path}.createdAt`);
-    requireStringArray(batch.sourceIds, `${path}.sourceIds`);
-    requireStringArray(batch.evidenceIds, `${path}.evidenceIds`);
+    const sourceIds = requireStringArray(batch.sourceIds, `${path}.sourceIds`);
+    const evidenceIds = requireStringArray(batch.evidenceIds, `${path}.evidenceIds`);
+    if (!Array.isArray(batch.sourceCandidates)) {
+      throw new Error(`${path}.sourceCandidates 必须是数组`);
+    }
+    if (!Array.isArray(batch.evidenceCandidates)) {
+      throw new Error(`${path}.evidenceCandidates 必须是数组`);
+    }
+    if (!Array.isArray(batch.reviews)) {
+      throw new Error(`${path}.reviews 必须是数组`);
+    }
+    const candidateSourceIds = new Set<string>();
+    for (const [candidateIndex, candidate] of batch.sourceCandidates.entries()) {
+      const id = validateSourceCandidate(
+        candidate,
+        `${path}.sourceCandidates[${candidateIndex}]`,
+      );
+      if (candidateSourceIds.has(id)) {
+        throw new Error(`${path}.sourceCandidates 包含重复 ID ${id}`);
+      }
+      candidateSourceIds.add(id);
+    }
+    const candidateEvidenceIds = new Set<string>();
+    for (const [candidateIndex, candidate] of batch.evidenceCandidates.entries()) {
+      const { id, sourceId } = validateEvidenceCandidate(
+        candidate,
+        `${path}.evidenceCandidates[${candidateIndex}]`,
+      );
+      if (candidateEvidenceIds.has(id)) {
+        throw new Error(`${path}.evidenceCandidates 包含重复 ID ${id}`);
+      }
+      if (!candidateSourceIds.has(sourceId)) {
+        throw new Error(`${path}.evidenceCandidates 引用了批次外来源 ${sourceId}`);
+      }
+      candidateEvidenceIds.add(id);
+    }
+    if (
+      sourceIds.length !== candidateSourceIds.size
+      || sourceIds.some((id) => !candidateSourceIds.has(id))
+    ) {
+      throw new Error(`${path}.sourceIds 与来源候选不一致`);
+    }
+    if (
+      evidenceIds.length !== candidateEvidenceIds.size
+      || evidenceIds.some((id) => !candidateEvidenceIds.has(id))
+    ) {
+      throw new Error(`${path}.evidenceIds 与证据候选不一致`);
+    }
+    const reviewedEvidenceIds = new Set<string>();
+    for (const [reviewIndex, reviewValue] of batch.reviews.entries()) {
+      const reviewPath = `${path}.reviews[${reviewIndex}]`;
+      const review = requireRecord(reviewValue, reviewPath);
+      const evidenceId = requireString(review.evidenceId, `${reviewPath}.evidenceId`);
+      if (!candidateEvidenceIds.has(evidenceId)) {
+        throw new Error(`${reviewPath} 引用了批次外证据 ${evidenceId}`);
+      }
+      if (reviewedEvidenceIds.has(evidenceId)) {
+        throw new Error(`${path}.reviews 包含重复 evidenceId ${evidenceId}`);
+      }
+      reviewedEvidenceIds.add(evidenceId);
+      requireEnum(review.decision, ["验收通过"] as const, `${reviewPath}.decision`);
+      requireIsoDate(review.reviewedAt, `${reviewPath}.reviewedAt`);
+    }
   }
   return value as unknown as SourceLedger;
 }
@@ -445,6 +575,111 @@ export function saveSourceRevision(
     sources: existing
       ? ledger.sources.map((source) => source.id === input.id ? nextSource : source)
       : [...ledger.sources, nextSource],
+  });
+}
+
+export function createResearchBatch(
+  ledger: SourceLedger,
+  input: CreateResearchBatchInput,
+) {
+  if (ledger.researchBatches.some((batch) => batch.id === input.id)) {
+    throw new Error(`研究批次 ID 已存在 ${input.id}`);
+  }
+  const batch: ResearchBatch = {
+    id: input.id,
+    label: input.label,
+    status: "待裁定",
+    createdAt: input.createdAt,
+    sourceIds: input.sources.map((source) => source.id),
+    evidenceIds: input.evidence.map((evidence) => evidence.id),
+    sourceCandidates: input.sources,
+    evidenceCandidates: input.evidence,
+    reviews: [],
+  };
+  return parseSourceLedger({
+    ...ledger,
+    researchBatches: [...ledger.researchBatches, batch],
+  });
+}
+
+export function reviewResearchBatchEvidence(
+  ledger: SourceLedger,
+  input: ReviewResearchBatchEvidenceInput,
+) {
+  const batch = ledger.researchBatches.find((item) => item.id === input.batchId);
+  if (!batch) throw new Error(`研究批次不存在 ${input.batchId}`);
+  if (!batch.evidenceIds.includes(input.evidenceId)) {
+    throw new Error(`研究批次不包含证据 ${input.evidenceId}`);
+  }
+  if (batch.status !== "待裁定") {
+    throw new Error(`研究批次状态为 ${batch.status}，不能修改验收勾选`);
+  }
+  const review: ResearchBatchEvidenceReview = {
+    evidenceId: input.evidenceId,
+    decision: "验收通过",
+    reviewedAt: input.reviewedAt,
+  };
+  const nextBatch: ResearchBatch = {
+    ...batch,
+    reviews: input.reviewed
+      ? [
+        ...batch.reviews.filter((item) => item.evidenceId !== input.evidenceId),
+        review,
+      ]
+      : batch.reviews.filter((item) => item.evidenceId !== input.evidenceId),
+  };
+  return parseSourceLedger({
+    ...ledger,
+    researchBatches: ledger.researchBatches.map((item) => (
+      item.id === input.batchId ? nextBatch : item
+    )),
+  });
+}
+
+export function mergeResearchBatch(
+  ledger: SourceLedger,
+  input: MergeResearchBatchInput,
+) {
+  const batch = ledger.researchBatches.find((item) => item.id === input.batchId);
+  if (!batch) throw new Error(`研究批次不存在 ${input.batchId}`);
+  if (batch.status !== "待裁定") {
+    throw new Error(`研究批次状态为 ${batch.status}，不能再次合并`);
+  }
+  const reviewedIds = new Set(batch.reviews.map((review) => review.evidenceId));
+  const unreviewedIds = batch.evidenceIds.filter((id) => !reviewedIds.has(id));
+  if (unreviewedIds.length > 0) {
+    throw new Error(`研究批次仍有 ${unreviewedIds.length} 条候选未验收`);
+  }
+
+  let next = ledger;
+  for (const source of batch.sourceCandidates) {
+    const revisionId = input.sourceRevisionIds[source.id];
+    if (typeof revisionId !== "string" || !revisionId.trim()) {
+      throw new Error(`来源候选 ${source.id} 缺少合并修订 ID`);
+    }
+    next = saveSourceRevision(next, source, {
+      revisionId,
+      recordedAt: input.mergedAt,
+    });
+  }
+  for (const evidence of batch.evidenceCandidates) {
+    const revisionId = input.evidenceRevisionIds[evidence.id];
+    if (typeof revisionId !== "string" || !revisionId.trim()) {
+      throw new Error(`证据候选 ${evidence.id} 缺少合并修订 ID`);
+    }
+    next = saveEvidenceRevision(next, evidence, {
+      revisionId,
+      recordedAt: input.mergedAt,
+    });
+  }
+
+  return parseSourceLedger({
+    ...next,
+    researchBatches: next.researchBatches.map((item) => (
+      item.id === input.batchId
+        ? { ...item, status: "已合并" }
+        : item
+    )),
   });
 }
 
