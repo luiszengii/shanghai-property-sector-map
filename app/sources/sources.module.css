@@ -474,6 +474,281 @@
   border-color: var(--color-danger);
 }
 
+.batchReview {
+  width: min(100% - var(--space-xl), 96rem);
+  display: grid;
+  gap: var(--space-md);
+  margin: var(--space-lg) auto 0;
+  padding: var(--space-lg);
+  background: var(--color-paper);
+  border: var(--rule-strong);
+}
+
+.batchReviewHeading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.85fr);
+  align-items: end;
+  gap: var(--space-xl);
+}
+
+.batchReviewHeading > div {
+  min-width: 0;
+}
+
+.batchReviewHeading > div > span {
+  color: var(--color-accent-strong);
+  font: 700 var(--text-xs) var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.batchReviewHeading h2 {
+  margin: var(--space-3xs) 0 var(--space-xs);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: -0.035em;
+}
+
+.batchReviewHeading p {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--color-ink-2);
+  line-height: 1.6;
+}
+
+.batchFacts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  border: var(--rule-hairline);
+}
+
+.batchFacts > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3xs);
+  padding: var(--space-sm);
+  border-inline-end: var(--rule-hairline);
+}
+
+.batchFacts > div:last-child {
+  border-inline-end: 0;
+}
+
+.batchFacts dt {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.batchFacts dd {
+  margin: 0;
+  font: 700 var(--text-lg) var(--font-outlier);
+}
+
+.batchToolbar {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(320px, 1.2fr) auto;
+  align-items: end;
+  gap: var(--space-sm);
+}
+
+.batchToolbar > label {
+  display: grid;
+  gap: var(--space-xs);
+  color: var(--color-ink-2);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.batchToolbar select,
+.batchSearch > span {
+  min-height: 44px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: var(--rule-strong);
+  border-radius: var(--radius-control);
+}
+
+.batchToolbar select {
+  width: 100%;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.batchSearch > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding-inline: var(--space-sm);
+}
+
+.batchSearch input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.batchToggle {
+  min-height: 44px;
+  display: flex !important;
+  grid-template-columns: none;
+  align-items: center;
+  gap: var(--space-xs) !important;
+  padding-inline: var(--space-sm);
+  border: var(--rule-strong);
+  border-radius: var(--radius-control);
+  white-space: nowrap;
+}
+
+.batchToggle input,
+.batchEvidenceList input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.batchProgress {
+  height: 5px;
+  overflow: hidden;
+  background: var(--color-paper-3);
+  border-radius: 999px;
+}
+
+.batchProgress span {
+  height: 100%;
+  display: block;
+  background: var(--color-accent);
+  transition: width 180ms ease;
+}
+
+.batchEvidenceList {
+  max-height: 620px;
+  display: grid;
+  gap: var(--space-xs);
+  padding-right: var(--space-xs);
+  overflow-y: auto;
+}
+
+.batchEvidenceList > p {
+  margin: 0;
+  padding: var(--space-lg);
+  color: var(--color-muted);
+  text-align: center;
+  background: var(--color-paper-2);
+  border: 1px dashed var(--color-rule);
+}
+
+.batchEvidenceList > label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-paper-2);
+  border: var(--rule-hairline);
+  cursor: pointer;
+}
+
+.batchEvidenceList > label:hover {
+  border-color: var(--color-accent);
+}
+
+.batchEvidenceList > label > input {
+  margin-top: 2px;
+}
+
+.batchEvidenceList > label > span {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.batchEvidenceTopline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.batchEvidenceTopline strong,
+.batchEvidenceList b {
+  overflow-wrap: anywhere;
+}
+
+.batchEvidenceTopline i {
+  flex: 0 0 auto;
+  padding: 3px 6px;
+  color: var(--color-muted);
+  background: var(--color-paper);
+  border: var(--rule-hairline);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-style: normal;
+}
+
+.batchEvidenceList b {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  font-weight: 560;
+  line-height: 1.55;
+}
+
+.batchEvidenceList small {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.batchEvidenceReviewed {
+  background: var(--color-accent-soft) !important;
+  border-color: var(--color-accent) !important;
+}
+
+.batchReviewFooter {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  padding-top: var(--space-sm);
+  color: var(--color-muted);
+  border-top: var(--rule-hairline);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+.batchReviewFooter svg {
+  flex: 0 0 auto;
+  color: var(--color-accent-strong);
+}
+
+.batchMergeButton {
+  min-height: 36px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  margin-left: auto;
+  padding-inline: var(--space-sm);
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-control);
+  font: 700 var(--text-xs) var(--font-display);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.batchMergeButton:disabled {
+  color: var(--color-muted);
+  background: var(--color-paper-3);
+  border-color: var(--color-rule);
+  cursor: not-allowed;
+}
+
+.batchMergeButton svg {
+  color: currentColor;
+}
+
 .workspace {
   width: min(100% - var(--space-xl), 96rem);
   display: grid;
@@ -928,6 +1203,10 @@
     grid-template-columns: 1fr;
   }
 
+  .batchReviewHeading {
+    grid-template-columns: 1fr;
+  }
+
   .sourceDirectory {
     border-right: 0;
     border-bottom: var(--rule-strong);
@@ -945,6 +1224,28 @@
     width: calc(100% - var(--space-md));
     margin-top: var(--space-sm);
     padding: var(--space-md);
+  }
+
+  .batchReview {
+    width: calc(100% - var(--space-md));
+    margin-top: var(--space-sm);
+    padding: var(--space-md);
+  }
+
+  .batchFacts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .batchFacts > div:nth-child(2) {
+    border-inline-end: 0;
+  }
+
+  .batchFacts > div:nth-child(-n + 2) {
+    border-bottom: var(--rule-hairline);
+  }
+
+  .batchToolbar {
+    grid-template-columns: 1fr;
   }
 
   .releaseFlowHeading,

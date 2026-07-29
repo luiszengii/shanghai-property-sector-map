@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import type { PropertyProject } from "@/src/types/map";
 import { ProjectDetailMap } from "@/src/components/ProjectDetailMap";
+import { getOfficialPropertyLookup } from "@/src/lib/project-official-lookup";
 import type { PublicProjectProjection } from "@/src/lib/source-ledger";
 import styles from "@/app/projects/[id]/page.module.css";
 
@@ -52,6 +53,7 @@ export function ProjectDetailPage({
   publicProject: PublicProjectData | null;
 }) {
   const displayName = project.officialName ?? project.name;
+  const officialLookup = getOfficialPropertyLookup(project);
   const confidenceLabel = project.locationConfidence === "high" ? "高" : "中";
   const publicFields = publicProject?.fields ?? [];
   const fieldValue = (name: string) => (
@@ -258,6 +260,31 @@ export function ProjectDetailPage({
           </div>
         </aside>
       </div>
+
+      <section className={`${styles.section} ${styles.officialLookup}`}>
+        <div>
+          <span>官方核验入口</span>
+          <h2>{officialLookup.title}</h2>
+          <p>{officialLookup.publisher}的一手房公开查询页；本页面不复制其受限查询结果。</p>
+        </div>
+        <dl>
+          <div>
+            <dt>建议搜索名称</dt>
+            <dd>{officialLookup.searchName}</dd>
+          </div>
+          <div>
+            <dt>地址辅助条件</dt>
+            <dd>{officialLookup.searchAddress}</dd>
+          </div>
+        </dl>
+        <div className={styles.officialLookupAction}>
+          <a href={officialLookup.url} target="_blank" rel="noreferrer">
+            打开官方查询
+            <ExternalLink aria-hidden="true" size={14} />
+          </a>
+          <small>{officialLookup.notice}</small>
+        </div>
+      </section>
 
       <section id="sources" className={`${styles.section} ${styles.sources}`}>
         <div>

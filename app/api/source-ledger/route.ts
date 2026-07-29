@@ -5,6 +5,8 @@ import {
   buildPublicProjectProjectionFromSnapshot,
   buildSnapshotProjectionPreview,
   createLedgerSnapshot,
+  mergeResearchBatch,
+  reviewResearchBatchEvidence,
   saveEvidenceRevision,
   saveSourceRevision,
   type EvidenceConfidence,
@@ -67,6 +69,12 @@ function nullableString(body: Record<string, unknown>, key: string) {
   const value = body[key];
   if (value === null || value === "") return null;
   if (typeof value !== "string") throw new Error(`${key} 必须是字符串或 null`);
+  return value;
+}
+
+function booleanValue(body: Record<string, unknown>, key: string) {
+  const value = body[key];
+  if (typeof value !== "boolean") throw new Error(`${key} 必须是布尔值`);
   return value;
 }
 
@@ -150,6 +158,36 @@ export async function POST(request: NextRequest) {
         id: `ledger-snapshot-${randomUUID()}`,
         label: stringValue(body, "label"),
         createdAt: now,
+      });
+    } else if (action === "reviewResearchEvidence") {
+      next = reviewResearchBatchEvidence(ledger, {
+        batchId: stringValue(body, "batchId"),
+        evidenceId: stringValue(body, "evidenceId"),
+        reviewed: booleanValue(body, "reviewed"),
+        reviewedAt: now,
+      });
+    } else if (action === "mergeResearchBatch") {
+      if (body.confirmReviewed !== true) {
+        throw new Error("合并研究批次前必须确认已完成全部验收");
+      }
+      const batchId = stringValue(body, "batchId");
+      const batch = ledger.researchBatches.find((item) => item.id === batchId);
+      if (!batch) throw new Error(`研究批次不存在 ${batchId}`);
+      next = mergeResearchBatch(ledger, {
+        batchId,
+        mergedAt: now,
+        sourceRevisionIds: Object.fromEntries(
+          batch.sourceCandidates.map((source) => [
+            source.id,
+            `source-revision-${randomUUID()}`,
+          ]),
+        ),
+        evidenceRevisionIds: Object.fromEntries(
+          batch.evidenceCandidates.map((evidence) => [
+            evidence.id,
+            `evidence-revision-${randomUUID()}`,
+          ]),
+        ),
       });
     } else if (action === "generatePublicProjection") {
       const snapshotId = stringValue(body, "snapshotId");
