@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import {
+  getSnapshotDisplayFeatures,
   isPlaceholderSectorName,
   normalizeSectorSnapshotName,
   parseHfwgsjSectorSnapshot,
@@ -14,7 +15,10 @@ import {
   type SectorLabelMode,
 } from "@/src/lib/sector-label-visibility";
 import type { SectorFeature } from "@/src/types/map";
-import type { SectorBoundarySource } from "@/src/store/map-store";
+import {
+  useMapStore,
+  type SectorBoundarySource,
+} from "@/src/store/map-store";
 import { nativeGeometryToDisplayPath } from "./amap-coordinate-conversion";
 
 type PrivateSnapshotSource = Exclude<SectorBoundarySource, "project">;
@@ -39,6 +43,7 @@ interface SnapshotOverlay {
   labelMounted: boolean;
   hoverLeaveTimer: ReturnType<typeof setTimeout> | null;
   palette: SnapshotPalette;
+  districtOutlineDifference: boolean;
 }
 
 type SnapshotStatus =
@@ -92,6 +97,17 @@ const snapshotConfigs: Record<PrivateSnapshotSource, {
       labelBorder: "rgba(37, 99, 235, .28)",
     },
   },
+  "realtynavi-private": {
+    label: "RealtyNavi 授权研究快照",
+    url: "/api/local-sector-snapshot?source=realtynavi-private",
+    palette: {
+      fill: "#e11d48",
+      stroke: "#be123c",
+      selectedStroke: "#881337",
+      label: "#be123c",
+      labelBorder: "rgba(190, 18, 60, .28)",
+    },
+  },
 };
 
 const snapshotSectorByName = new Map<string, SectorFeature>();
@@ -103,15 +119,18 @@ for (const record of sectorCatalog.registry) {
   }
 }
 
-function snapshotLabelStyle(matched: boolean, palette: SnapshotPalette) {
+function snapshotLabelStyle(
+  districtOutlineDifference: boolean,
+  palette: SnapshotPalette,
+) {
   return {
     padding: "5px 9px",
     borderRadius: "999px",
-    border: `1px solid ${matched
-      ? palette.labelBorder
-      : "rgba(100, 116, 139, .24)"}`,
+    border: `1px solid ${districtOutlineDifference
+      ? "rgba(100, 116, 139, .24)"
+      : palette.labelBorder}`,
     background: "rgba(255,255,255,.92)",
-    color: matched ? palette.label : "#475569",
+    color: districtOutlineDifference ? "#475569" : palette.label,
     fontSize: "12px",
     fontWeight: "700",
     boxShadow: "0 5px 16px rgba(15,23,42,.12)",
@@ -125,21 +144,24 @@ function applySnapshotStyle(
   zoom: number,
   selected: boolean,
 ) {
-  const matched = Boolean(overlay.matchedSector);
-  const { palette } = overlay;
+  const { palette, districtOutlineDifference } = overlay;
   const baseOpacity = zoom >= 14
     ? 0.025
     : zoom >= 12
       ? Math.max(0.05, 0.22 - (zoom - 12) * 0.085)
       : Math.min(0.32, 0.16 + (12 - zoom) * 0.08);
   overlay.polygon.setOptions({
-    fillColor: matched ? palette.fill : "#94a3b8",
+    fillColor: districtOutlineDifference ? "#94a3b8" : palette.fill,
     fillOpacity: selected ? Math.max(baseOpacity, 0.22) : baseOpacity,
-    strokeColor: selected ? palette.selectedStroke : matched ? palette.stroke : "#64748b",
-    strokeStyle: matched ? "solid" : "dashed",
+    strokeColor: selected
+      ? palette.selectedStroke
+      : districtOutlineDifference
+        ? "#64748b"
+        : palette.stroke,
+    strokeStyle: districtOutlineDifference ? "dashed" : "solid",
     strokeWeight: selected ? 3.2 : zoom >= 13 ? 1.4 : 2,
     strokeOpacity: zoom >= 14 ? 0.56 : 0.9,
-    zIndex: selected ? 25 : matched ? 23 : 22,
+    zIndex: selected ? 25 : districtOutlineDifference ? 22 : 23,
   });
 }
 
@@ -162,6 +184,9 @@ export function PrivateSectorLayer({
   onSelect,
 }: PrivateSectorLayerProps) {
   const config = snapshotConfigs[source];
+  const showRealtynaviDistrictOutlineDifferences = useMapStore(
+    (state) => state.showRealtynaviDistrictOutlineDifferences,
+  );
   const overlaysRef = useRef<SnapshotOverlay[]>([]);
   const polygonGroupRef = useRef<AMap.OverlayGroup | null>(null);
   const onSelectRef = useRef(onSelect);
@@ -176,6 +201,8 @@ export function PrivateSectorLayer({
   });
   const [snapshotMeta, setSnapshotMeta] = useState<{
     directoryCount: number;
+    namedCount: number;
+    districtOutlineDifferenceCount: number;
     missingCount: number;
     coordinateNote: string;
   } | null>(null);
@@ -183,7 +210,9 @@ export function PrivateSectorLayer({
     ? "正在载入私有板块快照…"
     : status.state === "error"
       ? "私有板块快照不可用"
-      : `${config.label} · ${status.count} / ${snapshotMeta?.directoryCount ?? status.count} 个边界`;
+      : snapshotMeta?.districtOutlineDifferenceCount
+        ? `${config.label} · ${snapshotMeta.namedCount} 个命名板块${showRealtynaviDistrictOutlineDifferences ? ` · 已显示 ${snapshotMeta.districtOutlineDifferenceCount} 个区级外轮廓差异参考面` : ""}`
+        : `${config.label} · ${status.count} / ${snapshotMeta?.directoryCount ?? status.count} 个边界`;
 
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -217,12 +246,24 @@ export function PrivateSectorLayer({
       const snapshot = parseHfwgsjSectorSnapshot(await response.json());
       setSnapshotMeta({
         directoryCount: snapshot.metadata.directory_count ?? snapshot.features.length,
+        namedCount: snapshot.metadata.named_feature_count ?? snapshot.features.length,
+        districtOutlineDifferenceCount:
+          snapshot.metadata.district_outline_difference_feature_count ?? 0,
         missingCount: snapshot.metadata.missing_geometry_count ?? 0,
         coordinateNote: snapshot.metadata.coordinate_note,
       });
 
-      for (const feature of snapshot.features) {
+      const displayFeatures = getSnapshotDisplayFeatures(snapshot.features, {
+        includeDistrictOutlineDifferences: (
+          source === "realtynavi-private"
+          && showRealtynaviDistrictOutlineDifferences
+        ),
+      });
+      for (const feature of displayFeatures) {
         const matchedSector = matchedSectorFor(feature);
+        const districtOutlineDifference = (
+          feature.properties.classification === "district_outline_difference"
+        );
         const path = await nativeGeometryToDisplayPath(
           amapApi,
           simplifySectorGeometryForDisplay(feature.geometry),
@@ -245,7 +286,10 @@ export function PrivateSectorLayer({
             anchor: "center",
             zIndex: 26,
             clickable: false,
-            style: snapshotLabelStyle(Boolean(matchedSector), config.palette),
+            style: snapshotLabelStyle(
+              districtOutlineDifference,
+              config.palette,
+            ),
           })
           : null;
         const overlay: SnapshotOverlay = {
@@ -259,6 +303,7 @@ export function PrivateSectorLayer({
           }),
           hoverLeaveTimer: null,
           palette: config.palette,
+          districtOutlineDifference,
         };
         applySnapshotStyle(
           overlay,
@@ -322,7 +367,7 @@ export function PrivateSectorLayer({
       if (cancelled) return;
       overlaysRef.current = overlays;
       setOverlayVersion((version) => version + 1);
-      setStatus({ state: "ready", count: snapshot.features.length });
+      setStatus({ state: "ready", count: displayFeatures.length });
     };
 
     loadSnapshot().catch((error: unknown) => {
@@ -341,7 +386,13 @@ export function PrivateSectorLayer({
       overlaysRef.current = [];
       polygonGroupRef.current = null;
     };
-  }, [amapApi, config, map]);
+  }, [
+    amapApi,
+    config,
+    map,
+    showRealtynaviDistrictOutlineDifferences,
+    source,
+  ]);
 
   useEffect(() => {
     const polygonGroup = polygonGroupRef.current;
