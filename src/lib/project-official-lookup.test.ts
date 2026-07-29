@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+// @ts-expect-error Node 22 executes this TypeScript test directly and needs the source extension.
 import { getOfficialPropertyLookup } from "./project-official-lookup.ts";
-import type { PropertyProject } from "../types/map.ts";
+import type { PropertyProject } from "../types/map";
 
 test("公开楼盘详情提供上海网上房地产人工查询入口和辅助条件", () => {
   const project: PropertyProject = {
