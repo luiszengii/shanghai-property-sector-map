@@ -9,15 +9,17 @@ import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import {
   buildUserReviewedOverrideCollection,
-  createSectorEditorVersion,
-  emptySectorEditorVersionStore,
   emptyUserReviewedOverrideCollection,
-  parseSectorEditorVersionStore,
   parseUserReviewedOverrideCollection,
   summarizeSectorEditorVersion,
-  type SectorEditorVersionStore,
   type UserReviewedOverrideCollection,
 } from "@/src/lib/sector-editor-versions";
+import {
+  appendSectorEditorVersion,
+  listSectorEditorVersions,
+  readSectorEditorVersion,
+  type SectorEditorVersionStorePaths,
+} from "@/src/lib/sector-editor-version-store";
 import { isLocalRouteEnabled, localRouteNotFound } from "@/src/lib/local-route-guard";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +37,11 @@ const versionDirectory = path.join(
   "sector-editor-versions",
 );
 const versionStorePath = path.join(versionDirectory, "versions.json");
+const versionObjectDirectory = path.join(versionDirectory, "objects");
+const versionStorePaths: SectorEditorVersionStorePaths = {
+  manifestPath: versionStorePath,
+  objectDirectory: versionObjectDirectory,
+};
 const overridePath = path.join(
   /* turbopackIgnore: true */ process.cwd(),
   "src",
@@ -62,24 +69,6 @@ function localOnlyResponse() {
     status: 403,
     headers: privateHeaders,
   });
-}
-
-async function readStore(): Promise<SectorEditorVersionStore> {
-  try {
-    return parseSectorEditorVersionStore(
-      JSON.parse(await readFile(versionStorePath, "utf8")),
-    );
-  } catch (error) {
-    if (
-      error
-      && typeof error === "object"
-      && "code" in error
-      && error.code === "ENOENT"
-    ) {
-      return emptySectorEditorVersionStore();
-    }
-    throw error;
-  }
 }
 
 async function writeJsonAtomically(targetPath: string, value: unknown) {
@@ -132,10 +121,12 @@ export async function GET(request: NextRequest) {
   if (!isLocalRouteEnabled()) return localRouteNotFound();
   if (!isLocalRequest(request)) return localOnlyResponse();
   try {
-    const store = await readStore();
     const requestedId = request.nextUrl.searchParams.get("id");
     if (requestedId) {
-      const version = store.versions.find((item) => item.id === requestedId);
+      const version = await readSectorEditorVersion(
+        versionStorePaths,
+        requestedId,
+      );
       if (!version) {
         return NextResponse.json({
           code: "SECTOR_EDITOR_VERSION_NOT_FOUND",
@@ -148,9 +139,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ version }, { headers: privateHeaders });
     }
     return NextResponse.json({
-      versions: store.versions
-        .map(summarizeSectorEditorVersion)
-        .sort((a, b) => b.versionNumber - a.versionNumber),
+      versions: await listSectorEditorVersions(versionStorePaths),
     }, { headers: privateHeaders });
   } catch {
     return NextResponse.json({
@@ -172,8 +161,7 @@ export async function POST(request: NextRequest) {
       throw new Error("保存内容不是有效对象");
     }
     const body = input as Record<string, unknown>;
-    const store = await readStore();
-    const version = createSectorEditorVersion(store, {
+    const version = await appendSectorEditorVersion(versionStorePaths, {
       label: typeof body.label === "string" ? body.label : undefined,
       activeId: typeof body.activeId === "string" ? body.activeId : null,
       drafts: body.drafts,
@@ -190,9 +178,7 @@ export async function POST(request: NextRequest) {
       registeredSectorIds,
       previous: previousOverrides,
     });
-    store.versions.push(version);
     await writeJsonAtomically(overridePath, overrideResult.collection);
-    await writeJsonAtomically(versionStorePath, store);
     return NextResponse.json({
       version: summarizeSectorEditorVersion(version),
       publishedDraftCount: overrideResult.publishedDraftCount,

@@ -30,7 +30,7 @@
       "expectedOsmName": "顾村镇",
       "insidePoint": [121.381365, 31.3549925],
       "sharedEdgeSectorIds": ["sector_zhangmiao", "sector_yanghang", "sector_luodian"],
-      "requiredAdjacencyReviewIds": ["unresolved_dahua", "unresolved_shangda", "unresolved_nanda", "unresolved_gongkang"],
+      "requiredAdjacencyReviewIds": ["unresolved_dahua", "unresolved_shangda", "unresolved_gongkang"],
       "sharedEdgeSnapDistanceMeters": 0.1,
       "preserveTopologyPrecision": true,
       "marketAdminAlignmentUnverified": true,
@@ -40,7 +40,7 @@
       "riskFlags": ["overwide_admin_proxy", "mixed_industrial_rail_non_residential", "market_boundary_not_official"],
       "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025", "official-baoshan-gucun-profile-2025"],
       "geometryVerificationSourceIds": ["official-tianditu-shanghai-standard-maps-2025", "osm-geofabrik-shanghai-260721"],
-      "geometryRule": "市场顾村暂以同名顾村镇固定行政关系作为低置信、可编辑骨架。镇域约 41.6 平方公里，明显大于连续住宅市场，并包含乡村、产业和交通用地；大华、上大、南大、共康接口必须按完整项目归属另行裁切。"
+      "geometryRule": "市场顾村暂以同名顾村镇固定行政关系作为低置信、可编辑骨架。镇域约 41.6 平方公里，明显大于连续住宅市场，并包含乡村、产业和交通用地；大华、上大、共康接口及南大地区规划语境必须按完整项目归属另行裁切。"
     },
     {
       "id": "sector_zhangmiao",
@@ -124,7 +124,7 @@
       "expectedOsmName": "杨行镇",
       "insidePoint": [121.4462607, 31.3812796],
       "sharedEdgeSectorIds": ["sector_gucun", "sector_zhangmiao", "sector_songnan", "sector_luodian", "sector_yuepu"],
-      "requiredAdjacencyReviewIds": ["unresolved_nanda", "unresolved_songbao"],
+      "requiredAdjacencyReviewIds": ["unresolved_songbao"],
       "sharedEdgeSnapDistanceMeters": 0.1,
       "preserveTopologyPrecision": true,
       "marketAdminAlignmentUnverified": true,
@@ -134,7 +134,7 @@
       "riskFlags": ["overwide_admin_proxy", "mixed_industrial_rail_non_residential", "market_boundary_not_official"],
       "definitionSourceIds": ["seller-lianjia-shanghai-sector-sitemap", "official-shanghai-town-list-2025", "official-baoshan-yanghang-master-plan-2035"],
       "geometryVerificationSourceIds": ["official-tianditu-shanghai-standard-maps-2025", "osm-geofabrik-shanghai-260721"],
-      "geometryRule": "市场杨行暂以同名杨行镇固定行政关系作为低置信、可编辑骨架。约 39.3 平方公里镇域混合产业、铁路和非住宅范围，南大、淞宝接口必须另行按项目收窄。"
+      "geometryRule": "市场杨行暂以同名杨行镇固定行政关系作为低置信、可编辑骨架。约 39.3 平方公里镇域混合产业、铁路和非住宅范围，淞宝接口及南大地区规划语境必须另行按项目收窄。"
     },
     {
       "id": "sector_luodian",
