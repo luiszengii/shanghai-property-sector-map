@@ -16,6 +16,7 @@
     "verify:public": "node scripts/verify-public-deployment.mjs",
     "build:public-observations": "python3 scripts/build-public-observations.py",
     "build:public-project-data": "node scripts/build-public-project-data.mjs",
+    "import:source-ledger-research-batch": "node scripts/import-source-ledger-research-batch.mjs",
     "check:public-project-data": "node scripts/build-public-project-data.mjs --check",
     "check:public-project-data-source": "node scripts/build-public-project-data.mjs --check --check-source",
     "check:sectors": "node scripts/check-sector-data.mjs",

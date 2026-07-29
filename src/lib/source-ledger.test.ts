@@ -4,14 +4,227 @@ import {
   buildPublicProjectProjection,
   buildPublicProjectProjectionFromSnapshot,
   buildSnapshotProjectionPreview,
+  createResearchBatch,
   createLedgerSnapshot,
   emptySourceLedger,
+  mergeResearchBatch,
   parsePublicProjectProjection,
   parseSourceLedger,
+  reviewResearchBatchEvidence,
   saveEvidenceRevision,
   saveSourceRevision,
 // @ts-expect-error Node 22 executes this TypeScript test directly and needs the source extension.
 } from "./source-ledger.ts";
+
+test("研究结果导入为待裁定批次且不会进入当前台账", () => {
+  const ledger = createResearchBatch(emptySourceLedger(), {
+    id: "research-batch-1",
+    label: "46 个楼盘首轮身份与 Fangdi 验收",
+    createdAt: "2026-07-29T00:00:00.000Z",
+    sources: [{
+      id: "candidate-source-1",
+      title: "网上房地产项目详情",
+      publisher: "上海市房地产交易中心",
+      url: "https://www.fangdi.com.cn/new_house/new_house_detail.html?project_id=example",
+      sourceType: "官方查询页面",
+      licenseStatus: "公开查询页面；转载许可待裁定",
+      allowedUse: "仅限事实核验",
+      note: "",
+    }],
+    evidence: [{
+      id: "candidate-evidence-1",
+      objectType: "project",
+      objectId: "project_中建虹悦里",
+      field: "法定项目名",
+      value: "虹映悦庭",
+      sourceId: "candidate-source-1",
+      confidence: "高",
+      publicationStatus: "待裁定",
+      observedAt: "2026-07-29",
+      reviewDueAt: null,
+      note: "",
+    }],
+  });
+
+  assert.equal(ledger.sources.length, 0);
+  assert.equal(ledger.evidence.length, 0);
+  assert.equal(ledger.researchBatches.length, 1);
+  assert.equal(ledger.researchBatches[0].status, "待裁定");
+  assert.equal(ledger.researchBatches[0].sourceCandidates.length, 1);
+  assert.equal(ledger.researchBatches[0].evidenceCandidates.length, 1);
+  assert.deepEqual(ledger.researchBatches[0].reviews, []);
+});
+
+test("验收勾选只记录批次审核且不会合并或发布候选", () => {
+  const imported = createResearchBatch(emptySourceLedger(), {
+    id: "research-batch-1",
+    label: "待验收研究",
+    createdAt: "2026-07-29T00:00:00.000Z",
+    sources: [{
+      id: "candidate-source-1",
+      title: "官方查询",
+      publisher: "官方机构",
+      url: "https://example.com",
+      sourceType: "官方网页",
+      licenseStatus: "待裁定",
+      allowedUse: "仅限事实核验",
+      note: "",
+    }],
+    evidence: [{
+      id: "candidate-evidence-1",
+      objectType: "project",
+      objectId: "project_中建虹悦里",
+      field: "法定项目名",
+      value: "虹映悦庭",
+      sourceId: "candidate-source-1",
+      confidence: "高",
+      publicationStatus: "待裁定",
+      observedAt: "2026-07-29",
+      reviewDueAt: null,
+      note: "",
+    }],
+  });
+  const reviewed = reviewResearchBatchEvidence(imported, {
+    batchId: "research-batch-1",
+    evidenceId: "candidate-evidence-1",
+    reviewed: true,
+    reviewedAt: "2026-07-29T01:00:00.000Z",
+  });
+
+  assert.deepEqual(reviewed.researchBatches[0].reviews, [{
+    evidenceId: "candidate-evidence-1",
+    decision: "验收通过",
+    reviewedAt: "2026-07-29T01:00:00.000Z",
+  }]);
+  assert.equal(reviewed.researchBatches[0].status, "待裁定");
+  assert.equal(reviewed.sources.length, 0);
+  assert.equal(reviewed.evidence.length, 0);
+  assert.deepEqual(
+    buildPublicProjectProjection(
+      reviewed,
+      "2026-07-29T01:00:00.000Z",
+    ).projects,
+    {},
+  );
+
+  const unchecked = reviewResearchBatchEvidence(reviewed, {
+    batchId: "research-batch-1",
+    evidenceId: "candidate-evidence-1",
+    reviewed: false,
+    reviewedAt: "2026-07-29T02:00:00.000Z",
+  });
+  assert.deepEqual(unchecked.researchBatches[0].reviews, []);
+});
+
+test("全部验收的研究批次可以并入当前台账但不会自动公开", () => {
+  const imported = createResearchBatch(emptySourceLedger(), {
+    id: "research-batch-merge",
+    label: "待合并研究",
+    createdAt: "2026-07-29T00:00:00.000Z",
+    sources: [{
+      id: "candidate-source-merge",
+      title: "官方查询",
+      publisher: "官方机构",
+      url: "https://example.com",
+      sourceType: "官方网页",
+      licenseStatus: "待裁定",
+      allowedUse: "仅限事实核验",
+      note: "",
+    }],
+    evidence: [{
+      id: "candidate-evidence-merge",
+      objectType: "project",
+      objectId: "project_中建虹悦里",
+      field: "法定项目名",
+      value: "虹映悦庭",
+      sourceId: "candidate-source-merge",
+      confidence: "高",
+      publicationStatus: "待裁定",
+      observedAt: "2026-07-29",
+      reviewDueAt: null,
+      note: "",
+    }],
+  });
+  const reviewed = reviewResearchBatchEvidence(imported, {
+    batchId: "research-batch-merge",
+    evidenceId: "candidate-evidence-merge",
+    reviewed: true,
+    reviewedAt: "2026-07-29T01:00:00.000Z",
+  });
+
+  const merged = mergeResearchBatch(reviewed, {
+    batchId: "research-batch-merge",
+    mergedAt: "2026-07-29T02:00:00.000Z",
+    sourceRevisionIds: {
+      "candidate-source-merge": "source-revision-merge",
+    },
+    evidenceRevisionIds: {
+      "candidate-evidence-merge": "evidence-revision-merge",
+    },
+  });
+
+  assert.equal(merged.researchBatches[0].status, "已合并");
+  assert.equal(merged.sources.length, 1);
+  assert.equal(merged.sources[0].currentRevisionId, "source-revision-merge");
+  assert.equal(merged.evidence.length, 1);
+  assert.equal(merged.evidence[0].currentRevisionId, "evidence-revision-merge");
+  assert.equal(merged.evidence[0].revisions[0].publicationStatus, "待裁定");
+  assert.deepEqual(
+    buildPublicProjectProjection(
+      merged,
+      "2026-07-29T03:00:00.000Z",
+    ).projects,
+    {},
+  );
+});
+
+test("仍有未验收候选时研究批次不能并入当前台账", () => {
+  const imported = createResearchBatch(emptySourceLedger(), {
+    id: "research-batch-unreviewed",
+    label: "未完成验收研究",
+    createdAt: "2026-07-29T00:00:00.000Z",
+    sources: [{
+      id: "candidate-source-unreviewed",
+      title: "官方查询",
+      publisher: "官方机构",
+      url: "https://example.com",
+      sourceType: "官方网页",
+      licenseStatus: "待裁定",
+      allowedUse: "仅限事实核验",
+      note: "",
+    }],
+    evidence: [{
+      id: "candidate-evidence-unreviewed",
+      objectType: "project",
+      objectId: "project_中建虹悦里",
+      field: "法定项目名",
+      value: "虹映悦庭",
+      sourceId: "candidate-source-unreviewed",
+      confidence: "高",
+      publicationStatus: "待裁定",
+      observedAt: "2026-07-29",
+      reviewDueAt: null,
+      note: "",
+    }],
+  });
+
+  assert.throws(
+    () => mergeResearchBatch(imported, {
+      batchId: "research-batch-unreviewed",
+      mergedAt: "2026-07-29T02:00:00.000Z",
+      sourceRevisionIds: {
+        "candidate-source-unreviewed": "source-revision-unreviewed",
+      },
+      evidenceRevisionIds: {
+        "candidate-evidence-unreviewed": "evidence-revision-unreviewed",
+      },
+    }),
+    /仍有 1 条候选未验收/,
+  );
+  assert.equal(imported.sources.length, 0);
+  assert.equal(imported.evidence.length, 0);
+  assert.equal(imported.researchBatches[0].status, "待裁定");
+});
 
 test("有效的空来源台账可以打开", () => {
   const ledger = parseSourceLedger({

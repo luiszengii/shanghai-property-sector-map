@@ -9,6 +9,8 @@ import {
   ExternalLink,
   FileCheck2,
   FilePenLine,
+  GitMerge,
+  ListChecks,
   Link2,
   LoaderCircle,
   LockKeyhole,
@@ -127,6 +129,9 @@ export function SourceLedgerWorkbench({
   const [evidenceDraft, setEvidenceDraft] = useState<EvidenceDraft>(emptyEvidenceDraft);
   const [snapshotLabel, setSnapshotLabel] = useState("");
   const [selectedSnapshotId, setSelectedSnapshotId] = useState("");
+  const [selectedBatchId, setSelectedBatchId] = useState("");
+  const [batchQuery, setBatchQuery] = useState("");
+  const [showOnlyUnreviewed, setShowOnlyUnreviewed] = useState(false);
   const [publishConfirmed, setPublishConfirmed] = useState(false);
   const [busyAction, setBusyAction] = useState("");
   const [notice, setNotice] = useState<{ tone: "ok" | "error"; text: string } | null>(null);
@@ -144,6 +149,9 @@ export function SourceLedgerWorkbench({
           setPayload(value);
           setSelectedSnapshotId((current) => (
             current || value.ledger.snapshots.at(-1)?.id || ""
+          ));
+          setSelectedBatchId((current) => (
+            current || value.ledger.researchBatches.at(-1)?.id || ""
           ));
         }
       })
@@ -220,6 +228,27 @@ export function SourceLedgerWorkbench({
   const publishedFieldCount = Object.values(
     payload?.publishedProjection.projects ?? {},
   ).reduce((total, project) => total + project.fields.length, 0);
+  const selectedBatch = payload?.ledger.researchBatches.find(
+    (batch) => batch.id === selectedBatchId,
+  ) ?? payload?.ledger.researchBatches.at(-1);
+  const selectedBatchReviewedIds = new Set(
+    selectedBatch?.reviews.map((review) => review.evidenceId) ?? [],
+  );
+  const selectedBatchSourceById = new Map(
+    selectedBatch?.sourceCandidates.map((source) => [source.id, source]) ?? [],
+  );
+  const batchEvidenceRows = (selectedBatch?.evidenceCandidates ?? []).filter((evidence) => {
+    if (showOnlyUnreviewed && selectedBatchReviewedIds.has(evidence.id)) return false;
+    const project = projects.find((item) => item.id === evidence.objectId);
+    const source = selectedBatchSourceById.get(evidence.sourceId);
+    const query = batchQuery.trim().toLocaleLowerCase("zh-CN");
+    return !query || [
+      project?.name ?? evidence.objectId,
+      evidence.field,
+      evidence.value,
+      source?.title ?? "",
+    ].some((value) => value.toLocaleLowerCase("zh-CN").includes(query));
+  });
 
   async function mutate(action: string, data: object, successText = "已保存到本地资料库") {
     setBusyAction(action);
@@ -300,6 +329,31 @@ export function SourceLedgerWorkbench({
     if (saved) setPublishConfirmed(false);
   }
 
+  async function reviewResearchEvidence(evidenceId: string, reviewed: boolean) {
+    if (!selectedBatch) return;
+    await mutate(
+      "reviewResearchEvidence",
+      {
+        batchId: selectedBatch.id,
+        evidenceId,
+        reviewed,
+      },
+      reviewed ? "已记录该字段的验收勾选" : "已取消该字段的验收勾选",
+    );
+  }
+
+  async function mergeSelectedResearchBatch() {
+    if (!selectedBatch) return;
+    await mutate(
+      "mergeResearchBatch",
+      {
+        batchId: selectedBatch.id,
+        confirmReviewed: true,
+      },
+      "已将验收批次并入当前私有台账；字段仍保持待裁定且不会自动公开",
+    );
+  }
+
   function editSource(sourceId: string) {
     const item = currentSources.find((source) => source.record.id === sourceId);
     if (!item) return;
@@ -377,6 +431,141 @@ export function SourceLedgerWorkbench({
           {notice.text}
         </div>
       )}
+
+      <section className={styles.batchReview} aria-labelledby="batch-review-title">
+        <div className={styles.batchReviewHeading}>
+          <div>
+            <span>候选不会自动并入当前台账</span>
+            <h2 id="batch-review-title">研究验收版本</h2>
+            <p>逐条核对候选字段和值。勾选只记录人工验收进度，不代表允许公开，也不会生成公开数据。</p>
+          </div>
+          {selectedBatch ? (
+            <dl className={styles.batchFacts}>
+              <div><dt>批次状态</dt><dd>{selectedBatch.status}</dd></div>
+              <div><dt>候选来源</dt><dd>{selectedBatch.sourceCandidates.length}</dd></div>
+              <div><dt>候选字段</dt><dd>{selectedBatch.evidenceCandidates.length}</dd></div>
+              <div><dt>已勾选</dt><dd>{selectedBatch.reviews.length}</dd></div>
+            </dl>
+          ) : null}
+        </div>
+
+        {payload.ledger.researchBatches.length === 0 ? (
+          <div className={styles.releaseEmpty}>
+            <LockKeyhole size={18} />
+            <span>尚未导入待裁定研究批次。</span>
+          </div>
+        ) : (
+          <>
+            <div className={styles.batchToolbar}>
+              <label>
+                验收版本
+                <select
+                  value={selectedBatch?.id ?? ""}
+                  onChange={(event) => setSelectedBatchId(event.target.value)}
+                >
+                  {payload.ledger.researchBatches.toReversed().map((batch) => (
+                    <option value={batch.id} key={batch.id}>
+                      {batch.label} · {new Date(batch.createdAt).toLocaleString("zh-CN")}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className={styles.batchSearch}>
+                搜索候选
+                <span>
+                  <Search aria-hidden="true" size={15} />
+                  <input
+                    value={batchQuery}
+                    onChange={(event) => setBatchQuery(event.target.value)}
+                    placeholder="楼盘、字段、值或来源"
+                  />
+                </span>
+              </label>
+              <label className={styles.batchToggle}>
+                <input
+                  type="checkbox"
+                  checked={showOnlyUnreviewed}
+                  onChange={(event) => setShowOnlyUnreviewed(event.target.checked)}
+                />
+                只看未验收
+              </label>
+            </div>
+
+            <div className={styles.batchProgress} aria-label="验收进度">
+              <span style={{
+                width: selectedBatch && selectedBatch.evidenceCandidates.length > 0
+                  ? `${(selectedBatch.reviews.length / selectedBatch.evidenceCandidates.length) * 100}%`
+                  : "0%",
+              }} />
+            </div>
+
+            <div className={styles.batchEvidenceList}>
+              {batchEvidenceRows.length === 0 ? (
+                <p>当前筛选条件下没有候选字段。</p>
+              ) : batchEvidenceRows.map((evidence) => {
+                const project = projects.find((item) => item.id === evidence.objectId);
+                const source = selectedBatchSourceById.get(evidence.sourceId);
+                const reviewed = selectedBatchReviewedIds.has(evidence.id);
+                return (
+                  <label className={reviewed ? styles.batchEvidenceReviewed : ""} key={evidence.id}>
+                    <input
+                      type="checkbox"
+                      checked={reviewed}
+                      disabled={
+                        selectedBatch?.status !== "待裁定"
+                        || busyAction === "reviewResearchEvidence"
+                        || busyAction === "mergeResearchBatch"
+                      }
+                      onChange={(event) => {
+                        void reviewResearchEvidence(evidence.id, event.target.checked);
+                      }}
+                      aria-label={`验收 ${project?.name ?? evidence.objectId} ${evidence.field}`}
+                    />
+                    <span>
+                      <span className={styles.batchEvidenceTopline}>
+                        <strong>{project?.name ?? evidence.objectId} · {evidence.field}</strong>
+                        <i>{evidence.publicationStatus}</i>
+                      </span>
+                      <b>{evidence.value}</b>
+                      <small>
+                        {evidence.confidence}置信 · 观察于 {evidence.observedAt}
+                        {source ? ` · ${source.title} · ${source.allowedUse}` : ""}
+                      </small>
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+            <div className={styles.batchReviewFooter}>
+              <ListChecks size={16} />
+              <span>
+                当前显示 {batchEvidenceRows.length} 条；已勾选 {selectedBatch?.reviews.length ?? 0}
+                /{selectedBatch?.evidenceCandidates.length ?? 0}。逐条勾选不会改变候选的“待裁定”状态。
+              </span>
+              <button
+                type="button"
+                className={styles.batchMergeButton}
+                disabled={
+                  !selectedBatch
+                  || selectedBatch.status !== "待裁定"
+                  || selectedBatch.reviews.length !== selectedBatch.evidenceCandidates.length
+                  || busyAction !== ""
+                }
+                onClick={() => {
+                  void mergeSelectedResearchBatch();
+                }}
+              >
+                {busyAction === "mergeResearchBatch"
+                  ? <LoaderCircle aria-hidden="true" size={15} />
+                  : selectedBatch?.status === "已合并"
+                    ? <CheckCircle2 aria-hidden="true" size={15} />
+                    : <GitMerge aria-hidden="true" size={15} />}
+                {selectedBatch?.status === "已合并" ? "已并入当前台账" : "并入当前台账"}
+              </button>
+            </div>
+          </>
+        )}
+      </section>
 
       <section className={styles.releaseFlow} aria-labelledby="release-flow-title">
         <div className={styles.releaseFlowHeading}>
