@@ -2,14 +2,6 @@
   "schemaVersion": "1.0.0",
   "features": [
     {
-      "id": "sector_suhewan",
-      "labelPoint": [
-        121.468,
-        31.247
-      ],
-      "status": "source-backed-proxy"
-    },
-    {
       "id": "sector_buyecheng",
       "labelPoint": [
         121.4515,
@@ -22,14 +14,6 @@
       "labelPoint": [
         121.5259,
         31.2954
-      ],
-      "status": "source-backed-proxy"
-    },
-    {
-      "id": "sector_nanda",
-      "labelPoint": [
-        121.381,
-        31.304
       ],
       "status": "source-backed-proxy"
     },

@@ -142,6 +142,13 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .sector-source-options button > span { display: grid; gap: 2px; }
 .sector-source-options strong { font-size: 11px; }
 .sector-source-options small { color: #94a3b8; font-size: 9px; font-weight: 500; }
+.realtynavi-difference-toggle { width: 100%; min-height: 42px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 9px; margin-top: 6px; padding: 7px 9px; color: #64748b; text-align: left; background: rgba(248,250,252,.86); border: 1px dashed rgba(100,116,139,.24); border-radius: 10px; cursor: pointer; }
+.realtynavi-difference-toggle > span:first-child { display: grid; gap: 2px; }
+.realtynavi-difference-toggle strong { font-size: 10px; }
+.realtynavi-difference-toggle small { color: #94a3b8; font-size: 9px; }
+.realtynavi-difference-toggle.is-active { color: #475569; background: #f1f5f9; border-color: #94a3b8; }
+.realtynavi-difference-toggle.is-active .toggle { background: #64748b; }
+.realtynavi-difference-toggle.is-active .toggle span { transform: translateX(12px); }
 .sector-source-note { margin: 7px 0 0; color: #8b6f63; font-size: 9px; line-height: 1.45; }
 .sector-source-badge { position: absolute; z-index: 175; top: 150px; right: 16px; max-width: 250px; display: grid; gap: 2px; padding: 8px 10px; color: #5b21b6; background: rgba(255,255,255,.92); border: 1px solid rgba(124,58,237,.2); border-radius: 11px; box-shadow: 0 8px 22px rgba(15,23,42,.12); backdrop-filter: blur(12px); pointer-events: none; }
 .sector-source-badge strong { font-size: 10px; }

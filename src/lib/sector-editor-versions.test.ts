@@ -108,3 +108,26 @@ test("unregistered custom drafts stay versioned but cannot silently enter projec
   assert.deepEqual(result.skippedUnregisteredDraftIds, [draft.id]);
   assert.equal(result.collection.features.length, 0);
 });
+
+test("saving after an identity is retired removes its previous active override", () => {
+  const version = createSectorEditorVersion(emptySectorEditorVersionStore(), {
+    drafts: [draft],
+  }, {
+    id: "version-2",
+    createdAt: "2026-07-28T08:30:00.000Z",
+  });
+  const previous = buildUserReviewedOverrideCollection({
+    version,
+    registeredSectorIds: new Set([draft.id]),
+  }).collection;
+
+  const result = buildUserReviewedOverrideCollection({
+    version,
+    registeredSectorIds: new Set(),
+    previous,
+  });
+
+  assert.equal(result.publishedDraftCount, 0);
+  assert.deepEqual(result.skippedUnregisteredDraftIds, [draft.id]);
+  assert.equal(result.collection.features.length, 0);
+});

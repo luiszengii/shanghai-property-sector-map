@@ -6,6 +6,7 @@ import {
   createPairSharedEdgeSession,
   findClosedGapAtPoint,
   findClosedGaps,
+  geometryOverlapAreaSquareMeters,
   geometryProximityMeters,
 // @ts-expect-error Node 22 executes this TypeScript test directly and requires the source extension.
 } from "./sector-editor-topology.ts";
@@ -189,4 +190,39 @@ test("geometry proximity is zero for touching boxes and metric for gaps", () => 
     square(121.42, 31.2, 121.43, 31.21),
   );
   assert.ok(distance > 900 && distance < 1_000);
+});
+
+test("pair controls distinguish an actual overlap from a shared edge", () => {
+  assert.equal(
+    geometryOverlapAreaSquareMeters(
+      square(121.4, 31.2, 121.41, 31.21),
+      square(121.41, 31.2, 121.42, 31.21),
+    ),
+    0,
+  );
+  assert.ok(
+    (geometryOverlapAreaSquareMeters(
+      square(121.4, 31.2, 121.415, 31.21),
+      square(121.41, 31.2, 121.42, 31.21),
+    ) ?? 0) > 40_000,
+  );
+});
+
+test("overlap inspection ignores stored polygon parts that collapse after snapping", () => {
+  const historicalMultiPartDraft = {
+    ...square(121.4, 31.2, 121.42, 31.22),
+    additionalRings: [[
+      [121.41, 31.21],
+      [121.41000000001, 31.21000000001],
+      [121.41000000002, 31.21000000002],
+    ]] as [number, number][][],
+    additionalHoles: [[]],
+  };
+
+  const overlapArea = geometryOverlapAreaSquareMeters(
+    square(121.41, 31.21, 121.43, 31.23),
+    historicalMultiPartDraft,
+  );
+
+  assert.ok((overlapArea ?? 0) > 0);
 });

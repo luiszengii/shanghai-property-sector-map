@@ -1775,7 +1775,7 @@ for (const unresolvedName of ["西藏北路", "闸北公园"]) {
     error(`静安市场替代身份只能以 geometry.status=missing 注册 ${unresolvedName}`);
   }
 }
-for (const id of ["sector_buyecheng", "sector_suhewan"]) {
+for (const id of ["sector_buyecheng"]) {
   const record = registryById.get(id);
   if (candidateById.has(id)
     || record?.geometry?.status !== "missing"
@@ -2102,7 +2102,7 @@ for (const [firstId, secondId, minimumSharedMeters] of [
     error(`${firstId} / ${secondId}: 宝山—杨浦跨区行政骨架共享边不足 ${minimumSharedMeters} 米`);
   }
 }
-for (const unresolvedName of ["大华", "上大", "南大", "共康", "淞宝"]) {
+for (const unresolvedName of ["大华", "上大", "共康", "淞宝"]) {
   const record = [...registryById.values()].find(
     (candidate) => candidate.canonicalName === unresolvedName,
   );
@@ -2529,7 +2529,6 @@ for (const [id, relation, requiredRiskFlag] of [
 }
 for (const id of [
   "sector_jinganxincheng",
-  "sector_minhangjinhui",
   "sector_longbai",
   "sector_hanghua",
   "sector_jinhongqiao",
