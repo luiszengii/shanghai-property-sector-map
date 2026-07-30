@@ -11,5 +11,5 @@
   "license": "ODbL-1.0",
   "attribution": "© OpenStreetMap contributors",
   "licenseUrl": "https://www.openstreetmap.org/copyright",
-  "note": "用于项目拓扑修复预览。latest URL 只用于发现版本；生成时必须传入并校验固定 GeoPackage 的 SHA-256。"
+  "note": "用于本地项目边界拓扑审计。latest URL 只用于发现版本；生成时必须传入并校验固定 GeoPackage 的 SHA-256。"
 }
