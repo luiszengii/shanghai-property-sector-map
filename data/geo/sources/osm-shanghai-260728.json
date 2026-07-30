@@ -1,0 +1,15 @@
+{
+  "id": "osm-geofabrik-shanghai-260728",
+  "provider": "Geofabrik GmbH / OpenStreetMap contributors",
+  "resolvedUrl": "https://download.geofabrik.de/asia/china/shanghai-260728-free.gpkg.zip",
+  "latestDiscoveryUrl": "https://download.geofabrik.de/asia/china/shanghai-latest-free.gpkg.zip",
+  "snapshotAt": "2026-07-28T20:21:00Z",
+  "downloadedAt": "2026-07-29",
+  "archiveSha256": "78e1d52d2918882cdfd48b801fa58af55d79b88e7045723b8719366348411932",
+  "gpkgSha256": "bd30e1a99c021986968d4535f4d8f410fe45cd72c13eba0274c1c887b0076093",
+  "crs": "OGC:CRS84",
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "licenseUrl": "https://www.openstreetmap.org/copyright",
+  "note": "用于本地项目边界拓扑审计。latest URL 只用于发现版本；生成时必须传入并校验固定 GeoPackage 的 SHA-256。"
+}

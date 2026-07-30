@@ -11,6 +11,7 @@ const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
 export type SectorBoundarySource =
   | "project"
+  | "project-topology-repair"
   | "hfwgsj-private"
   | "anjuke-private"
   | "fang-private"
