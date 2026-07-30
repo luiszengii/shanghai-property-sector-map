@@ -60,6 +60,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .map-stage, .amap-host, .map-fallback { position: absolute; inset: 0; }
 .amap-host { z-index: 0; background: #dbe6e4; touch-action: none; overscroll-behavior: contain; }
+.osm-attribution { position: absolute; z-index: 90; right: 8px; bottom: 5px; padding: 2px 5px; color: #475569; background: rgba(255,255,255,.78); border-radius: 4px; font-size: 9px; line-height: 1.25; text-decoration: none; backdrop-filter: blur(5px); }
+.osm-attribution:hover { color: #0f172a; text-decoration: underline; }
 .map-zoom-controls { position: absolute; z-index: 170; top: 98px; right: 16px; display: grid; overflow: hidden; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.95); border-radius: 12px; box-shadow: 0 10px 28px rgba(15,23,42,.16); backdrop-filter: blur(14px); }
 .map-zoom-controls button { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; color: #334155; background: transparent; border: 0; cursor: pointer; }
 .map-zoom-controls button + button { border-top: 1px solid rgba(15,23,42,.09); }

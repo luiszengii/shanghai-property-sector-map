@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -12,6 +13,27 @@ const projectProjectionPath = path.join(
 );
 const projectProjection = JSON.parse(
   readFileSync(projectProjectionPath, "utf8"),
+);
+const publishedTopologyPath = path.join(
+  root,
+  "src/data/sectors/published-topology.wgs84.json",
+);
+const publishedTopologyIndexPath = path.join(
+  root,
+  "src/data/sectors/published-topology.index.json",
+);
+const publishedTopologyManifestPath = path.join(
+  root,
+  "src/data/sectors/published-topology.manifest.json",
+);
+const publishedTopology = JSON.parse(
+  readFileSync(publishedTopologyPath, "utf8"),
+);
+const publishedTopologyIndex = JSON.parse(
+  readFileSync(publishedTopologyIndexPath, "utf8"),
+);
+const publishedTopologyManifest = JSON.parse(
+  readFileSync(publishedTopologyManifestPath, "utf8"),
 );
 const failures = [];
 const forbiddenKeys = new Set([
@@ -62,6 +84,73 @@ function visit(value, location = "snapshot") {
 
 visit(snapshot);
 visit(projectProjection, "projectProjection");
+
+function fileSha256(target) {
+  return createHash("sha256").update(readFileSync(target)).digest("hex");
+}
+
+if (
+  publishedTopology.metadata?.publicationStatus
+  !== "user-approved-production"
+) {
+  failures.push("published sector topology must be explicitly user-approved");
+}
+if (
+  publishedTopology.metadata?.approvedVersionId
+  !== publishedTopologyManifest.approvedVersionId
+  || Number.isNaN(Date.parse(publishedTopology.metadata?.approvedAt))
+) {
+  failures.push("published sector topology approval metadata is invalid");
+}
+if (
+  publishedTopology.metadata?.semanticReferenceCoordinatesPublished !== false
+  || publishedTopologyManifest.semanticReferenceCoordinatesPublished !== false
+) {
+  failures.push("published sector topology must exclude semantic-reference coordinates");
+}
+if (
+  fileSha256(publishedTopologyPath) !== publishedTopologyManifest.outputSha256
+  || fileSha256(publishedTopologyIndexPath)
+    !== publishedTopologyManifest.indexSha256
+) {
+  failures.push("published sector topology does not match its manifest hashes");
+}
+const publishedFeatures = publishedTopology.features ?? [];
+const publishedIndexFeatures = publishedTopologyIndex.features ?? [];
+const publishedIds = publishedFeatures.map((feature) => feature.properties?.id);
+const publishedIndexIds = publishedIndexFeatures.map((feature) => feature.id);
+if (
+  publishedFeatures.length !== publishedTopologyManifest.featureCount
+  || publishedIndexFeatures.length !== publishedTopologyManifest.featureCount
+  || new Set(publishedIds).size !== publishedFeatures.length
+  || JSON.stringify(publishedIds) !== JSON.stringify(publishedIndexIds)
+) {
+  failures.push("published sector topology feature/index identities are inconsistent");
+}
+for (const [index, feature] of publishedFeatures.entries()) {
+  if (
+    feature.type !== "Feature"
+    || feature.properties?.status !== "reviewed-candidate"
+    || feature.properties?.coordinateSystem !== "WGS84"
+    || !["Polygon", "MultiPolygon"].includes(feature.geometry?.type)
+    || !Array.isArray(feature.geometry?.coordinates)
+    || feature.geometry.coordinates.length === 0
+  ) {
+    failures.push(`published sector topology feature ${index} is invalid`);
+  }
+}
+const topologyMetrics =
+  publishedTopologyManifest.topologyMetricsSquareKilometers ?? {};
+if (
+  topologyMetrics.finalOverlapExcess !== 0
+  || topologyMetrics.finalUncoveredTarget !== 0
+  || topologyMetrics.finalOutsideTarget !== 0
+  || topologyMetrics.serializedOverlapExcess > 0.002
+  || topologyMetrics.serializedUncoveredTarget > 0.002
+  || topologyMetrics.serializedOutsideTarget > 0.002
+) {
+  failures.push("published sector topology exceeds the approved topology tolerances");
+}
 const snapshotText = JSON.stringify(snapshot);
 for (const pattern of [
   /\b(?:nickname|creator_hash|comment_id|note_id|user_id|cookie|xsec_token)\b/i,

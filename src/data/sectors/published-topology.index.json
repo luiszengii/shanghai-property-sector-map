@@ -1,0 +1,1337 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedFrom": "src/data/sectors/published-topology.wgs84.json",
+  "approvedVersionId": "topology-repair-production-2026-07-30",
+  "features": [
+    {
+      "id": "sector_anshan",
+      "labelPoint": [
+        121.5079031,
+        31.2757124
+      ]
+    },
+    {
+      "id": "sector_anting",
+      "labelPoint": [
+        121.1943038,
+        31.3000029
+      ]
+    },
+    {
+      "id": "sector_baihe",
+      "labelPoint": [
+        121.1105784,
+        31.2583398
+      ]
+    },
+    {
+      "id": "sector_bansongyuanlu",
+      "labelPoint": [
+        121.4900454,
+        31.2058063
+      ]
+    },
+    {
+      "id": "sector_bao_town",
+      "labelPoint": [
+        121.367389,
+        31.680831
+      ]
+    },
+    {
+      "id": "sector_beicai",
+      "labelPoint": [
+        121.5551127,
+        31.1855314
+      ]
+    },
+    {
+      "id": "sector_beiwaitan",
+      "labelPoint": [
+        121.4990359,
+        31.2543681
+      ]
+    },
+    {
+      "id": "sector_beixinjing",
+      "labelPoint": [
+        121.3627976,
+        31.2221649
+      ]
+    },
+    {
+      "id": "sector_biyun",
+      "labelPoint": [
+        121.5849222,
+        31.2424849
+      ]
+    },
+    {
+      "id": "sector_buyecheng",
+      "labelPoint": [
+        121.4524832,
+        31.251449
+      ]
+    },
+    {
+      "id": "sector_caohejing",
+      "labelPoint": [
+        121.4315083,
+        31.1650938
+      ]
+    },
+    {
+      "id": "sector_caojiadu",
+      "labelPoint": [
+        121.4304864,
+        31.232055
+      ]
+    },
+    {
+      "id": "sector_caojing",
+      "labelPoint": [
+        121.4048664,
+        30.7992109
+      ]
+    },
+    {
+      "id": "sector_caolu",
+      "labelPoint": [
+        121.6732767,
+        31.2840131
+      ]
+    },
+    {
+      "id": "sector_caoyang",
+      "labelPoint": [
+        121.4025388,
+        31.2403434
+      ]
+    },
+    {
+      "id": "sector_changfeng",
+      "labelPoint": [
+        121.3894611,
+        31.229456
+      ]
+    },
+    {
+      "id": "sector_changning_hongqiao",
+      "labelPoint": [
+        121.3937194,
+        31.2196473
+      ]
+    },
+    {
+      "id": "sector_changqiao",
+      "labelPoint": [
+        121.4358827,
+        31.1433607
+      ]
+    },
+    {
+      "id": "sector_changshoulu",
+      "labelPoint": [
+        121.4330982,
+        31.2427628
+      ]
+    },
+    {
+      "id": "sector_changxing_island",
+      "labelPoint": [
+        121.692772,
+        31.4026718
+      ]
+    },
+    {
+      "id": "sector_changzheng",
+      "labelPoint": [
+        121.3720955,
+        31.2367057
+      ]
+    },
+    {
+      "id": "sector_chedun",
+      "labelPoint": [
+        121.2935223,
+        31.0181746
+      ]
+    },
+    {
+      "id": "sector_chenjia_town",
+      "labelPoint": [
+        121.8498979,
+        31.527409
+      ]
+    },
+    {
+      "id": "sector_chonggu",
+      "labelPoint": [
+        121.1768192,
+        31.2042148
+      ]
+    },
+    {
+      "id": "sector_chongming_new_city",
+      "labelPoint": [
+        121.4695356,
+        31.6303825
+      ]
+    },
+    {
+      "id": "sector_chuansha",
+      "labelPoint": [
+        121.6889756,
+        31.147275
+      ]
+    },
+    {
+      "id": "sector_chunshen",
+      "labelPoint": [
+        121.4062338,
+        31.1097247
+      ]
+    },
+    {
+      "id": "sector_dahua",
+      "labelPoint": [
+        121.4128033,
+        31.2725087
+      ]
+    },
+    {
+      "id": "sector_daning",
+      "labelPoint": [
+        121.4376833,
+        31.2865239
+      ]
+    },
+    {
+      "id": "sector_dapuqiao",
+      "labelPoint": [
+        121.4700328,
+        31.2094637
+      ]
+    },
+    {
+      "id": "sector_datun",
+      "labelPoint": [
+        121.7516211,
+        30.9782387
+      ]
+    },
+    {
+      "id": "sector_dongjing",
+      "labelPoint": [
+        121.259639,
+        31.0869296
+      ]
+    },
+    {
+      "id": "sector_fengcheng",
+      "labelPoint": [
+        121.6504107,
+        30.9305341
+      ]
+    },
+    {
+      "id": "sector_fengjing",
+      "labelPoint": [
+        121.0533292,
+        30.8861732
+      ]
+    },
+    {
+      "id": "sector_fenglinlu",
+      "labelPoint": [
+        121.4498246,
+        31.1905957
+      ]
+    },
+    {
+      "id": "sector_fengxianjinhui",
+      "labelPoint": [
+        121.5554557,
+        30.9728259
+      ]
+    },
+    {
+      "id": "sector_fengzhuang",
+      "labelPoint": [
+        121.3615962,
+        31.2523072
+      ]
+    },
+    {
+      "id": "sector_ganquanyichuan",
+      "labelPoint": [
+        121.429743,
+        31.2649079
+      ]
+    },
+    {
+      "id": "sector_gaohang",
+      "labelPoint": [
+        121.5656303,
+        31.3107416
+      ]
+    },
+    {
+      "id": "sector_gaojing",
+      "labelPoint": [
+        121.4722524,
+        31.3276143
+      ]
+    },
+    {
+      "id": "sector_gongkang",
+      "labelPoint": [
+        121.4217535,
+        31.3317122
+      ]
+    },
+    {
+      "id": "sector_guangxin",
+      "labelPoint": [
+        121.4183669,
+        31.2540466
+      ]
+    },
+    {
+      "id": "sector_gubei",
+      "labelPoint": [
+        121.3954675,
+        31.1975322
+      ]
+    },
+    {
+      "id": "sector_gucun",
+      "labelPoint": [
+        121.3813648,
+        31.3549924
+      ]
+    },
+    {
+      "id": "sector_gumei",
+      "labelPoint": [
+        121.3905003,
+        31.1461916
+      ]
+    },
+    {
+      "id": "sector_haiwan",
+      "labelPoint": [
+        121.5765252,
+        30.843899
+      ]
+    },
+    {
+      "id": "sector_hanghua",
+      "labelPoint": [
+        121.3459144,
+        31.1748142
+      ]
+    },
+    {
+      "id": "sector_hangtou",
+      "labelPoint": [
+        121.5879007,
+        31.0432088
+      ]
+    },
+    {
+      "id": "sector_hengsha_island",
+      "labelPoint": [
+        121.8423681,
+        31.3391278
+      ]
+    },
+    {
+      "id": "sector_heqing",
+      "labelPoint": [
+        121.7232733,
+        31.2353523
+      ]
+    },
+    {
+      "id": "sector_hongqiao",
+      "labelPoint": [
+        121.3234311,
+        31.1891977
+      ]
+    },
+    {
+      "id": "sector_huacao",
+      "labelPoint": [
+        121.2805693,
+        31.2296467
+      ]
+    },
+    {
+      "id": "sector_huajing",
+      "labelPoint": [
+        121.4490765,
+        31.1195194
+      ]
+    },
+    {
+      "id": "sector_huamu",
+      "labelPoint": [
+        121.5521356,
+        31.2174414
+      ]
+    },
+    {
+      "id": "sector_huangxing_park",
+      "labelPoint": [
+        121.5385097,
+        31.292058
+      ]
+    },
+    {
+      "id": "sector_huating",
+      "labelPoint": [
+        121.2629973,
+        31.4668294
+      ]
+    },
+    {
+      "id": "sector_huaxin",
+      "labelPoint": [
+        121.2277654,
+        31.2186454
+      ]
+    },
+    {
+      "id": "sector_huinan",
+      "labelPoint": [
+        121.7593154,
+        31.0391739
+      ]
+    },
+    {
+      "id": "sector_hunanlu",
+      "labelPoint": [
+        121.4420894,
+        31.213879
+      ]
+    },
+    {
+      "id": "sector_jiading_new_city",
+      "labelPoint": [
+        121.1939062,
+        31.4275441
+      ]
+    },
+    {
+      "id": "sector_jiading_old_city",
+      "labelPoint": [
+        121.2417216,
+        31.3744243
+      ]
+    },
+    {
+      "id": "sector_jiangninglu",
+      "labelPoint": [
+        121.448168,
+        31.2372393
+      ]
+    },
+    {
+      "id": "sector_jiangqiao",
+      "labelPoint": [
+        121.299525,
+        31.2630266
+      ]
+    },
+    {
+      "id": "sector_jiangwanzhen",
+      "labelPoint": [
+        121.4705162,
+        31.3048151
+      ]
+    },
+    {
+      "id": "sector_jingansi",
+      "labelPoint": [
+        121.4380895,
+        31.2237591
+      ]
+    },
+    {
+      "id": "sector_jinganxincheng",
+      "labelPoint": [
+        121.376999,
+        31.1670457
+      ]
+    },
+    {
+      "id": "sector_jinhongqiao",
+      "labelPoint": [
+        121.3809362,
+        31.1809536
+      ]
+    },
+    {
+      "id": "sector_jinqiao",
+      "labelPoint": [
+        121.6096786,
+        31.2563353
+      ]
+    },
+    {
+      "id": "sector_jinshanwei",
+      "labelPoint": [
+        121.286175,
+        30.7475486
+      ]
+    },
+    {
+      "id": "sector_jinshanxincheng",
+      "labelPoint": [
+        121.3239469,
+        30.7144224
+      ]
+    },
+    {
+      "id": "sector_jinyang",
+      "labelPoint": [
+        121.5619903,
+        31.2566927
+      ]
+    },
+    {
+      "id": "sector_jinze",
+      "labelPoint": [
+        120.9731035,
+        31.0776224
+      ]
+    },
+    {
+      "id": "sector_jiuting",
+      "labelPoint": [
+        121.3199073,
+        31.1278217
+      ]
+    },
+    {
+      "id": "sector_juyuanxinqu",
+      "labelPoint": [
+        121.2134505,
+        31.3761065
+      ]
+    },
+    {
+      "id": "sector_kangjian",
+      "labelPoint": [
+        121.4114154,
+        31.1563112
+      ]
+    },
+    {
+      "id": "sector_kangqiao",
+      "labelPoint": [
+        121.6106596,
+        31.1386641
+      ]
+    },
+    {
+      "id": "sector_kongjianglu",
+      "labelPoint": [
+        121.5197327,
+        31.2826931
+      ]
+    },
+    {
+      "id": "sector_langxia",
+      "labelPoint": [
+        121.1801607,
+        30.8020541
+      ]
+    },
+    {
+      "id": "sector_laogang",
+      "labelPoint": [
+        121.8329885,
+        31.0430805
+      ]
+    },
+    {
+      "id": "sector_laominhang",
+      "labelPoint": [
+        121.4007523,
+        31.0076479
+      ]
+    },
+    {
+      "id": "sector_laoximen",
+      "labelPoint": [
+        121.4839182,
+        31.2185546
+      ]
+    },
+    {
+      "id": "sector_liangcheng",
+      "labelPoint": [
+        121.4644043,
+        31.2913017
+      ]
+    },
+    {
+      "id": "sector_liantang",
+      "labelPoint": [
+        121.0439217,
+        31.0000197
+      ]
+    },
+    {
+      "id": "sector_lingyunlu",
+      "labelPoint": [
+        121.4168724,
+        31.1416377
+      ]
+    },
+    {
+      "id": "sector_longbai",
+      "labelPoint": [
+        121.3600676,
+        31.1809941
+      ]
+    },
+    {
+      "id": "sector_longhua",
+      "labelPoint": [
+        121.4438956,
+        31.1774569
+      ]
+    },
+    {
+      "id": "sector_lujiazui",
+      "labelPoint": [
+        121.5087341,
+        31.2378095
+      ]
+    },
+    {
+      "id": "sector_luodian",
+      "labelPoint": [
+        121.3439138,
+        31.4104907
+      ]
+    },
+    {
+      "id": "sector_luojing",
+      "labelPoint": [
+        121.3453257,
+        31.474562
+      ]
+    },
+    {
+      "id": "sector_luxiang",
+      "labelPoint": [
+        121.1962694,
+        30.8368574
+      ]
+    },
+    {
+      "id": "sector_luxun_park",
+      "labelPoint": [
+        121.4772801,
+        31.2726814
+      ]
+    },
+    {
+      "id": "sector_malu",
+      "labelPoint": [
+        121.2993905,
+        31.3597374
+      ]
+    },
+    {
+      "id": "sector_maogang",
+      "labelPoint": [
+        121.1717136,
+        30.9350765
+      ]
+    },
+    {
+      "id": "sector_maqiao",
+      "labelPoint": [
+        121.354894,
+        31.02172
+      ]
+    },
+    {
+      "id": "sector_meilong",
+      "labelPoint": [
+        121.4351752,
+        31.1066199
+      ]
+    },
+    {
+      "id": "sector_nanjingdonglu",
+      "labelPoint": [
+        121.4701032,
+        31.2342208
+      ]
+    },
+    {
+      "id": "sector_nanjingxilu",
+      "labelPoint": [
+        121.4530764,
+        31.226819
+      ]
+    },
+    {
+      "id": "sector_nanmatou",
+      "labelPoint": [
+        121.5096038,
+        31.1946041
+      ]
+    },
+    {
+      "id": "sector_nanqiao",
+      "labelPoint": [
+        121.4559234,
+        30.9368949
+      ]
+    },
+    {
+      "id": "sector_nanxiang",
+      "labelPoint": [
+        121.2955613,
+        31.3080609
+      ]
+    },
+    {
+      "id": "sector_nicheng",
+      "labelPoint": [
+        121.9312319,
+        30.9240519
+      ]
+    },
+    {
+      "id": "sector_pengpu",
+      "labelPoint": [
+        121.4466391,
+        31.3155056
+      ]
+    },
+    {
+      "id": "sector_pujiangzhen",
+      "labelPoint": [
+        121.5085995,
+        31.0580682
+      ]
+    },
+    {
+      "id": "sector_qiantan",
+      "labelPoint": [
+        121.4702852,
+        31.1553222
+      ]
+    },
+    {
+      "id": "sector_qibao",
+      "labelPoint": [
+        121.3526866,
+        31.1500047
+      ]
+    },
+    {
+      "id": "sector_qingcun",
+      "labelPoint": [
+        121.5425563,
+        30.906681
+      ]
+    },
+    {
+      "id": "sector_quyang",
+      "labelPoint": [
+        121.4747866,
+        31.2787833
+      ]
+    },
+    {
+      "id": "sector_ruijinerlu",
+      "labelPoint": [
+        121.4606145,
+        31.2174598
+      ]
+    },
+    {
+      "id": "sector_sanlin",
+      "labelPoint": [
+        121.4966722,
+        31.1364281
+      ]
+    },
+    {
+      "id": "sector_senlan",
+      "labelPoint": [
+        121.5869706,
+        31.3110918
+      ]
+    },
+    {
+      "id": "sector_shanghai_university",
+      "labelPoint": [
+        121.3896047,
+        31.3038009
+      ]
+    },
+    {
+      "id": "sector_shangnan",
+      "labelPoint": [
+        121.4980084,
+        31.178684
+      ]
+    },
+    {
+      "id": "sector_shanyang",
+      "labelPoint": [
+        121.3536777,
+        30.7577026
+      ]
+    },
+    {
+      "id": "sector_sheshan",
+      "labelPoint": [
+        121.1576708,
+        31.0837281
+      ]
+    },
+    {
+      "id": "sector_shibo",
+      "labelPoint": [
+        121.4766418,
+        31.181005
+      ]
+    },
+    {
+      "id": "sector_shihudang",
+      "labelPoint": [
+        121.1490915,
+        30.9815553
+      ]
+    },
+    {
+      "id": "sector_shuyuan",
+      "labelPoint": [
+        121.8716461,
+        30.9577471
+      ]
+    },
+    {
+      "id": "sector_sichuanbeilu",
+      "labelPoint": [
+        121.4890297,
+        31.2642018
+      ]
+    },
+    {
+      "id": "sector_sijing",
+      "labelPoint": [
+        121.2595679,
+        31.1136778
+      ]
+    },
+    {
+      "id": "sector_situan",
+      "labelPoint": [
+        121.7326555,
+        30.934309
+      ]
+    },
+    {
+      "id": "sector_songbao",
+      "labelPoint": [
+        121.4908524,
+        31.3881997
+      ]
+    },
+    {
+      "id": "sector_songjiang_old_city",
+      "labelPoint": [
+        121.2035759,
+        30.9977468
+      ]
+    },
+    {
+      "id": "sector_songnan",
+      "labelPoint": [
+        121.4756794,
+        31.3478646
+      ]
+    },
+    {
+      "id": "sector_tangqiao",
+      "labelPoint": [
+        121.5153526,
+        31.2108159
+      ]
+    },
+    {
+      "id": "sector_tangzhen",
+      "labelPoint": [
+        121.6568222,
+        31.2282842
+      ]
+    },
+    {
+      "id": "sector_taopu",
+      "labelPoint": [
+        121.3638769,
+        31.2816915
+      ]
+    },
+    {
+      "id": "sector_tianlin",
+      "labelPoint": [
+        121.4125479,
+        31.1802989
+      ]
+    },
+    {
+      "id": "sector_tianpinglu",
+      "labelPoint": [
+        121.4461705,
+        31.2067628
+      ]
+    },
+    {
+      "id": "sector_tianshan",
+      "labelPoint": [
+        121.4018934,
+        31.2116437
+      ]
+    },
+    {
+      "id": "sector_tinglin",
+      "labelPoint": [
+        121.3071745,
+        30.8630392
+      ]
+    },
+    {
+      "id": "sector_waigang",
+      "labelPoint": [
+        121.1454959,
+        31.3648099
+      ]
+    },
+    {
+      "id": "sector_waigaoqiao",
+      "labelPoint": [
+        121.592997,
+        31.3409299
+      ]
+    },
+    {
+      "id": "sector_waitan",
+      "labelPoint": [
+        121.4830877,
+        31.2371234
+      ]
+    },
+    {
+      "id": "sector_wanli",
+      "labelPoint": [
+        121.3996332,
+        31.2713127
+      ]
+    },
+    {
+      "id": "sector_wanxiang",
+      "labelPoint": [
+        121.8136373,
+        30.9647897
+      ]
+    },
+    {
+      "id": "sector_weifang",
+      "labelPoint": [
+        121.5176421,
+        31.2258422
+      ]
+    },
+    {
+      "id": "sector_wujiaochang",
+      "labelPoint": [
+        121.5020401,
+        31.2991979
+      ]
+    },
+    {
+      "id": "sector_wujing",
+      "labelPoint": [
+        121.448049,
+        31.0619503
+      ]
+    },
+    {
+      "id": "sector_wuliqiao",
+      "labelPoint": [
+        121.4736032,
+        31.1995338
+      ]
+    },
+    {
+      "id": "sector_wuning",
+      "labelPoint": [
+        121.4186844,
+        31.2409555
+      ]
+    },
+    {
+      "id": "sector_xianghuaqiao",
+      "labelPoint": [
+        121.1102237,
+        31.1887489
+      ]
+    },
+    {
+      "id": "sector_xianxia",
+      "labelPoint": [
+        121.3872235,
+        31.2086093
+      ]
+    },
+    {
+      "id": "sector_xiaodongmen",
+      "labelPoint": [
+        121.4977369,
+        31.220852
+      ]
+    },
+    {
+      "id": "sector_xiaokunshan",
+      "labelPoint": [
+        121.132795,
+        31.0290507
+      ]
+    },
+    {
+      "id": "sector_xiayang",
+      "labelPoint": [
+        121.1158943,
+        31.1309617
+      ]
+    },
+    {
+      "id": "sector_xidu",
+      "labelPoint": [
+        121.4460611,
+        30.9908701
+      ]
+    },
+    {
+      "id": "sector_xietulu",
+      "labelPoint": [
+        121.4626948,
+        31.19265
+      ]
+    },
+    {
+      "id": "sector_xijiao",
+      "labelPoint": [
+        121.360417,
+        31.2149735
+      ]
+    },
+    {
+      "id": "sector_xinbang",
+      "labelPoint": [
+        121.0633417,
+        30.934292
+      ]
+    },
+    {
+      "id": "sector_xinchang",
+      "labelPoint": [
+        121.6421027,
+        31.0426067
+      ]
+    },
+    {
+      "id": "sector_xinhualu",
+      "labelPoint": [
+        121.4230358,
+        31.2067338
+      ]
+    },
+    {
+      "id": "sector_xinjiangwancheng",
+      "labelPoint": [
+        121.5070437,
+        31.3286355
+      ]
+    },
+    {
+      "id": "sector_xinmin_villas",
+      "labelPoint": [
+        121.3457936,
+        31.0897069
+      ]
+    },
+    {
+      "id": "sector_xinqiao",
+      "labelPoint": [
+        121.3179887,
+        31.0722005
+      ]
+    },
+    {
+      "id": "sector_xintiandi",
+      "labelPoint": [
+        121.4728918,
+        31.2202038
+      ]
+    },
+    {
+      "id": "sector_xinzhuang",
+      "labelPoint": [
+        121.3682958,
+        31.1171341
+      ]
+    },
+    {
+      "id": "sector_xizang_north_road",
+      "labelPoint": [
+        121.46766,
+        31.2539923
+      ]
+    },
+    {
+      "id": "sector_xuanqiao",
+      "labelPoint": [
+        121.6910961,
+        31.0398539
+      ]
+    },
+    {
+      "id": "sector_xuhang",
+      "labelPoint": [
+        121.2841312,
+        31.4333241
+      ]
+    },
+    {
+      "id": "sector_xuhuibinjiang",
+      "labelPoint": [
+        121.4529612,
+        31.1558143
+      ]
+    },
+    {
+      "id": "sector_xujiahui",
+      "labelPoint": [
+        121.4319513,
+        31.1917295
+      ]
+    },
+    {
+      "id": "sector_xujing",
+      "labelPoint": [
+        121.2709166,
+        31.1737112
+      ]
+    },
+    {
+      "id": "sector_yangdong",
+      "labelPoint": [
+        121.5330235,
+        31.2052943
+      ]
+    },
+    {
+      "id": "sector_yanghang",
+      "labelPoint": [
+        121.4462605,
+        31.3812797
+      ]
+    },
+    {
+      "id": "sector_yangjing",
+      "labelPoint": [
+        121.5479762,
+        31.2436582
+      ]
+    },
+    {
+      "id": "sector_yangpu_dongwaitan",
+      "labelPoint": [
+        121.5413891,
+        31.2774199
+      ]
+    },
+    {
+      "id": "sector_yangsi",
+      "labelPoint": [
+        121.5139975,
+        31.1642858
+      ]
+    },
+    {
+      "id": "sector_yexie",
+      "labelPoint": [
+        121.2998785,
+        30.9402032
+      ]
+    },
+    {
+      "id": "sector_yingpu",
+      "labelPoint": [
+        121.0901457,
+        31.1557904
+      ]
+    },
+    {
+      "id": "sector_yuanshen",
+      "labelPoint": [
+        121.5346178,
+        31.236582
+      ]
+    },
+    {
+      "id": "sector_yuepu",
+      "labelPoint": [
+        121.4148092,
+        31.4391437
+      ]
+    },
+    {
+      "id": "sector_yuqiao",
+      "labelPoint": [
+        121.5678424,
+        31.163188
+      ]
+    },
+    {
+      "id": "sector_yuyuan",
+      "labelPoint": [
+        121.4836993,
+        31.2260651
+      ]
+    },
+    {
+      "id": "sector_zhabei_park",
+      "labelPoint": [
+        121.4593017,
+        31.2697079
+      ]
+    },
+    {
+      "id": "sector_zhangjiang",
+      "labelPoint": [
+        121.6237287,
+        31.1922521
+      ]
+    },
+    {
+      "id": "sector_zhangmiao",
+      "labelPoint": [
+        121.4460686,
+        31.3392344
+      ]
+    },
+    {
+      "id": "sector_zhangyan",
+      "labelPoint": [
+        121.2781948,
+        30.8008775
+      ]
+    },
+    {
+      "id": "sector_zhaoxiang",
+      "labelPoint": [
+        121.2115756,
+        31.1493542
+      ]
+    },
+    {
+      "id": "sector_zhelin",
+      "labelPoint": [
+        121.4379393,
+        30.8367211
+      ]
+    },
+    {
+      "id": "sector_zhenning_road",
+      "labelPoint": [
+        121.4296915,
+        31.2201822
+      ]
+    },
+    {
+      "id": "sector_zhenru",
+      "labelPoint": [
+        121.3919278,
+        31.2572338
+      ]
+    },
+    {
+      "id": "sector_zhongshangongyuan",
+      "labelPoint": [
+        121.4165492,
+        31.2196353
+      ]
+    },
+    {
+      "id": "sector_zhongyuan",
+      "labelPoint": [
+        121.5339464,
+        31.3187805
+      ]
+    },
+    {
+      "id": "sector_zhongyuanliangwancheng",
+      "labelPoint": [
+        121.441518,
+        31.254068
+      ]
+    },
+    {
+      "id": "sector_zhoupu",
+      "labelPoint": [
+        121.6149707,
+        31.1113623
+      ]
+    },
+    {
+      "id": "sector_zhuanghang",
+      "labelPoint": [
+        121.3807993,
+        30.9261213
+      ]
+    },
+    {
+      "id": "sector_zhuanqiao",
+      "labelPoint": [
+        121.3891129,
+        31.0614447
+      ]
+    },
+    {
+      "id": "sector_zhujiajiao",
+      "labelPoint": [
+        121.047639,
+        31.0829658
+      ]
+    },
+    {
+      "id": "sector_zhujing",
+      "labelPoint": [
+        121.1652259,
+        30.8914716
+      ]
+    },
+    {
+      "id": "sector_zhuqiao",
+      "labelPoint": [
+        121.7918988,
+        31.1208369
+      ]
+    }
+  ]
+}

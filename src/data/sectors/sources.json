@@ -1314,6 +1314,28 @@
       "note": "固定快照时间：2026-07-21T20:21:50Z。 归档 SHA-256：7311f5f65ab50a107fc5554de33c7b4ef93daa7a8af104be2b79f1eeafad4a1b。 © OpenStreetMap contributors"
     },
     {
+      "id": "osm-geofabrik-shanghai-260728",
+      "title": "Geofabrik GmbH / OpenStreetMap contributors 上海开放几何快照",
+      "publisher": "Geofabrik GmbH / OpenStreetMap contributors",
+      "url": "https://download.geofabrik.de/asia/china/shanghai-260728-free.gpkg.zip",
+      "sourceType": "open_geometry_snapshot",
+      "publishedAt": "2026-07-28T20:21:00Z",
+      "licenseStatus": "ODbL-1.0",
+      "allowedUse": "geometry_with_attribution_and_odbl_compliance",
+      "note": "用于用户批准的全域板块拓扑生产版本。GeoPackage SHA-256：bd30e1a99c021986968d4535f4d8f410fe45cd72c13eba0274c1c887b0076093。 © OpenStreetMap contributors"
+    },
+    {
+      "id": "internal-user-approved-full-domain-topology-2026-07-30",
+      "title": "全域板块拓扑生产发布裁定",
+      "publisher": "上海楼盘地图项目用户",
+      "url": null,
+      "sourceType": "internal_user_scope_decision",
+      "publishedAt": "2026-07-30",
+      "licenseStatus": "internal",
+      "allowedUse": "sector_definition_and_geometry_rule",
+      "note": "用户明确批准 topology-repair-production-2026-07-30 作为生产地图板块版本；RealtyNavi 仅作名称归属与相邻关系参考，不发布其坐标。"
+    },
+    {
       "id": "osm-overpass-roads-2026-07-25",
       "title": "OpenStreetMap road geometries queried through Overpass",
       "publisher": "OpenStreetMap contributors / Overpass API",

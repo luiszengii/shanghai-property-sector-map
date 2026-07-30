@@ -1,6 +1,7 @@
 import boundaryEvidenceData from "@/src/data/sectors/boundary-evidence.json";
 import candidateIndexData from "@/src/data/sectors/reviewed-candidates.index.json";
 import editorialSeedIndexData from "@/src/data/sectors/editorial-seeds.index.json";
+import publishedTopologyIndexData from "@/src/data/sectors/published-topology.index.json";
 import sourceBackedProxyData from "@/src/data/sectors/source-backed-proxies.wgs84.json";
 import sourceBackedProxyIndexData from "@/src/data/sectors/source-backed-proxies.index.json";
 import referenceChecksData from "@/src/data/sectors/reference-checks.json";
@@ -10,6 +11,7 @@ import userReviewedOverridesData from "@/src/data/sectors/user-reviewed-override
 import sectorsData from "@/src/data/sectors.json";
 import sourcesData from "@/src/data/sectors/sources.json";
 import { buildCandidateOnlySectorFeatures } from "@/src/lib/sector-catalog-features";
+import { mergeMarketGeometryLayers } from "@/src/lib/sector-geometry-priority";
 import type {
   SectorBoundaryEvidence,
   SectorCollection,
@@ -59,6 +61,18 @@ export interface SectorActiveLocation {
   center: [number, number];
 }
 
+type ActiveMarketGeometryIndexEntry = {
+  properties: {
+    id: string;
+    status:
+      | "reviewed-candidate"
+      | "editorial-seed"
+      | "source-backed-proxy"
+      | "user-reviewed-override";
+    labelPoint: [number, number];
+  };
+};
+
 const legacyFeatures = (sectorsData as SectorCollection).features;
 const registry = registryData.sectors as SectorRegistryEntry[];
 const sources = sourcesData.sources as SectorSourceRecord[];
@@ -92,13 +106,19 @@ const userReviewedOverrideIndex = userReviewedOverrideFeatures.map((feature) => 
     labelPoint: feature.properties.labelPoint as [number, number],
   },
 }));
-const activeMarketGeometryIndex = [
-  ...new Map(
-    [...baseActiveMarketGeometryIndex, ...userReviewedOverrideIndex].map(
-      (feature) => [feature.properties.id, feature],
-    ),
-  ).values(),
-];
+const publishedTopologyIndex = publishedTopologyIndexData.features.map((feature) => ({
+  properties: {
+    ...feature,
+    status: "reviewed-candidate" as const,
+    labelPoint: feature.labelPoint as [number, number],
+  },
+}));
+const activeMarketGeometryIndex =
+  mergeMarketGeometryLayers<ActiveMarketGeometryIndexEntry>(
+  baseActiveMarketGeometryIndex,
+  userReviewedOverrideIndex,
+  publishedTopologyIndex,
+);
 const subscopes = subscopesData.features as unknown as SectorSubscopeFeature[];
 
 const legacyFeatureById = new Map(
