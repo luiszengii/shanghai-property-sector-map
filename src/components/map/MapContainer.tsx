@@ -66,7 +66,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
           zoom: 10.6,
           center: [121.4737, 31.2304],
           viewMode: "2D",
-          mapStyle: "amap://styles/normal",
+          mapStyle: "amap://styles/whitesmoke",
           showLabel: true,
           animateEnable: true,
           scrollWheel: true,

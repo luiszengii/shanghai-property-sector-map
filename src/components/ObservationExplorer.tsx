@@ -74,12 +74,12 @@ function Highlight({ children, query }: { children: string; query: string }) {
   return <>{parts.map((part, index) => part.toLocaleLowerCase("zh-CN") === needle.toLocaleLowerCase("zh-CN") ? <mark key={index}>{part}</mark> : <Fragment key={index}>{part}</Fragment>)}</>;
 }
 
-export function LocalObservationExplorer() {
+export function LocalObservationExplorer({ initialQuery = "" }: { initialQuery?: string }) {
   const [dataset, setDataset] = useState<ResearchDataset | null>(null);
   const [error, setError] = useState("");
   const [district, setDistrict] = useState("全部行政区");
   const [sector, setSector] = useState("全部");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {

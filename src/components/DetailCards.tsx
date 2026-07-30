@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Building2, CalendarClock, ExternalLink, MapPin, Route, Ruler, X } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, CalendarClock, ExternalLink, MapPin, MessageCircleMore, Route, Ruler, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
@@ -98,21 +98,53 @@ export function DetailCard() {
     return (
       <article className="detail-card project-detail-card glass-panel" aria-label={displayName + "详情"}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
-        <span className="eyebrow">{project.district} · {project.sector} · 已核验项目点位</span>
+        <div className="detail-inspector-kicker">
+          <span className="detail-accent is-project" />
+          <span>楼盘资料</span>
+          <b>点位已核对</b>
+        </div>
+        <span className="eyebrow">{project.district} · {project.sector}</span>
         <h2>{displayName}</h2>
         {project.officialName && project.officialName !== project.name && <p className="project-original-name">清单原名：{project.name}</p>}
-        <LocalProjectResearchSummary research={research} />
+        <div className="project-verification-strip">
+          <BadgeCheck size={15} />
+          <span>已核验 · 新盘项目点位</span>
+        </div>
+        <p className="detail-section-label">项目概览</p>
+        {research ? (
+          <LocalProjectResearchSummary research={research} />
+        ) : (
+          <div className="project-public-summary">
+            <span>公开资料状态</span>
+            <strong>基础点位资料</strong>
+            <small>价格、户型与观点字段尚未进入公开投射</small>
+          </div>
+        )}
+        <p className="detail-section-label">位置与来源</p>
         <dl className="detail-list project-meta">
+          <div><dt><Building2 size={15} /> 所在区域</dt><dd>{project.district} · {project.sector}</dd></div>
           <div><dt><MapPin size={15} /> 项目地址</dt><dd>{project.locationAddress}</dd></div>
           <div><dt><Building2 size={15} /> 点位来源</dt><dd>{project.locationSourceName}<a href={project.locationSourceUrl} target="_blank" rel="noreferrer" aria-label="在高德地图查看项目"><ExternalLink size={13} /></a></dd></div>
           <div><dt><CalendarClock size={15} /> 点位核对</dt><dd>{project.locationVerifiedAt} · {project.locationConfidence === "high" ? "高置信" : "中等置信"}</dd></div>
+          <div><dt><MapPin size={15} /> 地图坐标</dt><dd>{project.position[0].toFixed(5)}, {project.position[1].toFixed(5)}</dd></div>
           {project.locationNote && <div><dt><MapPin size={15} /> 点位说明</dt><dd>{project.locationNote}</dd></div>}
           <LocalProjectResearchMetadata research={research} />
         </dl>
+        <p className="detail-section-label">资料状态</p>
+        <dl className="detail-list project-public-status">
+          <div><dt><Building2 size={15} /> 公开范围</dt><dd>名称、地址、点位、来源与核验日期</dd></div>
+          <div><dt><CalendarClock size={15} /> 当前状态</dt><dd>基础字段已进入公开楼盘资料</dd></div>
+          <div><dt><MapPin size={15} /> 待补充</dt><dd>价格、户型与销售状态需经人工裁定后投射</dd></div>
+        </dl>
         <p className="project-disclaimer">{projectDetailDisclaimer}</p>
-        <Link href={`/projects/${encodeURIComponent(project.id)}`} className="primary-action full">
-          查看完整楼盘资料 <ArrowRight size={16} />
-        </Link>
+        <div className="detail-actions">
+          <button type="button" className="secondary-action full" onClick={() => requestFocus("project", project.id)}>
+            <MapPin size={15} /> 在地图中定位
+          </button>
+          <Link href={`/projects/${encodeURIComponent(project.id)}`} className="primary-action full">
+            查看完整楼盘资料 <ArrowRight size={16} />
+          </Link>
+        </div>
       </article>
     );
   }
@@ -132,6 +164,11 @@ export function DetailCard() {
     return (
       <article className="detail-card glass-panel" aria-label={`${place.name}详情`}>
         <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
+        <div className="detail-inspector-kicker">
+          <span className="detail-accent is-place" />
+          <span>设施详情</span>
+          <b>演示数据</b>
+        </div>
         <div className="detail-topline">
           <span className="category-icon large" style={{ "--category-color": category?.color ?? "#0f766e" } as React.CSSProperties}>{category ? <CategoryIcon name={category.icon} size={22} /> : "•"}</span>
           <div><span className="eyebrow">{category?.name}</span><h2>{place.name}</h2></div>
@@ -144,6 +181,9 @@ export function DetailCard() {
           <div><dt><CalendarClock size={15} /> 更新时间</dt><dd>{place.sourceDate}</dd></div>
           <div><dt><Ruler size={15} /> 大致距离</dt><dd>距{sector ? "当前板块中心" : "地图中心"}约 {distance.toFixed(distance < 10 ? 1 : 0)} 公里</dd></div>
         </dl>
+        <button type="button" className="secondary-action full" onClick={() => requestFocus("place", place.id)}>
+          <MapPin size={15} /> 在地图中定位
+        </button>
       </article>
     );
   }
@@ -240,6 +280,11 @@ export function DetailCard() {
   return (
     <article className="detail-card glass-panel" aria-label={`${sector.properties.name}板块详情`}>
       <button className="icon-button detail-close" onClick={closeDetail} aria-label="关闭详情"><X size={18} /></button>
+      <div className="detail-inspector-kicker">
+        <span className="detail-accent is-sector" />
+        <span>板块资料</span>
+        <b>{geometryLabel}</b>
+      </div>
       <span className="eyebrow">楼市板块 · {(sectorRecord?.districtNames ?? [sector.properties.district]).join(" / ")}</span>
       <h2>{sector.properties.name}</h2>
       <span className="mock-badge">{geometryLabel}</span>
@@ -323,9 +368,14 @@ export function DetailCard() {
           </div>
         )}
       </dl>
-      <button className="primary-action" onClick={() => { selectSector(sector.properties.id); requestFocus("sector", sector.properties.id); }}>
-        查看板块设施 <ArrowRight size={16} />
-      </button>
+      <div className="detail-actions">
+        <button className="primary-action full" onClick={() => { selectSector(sector.properties.id); requestFocus("sector", sector.properties.id); }}>
+          查看板块设施 <ArrowRight size={16} />
+        </button>
+        <Link className="secondary-action full" href={`/observations?q=${encodeURIComponent(sector.properties.name)}`}>
+          <MessageCircleMore size={15} /> 查看该板块观察
+        </Link>
+      </div>
     </article>
   );
 }
