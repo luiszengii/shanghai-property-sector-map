@@ -15,6 +15,7 @@
 5. `docs/adr/0041-use-record-revisions-and-ledger-snapshots.md`
 6. `docs/adr/0042-review-agent-research-batches-before-merging.md`
 7. `docs/adr/0043-keep-private-ledger-and-generate-public-projection.md`
+8. `docs/adr/0044-version-private-study-data-in-authenticated-git.md`
 
 如果任务涉及板块身份、边界或板块数据源，还必须完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。
 
@@ -48,7 +49,14 @@
 - 保存资料版本快照
 - 保存 Agent 研究批次及逐条验收进度
 
-该目录被 `.gitignore` 排除，只允许本机开发环境读写。它可能包含未获公开许可、尚未核验、存在冲突或只供研究使用的材料，因此不得整体提交到 Git，也不得让生产页面直接读取。
+该目录被当前公开仓库的 `.gitignore` 排除。用户于 2026-07-30 明确授权把
+个人学习和跨设备延续所需的私有台账放在受鉴权的私有数据仓库
+`luiszengii/shanghai-property-sector-map-private-data` 中版本化，并通过
+`.private-data` submodule 与本地 `outputs/` 链接。
+
+私有 Git 存储不改变发布裁定：该目录可能包含未获公开许可、尚未核验、存在
+冲突或只供研究使用的材料，仍不得进入当前公开仓库、生产构建、公开 API 或
+公开产品投射。Cookie、Token、密码、私钥和浏览器会话不得进入私有数据仓库。
 
 ### 2.3 公开产品投射
 
@@ -334,14 +342,19 @@ npm run check:map-performance
 - 桌面和移动端没有明显布局问题
 - 生产构建中的 `/sources` 和 `/api/source-ledger` 返回 404
 - `git status --ignored` 显示 `outputs/source-ledger/` 仍被忽略
-- 提交中没有 `ledger.json`、私有备注、受限摘录或认证信息
+- 当前公开仓库提交中没有 `ledger.json`、私有备注、受限摘录或认证信息
+- 私有数据仓库保持 `PRIVATE`，且提交中没有 Cookie、Token、密码、私钥或
+  浏览器会话
 
 ## 8. 故障与恢复
 
 - JSON 不存在时，系统会创建空的 schema v1 资料库。
 - JSON 无法通过解析时，停止写入并报告具体校验错误；不得用空文件覆盖。
 - 写入使用临时文件和原子重命名，避免部分写入。
-- 当前没有自动备份、跨设备同步或快照恢复接口。
+- 私有 Git 仓库提供跨设备版本同步；它不是资料版本恢复接口，也不能替代
+  `snapshots` 的业务语义。
+- 新设备运行 `pnpm setup:local` 初始化私有 submodule、链接 `outputs/` 并
+  生成 `.env.local`。GitHub CLI 必须登录到获准账号。
 - 需要迁移、恢复或修复损坏数据时，先复制原文件到工作区外的安全位置，再编写经过测试的一次性迁移工具。
 
 ## 9. Agent 完成检查单
@@ -354,7 +367,8 @@ npm run check:map-performance
 - [ ] 来源许可与证据置信度分别判断
 - [ ] 未经人工裁定的记录没有标记为 `可公开投射`
 - [ ] 历史修订没有被覆盖或删除
-- [ ] 私有文件和认证信息没有进入 Git
+- [ ] 私有文件只进入受鉴权私有数据仓库，没有进入当前公开仓库
+- [ ] Cookie、Token、密码、私钥和浏览器会话没有进入任何 Git 仓库
 - [ ] 公开字段未超过复核日期
 - [ ] 公开投射来自明确审核过的资料版本
 - [ ] 已运行适用测试
