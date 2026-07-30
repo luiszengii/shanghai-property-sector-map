@@ -40,6 +40,7 @@ const forbiddenHomeText = [
   "微观世界私有快照",
   "安居客研究快照",
   "房天下研究快照",
+  "RealtyNavi 授权研究快照",
   "用户观点 · 待核验",
 ];
 for (const forbidden of forbiddenHomeText) {

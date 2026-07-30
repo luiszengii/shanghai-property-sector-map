@@ -67,6 +67,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
           center: [121.4737, 31.2304],
           viewMode: "2D",
           mapStyle: "amap://styles/whitesmoke",
+          features: ["bg", "road", "building"],
           showLabel: true,
           animateEnable: true,
           scrollWheel: true,

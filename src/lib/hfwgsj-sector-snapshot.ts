@@ -7,6 +7,7 @@ export interface HfwgsjSectorSnapshotFeature {
     sourceId: string;
     name: string;
     centroid: [number, number] | null;
+    classification?: "named_sector" | "district_outline_difference";
   };
   geometry: SectorGeometry;
 }
@@ -26,6 +27,10 @@ export interface HfwgsjSectorSnapshot {
     source_coordinate_system?: string;
     coordinate_system?: string;
     directory_count?: number;
+    named_feature_count?: number;
+    district_outline_difference_feature_count?: number;
+    district_outline_difference_generated?: boolean;
+    coverage_note?: string;
     feature_count: number;
     missing_geometry_count?: number;
     missing_geometry?: Array<{
@@ -43,6 +48,21 @@ export function normalizeSectorSnapshotName(value: string) {
 
 export function isPlaceholderSectorName(value: string) {
   return /^\d+$/.test(value.trim());
+}
+
+export function getSnapshotDisplayFeatures(
+  features: HfwgsjSectorSnapshotFeature[],
+  {
+    includeDistrictOutlineDifferences,
+  }: {
+    includeDistrictOutlineDifferences: boolean;
+  },
+) {
+  return includeDistrictOutlineDifferences
+    ? features
+    : features.filter(
+      (feature) => feature.properties.classification !== "district_outline_difference",
+    );
 }
 
 function isPosition(value: unknown): value is [number, number] {

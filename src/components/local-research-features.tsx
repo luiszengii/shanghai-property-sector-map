@@ -35,11 +35,18 @@ const sourceLabels: Record<SectorBoundarySource, string> = {
   "hfwgsj-private": "微观世界快照",
   "anjuke-private": "安居客快照",
   "fang-private": "房天下快照",
+  "realtynavi-private": "RealtyNavi 快照",
 };
 
 export function LocalSectorSourceControls() {
   const sectorBoundarySource = useMapStore((state) => state.sectorBoundarySource);
   const setSectorBoundarySource = useMapStore((state) => state.setSectorBoundarySource);
+  const showRealtynaviDistrictOutlineDifferences = useMapStore(
+    (state) => state.showRealtynaviDistrictOutlineDifferences,
+  );
+  const setShowRealtynaviDistrictOutlineDifferences = useMapStore(
+    (state) => state.setShowRealtynaviDistrictOutlineDifferences,
+  );
   return (
     <div className="filter-group sector-source-filter-group">
       <div className="group-title">
@@ -63,9 +70,30 @@ export function LocalSectorSourceControls() {
           <Database size={14} />
           <span><strong>房天下研究快照</strong><small>2026-07-25 · 182 / 183 个边界</small></span>
         </button>
+        <button type="button" className={sectorBoundarySource === "realtynavi-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "realtynavi-private"} onClick={() => setSectorBoundarySource("realtynavi-private")}>
+          <Database size={14} />
+          <span><strong>RealtyNavi 授权研究快照</strong><small>2026-07-28 · 151 个命名板块</small></span>
+        </button>
       </div>
+      {sectorBoundarySource === "realtynavi-private" ? (
+        <button
+          type="button"
+          className={`realtynavi-difference-toggle${showRealtynaviDistrictOutlineDifferences ? " is-active" : ""}`}
+          role="switch"
+          aria-checked={showRealtynaviDistrictOutlineDifferences}
+          onClick={() => setShowRealtynaviDistrictOutlineDifferences(
+            !showRealtynaviDistrictOutlineDifferences,
+          )}
+        >
+          <span>
+            <strong>区级外轮廓差异</strong>
+            <small>16 个参考面 · 默认关闭 · 不计入板块数</small>
+          </span>
+          <span className="toggle" aria-hidden="true"><span /></span>
+        </button>
+      ) : null}
       <p className="sector-source-note">
-        三套外部快照只从本机忽略文件读取；安居客、房天下已由 BD-09 转为 GCJ-02，许可仍待确认，不进入公开构建。
+        四套外部快照只从本机忽略文件读取；RealtyNavi 按用户确认授权仅作内部对照，其他快照许可状态不变，均不进入公开构建。
       </p>
     </div>
   );
@@ -76,6 +104,9 @@ export function LocalDataDisclosures({ source }: { source: SectorBoundarySource 
     <>
       {source === "hfwgsj-private" && (
         <li>当前板块边界已切换为本地私有快照；来源许可与坐标系尚未独立确认，不进入公开构建。</li>
+      )}
+      {source === "realtynavi-private" && (
+        <li>当前板块边界已切换为 RealtyNavi 授权研究快照；仅限内部对照，不进入公开构建或对外分发。</li>
       )}
       <li>本地新盘研究清单中的均价、优劣势、教育与推荐指数尚未独立核验，仅作为看盘线索。</li>
     </>
@@ -89,6 +120,8 @@ export function getLocalExternalLegend(source: SectorBoundarySource) {
       ? { color: "#ea580c", label: "橙色实线：安居客板块边界", note: "BD-09 已转 GCJ-02 · 120 / 141 个边界" }
       : source === "fang-private"
         ? { color: "#1d4ed8", label: "蓝色实线：房天下板块边界", note: "BD-09 已转 GCJ-02 · 182 / 183 个边界" }
+        : source === "realtynavi-private"
+          ? { color: "#be123c", label: "玫红实线：RealtyNavi 命名板块", note: "授权内部对照 · GCJ-02 · 151 个命名板块 · 区级外轮廓差异默认关闭" }
         : null;
 }
 

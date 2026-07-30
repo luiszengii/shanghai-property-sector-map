@@ -23,6 +23,11 @@ const snapshotPaths = {
     "fang",
     "shanghai-sector-boundaries-gcj02-2026-07-25.geojson",
   ],
+  "realtynavi-private": [
+    "outputs",
+    "realtynavi",
+    "shanghai-sector-boundaries-gcj02-2026-07-28.geojson",
+  ],
 } as const;
 
 type LocalSnapshotSource = keyof typeof snapshotPaths;
