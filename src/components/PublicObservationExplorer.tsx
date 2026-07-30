@@ -7,9 +7,9 @@ import snapshot from "@/src/data/public-observations.json";
 
 const ALL_DISTRICTS = "全部行政区";
 
-export function PublicObservationExplorer() {
+export function PublicObservationExplorer({ initialQuery = "" }: { initialQuery?: string }) {
   const [district, setDistrict] = useState(ALL_DISTRICTS);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const districts = useMemo(
     () => Array.from(new Set(snapshot.entries.flatMap((entry) => entry.district.split(" / ")))),
     [],

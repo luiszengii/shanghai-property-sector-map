@@ -9,8 +9,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function ObservationsPage() {
+export default async function ObservationsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q = "" } = await searchParams;
   return isLocalResearchMode
-    ? <LocalObservationExplorer />
-    : <PublicObservationExplorer />;
+    ? <LocalObservationExplorer initialQuery={q} />
+    : <PublicObservationExplorer initialQuery={q} />;
 }

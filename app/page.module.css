@@ -23,6 +23,20 @@
     transform var(--dur-micro) var(--ease-out);
 }
 
+@media (min-width: 45.0625rem) {
+  .editorShortcut {
+    z-index: 370;
+    left: 16px;
+    bottom: 18px;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+    padding: 0;
+    border-radius: 11px;
+    font-size: 0;
+  }
+}
+
 .editorShortcut:hover {
   background: var(--color-accent-strong);
   transform: translateY(-1px);
