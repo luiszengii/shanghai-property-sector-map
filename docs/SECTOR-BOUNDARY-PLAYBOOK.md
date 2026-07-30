@@ -419,7 +419,37 @@ http://localhost:3000/sector-editor
 
 不要为了测试迁移而清空用户 localStorage。优先用单元测试构造旧草稿；浏览器只核对真实迁移结果。
 
-## 11. 低级别 Agent 的最短执行模板
+## 11. 全域拓扑修复预览
+
+当任务是排查项目板块的全域空白和交叠，而不是发布单个已审核板块时，可生成本地拓扑修复预览：
+
+```bash
+npm run build:topology-repair-preview
+```
+
+固定输入与边界：
+
+- 项目当前候选面和用户复核覆盖面；
+- `data/geo/sources/osm-shanghai-260728.json` 锁定的 OSM/Geofabrik 街镇行政面；
+- `outputs/realtynavi/` 中经用户确认授权的私有快照，只用于板块名称、归属和相邻关系判断。
+
+生成结果位于：
+
+```text
+outputs/topology-repair/project-sector-topology-repair.wgs84.geojson
+outputs/topology-repair/project-sector-topology-repair-report.json
+```
+
+两者都被 Git 忽略，只能通过本地研究模式的“项目拓扑修复预览”查看。不得把预览 GeoJSON 复制到 `reviewed-candidates.wgs84.json`，也不得把自动归属视为人工裁定。需要发布时，应根据报告逐块复核，再把明确的 OSM 边界与共同邻居写进 batch/workpack 后重新生成。
+
+生成器必须保证：
+
+- RealtyNavi 坐标不成为输出边；
+- 上海下载框内的外省街镇被显式排除；
+- 重叠处理、空白归属、数值残差和被排除面全部进入审计报告；
+- 输出经过有效性、米制重叠、空白和超界检查。
+
+## 12. 低级别 Agent 的最短执行模板
 
 收到“调整 `<板块名>`”后，按这个模板行动：
 
