@@ -19,6 +19,7 @@ const groups = [
   { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
 ] as const;
 type CategoryGroupId = (typeof groups)[number]["id"];
+export type FilterPanelMode = "all" | "sectors" | "facilities";
 const categoriesByGroup = new Map(
   groups.map((group) => [
     group.id,
@@ -27,8 +28,12 @@ const categoriesByGroup = new Map(
 );
 export const FilterPanel = memo(function FilterPanel({
   mobile = false,
+  mode = "all",
+  onClose,
 }: {
   mobile?: boolean;
+  mode?: FilterPanelMode;
+  onClose?: () => void;
 }) {
   const projects = useProjectCatalog();
   const [expandedGroups, setExpandedGroups] = useState<Record<CategoryGroupId, boolean>>({
@@ -57,163 +62,185 @@ export const FilterPanel = memo(function FilterPanel({
   const showAllCategories = useMapStore((state) => state.showAllCategories);
   const clearCategories = useMapStore((state) => state.clearCategories);
   const setMobileFiltersOpen = useMapStore((state) => state.setMobileFiltersOpen);
+  const showSectorControls = mode === "all" || mode === "sectors";
+  const showFacilityControls = mode === "all" || mode === "facilities";
+  const panelTitle = mode === "sectors" ? "板块与项目" : mode === "facilities" ? "生活设施" : "地图显示";
   return (
-    <section className={`filter-panel glass-panel ${mobile ? "is-mobile" : ""}`} aria-label="设施图层筛选">
+    <section
+      className={`filter-panel glass-panel ${mobile ? "is-mobile" : ""}`}
+      aria-label={mode === "sectors" ? "板块边界筛选" : mode === "facilities" ? "生活设施筛选" : "地图图层筛选"}
+    >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow"><Layers3 size={13} /> 图层筛选</span>
-          <h2>设施分类</h2>
+          <span className="eyebrow">{mode === "facilities" ? <SlidersHorizontal size={13} /> : <Layers3 size={13} />} 图层筛选</span>
+          <h2>{panelTitle}</h2>
         </div>
-        {mobile && <button className="icon-button" onClick={() => setMobileFiltersOpen(false)} aria-label="关闭筛选"><X size={20} /></button>}
+        {(mobile || onClose) && (
+          <button
+            className="icon-button"
+            onClick={mobile ? () => setMobileFiltersOpen(false) : onClose}
+            aria-label="关闭筛选"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
-      <div className="filter-actions">
-        <button onClick={showAllCategories}><Check size={14} /> 显示全部</button>
-        <button onClick={clearCategories}><RotateCcw size={14} /> 清空</button>
-      </div>
-      <LocalSectorSourceControls />
-      <div className="filter-group sector-label-filter-group">
-        <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>
-        <details className="project-display-settings sector-display-settings">
-          <summary>
-            <MapPinned size={13} />
-            <span>显示设置</span>
-            <small>{sectorLabelMode === "hover" ? "悬停时显示" : `Z ${sectorLabelMinZoom.toFixed(1)} 起显示`}</small>
-          </summary>
-          <div className="project-settings-body">
-            <div className="sector-label-mode" role="group" aria-label="板块名称显示方式">
-              <button
-                type="button"
-                className={sectorLabelMode === "hover" ? "is-active" : ""}
-                onClick={() => setSectorLabelMode("hover")}
-                aria-pressed={sectorLabelMode === "hover"}
-              >
-                悬停显示
-              </button>
-              <button
-                type="button"
-                className={sectorLabelMode === "zoom" ? "is-active" : ""}
-                onClick={() => setSectorLabelMode("zoom")}
-                aria-pressed={sectorLabelMode === "zoom"}
-              >
-                按 Zoom 显示
-              </button>
-            </div>
-            <label htmlFor={sectorLabelZoomId}>
-              <span>开始显示级别 <output>Z {sectorLabelMinZoom.toFixed(1)}</output></span>
-              <input
-                id={sectorLabelZoomId}
-                type="range"
-                min="10"
-                max="16"
-                step="0.2"
-                value={sectorLabelMinZoom}
-                disabled={sectorLabelMode !== "zoom"}
-                onChange={(event) => setSectorLabelMinZoom(Number(event.target.value))}
-              />
-            </label>
-            <p>悬停模式性能最好；按 Zoom 显示时会自动隐藏相互重叠的名称。</p>
+      {showSectorControls && (
+        <>
+          <LocalSectorSourceControls />
+          <div className="filter-group sector-label-filter-group">
+            <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>
+            <details className="project-display-settings sector-display-settings">
+              <summary>
+                <MapPinned size={13} />
+                <span>显示设置</span>
+                <small>{sectorLabelMode === "hover" ? "悬停时显示" : `Z ${sectorLabelMinZoom.toFixed(1)} 起显示`}</small>
+              </summary>
+              <div className="project-settings-body">
+                <div className="sector-label-mode" role="group" aria-label="板块名称显示方式">
+                  <button
+                    type="button"
+                    className={sectorLabelMode === "hover" ? "is-active" : ""}
+                    onClick={() => setSectorLabelMode("hover")}
+                    aria-pressed={sectorLabelMode === "hover"}
+                  >
+                    悬停显示
+                  </button>
+                  <button
+                    type="button"
+                    className={sectorLabelMode === "zoom" ? "is-active" : ""}
+                    onClick={() => setSectorLabelMode("zoom")}
+                    aria-pressed={sectorLabelMode === "zoom"}
+                  >
+                    按 Zoom 显示
+                  </button>
+                </div>
+                <label htmlFor={sectorLabelZoomId}>
+                  <span>开始显示级别 <output>Z {sectorLabelMinZoom.toFixed(1)}</output></span>
+                  <input
+                    id={sectorLabelZoomId}
+                    type="range"
+                    min="10"
+                    max="16"
+                    step="0.2"
+                    value={sectorLabelMinZoom}
+                    disabled={sectorLabelMode !== "zoom"}
+                    onChange={(event) => setSectorLabelMinZoom(Number(event.target.value))}
+                  />
+                </label>
+                <p>悬停模式性能最好；按 Zoom 显示时会自动隐藏相互重叠的名称。</p>
+              </div>
+            </details>
           </div>
-        </details>
-      </div>
-      <div className="filter-group project-filter-group">
-        <div className="group-title"><strong>新房项目</strong><span>{projects.length} 个项目</span></div>
-        <button className={"filter-item project-filter " + (showProjects ? "is-active" : "")} onClick={toggleProjects} aria-pressed={showProjects}>
-          <span className="category-icon project-category-icon"><Building2 size={14} /></span>
-          <span>{projectFilterLabel}</span>
-          <span className="toggle"><span /></span>
-        </button>
-        <details className="project-display-settings">
-          <summary>
-            <SlidersHorizontal size={13} />
-            <span>显示设置</span>
-            <small>聚合 {projectClusterRadius}px · 详情 Z {projectDetailMinZoom.toFixed(1)}</small>
-          </summary>
-          <div className="project-settings-body">
-            <button
-              type="button"
-              className={`project-setting-toggle ${projectClusterEnabled ? "is-active" : ""}`}
-              onClick={() => setProjectClusterEnabled(!projectClusterEnabled)}
-              aria-pressed={projectClusterEnabled}
-            >
-              <span>聚合相邻 Pin</span>
+          <div className="filter-group project-filter-group">
+            <div className="group-title"><strong>新房项目</strong><span>{projects.length} 个项目</span></div>
+            <button className={"filter-item project-filter " + (showProjects ? "is-active" : "")} onClick={toggleProjects} aria-pressed={showProjects}>
+              <span className="category-icon project-category-icon"><Building2 size={14} /></span>
+              <span>{projectFilterLabel}</span>
               <span className="toggle"><span /></span>
             </button>
-            <label htmlFor={clusterRadiusId}>
-              <span>聚合范围 <output>{projectClusterRadius}px</output></span>
-              <input
-                id={clusterRadiusId}
-                type="range"
-                min="32"
-                max="128"
-                step="8"
-                value={projectClusterRadius}
-                disabled={!projectClusterEnabled}
-                onChange={(event) => setProjectClusterRadius(Number(event.target.value))}
-              />
-            </label>
-            <label htmlFor={detailZoomId}>
-              <span>详情显示级别 <output>Z {projectDetailMinZoom.toFixed(1)}</output></span>
-              <input
-                id={detailZoomId}
-                type="range"
-                min="11"
-                max="16"
-                step="0.2"
-                value={projectDetailMinZoom}
-                onChange={(event) => setProjectDetailMinZoom(Number(event.target.value))}
-              />
-            </label>
-            <p>点击聚合标签会继续放大；单个项目达到设定级别后才显示详情。</p>
-          </div>
-        </details>
-      </div>
-      {groups.map((group) => {
-        const groupCategories = categoriesByGroup.get(group.id) ?? [];
-        const groupCategoryIds = groupCategories.map((category) => category.id);
-        const groupContentId = `${categoryGroupIdPrefix}-${group.id}`;
-        const expanded = expandedGroups[group.id];
-        return (
-          <div className="filter-group category-filter-group" key={group.id}>
-            <div className="category-group-header">
-              <button
-                type="button"
-                className={`category-group-toggle ${expanded ? "is-open" : ""}`}
-                onClick={() => setExpandedGroups((current) => ({
-                  ...current,
-                  [group.id]: !current[group.id],
-                }))}
-                aria-expanded={expanded}
-                aria-controls={groupContentId}
-              >
-                <span className="category-group-copy">
-                  <strong>{group.label}</strong>
-                  <small>{group.helper}</small>
-                </span>
-                <ChevronDown aria-hidden="true" size={15} />
-              </button>
-              <span className="category-group-actions" role="group" aria-label={`${group.label}批量设置`}>
-                <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, true)}>全开</button>
-                <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, false)}>全关</button>
-              </span>
-            </div>
-            {expanded && (
-              <div className="filter-list" id={groupContentId}>
-                {groupCategories.map((category) => {
-                  const checked = enabledCategories.includes(category.id);
-                  return (
-                    <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
-                      <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
-                      <span>{category.name}</span>
-                      <span className="toggle"><span /></span>
-                    </button>
-                  );
-                })}
+            <details className="project-display-settings">
+              <summary>
+                <SlidersHorizontal size={13} />
+                <span>显示设置</span>
+                <small>聚合 {projectClusterRadius}px · 详情 Z {projectDetailMinZoom.toFixed(1)}</small>
+              </summary>
+              <div className="project-settings-body">
+                <button
+                  type="button"
+                  className={`project-setting-toggle ${projectClusterEnabled ? "is-active" : ""}`}
+                  onClick={() => setProjectClusterEnabled(!projectClusterEnabled)}
+                  aria-pressed={projectClusterEnabled}
+                >
+                  <span>聚合相邻 Pin</span>
+                  <span className="toggle"><span /></span>
+                </button>
+                <label htmlFor={clusterRadiusId}>
+                  <span>聚合范围 <output>{projectClusterRadius}px</output></span>
+                  <input
+                    id={clusterRadiusId}
+                    type="range"
+                    min="32"
+                    max="128"
+                    step="8"
+                    value={projectClusterRadius}
+                    disabled={!projectClusterEnabled}
+                    onChange={(event) => setProjectClusterRadius(Number(event.target.value))}
+                  />
+                </label>
+                <label htmlFor={detailZoomId}>
+                  <span>详情显示级别 <output>Z {projectDetailMinZoom.toFixed(1)}</output></span>
+                  <input
+                    id={detailZoomId}
+                    type="range"
+                    min="11"
+                    max="16"
+                    step="0.2"
+                    value={projectDetailMinZoom}
+                    onChange={(event) => setProjectDetailMinZoom(Number(event.target.value))}
+                  />
+                </label>
+                <p>点击聚合标签会继续放大；单个项目达到设定级别后才显示详情。</p>
               </div>
-            )}
+            </details>
           </div>
-        );
-      })}
-      <p className="panel-footnote">{projectFootnote}</p>
+          <p className="panel-footnote">{projectFootnote}</p>
+        </>
+      )}
+      {showFacilityControls && (
+        <>
+          <div className="filter-actions">
+            <button onClick={showAllCategories}><Check size={14} /> 显示全部</button>
+            <button onClick={clearCategories}><RotateCcw size={14} /> 清空</button>
+          </div>
+          {groups.map((group) => {
+            const groupCategories = categoriesByGroup.get(group.id) ?? [];
+            const groupCategoryIds = groupCategories.map((category) => category.id);
+            const groupContentId = `${categoryGroupIdPrefix}-${group.id}`;
+            const expanded = expandedGroups[group.id];
+            return (
+              <div className="filter-group category-filter-group" key={group.id}>
+                <div className="category-group-header">
+                  <button
+                    type="button"
+                    className={`category-group-toggle ${expanded ? "is-open" : ""}`}
+                    onClick={() => setExpandedGroups((current) => ({
+                      ...current,
+                      [group.id]: !current[group.id],
+                    }))}
+                    aria-expanded={expanded}
+                    aria-controls={groupContentId}
+                  >
+                    <span className="category-group-copy">
+                      <strong>{group.label}</strong>
+                      <small>{group.helper}</small>
+                    </span>
+                    <ChevronDown aria-hidden="true" size={15} />
+                  </button>
+                  <span className="category-group-actions" role="group" aria-label={`${group.label}批量设置`}>
+                    <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, true)}>全开</button>
+                    <button type="button" onClick={() => setCategoryGroup(groupCategoryIds, false)}>全关</button>
+                  </span>
+                </div>
+                {expanded && (
+                  <div className="filter-list" id={groupContentId}>
+                    {groupCategories.map((category) => {
+                      const checked = enabledCategories.includes(category.id);
+                      return (
+                        <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
+                          <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
+                          <span>{category.name}</span>
+                          <span className="toggle"><span /></span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </>
+      )}
     </section>
   );
 });
