@@ -17,8 +17,30 @@
 
 要求 Node.js 22.13+ 与 pnpm。
 
+仓库所有者在新设备上使用：
+
 ```bash
-pnpm install
+gh auth login
+gh auth setup-git
+git clone --recurse-submodules \
+  https://github.com/luiszengii/shanghai-property-sector-map.git
+cd shanghai-property-sector-map
+pnpm install --frozen-lockfile
+pnpm setup:local
+pnpm dev
+```
+
+`pnpm setup:local` 需要已登录且有权访问私有数据仓库的 GitHub CLI。它会：
+
+- 初始化 `.private-data` 私有 submodule；
+- 将私有仓库的 `outputs/` 链接到当前仓库被忽略的本地 `outputs/`；
+- 从私有仓库的 Repository Variables 获取高德本地开发配置并写入
+  `.env.local`，过程中不打印变量值。
+
+没有私有仓库权限的公开贡献者仍可使用：
+
+```bash
+pnpm install --frozen-lockfile
 cp .env.example .env.local
 pnpm dev
 ```
@@ -31,6 +53,15 @@ NEXT_PUBLIC_AMAP_SECURITY_JS_CODE=你的高德安全密钥
 ```
 
 如果没有配置 Key，页面会显示清晰的配置提示，不会白屏。
+
+### 私有研究数据
+
+个人学习用的楼盘台账、安居客、房天下、HFWGSJ、RealtyNavi 和拓扑研究文件
+位于私有仓库 `luiszengii/shanghai-property-sector-map-private-data`。公开
+仓库只跟踪 submodule 提交指针，不跟踪或部署实际私有文件。
+
+小红书原始/清洗数据、PDF 缓存、MediaCrawler、浏览器登录数据和 OSM 大型
+工作下载不进入该私有仓库。私有商业地图快照只用于个人研究，不是可发布边界。
 
 ## 数据文件
 

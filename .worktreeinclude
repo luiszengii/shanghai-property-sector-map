@@ -1,5 +1,14 @@
 # Copy local-only credentials and private research snapshots into new Codex worktrees.
 .env.local
+outputs/local-project-research.json
+outputs/source-ledger/ledger.json
 outputs/hfwgsj/shanghai-market-sectors-2026-07-25.geojson
 outputs/anjuke/shanghai-sector-boundaries-gcj02-2026-07-25.geojson
+outputs/anjuke/shanghai-sector-boundaries-raw-2026-07-25.json
 outputs/fang/shanghai-sector-boundaries-gcj02-2026-07-25.geojson
+outputs/fang/shanghai-sector-boundaries-raw-2026-07-25.json
+outputs/realtynavi/shanghai-sector-boundaries-gcj02-2026-07-28.geojson
+outputs/realtynavi/shanghai-sector-boundaries-raw-2026-07-28.json
+outputs/realtynavi/shanghai-sector-boundaries-raw-including-sold-out-2026-07-28.json
+outputs/topology-repair/project-sector-topology-repair-report.json
+outputs/topology-repair/project-sector-topology-repair.wgs84.geojson

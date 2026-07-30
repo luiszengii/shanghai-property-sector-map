@@ -1,5 +1,28 @@
 # Agent instructions
 
+## 私有 Git 数据仓库
+
+用户于 2026-07-30 明确决定把个人学习和跨设备延续所需的本地研究数据改为
+受鉴权的私有 Git 存储。私有仓库是
+`luiszengii/shanghai-property-sector-map-private-data`，在本公开仓库中以
+`.private-data` submodule 引用。
+
+- 当前公开仓库仍不得跟踪 `outputs/`、私有备注、受限来源正文或认证信息。
+- 私有仓库可跟踪用户明确授权用于个人学习的楼盘台账、安居客、房天下、
+  HFWGSJ、RealtyNavi 和拓扑研究文件；它们不得公开再分发、进入公开产品
+  投射、被生产构建读取，或被称为可发布几何来源。
+- 小红书原始/清洗数据、PDF 缓存、MediaCrawler、浏览器会话、Cookie、
+  Token、验证码和 OSM 大型工作下载不进入私有仓库。
+- 新设备使用 `git clone --recurse-submodules`，然后运行
+  `pnpm setup:local`。该命令把私有数据链接到被忽略的 `outputs/`，并从私有
+  仓库的 Repository Variables 生成 `.env.local`。
+- `NEXT_PUBLIC_AMAP_KEY` 和 `NEXT_PUBLIC_AMAP_SECURITY_JS_CODE` 是浏览器
+  可见的本地开发配置，保存在私有仓库的 Repository Variables；生产仍使用
+  当前公开仓库的 Actions Secrets。密码、SSH 私钥和登录令牌不得改存为
+  Repository Variables。
+- CI 和生产部署必须显式保持 `submodules: false`，不得初始化、上传或打包
+  `.private-data`。
+
 ## 线上访问数据与 Umami
 
 任何 agent 在回答“网站流量、访客、浏览量、来源、实时在线、性能数据在哪看”
@@ -23,18 +46,24 @@
 任何 agent 在读取、录入、修改、批量研究或发布楼盘资料前，必须先完整阅读 `docs/PROPERTY-DATA-GUIDE.md`。
 
 - 用户界面称“楼盘资料中心”；代码中的 `source-ledger` 指私有来源、证据、修订与发布裁定模型。
-- `outputs/source-ledger/ledger.json` 是被 Git 忽略的本地研究底稿，不是公开产品数据库。不得提交该文件、私有备注、受限来源摘录或未裁定候选。
+- `outputs/source-ledger/ledger.json` 是被当前公开仓库忽略的私有研究底稿，
+  不是公开产品数据库；它只允许在上述受鉴权私有数据仓库中版本化。
 - 地图 APP 使用的核心公开楼盘资料应由已裁定记录生成到受版本控制的 `src/data/`，而不是让生产代码读取 `outputs/`。
 - Agent 可以登记研究候选，但不得自行把候选改为 `可公开投射`，不得绕过人工裁定，也不得手工复制私有台账来伪造公开投射。
 - 来源许可、证据置信度、复核期限和发布状态必须分别判断；“已核验”不自动代表“允许公开”。
-- 当前批次审核和快照恢复尚未实现。公开投射只能通过 `npm run build:public-project-data -- --snapshot <id> --confirm-reviewed` 生成；不得用直接改 JSON 的方式替代。
+- 当前已实现批次导入、逐条验收和整批合并，尚未实现整批退回和快照恢复。
+  公开投射只能通过
+  `npm run build:public-project-data -- --snapshot <id> --confirm-reviewed`
+  生成；不得用直接改 JSON 的方式替代。
 
 ## 板块边界任务
 
 任何 agent 在新增、调整、拆分、合并、删除板块，或研究板块数据源前，必须先完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。
 
 - `src/data/sectors/registry.json` 是活动板块身份的唯一登记表；身份与几何必须分开处理。
-- 商业地图、看房平台和截图只能帮助确认名称、市场语义、相邻关系和大致形态；没有明确授权时，不得复制、批量抓取、保存或描摹其边界坐标。
+- 商业地图、看房平台和截图只能帮助确认名称、市场语义、相邻关系和大致形态。
+  用户已允许现有快照在私有 Git 中作个人学习与跨设备同步；这不授权继续抓取、
+  公开再分发、进入生产或把其坐标作为可发布几何来源。
 - 可发布候选面的坐标必须来自固定且许可明确的几何来源，当前首选 `data/geo/sources/osm-shanghai-260721.json` 锁定的 OSM/Geofabrik 快照，并保留来源、版本、哈希和生成命令。
 - 不得手改 `src/data/sectors/reviewed-candidates*.json` 等生成产物来“修边”；应修改批次定义或 workpack 生成器后重新生成。
 - 删除、合并或重命名板块时，必须同步处理编辑器草稿迁移、客户端索引和板块观察映射；历史手工草稿应归档，不得静默丢弃。

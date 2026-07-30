@@ -56,6 +56,10 @@ PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 预生产构建沿用公开展示模式，不能从远程入口写入本地编辑器版本或读取本地研究数据。
 预生产默认不注入 Umami Website ID，因此不会污染生产访问统计。
 
+公开仓库包含一个指向受鉴权私有研究仓库的 `.private-data` submodule。
+生产、预生产和 PR 验证工作流均显式使用 `submodules: false`，不得初始化、
+读取或打包该仓库。本地的 `pnpm setup:local` 与生产部署是两条独立路径。
+
 ## GitHub Actions Secrets
 
 仓库需要以下 Secrets，值不得提交：
