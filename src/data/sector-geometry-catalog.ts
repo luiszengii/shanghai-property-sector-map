@@ -1,11 +1,13 @@
 import adminReferencesData from "@/src/data/sectors/admin-references.wgs84.json";
 import editorialSeedsData from "@/src/data/sectors/editorial-seeds.wgs84.json";
+import publishedTopologyData from "@/src/data/sectors/published-topology.wgs84.json";
 import reviewedCandidatesData from "@/src/data/sectors/reviewed-candidates.wgs84.json";
 import sourceBackedProxiesData from "@/src/data/sectors/source-backed-proxies.wgs84.json";
 import subscopesData from "@/src/data/sectors/subscopes.wgs84.json";
 import userReviewedOverridesData from "@/src/data/sectors/user-reviewed-overrides.wgs84.json";
 import sectorsData from "@/src/data/sectors.json";
 import { selectPreferredEditorGeometry } from "@/src/lib/sector-editor-catalog";
+import { mergeMarketGeometryLayers } from "@/src/lib/sector-geometry-priority";
 import type {
   SectorResearchGeometryFeature,
   SectorSubscopeFeature,
@@ -36,19 +38,23 @@ const sourceBackedProxyIds = new Set(
 );
 const userReviewedOverrides =
   userReviewedOverridesData.features as unknown as SectorResearchGeometryFeature[];
-const reviewedCandidates = [
-  ...new Map([
+const publishedTopology =
+  publishedTopologyData.features as unknown as SectorResearchGeometryFeature[];
+const reviewedCandidates = mergeMarketGeometryLayers(
+  [
     ...reviewedCandidatesData.features,
     ...editorialSeedsData.features.filter(
       (feature) => !sourceBackedProxyIds.has(feature.properties.id),
     ),
     ...sourceBackedProxies,
     ...userReviewedOverrides,
-  ].map((feature) => [feature.properties.id, feature])).values(),
-] as unknown as SectorResearchGeometryFeature[];
+  ] as unknown as SectorResearchGeometryFeature[],
+  publishedTopology,
+);
 
 export const sectorGeometryCatalog = {
   reviewedCandidates,
+  publishedTopology,
   userReviewedOverrides,
   editorialSeeds: editorialSeedsData.features as unknown as SectorResearchGeometryFeature[],
   sourceBackedProxies,

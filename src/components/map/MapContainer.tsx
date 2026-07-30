@@ -260,6 +260,14 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
         }
       `}</style>
       <div ref={containerRef} className="amap-host" />
+      <a
+        className="osm-attribution"
+        href="https://www.openstreetmap.org/copyright"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Sector geometry © OpenStreetMap contributors
+      </a>
       {status === "ready" && !immersive && (
         <div className="map-zoom-controls" role="group" aria-label="地图缩放控制">
           <button type="button" onClick={() => changeZoom(1)} aria-label="放大地图" title="放大地图">

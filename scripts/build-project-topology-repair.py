@@ -59,6 +59,15 @@ DEFAULT_REPORT = (
     / "outputs/topology-repair/"
     "project-sector-topology-repair-report.json"
 )
+DEFAULT_PUBLISHED_OUTPUT = (
+    REPO_ROOT / "src/data/sectors/published-topology.wgs84.json"
+)
+DEFAULT_PUBLISHED_INDEX = (
+    REPO_ROOT / "src/data/sectors/published-topology.index.json"
+)
+DEFAULT_PUBLISHED_MANIFEST = (
+    REPO_ROOT / "src/data/sectors/published-topology.manifest.json"
+)
 WORKING_CRS = "EPSG:32651"
 OUTPUT_CRS = "EPSG:4326"
 MINIMUM_PART_AREA_SQUARE_METERS = 1.0
@@ -1070,6 +1079,137 @@ def build(args):
         json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    if args.publish_approved_version:
+        published_features = [
+            {
+                "type": "Feature",
+                "properties": {
+                    "id": feature["properties"]["projectSectorId"],
+                    "name": feature["properties"]["name"],
+                    "status": "reviewed-candidate",
+                    "confidence": "user-approved-topology",
+                    "coordinateSystem": "WGS84",
+                    "labelPoint": feature["properties"]["centroid"],
+                    "sourceStatus": feature["properties"]["sourceStatus"],
+                    "repairMethods": feature["properties"]["repairMethods"],
+                    "boundaryBasis": (
+                        "User-approved full-domain market-sector topology "
+                        "generated from fixed OSM geometry and the existing "
+                        "project sector catalog."
+                    ),
+                },
+                "geometry": feature["geometry"],
+            }
+            for feature in output_features
+        ]
+        published_output = {
+            "type": "FeatureCollection",
+            "name": "shanghai-approved-sector-topology",
+            "metadata": {
+                "schemaVersion": 1,
+                "coordinateSystem": "WGS84",
+                "publicationStatus": "user-approved-production",
+                "approvedVersionId": args.publish_approved_version,
+                "approvedAt": args.publish_approved_at,
+                "sourceLock": str(args.source_lock.relative_to(REPO_ROOT)),
+                "sourceSnapshotId": source_lock["id"],
+                "sourceGpkgSha256": actual_gpkg_sha,
+                "sourceIds": [
+                    source_lock["id"],
+                    "internal-user-approved-full-domain-topology-2026-07-30",
+                ],
+                "geometryBasis": (
+                    "Fixed Geofabrik/OpenStreetMap administrative geometry, "
+                    "existing project candidate geometry, and deterministic "
+                    "shared-boundary allocation."
+                ),
+                "semanticReference": (
+                    "User-authorized RealtyNavi research snapshot was used "
+                    "only for sector-name ownership and adjacency decisions."
+                ),
+                "semanticReferenceCoordinatesPublished": False,
+                "featureCount": len(published_features),
+                "missingRegistryIdentityCount":
+                    len(registry) - len(output_sector_ids),
+                "warning": (
+                    "User-approved market research topology; not a statutory, "
+                    "cadastral, planning, or official administrative boundary."
+                ),
+            },
+            "features": published_features,
+        }
+        published_index = {
+            "schemaVersion": "1.0.0",
+            "generatedFrom": str(
+                args.publish_output.relative_to(REPO_ROOT)
+            ),
+            "approvedVersionId": args.publish_approved_version,
+            "features": [
+                {
+                    "id": feature["properties"]["id"],
+                    "labelPoint": feature["properties"]["labelPoint"],
+                }
+                for feature in published_features
+            ],
+        }
+        args.publish_output.parent.mkdir(parents=True, exist_ok=True)
+        args.publish_output.write_text(
+            json.dumps(
+                published_output,
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        args.publish_index.parent.mkdir(parents=True, exist_ok=True)
+        args.publish_index.write_text(
+            json.dumps(
+                published_index,
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        published_manifest = {
+            "schemaVersion": 1,
+            "approvedVersionId": args.publish_approved_version,
+            "approvedAt": args.publish_approved_at,
+            "output": str(args.publish_output.relative_to(REPO_ROOT)),
+            "outputSha256": sha256(args.publish_output),
+            "index": str(args.publish_index.relative_to(REPO_ROOT)),
+            "indexSha256": sha256(args.publish_index),
+            "featureCount": len(published_features),
+            "registryIdentityCount": len(registry),
+            "missingRegistryIdentityIds": [
+                record["id"]
+                for record in registry
+                if record["id"] not in output_sector_ids
+            ],
+            "topologyMetricsSquareKilometers": (
+                report["metricsSquareKilometers"]
+            ),
+            "sourceLock": str(args.source_lock.relative_to(REPO_ROOT)),
+            "sourceGpkgSha256": actual_gpkg_sha,
+            "sourceIds": [
+                source_lock["id"],
+                "internal-user-approved-full-domain-topology-2026-07-30",
+            ],
+            "semanticReferenceCoordinatesPublished": False,
+        }
+        args.publish_manifest.parent.mkdir(parents=True, exist_ok=True)
+        args.publish_manifest.write_text(
+            json.dumps(
+                published_manifest,
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
+        print(
+            "PUBLISHED_TOPOLOGY_GREEN: "
+            f"{len(published_features)} 个生产板块面，"
+            f"版本 {args.publish_approved_version}"
+        )
     print(
         "TOPOLOGY_REPAIR_GREEN: "
         f"{len(output_features)} 个板块，"
@@ -1095,7 +1235,30 @@ def parse_args():
     )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
-    return parser.parse_args()
+    parser.add_argument("--publish-approved-version")
+    parser.add_argument("--publish-approved-at")
+    parser.add_argument(
+        "--publish-output",
+        type=Path,
+        default=DEFAULT_PUBLISHED_OUTPUT,
+    )
+    parser.add_argument(
+        "--publish-index",
+        type=Path,
+        default=DEFAULT_PUBLISHED_INDEX,
+    )
+    parser.add_argument(
+        "--publish-manifest",
+        type=Path,
+        default=DEFAULT_PUBLISHED_MANIFEST,
+    )
+    args = parser.parse_args()
+    if bool(args.publish_approved_version) != bool(args.publish_approved_at):
+        parser.error(
+            "--publish-approved-version and --publish-approved-at "
+            "must be provided together"
+        )
+    return args
 
 
 if __name__ == "__main__":

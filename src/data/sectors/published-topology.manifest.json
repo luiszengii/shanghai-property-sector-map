@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "approvedVersionId": "topology-repair-production-2026-07-30",
+  "approvedAt": "2026-07-30T08:51:22+08:00",
+  "output": "src/data/sectors/published-topology.wgs84.json",
+  "outputSha256": "0310195486c4ce4ebad1ef364ea6dcd54065470b7e5abd57bea206c8ab35cbc4",
+  "index": "src/data/sectors/published-topology.index.json",
+  "indexSha256": "6fa8493e43c3c783eea6736b9cf3a69f5d30a8a159ba30e0924d2d0173a70b98",
+  "featureCount": 190,
+  "registryIdentityCount": 197,
+  "missingRegistryIdentityIds": [
+    "sector_yangcheng",
+    "sector_yonghe",
+    "sector_zhenguang",
+    "sector_lingang_main_city",
+    "sector_ruihong_new_town",
+    "sector_dinghai_road",
+    "sector_songjiang_university_town"
+  ],
+  "topologyMetricsSquareKilometers": {
+    "osmLevel8And9RawDomain": 6797.433613,
+    "enclosedDomainGapFilled": 1.284342,
+    "osmLevel8And9ClosedDomain": 6798.717955,
+    "originalProjectSum": 5393.80894,
+    "originalProjectUnion": 5374.583621,
+    "originalProjectOverlapExcess": 19.225319,
+    "originalUncoveredOsmDomain": 1424.134441,
+    "finalTargetUnion": 6798.717579,
+    "finalOverlapExcess": 0.0,
+    "finalUncoveredTarget": 0.0,
+    "finalOutsideTarget": 0.0,
+    "serializedOverlapExcess": 0.000500556,
+    "serializedUncoveredTarget": 0.001218165,
+    "serializedOutsideTarget": 8.67e-07
+  },
+  "sourceLock": "data/geo/sources/osm-shanghai-260728.json",
+  "sourceGpkgSha256": "bd30e1a99c021986968d4535f4d8f410fe45cd72c13eba0274c1c887b0076093",
+  "sourceIds": [
+    "osm-geofabrik-shanghai-260728",
+    "internal-user-approved-full-domain-topology-2026-07-30"
+  ],
+  "semanticReferenceCoordinatesPublished": false
+}
