@@ -15,6 +15,7 @@
 5. `docs/adr/0041-use-record-revisions-and-ledger-snapshots.md`
 6. `docs/adr/0042-review-agent-research-batches-before-merging.md`
 7. `docs/adr/0043-keep-private-ledger-and-generate-public-projection.md`
+8. `docs/adr/0044-version-private-study-data-in-authenticated-git.md`
 
 如果任务涉及板块身份、边界或板块数据源，还必须完整阅读 `docs/SECTOR-BOUNDARY-PLAYBOOK.md`。
 
@@ -46,9 +47,16 @@
 - 保存私有备注、许可判断和待核验线索
 - 保存不可变修订
 - 保存资料版本快照
-- 将来保存 Agent 研究批次
+- 保存 Agent 研究批次及逐条验收进度
 
-该目录被 `.gitignore` 排除，只允许本机开发环境读写。它可能包含未获公开许可、尚未核验、存在冲突或只供研究使用的材料，因此不得整体提交到 Git，也不得让生产页面直接读取。
+该目录被当前公开仓库的 `.gitignore` 排除。用户于 2026-07-30 明确授权把
+个人学习和跨设备延续所需的私有台账放在受鉴权的私有数据仓库
+`luiszengii/shanghai-property-sector-map-private-data` 中版本化，并通过
+`.private-data` submodule 与本地 `outputs/` 链接。
+
+私有 Git 存储不改变发布裁定：该目录可能包含未获公开许可、尚未核验、存在
+冲突或只供研究使用的材料，仍不得进入当前公开仓库、生产构建、公开 API 或
+公开产品投射。Cookie、Token、密码、私钥和浏览器会话不得进入私有数据仓库。
 
 ### 2.3 公开产品投射
 
@@ -152,7 +160,16 @@ Agent 不得手工把 `ledger.json` 复制到 `src/data/`，也不得直接编�
 - `已合并`
 - `已退回`
 
-当前只有结构定义，尚未实现提交、预览、批量裁定和合并接口。Agent 不得直接编辑 `ledger.json` 创建批次，也不得把研究候选直接写入当前记录来绕过人工裁定。
+当前已实现：
+
+- 通过受验证的导入脚本创建 `待裁定` 批次
+- 在“楼盘资料中心”的“研究验收版本”区域浏览、搜索和筛选候选
+- 逐条勾选或取消验收，并在刷新页面后保留进度
+- 仅在全部候选完成验收后，把整个批次并入当前私有来源和证据修订
+
+验收勾选只记录人工检查进度，不会自动把候选来源或证据并入当前记录。人工点击“并入当前台账”后，来源与证据候选才会成为当前私有修订，批次状态变为 `已合并`；证据的发布状态和来源允许用途保持原值，不会自动生成公开投射。当前尚未实现整批退回接口。
+
+Agent 不得直接编辑 `ledger.json` 创建批次，也不得把研究候选直接写入当前记录来绕过人工裁定。
 
 ## 4. 日常人工维护流程
 
@@ -203,9 +220,15 @@ Agent 不得手工把 `ledger.json` 复制到 `src/data/`，也不得直接编�
 - 覆盖历史修订
 - 直接修改生成的公开数据来绕过来源和证据模型
 
-### 5.3 研究批次尚未实现时
+### 5.3 导入待裁定研究批次
 
-在研究批次接口完成前，Agent 应停止在“候选清单”阶段，并向用户提供：
+先把候选整理为受验证的 JSON 清单，保存在被 Git 忽略的本地目录，例如：
+
+```text
+outputs/source-ledger/imports/<batch-name>.json
+```
+
+清单必须包含范围明确的：
 
 - 批次目标和覆盖楼盘
 - 候选来源及许可判断
@@ -215,7 +238,24 @@ Agent 不得手工把 `ledger.json` 复制到 `src/data/`，也不得直接编�
 - 建议发布状态
 - 冲突或待核验事项
 
-Agent 必须等待用户裁定，不能直接写入当前私有记录或公开产品数据。
+先只校验清单：
+
+```bash
+npm run import:source-ledger-research-batch -- \
+  --input outputs/source-ledger/imports/<batch-name>.json \
+  --check
+```
+
+校验通过后再导入：
+
+```bash
+npm run import:source-ledger-research-batch -- \
+  --input outputs/source-ledger/imports/<batch-name>.json
+```
+
+导入后在 `http://localhost:3000/sources` 的“研究验收版本”区域验收。导入器通过与资料中心相同的结构校验创建批次；不得用直接修改 `ledger.json` 的方式代替。
+
+Agent 必须等待用户完成全部候选验收或明确授权整批验收，才能点击“并入当前台账”。合并只会创建当前私有来源和证据修订；不能因为验收或合并而把候选改成 `可公开投射`，也不能直接写入公开产品数据。
 
 ## 6. 公开发布流程
 
@@ -236,6 +276,9 @@ Agent 候选
 
 - 私有来源和证据编辑
 - 不可变修订
+- 待裁定研究批次的受验证导入
+- 研究批次浏览、搜索、未验收筛选和逐条验收进度
+- 全部验收后的研究批次整批合并
 - 资料版本创建
 - 公开资格、新鲜度和来源用途筛选
 - 私有备注与修订信息脱敏
@@ -248,7 +291,7 @@ Agent 候选
 
 当前尚未实现：
 
-- Agent 研究批次提交和批量裁定
+- 研究批次整批退回
 - 资料版本恢复
 
 生成公开投射前，用户必须已经审核目标资料版本。执行：
@@ -299,14 +342,19 @@ npm run check:map-performance
 - 桌面和移动端没有明显布局问题
 - 生产构建中的 `/sources` 和 `/api/source-ledger` 返回 404
 - `git status --ignored` 显示 `outputs/source-ledger/` 仍被忽略
-- 提交中没有 `ledger.json`、私有备注、受限摘录或认证信息
+- 当前公开仓库提交中没有 `ledger.json`、私有备注、受限摘录或认证信息
+- 私有数据仓库保持 `PRIVATE`，且提交中没有 Cookie、Token、密码、私钥或
+  浏览器会话
 
 ## 8. 故障与恢复
 
 - JSON 不存在时，系统会创建空的 schema v1 资料库。
 - JSON 无法通过解析时，停止写入并报告具体校验错误；不得用空文件覆盖。
 - 写入使用临时文件和原子重命名，避免部分写入。
-- 当前没有自动备份、跨设备同步或快照恢复接口。
+- 私有 Git 仓库提供跨设备版本同步；它不是资料版本恢复接口，也不能替代
+  `snapshots` 的业务语义。
+- 新设备运行 `pnpm setup:local` 初始化私有 submodule、链接 `outputs/` 并
+  生成 `.env.local`。GitHub CLI 必须登录到获准账号。
 - 需要迁移、恢复或修复损坏数据时，先复制原文件到工作区外的安全位置，再编写经过测试的一次性迁移工具。
 
 ## 9. Agent 完成检查单
@@ -319,7 +367,8 @@ npm run check:map-performance
 - [ ] 来源许可与证据置信度分别判断
 - [ ] 未经人工裁定的记录没有标记为 `可公开投射`
 - [ ] 历史修订没有被覆盖或删除
-- [ ] 私有文件和认证信息没有进入 Git
+- [ ] 私有文件只进入受鉴权私有数据仓库，没有进入当前公开仓库
+- [ ] Cookie、Token、密码、私钥和浏览器会话没有进入任何 Git 仓库
 - [ ] 公开字段未超过复核日期
 - [ ] 公开投射来自明确审核过的资料版本
 - [ ] 已运行适用测试

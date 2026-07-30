@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: false
       - uses: pnpm/action-setup@v6
         with:
           version: "11.9.0"

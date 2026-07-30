@@ -6,7 +6,10 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "predev": "node scripts/link-private-data.mjs",
     "dev": "next dev",
+    "setup:local": "node scripts/setup-local-workspace.mjs",
+    "check:local-setup": "node --test scripts/local-workspace-data.test.mjs",
     "build": "next build",
     "build:sites": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "next start",
@@ -16,6 +19,7 @@
     "verify:public": "node scripts/verify-public-deployment.mjs",
     "build:public-observations": "python3 scripts/build-public-observations.py",
     "build:public-project-data": "node scripts/build-public-project-data.mjs",
+    "import:source-ledger-research-batch": "node scripts/import-source-ledger-research-batch.mjs",
     "check:public-project-data": "node scripts/build-public-project-data.mjs --check",
     "check:public-project-data-source": "node scripts/build-public-project-data.mjs --check --check-source",
     "check:sectors": "node scripts/check-sector-data.mjs",
@@ -24,7 +28,7 @@
     "build:private-sector-snapshots": "node scripts/build-private-sector-snapshots.mjs",
     "build:topology-repair-preview": "uv run --script scripts/build-project-topology-repair.py",
     "check:sector-client-index": "node scripts/build-sector-client-index.mjs --check",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .private-data",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
