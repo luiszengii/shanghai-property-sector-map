@@ -1,5 +1,9 @@
 # Keep the source ledger local until authenticated
 
+Status: superseded for cross-device storage by
+`0044-version-private-study-data-in-authenticated-git.md`. Its public-build and
+public-projection boundaries remain in force.
+
 The source ledger will first exist only in local development and will not be included in production artifacts. It may contain private research snapshots, excerpts, notes, and not-yet-cleared sources; the public site receives only a deliberately selected public projection. If cross-device access becomes necessary, an authenticated internal service must be designed before any ledger data is deployed.
 
 ## Considered Options
