@@ -6,7 +6,10 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "predev": "node scripts/link-private-data.mjs",
     "dev": "next dev",
+    "setup:local": "node scripts/setup-local-workspace.mjs",
+    "check:local-setup": "node --test scripts/local-workspace-data.test.mjs",
     "build": "next build",
     "build:sites": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "next start",
@@ -24,7 +27,7 @@
     "build:sector-client-index": "node scripts/build-sector-client-index.mjs",
     "build:private-sector-snapshots": "node scripts/build-private-sector-snapshots.mjs",
     "check:sector-client-index": "node scripts/build-sector-client-index.mjs --check",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .private-data",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
