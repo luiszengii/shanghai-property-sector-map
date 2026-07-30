@@ -8,6 +8,11 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const snapshotPaths = {
+  "project-topology-repair": [
+    "outputs",
+    "topology-repair",
+    "project-sector-topology-repair.wgs84.geojson",
+  ],
   "hfwgsj-private": [
     "outputs",
     "hfwgsj",

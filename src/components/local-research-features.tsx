@@ -32,6 +32,7 @@ export function LocalSourceLedgerShortcut() {
 
 const sourceLabels: Record<SectorBoundarySource, string> = {
   project: "项目研究口径",
+  "project-topology-repair": "拓扑修复预览",
   "hfwgsj-private": "微观世界快照",
   "anjuke-private": "安居客快照",
   "fang-private": "房天下快照",
@@ -56,7 +57,11 @@ export function LocalSectorSourceControls() {
       <div className="sector-source-options" role="radiogroup" aria-label="板块边界数据源">
         <button type="button" className={sectorBoundarySource === "project" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "project"} onClick={() => setSectorBoundarySource("project")}>
           <MapPinned size={14} />
-          <span><strong>项目研究边界</strong><small>当前候选面与行政参考层</small></span>
+          <span><strong>项目研究边界</strong><small>本地拓扑修复目标层 · 待复核</small></span>
+        </button>
+        <button type="button" className={sectorBoundarySource === "project-topology-repair" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "project-topology-repair"} onClick={() => setSectorBoundarySource("project-topology-repair")}>
+          <MapPinned size={14} />
+          <span><strong>项目拓扑修复预览</strong><small>OSM 全域填补 · 消除交叠</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "hfwgsj-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "hfwgsj-private"} onClick={() => setSectorBoundarySource("hfwgsj-private")}>
           <Database size={14} />
@@ -93,7 +98,7 @@ export function LocalSectorSourceControls() {
         </button>
       ) : null}
       <p className="sector-source-note">
-        四套外部快照只从本机忽略文件读取；RealtyNavi 按用户确认授权仅作内部对照，其他快照许可状态不变，均不进入公开构建。
+        本地项目研究边界、修复预览与四套外部快照只从本机忽略文件读取；RealtyNavi 按用户确认授权仅作内部语义对照，均不进入公开构建。
       </p>
     </div>
   );
@@ -105,6 +110,12 @@ export function LocalDataDisclosures({ source }: { source: SectorBoundarySource 
       {source === "hfwgsj-private" && (
         <li>当前板块边界已切换为本地私有快照；来源许可与坐标系尚未独立确认，不进入公开构建。</li>
       )}
+      {source === "project-topology-repair" && (
+        <li>当前为项目拓扑修复预览：边界取自固定 OSM 几何，RealtyNavi 只辅助判断归属；自动分配尚待逐块复核，不进入公开构建。</li>
+      )}
+      {source === "project" && (
+        <li>本地项目研究边界已应用自动拓扑修复：边界取自固定 OSM 几何，RealtyNavi 只辅助判断归属；自动分配尚待逐块复核，不进入公开构建。</li>
+      )}
       {source === "realtynavi-private" && (
         <li>当前板块边界已切换为 RealtyNavi 授权研究快照；仅限内部对照，不进入公开构建或对外分发。</li>
       )}
@@ -114,7 +125,9 @@ export function LocalDataDisclosures({ source }: { source: SectorBoundarySource 
 }
 
 export function getLocalExternalLegend(source: SectorBoundarySource) {
-  return source === "hfwgsj-private"
+  return source === "project-topology-repair"
+    ? { color: "#0f766e", label: "青绿色实线：项目拓扑修复预览", note: "固定 OSM 边界 · RealtyNavi 仅作语义归属参考 · 待人工复核" }
+    : source === "hfwgsj-private"
     ? { color: "#7c3aed", label: "紫色实线：微观世界快照边界", note: "私有研究快照 · 坐标系尚未独立确认" }
     : source === "anjuke-private"
       ? { color: "#ea580c", label: "橙色实线：安居客板块边界", note: "BD-09 已转 GCJ-02 · 120 / 141 个边界" }
