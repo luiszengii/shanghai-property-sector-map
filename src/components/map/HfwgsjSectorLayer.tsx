@@ -16,10 +16,16 @@ import {
 } from "@/src/lib/sector-label-visibility";
 import type { SectorFeature } from "@/src/types/map";
 import {
+  coordinateToDisplayPosition,
+} from "@/src/lib/geo-coordinate-conversion";
+import {
   useMapStore,
   type SectorBoundarySource,
 } from "@/src/store/map-store";
-import { nativeGeometryToDisplayPath } from "./amap-coordinate-conversion";
+import {
+  nativeGeometryToDisplayPath,
+  wgs84GeometryToDisplayPath,
+} from "./amap-coordinate-conversion";
 
 type PrivateSnapshotSource = Exclude<SectorBoundarySource, "project">;
 
@@ -27,6 +33,7 @@ interface PrivateSectorLayerProps {
   amapApi: typeof AMap;
   map: AMap.Map;
   source: PrivateSnapshotSource;
+  projectTarget?: boolean;
   zoom: number;
   viewportVersion: number;
   viewportInteracting: boolean;
@@ -64,6 +71,17 @@ const snapshotConfigs: Record<PrivateSnapshotSource, {
   url: string;
   palette: SnapshotPalette;
 }> = {
+  "project-topology-repair": {
+    label: "项目拓扑修复预览",
+    url: "/api/local-sector-snapshot?source=project-topology-repair",
+    palette: {
+      fill: "#0f766e",
+      stroke: "#0f766e",
+      selectedStroke: "#134e4a",
+      label: "#0f766e",
+      labelBorder: "rgba(15, 118, 110, .3)",
+    },
+  },
   "hfwgsj-private": {
     label: "微观世界私有快照",
     url: "/api/local-sector-snapshot?source=hfwgsj-private",
@@ -175,6 +193,7 @@ export function PrivateSectorLayer({
   amapApi,
   map,
   source,
+  projectTarget = false,
   zoom,
   viewportVersion,
   viewportInteracting,
@@ -206,13 +225,16 @@ export function PrivateSectorLayer({
     missingCount: number;
     coordinateNote: string;
   } | null>(null);
+  const layerLabel = projectTarget
+    ? "项目研究边界 · 拓扑修复研究版"
+    : config.label;
   const statusLabel = status.state === "loading"
     ? "正在载入私有板块快照…"
     : status.state === "error"
       ? "私有板块快照不可用"
       : snapshotMeta?.districtOutlineDifferenceCount
         ? `${config.label} · ${snapshotMeta.namedCount} 个命名板块${showRealtynaviDistrictOutlineDifferences ? ` · 已显示 ${snapshotMeta.districtOutlineDifferenceCount} 个区级外轮廓差异参考面` : ""}`
-        : `${config.label} · ${status.count} / ${snapshotMeta?.directoryCount ?? status.count} 个边界`;
+        : `${layerLabel} · ${status.count} / ${snapshotMeta?.directoryCount ?? status.count} 个边界`;
 
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -244,6 +266,10 @@ export function PrivateSectorLayer({
       });
       if (!response.ok) throw new Error(`私有板块快照加载失败：${response.status}`);
       const snapshot = parseHfwgsjSectorSnapshot(await response.json());
+      const snapshotUsesWgs84 = (
+        snapshot.metadata.coordinate_system === "WGS84"
+        || snapshot.metadata.source_coordinate_system === "WGS84"
+      );
       setSnapshotMeta({
         directoryCount: snapshot.metadata.directory_count ?? snapshot.features.length,
         namedCount: snapshot.metadata.named_feature_count ?? snapshot.features.length,
@@ -264,9 +290,13 @@ export function PrivateSectorLayer({
         const districtOutlineDifference = (
           feature.properties.classification === "district_outline_difference"
         );
-        const path = await nativeGeometryToDisplayPath(
-          amapApi,
-          simplifySectorGeometryForDisplay(feature.geometry),
+        const simplifiedGeometry = simplifySectorGeometryForDisplay(
+          feature.geometry,
+        );
+        const path = await (
+          snapshotUsesWgs84
+            ? wgs84GeometryToDisplayPath(amapApi, simplifiedGeometry)
+            : nativeGeometryToDisplayPath(amapApi, simplifiedGeometry)
         );
         if (cancelled) return;
 
@@ -282,7 +312,10 @@ export function PrivateSectorLayer({
         const label = shouldLabel
           ? new amapApi.Text({
             text: feature.properties.name,
-            position: feature.properties.centroid!,
+            position: coordinateToDisplayPosition(
+              feature.properties.centroid!,
+              snapshotUsesWgs84 ? "WGS84" : "GCJ-02",
+            ),
             anchor: "center",
             zIndex: 26,
             clickable: false,
@@ -478,6 +511,8 @@ export function PrivateSectorLayer({
       <span>
         {status.state === "error"
           ? `请确认 ${source} 的本地文件仍存在`
+          : source === "project-topology-repair"
+            ? `${snapshotMeta?.coordinateNote ?? "WGS84"} · OSM ODbL · 仅限内部复核`
           : snapshotMeta?.missingCount
             ? `GCJ-02 · ${snapshotMeta.missingCount} 个目录项无边界 · 许可未知 · 仅限私有研究`
             : `${snapshotMeta?.coordinateNote ?? "GCJ-02"} · 许可未知 · 仅限私有研究`}

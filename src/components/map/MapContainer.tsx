@@ -300,7 +300,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
-          {!isLocalResearchMode || sectorBoundarySource === "project" ? (
+          {!isLocalResearchMode ? (
             <SectorLayer
               amapApi={amapApi}
               map={mapInstance}
@@ -316,7 +316,10 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
             <PrivateSectorLayer
               amapApi={amapApi}
               map={mapInstance}
-              source={sectorBoundarySource}
+              source={sectorBoundarySource === "project"
+                ? "project-topology-repair"
+                : sectorBoundarySource}
+              projectTarget={sectorBoundarySource === "project"}
               zoom={zoom}
               viewportVersion={viewportVersion}
               viewportInteracting={viewportInteracting}
