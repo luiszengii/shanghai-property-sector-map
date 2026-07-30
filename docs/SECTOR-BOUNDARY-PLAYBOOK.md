@@ -442,6 +442,25 @@ outputs/topology-repair/project-sector-topology-repair-report.json
 
 两者都被 Git 忽略，只能通过本地研究模式的“项目拓扑修复预览”查看。不得把预览 GeoJSON 复制到 `reviewed-candidates.wgs84.json`，也不得把自动归属视为人工裁定。需要发布时，应根据报告逐块复核，再把明确的 OSM 边界与共同邻居写进 batch/workpack 后重新生成。
 
+2026-07-30 用户明确批准当前全域拓扑版本直接进入生产。该裁定通过生成器的
+显式生产模式落盘，不是把 `outputs/` 文件手工复制进公开数据：
+
+```bash
+npm run build:published-sector-topology
+```
+
+受版本控制的生产产物为：
+
+```text
+src/data/sectors/published-topology.wgs84.json
+src/data/sectors/published-topology.index.json
+src/data/sectors/published-topology.manifest.json
+```
+
+生产版本必须包含固定批准 ID、批准时间、OSM source lock、GeoPackage 哈希、
+输出哈希和拓扑指标。RealtyNavi 仍只影响名称归属与相邻关系判断，其坐标不得
+进入生产产物。更换生产版本时必须使用新的批准 ID 并重新生成三份文件。
+
 生成器必须保证：
 
 - RealtyNavi 坐标不成为输出边；
