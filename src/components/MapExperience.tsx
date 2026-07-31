@@ -9,12 +9,14 @@ import {
   Navigation,
   SlidersHorizontal,
 } from "lucide-react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, type ReactNode, useCallback, useEffect, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
+import { shouldDismissDetail } from "@/src/lib/detail-card-dismissal";
 import { useMapStore } from "@/src/store/map-store";
 import { DetailCard } from "./DetailCards";
-import { FilterPanel, type FilterPanelMode } from "./FilterPanel";
+import type { FilterPanelMode } from "./FilterPanel";
+import { MapControlDrawer } from "./MapControlDrawer";
 import { MobileBottomSheet } from "./MobileBottomSheet";
 import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
@@ -31,8 +33,10 @@ const ZoomPill = memo(function ZoomPill() {
 
 const AppHeader = memo(function AppHeader({
   onEnterImmersive,
+  quickbar,
 }: {
   onEnterImmersive: () => void;
+  quickbar: ReactNode;
 }) {
   return (
     <header className="topbar">
@@ -43,7 +47,10 @@ const AppHeader = memo(function AppHeader({
           <p><Layers3 size={12} /> {sectorCatalog.registry.length} 个板块 · 设施与新盘</p>
         </div>
       </div>
-      <SearchBar />
+      <div className="topbar-workspace">
+        <SearchBar />
+        {quickbar}
+      </div>
       <div className="header-status">
         <span className="status-label">当前板块</span>
         <CurrentSectorName />
@@ -65,8 +72,6 @@ const MapQuickbar = memo(function MapQuickbar({
 }) {
   const projects = useProjectCatalog();
   const enabledCategoryCount = useMapStore((state) => state.enabledCategories.length);
-  const showProjects = useMapStore((state) => state.showProjects);
-  const toggleProjects = useMapStore((state) => state.toggleProjects);
   return (
     <div className="map-quickbar" aria-label="地图快捷筛选">
       <button
@@ -78,7 +83,12 @@ const MapQuickbar = memo(function MapQuickbar({
         <Layers3 size={15} />
         <span>板块边界</span>
       </button>
-      <button type="button" className={`is-project${showProjects ? " is-active" : ""}`} onClick={toggleProjects} aria-pressed={showProjects}>
+      <button
+        type="button"
+        className={`is-project${filterMode === "projects" ? " is-active" : ""}`}
+        onClick={() => onToggleFilters("projects")}
+        aria-expanded={filterMode === "projects"}
+      >
         <Building2 size={15} />
         <span>新盘</span>
         <b>{projects.length}</b>
@@ -135,23 +145,36 @@ export function MapExperience() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [exitImmersive, isImmersive]);
 
+  useEffect(() => {
+    if (!hasDetail) return;
+    const handlePointerDown = (event: PointerEvent) => {
+      if (shouldDismissDetail(event.target)) closeDetail();
+    };
+    document.addEventListener("pointerdown", handlePointerDown, true);
+    return () => document.removeEventListener("pointerdown", handlePointerDown, true);
+  }, [closeDetail, hasDetail]);
+
   return (
     <main className={`app-shell${isImmersive ? " is-immersive" : ""}${hasDetail ? " has-detail" : ""}`}>
       <MapContainer immersive={isImmersive} />
       {!isImmersive && (
-        <>
-          <AppHeader onEnterImmersive={enterImmersive} />
-          <MapQuickbar filterMode={desktopFilterMode} onToggleFilters={toggleDesktopFilters} />
-        </>
+        <AppHeader
+          onEnterImmersive={enterImmersive}
+          quickbar={(
+            <MapQuickbar
+              filterMode={desktopFilterMode}
+              onToggleFilters={toggleDesktopFilters}
+            />
+          )}
+        />
       )}
 
       {!isImmersive && (
         <>
-          {desktopFilterMode && (
-            <aside className="desktop-filters">
-              <FilterPanel mode={desktopFilterMode} onClose={() => setDesktopFilterMode(null)} />
-            </aside>
-          )}
+          <MapControlDrawer
+            mode={desktopFilterMode}
+            onClose={() => setDesktopFilterMode(null)}
+          />
           <DetailCard />
 
           <MobileActions />
