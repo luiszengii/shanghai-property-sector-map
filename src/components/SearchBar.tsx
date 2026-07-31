@@ -229,7 +229,7 @@ export function SearchBar() {
           ))}
         </div>
       )}
-      {searchMessage && <div className={`search-message ${searchMessage.startsWith("没有") ? "is-error" : ""}`} role="status">{searchMessage}</div>}
+      <span className="search-status" role="status" aria-live="polite">{searchMessage}</span>
     </div>
   );
 }

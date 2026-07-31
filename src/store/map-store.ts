@@ -51,6 +51,7 @@ interface MapState {
   selectSector: (id: string | null) => void;
   selectPlace: (id: string | null) => void;
   selectProject: (id: string | null) => void;
+  focusProject: (id: string) => void;
   toggleProjects: () => void;
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
@@ -113,6 +114,17 @@ export const useMapStore = create<MapState>()(
       selectSector: (id) => set({ selectedSectorId: id, selectedPlaceId: null, selectedProjectId: null }),
       selectPlace: (id) => set({ selectedPlaceId: id, selectedProjectId: null }),
       selectProject: (id) => set({ selectedProjectId: id, selectedPlaceId: null }),
+      focusProject: (id) =>
+        set((state) => ({
+          showProjects: true,
+          selectedPlaceId: null,
+          selectedProjectId: id,
+          focusRequest: {
+            type: "project",
+            id,
+            nonce: (state.focusRequest?.nonce ?? 0) + 1,
+          },
+        })),
       toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),

@@ -2,11 +2,10 @@
 
 import { Building2, Check, ChevronDown, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
 import { memo, useId, useState } from "react";
-import { CategoryIcon } from "@/src/components/CategoryIcon";
+import { AnimatedList } from "@/src/components/AnimatedList";
+import { AnimatedProjectList } from "@/src/components/AnimatedProjectList";
 import {
   LocalSectorSourceControls,
-  projectFilterLabel,
-  projectFootnote,
 } from "@/src/components/local-research-features";
 import categoriesData from "@/src/data/categories.json";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
@@ -19,7 +18,7 @@ const groups = [
   { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
 ] as const;
 type CategoryGroupId = (typeof groups)[number]["id"];
-export type FilterPanelMode = "all" | "sectors" | "facilities";
+export type FilterPanelMode = "all" | "sectors" | "projects" | "facilities";
 const categoriesByGroup = new Map(
   groups.map((group) => [
     group.id,
@@ -45,6 +44,7 @@ export const FilterPanel = memo(function FilterPanel({
   const sectorLabelZoomId = useId();
   const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
+  const selectedProjectId = useMapStore((state) => state.selectedProjectId);
   const showProjects = useMapStore((state) => state.showProjects);
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
@@ -54,6 +54,7 @@ export const FilterPanel = memo(function FilterPanel({
   const toggleCategory = useMapStore((state) => state.toggleCategory);
   const setCategoryGroup = useMapStore((state) => state.setCategoryGroup);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
+  const focusProject = useMapStore((state) => state.focusProject);
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
   const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
   const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
@@ -63,16 +64,34 @@ export const FilterPanel = memo(function FilterPanel({
   const clearCategories = useMapStore((state) => state.clearCategories);
   const setMobileFiltersOpen = useMapStore((state) => state.setMobileFiltersOpen);
   const showSectorControls = mode === "all" || mode === "sectors";
+  const showProjectControls = mode === "projects";
   const showFacilityControls = mode === "all" || mode === "facilities";
-  const panelTitle = mode === "sectors" ? "板块与项目" : mode === "facilities" ? "生活设施" : "地图显示";
+  const panelTitle = mode === "sectors"
+    ? "板块边界"
+    : mode === "projects"
+      ? "新盘列表"
+      : mode === "facilities"
+        ? "生活设施"
+        : "地图显示";
+  const panelIcon = mode === "projects"
+    ? <Building2 size={13} />
+    : mode === "facilities"
+      ? <SlidersHorizontal size={13} />
+      : <Layers3 size={13} />;
   return (
     <section
       className={`filter-panel glass-panel ${mobile ? "is-mobile" : ""}`}
-      aria-label={mode === "sectors" ? "板块边界筛选" : mode === "facilities" ? "生活设施筛选" : "地图图层筛选"}
+      aria-label={mode === "sectors"
+        ? "板块边界筛选"
+        : mode === "projects"
+          ? "新盘列表"
+          : mode === "facilities"
+            ? "生活设施筛选"
+            : "地图图层筛选"}
     >
       <div className="panel-heading">
         <div>
-          <span className="eyebrow">{mode === "facilities" ? <SlidersHorizontal size={13} /> : <Layers3 size={13} />} 图层筛选</span>
+          <span className="eyebrow">{panelIcon} {mode === "projects" ? `${projects.length} 个项目` : "图层筛选"}</span>
           <h2>{panelTitle}</h2>
         </div>
         {(mobile || onClose) && (
@@ -132,60 +151,87 @@ export const FilterPanel = memo(function FilterPanel({
               </div>
             </details>
           </div>
-          <div className="filter-group project-filter-group">
-            <div className="group-title"><strong>新房项目</strong><span>{projects.length} 个项目</span></div>
-            <button className={"filter-item project-filter " + (showProjects ? "is-active" : "")} onClick={toggleProjects} aria-pressed={showProjects}>
-              <span className="category-icon project-category-icon"><Building2 size={14} /></span>
-              <span>{projectFilterLabel}</span>
-              <span className="toggle"><span /></span>
-            </button>
-            <details className="project-display-settings">
-              <summary>
-                <SlidersHorizontal size={13} />
-                <span>显示设置</span>
-                <small>聚合 {projectClusterRadius}px · 详情 Z {projectDetailMinZoom.toFixed(1)}</small>
-              </summary>
-              <div className="project-settings-body">
-                <button
-                  type="button"
-                  className={`project-setting-toggle ${projectClusterEnabled ? "is-active" : ""}`}
-                  onClick={() => setProjectClusterEnabled(!projectClusterEnabled)}
-                  aria-pressed={projectClusterEnabled}
-                >
-                  <span>聚合相邻 Pin</span>
-                  <span className="toggle"><span /></span>
-                </button>
-                <label htmlFor={clusterRadiusId}>
-                  <span>聚合范围 <output>{projectClusterRadius}px</output></span>
-                  <input
-                    id={clusterRadiusId}
-                    type="range"
-                    min="32"
-                    max="128"
-                    step="8"
-                    value={projectClusterRadius}
-                    disabled={!projectClusterEnabled}
-                    onChange={(event) => setProjectClusterRadius(Number(event.target.value))}
-                  />
-                </label>
-                <label htmlFor={detailZoomId}>
-                  <span>详情显示级别 <output>Z {projectDetailMinZoom.toFixed(1)}</output></span>
-                  <input
-                    id={detailZoomId}
-                    type="range"
-                    min="11"
-                    max="16"
-                    step="0.2"
-                    value={projectDetailMinZoom}
-                    onChange={(event) => setProjectDetailMinZoom(Number(event.target.value))}
-                  />
-                </label>
-                <p>点击聚合标签会继续放大；单个项目达到设定级别后才显示详情。</p>
-              </div>
-            </details>
-          </div>
-          <p className="panel-footnote">{projectFootnote}</p>
         </>
+      )}
+      {mode === "all" && (
+        <div className="filter-group project-filter-group">
+          <div className="group-title"><strong>新房项目</strong><span>{projects.length} 个项目</span></div>
+          <button
+            type="button"
+            className={`filter-item project-filter${showProjects ? " is-active" : ""}`}
+            onClick={toggleProjects}
+            aria-pressed={showProjects}
+          >
+            <span className="category-icon project-category-icon"><Building2 size={14} /></span>
+            <span>显示新盘标记</span>
+            <span className="toggle"><span /></span>
+          </button>
+        </div>
+      )}
+      {showProjectControls && (
+        <div className="project-list-panel">
+          <button
+            type="button"
+            className={`project-visibility-switch${showProjects ? " is-active" : ""}`}
+            onClick={toggleProjects}
+            aria-pressed={showProjects}
+          >
+            <span>
+              <strong>显示全部新盘</strong>
+              <small>{showProjects ? "地图上显示项目标记" : "地图标记已隐藏"}</small>
+            </span>
+            <span className="toggle" aria-hidden="true"><span /></span>
+          </button>
+          <AnimatedProjectList
+            projects={projects}
+            selectedProjectId={selectedProjectId}
+            onSelect={(project) => focusProject(project.id)}
+          />
+          <details className="project-display-settings project-list-settings">
+            <summary>
+              <SlidersHorizontal size={13} />
+              <span>标记显示设置</span>
+              <small>聚合 {projectClusterRadius}px · 详情 Z {projectDetailMinZoom.toFixed(1)}</small>
+            </summary>
+            <div className="project-settings-body">
+              <button
+                type="button"
+                className={`project-setting-toggle ${projectClusterEnabled ? "is-active" : ""}`}
+                onClick={() => setProjectClusterEnabled(!projectClusterEnabled)}
+                aria-pressed={projectClusterEnabled}
+              >
+                <span>聚合相邻 Pin</span>
+                <span className="toggle"><span /></span>
+              </button>
+              <label htmlFor={clusterRadiusId}>
+                <span>聚合范围 <output>{projectClusterRadius}px</output></span>
+                <input
+                  id={clusterRadiusId}
+                  type="range"
+                  min="32"
+                  max="128"
+                  step="8"
+                  value={projectClusterRadius}
+                  disabled={!projectClusterEnabled}
+                  onChange={(event) => setProjectClusterRadius(Number(event.target.value))}
+                />
+              </label>
+              <label htmlFor={detailZoomId}>
+                <span>详情显示级别 <output>Z {projectDetailMinZoom.toFixed(1)}</output></span>
+                <input
+                  id={detailZoomId}
+                  type="range"
+                  min="11"
+                  max="16"
+                  step="0.2"
+                  value={projectDetailMinZoom}
+                  onChange={(event) => setProjectDetailMinZoom(Number(event.target.value))}
+                />
+              </label>
+              <p>点击列表项目会自动定位，并打开右侧楼盘详情。</p>
+            </div>
+          </details>
+        </div>
       )}
       {showFacilityControls && (
         <>
@@ -223,18 +269,17 @@ export const FilterPanel = memo(function FilterPanel({
                   </span>
                 </div>
                 {expanded && (
-                  <div className="filter-list" id={groupContentId}>
+                  <AnimatedList className="filter-list" id={groupContentId}>
                     {groupCategories.map((category) => {
                       const checked = enabledCategories.includes(category.id);
                       return (
                         <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
-                          <span className="category-icon" style={{ "--category-color": category.color } as React.CSSProperties}><CategoryIcon name={category.icon} /></span>
                           <span>{category.name}</span>
                           <span className="toggle"><span /></span>
                         </button>
                       );
                     })}
-                  </div>
+                  </AnimatedList>
                 )}
               </div>
             );
