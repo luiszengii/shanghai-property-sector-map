@@ -49,8 +49,9 @@ pnpm check:public
 - `shfang-preprod.service`（`127.0.0.1:3001`）与 `shfang-map.service`（`127.0.0.1:3000`）；
 - `pre-prod.shfang.xyz` 与 `shfang.xyz` Nginx 虚拟主机。
 
-预生产只用于人工验收，使用 HTTP Basic Auth，且由 Nginx 返回
-`X-Robots-Tag: noindex, nofollow`。确认后必须创建 `pre-prod` 到 `main` 的
+预生产只用于人工验收，允许匿名访问，但由 Nginx 返回
+`X-Robots-Tag: noindex, nofollow` 以阻止搜索引擎收录。确认后必须创建
+`pre-prod` 到 `main` 的
 PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 
 预生产构建沿用公开展示模式，不能从远程入口写入本地编辑器版本或读取本地研究数据。
@@ -69,11 +70,10 @@ PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 - `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
 - `TENCENT_SSH_PRIVATE_KEY`
 - `TENCENT_SSH_KNOWN_HOSTS`
-- `PREPROD_BASIC_AUTH`（HTTP Basic Auth 的 `用户名:密码`）
 
 SSH 私钥只用于 GitHub Actions。服务器端 `deploy` 用户只允许公钥登录，
-并且只能免密重启和检查两个应用服务。`PREPROD_BASIC_AUTH` 仅用于
-Actions 的外网验收，不得写入仓库或日志。
+并且只能免密重启和检查两个应用服务。预生产的
+Actions 外网验收必须不带认证信息，以及时发现匿名访问回归。
 
 访问统计后台、登录入口、数据查看和无数据排查见
 [`docs/ANALYTICS.md`](ANALYTICS.md)。
