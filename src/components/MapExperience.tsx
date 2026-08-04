@@ -5,9 +5,11 @@ import {
   Expand,
   Layers3,
   Map as MapIcon,
+  Milestone,
   Minimize2,
   Navigation,
   SlidersHorizontal,
+  TrainFront,
 } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
@@ -66,7 +68,11 @@ const MapQuickbar = memo(function MapQuickbar({
   const projects = useProjectCatalog();
   const enabledCategoryCount = useMapStore((state) => state.enabledCategories.length);
   const showProjects = useMapStore((state) => state.showProjects);
+  const showMetro = useMapStore((state) => state.showMetro);
+  const showElevated = useMapStore((state) => state.showElevated);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
+  const toggleMetro = useMapStore((state) => state.toggleMetro);
+  const toggleElevated = useMapStore((state) => state.toggleElevated);
   return (
     <div className="map-quickbar" aria-label="地图快捷筛选">
       <button
@@ -82,6 +88,26 @@ const MapQuickbar = memo(function MapQuickbar({
         <Building2 size={15} />
         <span>新盘</span>
         <b>{projects.length}</b>
+      </button>
+      <button
+        type="button"
+        className={showMetro ? "is-active" : ""}
+        onClick={toggleMetro}
+        aria-pressed={showMetro}
+        title="显示或隐藏地铁线路与地铁站"
+      >
+        <TrainFront size={15} />
+        <span>地铁</span>
+      </button>
+      <button
+        type="button"
+        className={showElevated ? "is-active" : ""}
+        onClick={toggleElevated}
+        aria-pressed={showElevated}
+        title="显示或隐藏高架与快速路"
+      >
+        <Milestone size={15} />
+        <span>高架</span>
       </button>
       <button
         type="button"

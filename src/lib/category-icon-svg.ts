@@ -24,3 +24,4 @@ export const categoryIconSvg: Record<CategoryIconName, string> = Object.fromEntr
 ) as Record<CategoryIconName, string>;
 
 export const projectHouseIconSvg = image("house", "project-pin-icon", 15);
+export const metroStationIconSvg = image("train-front", "project-pin-icon", 15);

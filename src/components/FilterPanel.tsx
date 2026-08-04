@@ -1,6 +1,17 @@
 "use client";
 
-import { Building2, Check, ChevronDown, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import {
+  Building2,
+  Check,
+  ChevronDown,
+  Layers3,
+  MapPinned,
+  Milestone,
+  RotateCcw,
+  SlidersHorizontal,
+  TrainFront,
+  X,
+} from "lucide-react";
 import { memo, useId, useState } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
 import {
@@ -43,9 +54,15 @@ export const FilterPanel = memo(function FilterPanel({
   const clusterRadiusId = useId();
   const detailZoomId = useId();
   const sectorLabelZoomId = useId();
+  const metroStationLabelZoomId = useId();
   const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const showProjects = useMapStore((state) => state.showProjects);
+  const showMetro = useMapStore((state) => state.showMetro);
+  const showElevated = useMapStore((state) => state.showElevated);
+  const metroStationLabelMinZoom = useMapStore(
+    (state) => state.metroStationLabelMinZoom,
+  );
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
@@ -54,6 +71,11 @@ export const FilterPanel = memo(function FilterPanel({
   const toggleCategory = useMapStore((state) => state.toggleCategory);
   const setCategoryGroup = useMapStore((state) => state.setCategoryGroup);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
+  const toggleMetro = useMapStore((state) => state.toggleMetro);
+  const toggleElevated = useMapStore((state) => state.toggleElevated);
+  const setMetroStationLabelMinZoom = useMapStore(
+    (state) => state.setMetroStationLabelMinZoom,
+  );
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
   const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
   const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
@@ -88,6 +110,92 @@ export const FilterPanel = memo(function FilterPanel({
       {showSectorControls && (
         <>
           <LocalSectorSourceControls />
+          <div className="filter-group transport-filter-group">
+            <div className="group-title">
+              <strong>交通图层</strong>
+              <span>地铁与高架独立控制</span>
+            </div>
+            <div className="transport-filter-list">
+              <button
+                type="button"
+                className={`filter-item transport-filter ${showMetro ? "is-active" : ""}`}
+                onClick={toggleMetro}
+                aria-pressed={showMetro}
+              >
+                <span className="category-icon transport-category-icon">
+                  <TrainFront size={14} />
+                </span>
+                <span>地铁线路与站点</span>
+                <span className="toggle"><span /></span>
+              </button>
+              <button
+                type="button"
+                className={`filter-item transport-filter ${showElevated ? "is-active" : ""}`}
+                onClick={toggleElevated}
+                aria-pressed={showElevated}
+              >
+                <span className="category-icon elevated-category-icon">
+                  <Milestone size={14} />
+                </span>
+                <span>高架与快速路</span>
+                <span className="toggle"><span /></span>
+              </button>
+            </div>
+            <details className="project-display-settings transport-display-settings">
+              <summary>
+                <TrainFront size={13} />
+                <span>地铁站名设置</span>
+                <small>Z {metroStationLabelMinZoom.toFixed(1)} 起显示</small>
+              </summary>
+              <div className="project-settings-body">
+                <label htmlFor={metroStationLabelZoomId}>
+                  <span>
+                    站名显示级别
+                    <output>Z {metroStationLabelMinZoom.toFixed(1)}</output>
+                  </span>
+                  <span className="transport-zoom-controls">
+                    <button
+                      type="button"
+                      aria-label="降低站名显示级别"
+                      disabled={metroStationLabelMinZoom <= 13.2}
+                      onClick={() =>
+                        setMetroStationLabelMinZoom(Number(Math.max(
+                          13.2,
+                          metroStationLabelMinZoom - 0.2,
+                        ).toFixed(1)))}
+                    >
+                      −
+                    </button>
+                    <input
+                      id={metroStationLabelZoomId}
+                      type="range"
+                      min="13.2"
+                      max="16"
+                      step="0.2"
+                      value={metroStationLabelMinZoom}
+                      onInput={(event) =>
+                        setMetroStationLabelMinZoom(
+                          Number(event.currentTarget.value),
+                        )}
+                    />
+                    <button
+                      type="button"
+                      aria-label="提高站名显示级别"
+                      disabled={metroStationLabelMinZoom >= 16}
+                      onClick={() =>
+                        setMetroStationLabelMinZoom(Number(Math.min(
+                          16,
+                          metroStationLabelMinZoom + 0.2,
+                        ).toFixed(1)))}
+                    >
+                      +
+                    </button>
+                  </span>
+                </label>
+                <p>地铁站 Pin 从 Z 13.2 开始显示；站名可在这里单独延后或提前。</p>
+              </div>
+            </details>
+          </div>
           <div className="filter-group sector-label-filter-group">
             <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>
             <details className="project-display-settings sector-display-settings">

@@ -241,6 +241,11 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .project-label b { color: #431407; font-size: 11px; }
 .project-label small { color: #c2410c; font-size: 9px; }
 .project-marker:hover .project-pin, .project-marker.is-selected .project-pin { transform: rotate(-45deg) scale(1.18); box-shadow: 0 0 0 4px rgba(249,115,22,.18); }
+.metro-station-marker { cursor: default; }
+.metro-station-pin { background: linear-gradient(145deg, #6366f1, #4338ca); }
+.metro-station-label { border-color: rgba(79,70,229,.22); }
+.metro-station-label b { color: #312e81; }
+.metro-station-marker:hover .metro-station-pin { transform: rotate(-45deg); box-shadow: 0 0 0 4px rgba(79,70,229,.14); }
 .project-cluster-marker { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; color: #fff; background: radial-gradient(circle at 35% 28%, #fdba74, #f97316 52%, #c2410c); border: 3px solid rgba(255,255,255,.96); border-radius: 50%; box-shadow: 0 7px 18px rgba(154,52,18,.3), 0 0 0 5px rgba(249,115,22,.13); cursor: zoom-in; transition: transform .18s ease, box-shadow .18s ease; }
 .project-cluster-marker span { font-size: 12px; font-weight: 900; letter-spacing: -.03em; }
 .project-cluster-marker:hover { transform: scale(1.12); box-shadow: 0 9px 23px rgba(154,52,18,.38), 0 0 0 7px rgba(249,115,22,.15); }
@@ -836,6 +841,63 @@ button:disabled,
 
 .project-filter:hover {
   background: var(--color-project-soft);
+}
+
+.transport-filter-list {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.transport-filter {
+  color: var(--color-ink-2);
+  background: color-mix(in oklch, #eef2ff 72%, var(--color-paper));
+  border: 1px solid color-mix(in oklch, #6366f1 22%, transparent);
+}
+
+.transport-filter:hover {
+  background: color-mix(in oklch, #e0e7ff 76%, var(--color-paper));
+}
+
+.transport-category-icon {
+  color: #4338ca;
+  background: #eef2ff;
+}
+
+.elevated-category-icon {
+  color: #b45309;
+  background: #fff7ed;
+}
+
+.transport-display-settings .project-settings-body output {
+  color: #4338ca;
+}
+
+.transport-display-settings .project-settings-body input[type="range"] {
+  accent-color: #4f46e5;
+}
+
+.transport-zoom-controls {
+  display: grid !important;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: var(--space-2xs) !important;
+}
+
+.transport-zoom-controls button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: #4338ca;
+  background: #eef2ff;
+  border: 1px solid rgba(79,70,229,.18);
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.transport-zoom-controls button:disabled {
+  opacity: .35;
+  cursor: not-allowed;
 }
 
 .project-display-settings,
