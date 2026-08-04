@@ -305,6 +305,11 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .project-label b { color: #431407; font-size: 11px; }
 .project-label small { color: #c2410c; font-size: 9px; }
 .project-marker:hover .project-pin, .project-marker.is-selected .project-pin { transform: rotate(-45deg) scale(1.18); box-shadow: 0 0 0 4px rgba(249,115,22,.18); }
+.metro-station-marker { cursor: default; }
+.metro-station-pin { background: linear-gradient(145deg, #6366f1, #4338ca); }
+.metro-station-label { border-color: rgba(79,70,229,.22); }
+.metro-station-label b { color: #312e81; }
+.metro-station-marker:hover .metro-station-pin { transform: rotate(-45deg); box-shadow: 0 0 0 4px rgba(79,70,229,.14); }
 .project-cluster-marker { width: 42px; height: 42px; display: grid; place-items: center; padding: 0; color: #fff; background: radial-gradient(circle at 35% 28%, #fdba74, #f97316 52%, #c2410c); border: 3px solid rgba(255,255,255,.96); border-radius: 50%; box-shadow: 0 7px 18px rgba(154,52,18,.3), 0 0 0 5px rgba(249,115,22,.13); cursor: zoom-in; transition: transform .18s ease, box-shadow .18s ease; }
 .project-cluster-marker span { font-size: 12px; font-weight: 900; letter-spacing: -.03em; }
 .project-cluster-marker:hover { transform: scale(1.12); box-shadow: 0 9px 23px rgba(154,52,18,.38), 0 0 0 7px rgba(249,115,22,.15); }
@@ -1803,6 +1808,12 @@ button:disabled,
     font-size: var(--text-sm);
     backdrop-filter: none;
     white-space: nowrap;
+  }
+
+  .mobile-actions button.is-active {
+    color: var(--color-accent-strong);
+    background: var(--color-accent-soft);
+    border-color: var(--color-accent);
   }
 
   .mobile-sheet {

@@ -1,6 +1,15 @@
 "use client";
 
-import { Building2, Check, ChevronDown, Layers3, MapPinned, RotateCcw, SlidersHorizontal, X } from "lucide-react";
+import {
+  Building2,
+  Check,
+  ChevronDown,
+  Layers3,
+  MapPinned,
+  RotateCcw,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import { memo, useId, useState } from "react";
 import { AnimatedList } from "@/src/components/AnimatedList";
 import { AnimatedProjectList } from "@/src/components/AnimatedProjectList";

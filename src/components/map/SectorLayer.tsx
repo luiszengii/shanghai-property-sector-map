@@ -7,6 +7,10 @@ import { useMapStore } from "@/src/store/map-store";
 import type { SectorFeature } from "@/src/types/map";
 import { simplifySectorGeometryForDisplay } from "@/src/lib/sector-display-lod";
 import {
+  sectorFillOpacity,
+  type SectorGeometryKind,
+} from "@/src/lib/map-visual-density";
+import {
   shouldMountSectorLabel,
   type SectorLabelMode,
 } from "@/src/lib/sector-label-visibility";
@@ -18,11 +22,6 @@ import {
 } from "./amap-coordinate-conversion";
 
 const sectors = sectorCatalog.legacyFeatures;
-type SectorGeometryKind =
-  | "reviewed-market-candidate"
-  | "official-subscope-reference"
-  | "administrative-reference"
-  | "demo";
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
 
 function strokeColor(kind: SectorGeometryKind) {
@@ -30,19 +29,6 @@ function strokeColor(kind: SectorGeometryKind) {
   if (kind === "official-subscope-reference") return "#d97706";
   if (kind === "administrative-reference") return "#2563eb";
   return "#64748b";
-}
-
-function geometryFillOpacity(kind: SectorGeometryKind, zoom: number, selected = false) {
-  const base = zoom >= 14
-    ? 0.025
-    : zoom >= 12
-      ? Math.max(0.05, 0.23 - (zoom - 12) * 0.09)
-      : Math.min(0.34, 0.18 + (12 - zoom) * 0.08);
-  if (selected) return Math.max(base, 0.2);
-  if (kind === "official-subscope-reference") return base * 0.3;
-  if (kind === "administrative-reference") return base * 0.38;
-  if (kind === "demo") return base * 0.65;
-  return base;
 }
 
 function geometryStrokeWeight(kind: SectorGeometryKind, zoom: number) {
@@ -98,7 +84,7 @@ function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = fals
   const { polygon, baseColor, geometryKind } = overlay;
   polygon.setOptions({
     fillColor: baseColor,
-    fillOpacity: geometryFillOpacity(geometryKind, zoom, selected),
+    fillOpacity: sectorFillOpacity(geometryKind, zoom, selected),
     strokeColor: selected && geometryKind !== "official-subscope-reference"
       ? "#0f172a"
       : strokeColor(geometryKind),

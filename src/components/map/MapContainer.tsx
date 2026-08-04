@@ -6,13 +6,16 @@ import placesData from "@/src/data/places.json";
 import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
+import { PUBLIC_BASEMAP_FEATURES } from "@/src/lib/map-visual-density";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
+import { resolveAmapStyleUrl } from "@/src/lib/transport-layer-style";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
 import { PrivateSectorLayer } from "@/src/components/map/HfwgsjSectorLayer";
 import { SectorLayer } from "./SectorLayer";
+import { TransportLayer } from "./TransportLayer";
 
 const places = placesData as Place[];
 
@@ -33,6 +36,11 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
   const showProjects = useMapStore((state) => state.showProjects);
+  const showMetro = useMapStore((state) => state.showMetro);
+  const showElevated = useMapStore((state) => state.showElevated);
+  const metroStationLabelMinZoom = useMapStore(
+    (state) => state.metroStationLabelMinZoom,
+  );
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
@@ -66,8 +74,8 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
           zoom: 10.6,
           center: [121.4737, 31.2304],
           viewMode: "2D",
-          mapStyle: "amap://styles/whitesmoke",
-          features: ["bg", "road", "building"],
+          mapStyle: resolveAmapStyleUrl(process.env.NEXT_PUBLIC_AMAP_STYLE_ID),
+          features: PUBLIC_BASEMAP_FEATURES,
           showLabel: true,
           animateEnable: true,
           scrollWheel: true,
@@ -266,7 +274,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
         target="_blank"
         rel="noreferrer"
       >
-        Sector geometry © OpenStreetMap contributors
+        Map overlays © OpenStreetMap contributors
       </a>
       {status === "ready" && !immersive && (
         <div className="map-zoom-controls" role="group" aria-label="地图缩放控制">
@@ -337,6 +345,15 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               onSelect={handleSnapshotSectorSelect}
             />
           )}
+          <TransportLayer
+            amapApi={amapApi}
+            map={mapInstance}
+            zoom={zoom}
+            showMetro={showMetro}
+            showElevated={showElevated}
+            stationLabelMinZoom={metroStationLabelMinZoom}
+            viewportVersion={viewportVersion}
+          />
           {!immersive && <PlaceLayer amapApi={amapApi} map={mapInstance} zoom={zoom} enabledCategories={enabledCategories} viewportVersion={viewportVersion} selectedPlaceId={selectedPlaceId} onSelect={handlePlaceSelect} />}
           <ProjectLayer
             amapApi={amapApi}

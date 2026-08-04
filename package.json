@@ -28,6 +28,7 @@
     "build:private-sector-snapshots": "node scripts/build-private-sector-snapshots.mjs",
     "build:topology-repair-preview": "uv run --script scripts/build-project-topology-repair.py",
     "build:published-sector-topology": "uv run --script scripts/build-project-topology-repair.py --publish-approved-version topology-repair-production-2026-07-30 --publish-approved-at 2026-07-30T08:51:22+08:00",
+    "build:transport-network": "uv run --script scripts/build-public-transport-network.py",
     "check:sector-client-index": "node scripts/build-sector-client-index.mjs --check",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .private-data",
     "typecheck": "tsc --noEmit"

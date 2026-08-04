@@ -29,6 +29,9 @@ interface MapState {
   selectedPlaceId: string | null;
   selectedProjectId: string | null;
   showProjects: boolean;
+  showMetro: boolean;
+  showElevated: boolean;
+  metroStationLabelMinZoom: number;
   projectClusterEnabled: boolean;
   projectClusterRadius: number;
   projectDetailMinZoom: number;
@@ -53,6 +56,9 @@ interface MapState {
   selectProject: (id: string | null) => void;
   focusProject: (id: string) => void;
   toggleProjects: () => void;
+  toggleMetro: () => void;
+  toggleElevated: () => void;
+  setMetroStationLabelMinZoom: (zoom: number) => void;
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
   setProjectDetailMinZoom: (zoom: number) => void;
@@ -79,6 +85,9 @@ export const useMapStore = create<MapState>()(
       selectedPlaceId: null,
       selectedProjectId: null,
       showProjects: true,
+      showMetro: true,
+      showElevated: true,
+      metroStationLabelMinZoom: 13.8,
       projectClusterEnabled: true,
       projectClusterRadius: 72,
       projectDetailMinZoom: 13.8,
@@ -126,6 +135,10 @@ export const useMapStore = create<MapState>()(
           },
         })),
       toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
+      toggleMetro: () => set((state) => ({ showMetro: !state.showMetro })),
+      toggleElevated: () => set((state) => ({ showElevated: !state.showElevated })),
+      setMetroStationLabelMinZoom: (zoom) =>
+        set({ metroStationLabelMinZoom: zoom }),
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
       setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
@@ -170,10 +183,18 @@ export const useMapStore = create<MapState>()(
       name: "shanghai-sector-map-session",
       storage: createJSONStorage(() => sessionStorage),
       merge: (persisted, current) => {
-        const stored = persisted as Partial<MapState>;
+        const stored = persisted as Partial<MapState> & {
+          showTransport?: boolean;
+        };
         return {
           ...current,
           ...stored,
+          showMetro: stored.showMetro
+            ?? stored.showTransport
+            ?? current.showMetro,
+          showElevated: stored.showElevated
+            ?? stored.showTransport
+            ?? current.showElevated,
           sectorBoundarySource: isLocalResearchMode
             ? stored.sectorBoundarySource ?? "project"
             : "project",
@@ -182,6 +203,9 @@ export const useMapStore = create<MapState>()(
       partialize: (state) => ({
         enabledCategories: state.enabledCategories,
         showProjects: state.showProjects,
+        showMetro: state.showMetro,
+        showElevated: state.showElevated,
+        metroStationLabelMinZoom: state.metroStationLabelMinZoom,
         projectClusterEnabled: state.projectClusterEnabled,
         projectClusterRadius: state.projectClusterRadius,
         projectDetailMinZoom: state.projectDetailMinZoom,

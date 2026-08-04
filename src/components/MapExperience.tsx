@@ -5,9 +5,11 @@ import {
   Expand,
   Layers3,
   Map as MapIcon,
+  Milestone,
   Minimize2,
   Navigation,
   SlidersHorizontal,
+  TrainFront,
 } from "lucide-react";
 import { memo, type ReactNode, useCallback, useEffect, useState } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
@@ -72,6 +74,10 @@ const MapQuickbar = memo(function MapQuickbar({
 }) {
   const projects = useProjectCatalog();
   const enabledCategoryCount = useMapStore((state) => state.enabledCategories.length);
+  const showMetro = useMapStore((state) => state.showMetro);
+  const showElevated = useMapStore((state) => state.showElevated);
+  const toggleMetro = useMapStore((state) => state.toggleMetro);
+  const toggleElevated = useMapStore((state) => state.toggleElevated);
   return (
     <div className="map-quickbar" aria-label="地图快捷筛选">
       <button
@@ -95,6 +101,26 @@ const MapQuickbar = memo(function MapQuickbar({
       </button>
       <button
         type="button"
+        className={showMetro ? "is-active" : ""}
+        onClick={toggleMetro}
+        aria-pressed={showMetro}
+        title="显示或隐藏地铁线路与地铁站"
+      >
+        <TrainFront size={15} />
+        <span>地铁</span>
+      </button>
+      <button
+        type="button"
+        className={showElevated ? "is-active" : ""}
+        onClick={toggleElevated}
+        aria-pressed={showElevated}
+        title="显示或隐藏高架与快速路"
+      >
+        <Milestone size={15} />
+        <span>高架</span>
+      </button>
+      <button
+        type="button"
         className={filterMode === "facilities" ? "is-active" : ""}
         onClick={() => onToggleFilters("facilities")}
         aria-expanded={filterMode === "facilities"}
@@ -112,8 +138,38 @@ const MapQuickbar = memo(function MapQuickbar({
 
 const MobileActions = memo(function MobileActions() {
   const enabledCategoryCount = useMapStore((state) => state.enabledCategories.length);
+  const showMetro = useMapStore((state) => state.showMetro);
+  const showElevated = useMapStore((state) => state.showElevated);
   const setMobileFiltersOpen = useMapStore((state) => state.setMobileFiltersOpen);
-  return <div className="mobile-actions"><button onClick={() => setMobileFiltersOpen(true)}><Layers3 size={19} /><span>筛选</span><b>{enabledCategoryCount}</b></button></div>;
+  const toggleMetro = useMapStore((state) => state.toggleMetro);
+  const toggleElevated = useMapStore((state) => state.toggleElevated);
+  return (
+    <div className="mobile-actions">
+      <button
+        type="button"
+        className={showMetro ? "is-active" : ""}
+        onClick={toggleMetro}
+        aria-pressed={showMetro}
+      >
+        <TrainFront size={18} />
+        <span>地铁</span>
+      </button>
+      <button
+        type="button"
+        className={showElevated ? "is-active" : ""}
+        onClick={toggleElevated}
+        aria-pressed={showElevated}
+      >
+        <Milestone size={18} />
+        <span>高架</span>
+      </button>
+      <button type="button" onClick={() => setMobileFiltersOpen(true)}>
+        <Layers3 size={19} />
+        <span>筛选</span>
+        <b>{enabledCategoryCount}</b>
+      </button>
+    </div>
+  );
 });
 
 export function MapExperience() {
