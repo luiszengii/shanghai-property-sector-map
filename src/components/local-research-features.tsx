@@ -1,7 +1,9 @@
 "use client";
 
-import { Building2, CalendarClock, ClipboardList, Database, GraduationCap, MapPinned, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Building2, CalendarClock, ClipboardList, Cloud, GraduationCap, Laptop, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { AnimatedList } from "@/src/components/AnimatedList";
 import { useMapStore, type SectorBoundarySource } from "@/src/store/map-store";
 import type { PropertyProject } from "@/src/types/map";
 
@@ -9,7 +11,6 @@ type ProjectResearch = NonNullable<PropertyProject["research"]>;
 
 export const projectFilterLabel = "本地新盘研究清单";
 export const projectLegendLabel = "本地新盘研究清单";
-export const projectFootnote = "项目点位已逐项核对并固定；仅本地显示的优劣势、教育及价格仍为待核验观点。";
 export const projectDetailDisclaimer = "项目点位已逐项核对；本地显示的价格、交通、学校、规划及周边风险仍未独立核验。";
 
 export function LocalEditorShortcut({ className }: { className: string }) {
@@ -18,6 +19,44 @@ export function LocalEditorShortcut({ className }: { className: string }) {
       <PencilRuler size={17} />
       自己画板块
     </Link>
+  );
+}
+
+export function LocalEnvironmentSwitcher() {
+  const [showProduction, setShowProduction] = useState(false);
+
+  return (
+    <>
+      {showProduction ? (
+        <div className="production-preview">
+          <iframe
+            src="https://shfang.xyz"
+            title="shfang.xyz 线上版本"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      ) : null}
+      <div className="environment-switcher" role="group" aria-label="页面版本">
+        <button
+          type="button"
+          className={showProduction ? "" : "is-active"}
+          aria-pressed={!showProduction}
+          onClick={() => setShowProduction(false)}
+        >
+          <Laptop size={13} />
+          本地
+        </button>
+        <button
+          type="button"
+          className={showProduction ? "is-active" : ""}
+          aria-pressed={showProduction}
+          onClick={() => setShowProduction(true)}
+        >
+          <Cloud size={13} />
+          线上
+        </button>
+      </div>
+    </>
   );
 }
 
@@ -54,32 +93,30 @@ export function LocalSectorSourceControls() {
         <strong>板块边界</strong>
         <span>{sourceLabels[sectorBoundarySource]}</span>
       </div>
-      <div className="sector-source-options" role="radiogroup" aria-label="板块边界数据源">
+      <AnimatedList
+        className="sector-source-options"
+        role="radiogroup"
+        ariaLabel="板块边界数据源"
+      >
         <button type="button" className={sectorBoundarySource === "project" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "project"} onClick={() => setSectorBoundarySource("project")}>
-          <MapPinned size={14} />
           <span><strong>项目研究边界</strong><small>本地拓扑修复目标层 · 待复核</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "project-topology-repair" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "project-topology-repair"} onClick={() => setSectorBoundarySource("project-topology-repair")}>
-          <MapPinned size={14} />
           <span><strong>项目拓扑修复预览</strong><small>OSM 全域填补 · 消除交叠</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "hfwgsj-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "hfwgsj-private"} onClick={() => setSectorBoundarySource("hfwgsj-private")}>
-          <Database size={14} />
           <span><strong>微观世界私有快照</strong><small>2026-07-25 · 121 个边界</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "anjuke-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "anjuke-private"} onClick={() => setSectorBoundarySource("anjuke-private")}>
-          <Database size={14} />
           <span><strong>安居客研究快照</strong><small>2026-07-25 · 120 / 141 个边界</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "fang-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "fang-private"} onClick={() => setSectorBoundarySource("fang-private")}>
-          <Database size={14} />
           <span><strong>房天下研究快照</strong><small>2026-07-25 · 182 / 183 个边界</small></span>
         </button>
         <button type="button" className={sectorBoundarySource === "realtynavi-private" ? "is-active" : ""} role="radio" aria-checked={sectorBoundarySource === "realtynavi-private"} onClick={() => setSectorBoundarySource("realtynavi-private")}>
-          <Database size={14} />
           <span><strong>RealtyNavi 授权研究快照</strong><small>2026-07-28 · 151 个命名板块</small></span>
         </button>
-      </div>
+      </AnimatedList>
       {sectorBoundarySource === "realtynavi-private" ? (
         <button
           type="button"
