@@ -4,6 +4,8 @@ import {
   Building2,
   Check,
   ChevronDown,
+  ExternalLink,
+  LandPlot,
   Layers3,
   MapPinned,
   RotateCcw,
@@ -17,6 +19,10 @@ import {
   LocalSectorSourceControls,
 } from "@/src/components/local-research-features";
 import categoriesData from "@/src/data/categories.json";
+import {
+  planningLandUseLegend,
+  planningReferenceSource,
+} from "@/src/lib/planning-reference-layer";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category } from "@/src/types/map";
@@ -51,10 +57,13 @@ export const FilterPanel = memo(function FilterPanel({
   const clusterRadiusId = useId();
   const detailZoomId = useId();
   const sectorLabelZoomId = useId();
+  const planningOpacityId = useId();
   const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
   const showProjects = useMapStore((state) => state.showProjects);
+  const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
+  const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
@@ -64,6 +73,8 @@ export const FilterPanel = memo(function FilterPanel({
   const setCategoryGroup = useMapStore((state) => state.setCategoryGroup);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
   const focusProject = useMapStore((state) => state.focusProject);
+  const togglePlanningOverlay = useMapStore((state) => state.togglePlanningOverlay);
+  const setPlanningOverlayOpacity = useMapStore((state) => state.setPlanningOverlayOpacity);
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
   const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
   const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
@@ -116,6 +127,67 @@ export const FilterPanel = memo(function FilterPanel({
       {showSectorControls && (
         <>
           <LocalSectorSourceControls />
+          <div className="filter-group planning-filter-group">
+            <div className="group-title"><strong>参考图层</strong><span>规划用途参考</span></div>
+            <section className={`planning-layer-card${showPlanningOverlay ? " is-active" : ""}`}>
+              <button
+                type="button"
+                className="planning-layer-toggle"
+                onClick={togglePlanningOverlay}
+                aria-pressed={showPlanningOverlay}
+              >
+                <span className="planning-layer-icon" aria-hidden="true"><LandPlot size={14} /></span>
+                <span className="planning-layer-copy">
+                  <strong>官方详细规划（参考）</strong>
+                  <small>Z {planningReferenceSource.minimumZoom} 后点地块查看规划</small>
+                </span>
+                <span className="toggle" aria-hidden="true"><span /></span>
+              </button>
+              {showPlanningOverlay && (
+                <ul className="planning-legend-grid" aria-label="规划用地颜色图例">
+                  {planningLandUseLegend.map((item) => (
+                    <li key={item.category}>
+                      <span
+                        className="planning-legend-swatch"
+                        style={{ "--planning-legend-color": item.fillColor } as React.CSSProperties}
+                        aria-hidden="true"
+                      />
+                      <span>{item.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <details className="planning-layer-settings">
+                <summary>
+                  <SlidersHorizontal size={13} aria-hidden="true" />
+                  <span>透明度</span>
+                  <small>{Math.round(planningOverlayOpacity * 100)}%</small>
+                </summary>
+                <div className="planning-layer-settings-body">
+                  <label htmlFor={planningOpacityId}>
+                    <span>图层透明度 <output>{Math.round(planningOverlayOpacity * 100)}%</output></span>
+                    <input
+                      id={planningOpacityId}
+                      type="range"
+                      min="15"
+                      max="80"
+                      step="1"
+                      value={Math.round(planningOverlayOpacity * 100)}
+                      disabled={!showPlanningOverlay}
+                      onChange={(event) => setPlanningOverlayOpacity(Number(event.target.value) / 100)}
+                    />
+                  </label>
+                  <div className="planning-layer-source-row">
+                    <a href={planningReferenceSource.url} target="_blank" rel="noreferrer">
+                      {planningReferenceSource.name}<ExternalLink size={11} aria-hidden="true" />
+                    </a>
+                    <span>Z {planningReferenceSource.minimumZoom} 起加载</span>
+                  </div>
+                  <p>规划用途不等于现状、在建状态或最终实施结果。</p>
+                </div>
+              </details>
+            </section>
+          </div>
           <div className="filter-group sector-label-filter-group">
             <div className="group-title"><strong>板块名称</strong><span>减少地图文字负担</span></div>
             <details className="project-display-settings sector-display-settings">

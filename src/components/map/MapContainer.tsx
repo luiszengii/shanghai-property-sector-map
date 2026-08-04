@@ -7,12 +7,18 @@ import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { PUBLIC_BASEMAP_FEATURES } from "@/src/lib/map-visual-density";
+import {
+  planningReferenceSource,
+  shouldPlanningLayerOwnMapClicks,
+  type PlanningLayerStatus,
+} from "@/src/lib/planning-reference-layer";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 import { resolveAmapStyleUrl } from "@/src/lib/transport-layer-style";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
+import { PlanningReferenceLayer } from "./PlanningReferenceLayer";
 import { PrivateSectorLayer } from "@/src/components/map/HfwgsjSectorLayer";
 import { SectorLayer } from "./SectorLayer";
 import { TransportLayer } from "./TransportLayer";
@@ -30,6 +36,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [viewportVersion, setViewportVersion] = useState(0);
   const [viewportInteracting, setViewportInteracting] = useState(false);
+  const [planningLayerStatus, setPlanningLayerStatus] = useState<PlanningLayerStatus>("idle");
   const zoom = useMapStore((state) => state.zoom);
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
@@ -40,6 +47,12 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const showElevated = useMapStore((state) => state.showElevated);
   const metroStationLabelMinZoom = useMapStore(
     (state) => state.metroStationLabelMinZoom,
+  );
+  const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
+  const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
+  const planningLayerOwnsClicks = shouldPlanningLayerOwnMapClicks(
+    showPlanningOverlay,
+    zoom,
   );
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
@@ -286,6 +299,24 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
           </button>
         </div>
       )}
+      {status === "ready" && showPlanningOverlay && (
+        <div
+          className={`planning-source-badge${planningLayerStatus === "unavailable" ? " is-error" : ""}`}
+          role="status"
+          aria-live="polite"
+        >
+          <strong>{planningLayerStatus === "unavailable"
+            ? "规划图层暂时不可用"
+            : planningLayerStatus === "zoom-required"
+              ? `放大至 Z${planningReferenceSource.minimumZoom} 查看详细规划`
+              : planningLayerStatus === "loading"
+                ? "正在加载官方详细规划…"
+                : "官方详细规划·参考"}</strong>
+          <span>{planningLayerStatus === "unavailable"
+            ? "已自动隐藏，主地图不受影响"
+            : "规划 ≠ 现状；数据以上海详细规划一张图为准"}</span>
+        </div>
+      )}
       {status === "loading" && (
         <div className="map-status" role="status">
           <LoaderCircle className="spin" size={24} />
@@ -316,6 +347,15 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
+          <PlanningReferenceLayer
+            amapApi={amapApi}
+            map={mapInstance}
+            zoom={zoom}
+            viewportVersion={viewportVersion}
+            visible={showPlanningOverlay}
+            opacity={planningOverlayOpacity}
+            onStatusChange={setPlanningLayerStatus}
+          />
           {!isLocalResearchMode ? (
             <SectorLayer
               amapApi={amapApi}
@@ -326,6 +366,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               labelMode={sectorLabelMode}
               labelMinZoom={sectorLabelMinZoom}
               selectedSectorId={selectedSectorId}
+              interactionEnabled={!planningLayerOwnsClicks}
               onSelect={handleSectorSelect}
             />
           ) : (
@@ -342,6 +383,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               labelMode={sectorLabelMode}
               labelMinZoom={sectorLabelMinZoom}
               selectedSectorId={selectedSectorId}
+              interactionEnabled={!planningLayerOwnsClicks}
               onSelect={handleSnapshotSectorSelect}
             />
           )}
