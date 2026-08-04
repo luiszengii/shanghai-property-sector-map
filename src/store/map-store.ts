@@ -33,6 +33,7 @@ interface MapState {
   selectedSectorId: string | null;
   selectedPlaceId: string | null;
   selectedProjectId: string | null;
+  showSectorBoundaries: boolean;
   showProjects: boolean;
   showMetro: boolean;
   showElevated: boolean;
@@ -62,6 +63,7 @@ interface MapState {
   selectPlace: (id: string | null) => void;
   selectProject: (id: string | null) => void;
   focusProject: (id: string) => void;
+  toggleSectorBoundaries: () => void;
   toggleProjects: () => void;
   toggleMetro: () => void;
   toggleElevated: () => void;
@@ -93,6 +95,7 @@ export const useMapStore = create<MapState>()(
       selectedSectorId: null,
       selectedPlaceId: null,
       selectedProjectId: null,
+      showSectorBoundaries: true,
       showProjects: true,
       showMetro: true,
       showElevated: true,
@@ -145,6 +148,10 @@ export const useMapStore = create<MapState>()(
             nonce: (state.focusRequest?.nonce ?? 0) + 1,
           },
         })),
+      toggleSectorBoundaries: () => set((state) => ({
+        showSectorBoundaries: !state.showSectorBoundaries,
+        selectedSectorId: state.showSectorBoundaries ? null : state.selectedSectorId,
+      })),
       toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
       toggleMetro: () => set((state) => ({ showMetro: !state.showMetro })),
       toggleElevated: () => set((state) => ({ showElevated: !state.showElevated })),
@@ -223,6 +230,8 @@ export const useMapStore = create<MapState>()(
           showElevated: stored.showElevated
             ?? stored.showTransport
             ?? current.showElevated,
+          showSectorBoundaries: stored.showSectorBoundaries
+            ?? current.showSectorBoundaries,
           sectorBoundarySource: isLocalResearchMode
             ? stored.sectorBoundarySource ?? "project"
             : "project",
@@ -230,6 +239,7 @@ export const useMapStore = create<MapState>()(
       },
       partialize: (state) => ({
         enabledCategories: state.enabledCategories,
+        showSectorBoundaries: state.showSectorBoundaries,
         showProjects: state.showProjects,
         showMetro: state.showMetro,
         showElevated: state.showElevated,

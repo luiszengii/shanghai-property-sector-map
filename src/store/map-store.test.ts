@@ -38,3 +38,24 @@ test("focusing a project from the list shows its marker, selects it, and request
     nonce: 1,
   });
 });
+
+test("sector boundary visibility is independent and clears a hidden sector selection", () => {
+  useMapStore.setState({
+    showSectorBoundaries: true,
+    showPlanningOverlay: true,
+    selectedSectorId: "sector_徐家汇",
+  });
+
+  useMapStore.getState().toggleSectorBoundaries();
+
+  let state = useMapStore.getState();
+  assert.equal(state.showSectorBoundaries, false);
+  assert.equal(state.showPlanningOverlay, true);
+  assert.equal(state.selectedSectorId, null);
+
+  useMapStore.getState().toggleSectorBoundaries();
+
+  state = useMapStore.getState();
+  assert.equal(state.showSectorBoundaries, true);
+  assert.equal(state.showPlanningOverlay, true);
+});

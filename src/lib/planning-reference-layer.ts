@@ -43,13 +43,6 @@ export interface PlanningParcelStyle {
   strokeColor: string;
 }
 
-export type PlanningLayerStatus =
-  | "idle"
-  | "zoom-required"
-  | "loading"
-  | "ready"
-  | "unavailable";
-
 export const planningReferenceSource = {
   name: "上海市规划和自然资源局·详细规划一张图",
   url: "https://shanghai.tianditu.gov.cn/xg/map.html",

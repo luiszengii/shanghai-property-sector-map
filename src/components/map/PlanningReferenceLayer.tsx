@@ -7,7 +7,6 @@ import {
   loadPlanningParcels,
   planningReferenceSource,
   resolvePlanningParcelStyle,
-  type PlanningLayerStatus,
   type PlanningParcel,
 } from "@/src/lib/planning-reference-layer";
 import { wgs84GeometryToDisplayPath } from "./amap-coordinate-conversion";
@@ -19,7 +18,6 @@ interface PlanningReferenceLayerProps {
   viewportVersion: number;
   visible: boolean;
   opacity: number;
-  onStatusChange: (status: PlanningLayerStatus) => void;
 }
 
 function addDetailRow(list: HTMLDListElement, label: string, value: string | null) {
@@ -100,7 +98,6 @@ export function PlanningReferenceLayer({
   viewportVersion,
   visible,
   opacity,
-  onStatusChange,
 }: PlanningReferenceLayerProps) {
   const overlaysRef = useRef<AMap.Polygon[]>([]);
   const parcelsRef = useRef<PlanningParcel[]>([]);
@@ -174,18 +171,15 @@ export function PlanningReferenceLayer({
   useEffect(() => {
     if (!visible) {
       clearOverlays();
-      onStatusChange("idle");
       return;
     }
     if (zoom < planningReferenceSource.minimumZoom) {
       clearOverlays();
-      onStatusChange("zoom-required");
       return;
     }
 
     const controller = new AbortController();
     let cancelled = false;
-    onStatusChange("loading");
 
     const load = async () => {
       const result = await loadPlanningParcels(
@@ -196,7 +190,6 @@ export function PlanningReferenceLayer({
       if (cancelled) return;
       if (result.status === "unavailable") {
         clearOverlays();
-        onStatusChange("unavailable");
         return;
       }
 
@@ -227,7 +220,6 @@ export function PlanningReferenceLayer({
       parcelsRef.current = result.parcels;
       queriedAtRef.current = result.queriedAt;
       if (nextOverlays.length) map.add(nextOverlays);
-      onStatusChange("ready");
     };
 
     void load();
@@ -239,7 +231,6 @@ export function PlanningReferenceLayer({
     amapApi,
     clearOverlays,
     map,
-    onStatusChange,
     viewportVersion,
     visible,
     zoom,

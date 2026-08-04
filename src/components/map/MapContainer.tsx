@@ -7,11 +7,7 @@ import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { PUBLIC_BASEMAP_FEATURES } from "@/src/lib/map-visual-density";
-import {
-  planningReferenceSource,
-  shouldPlanningLayerOwnMapClicks,
-  type PlanningLayerStatus,
-} from "@/src/lib/planning-reference-layer";
+import { shouldPlanningLayerOwnMapClicks } from "@/src/lib/planning-reference-layer";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 import { resolveAmapStyleUrl } from "@/src/lib/transport-layer-style";
 import { useMapStore } from "@/src/store/map-store";
@@ -36,12 +32,12 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [viewportVersion, setViewportVersion] = useState(0);
   const [viewportInteracting, setViewportInteracting] = useState(false);
-  const [planningLayerStatus, setPlanningLayerStatus] = useState<PlanningLayerStatus>("idle");
   const zoom = useMapStore((state) => state.zoom);
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
   const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const showSectorBoundaries = useMapStore((state) => state.showSectorBoundaries);
   const showProjects = useMapStore((state) => state.showProjects);
   const showMetro = useMapStore((state) => state.showMetro);
   const showElevated = useMapStore((state) => state.showElevated);
@@ -299,24 +295,6 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
           </button>
         </div>
       )}
-      {status === "ready" && showPlanningOverlay && (
-        <div
-          className={`planning-source-badge${planningLayerStatus === "unavailable" ? " is-error" : ""}`}
-          role="status"
-          aria-live="polite"
-        >
-          <strong>{planningLayerStatus === "unavailable"
-            ? "规划图层暂时不可用"
-            : planningLayerStatus === "zoom-required"
-              ? `放大至 Z${planningReferenceSource.minimumZoom} 查看详细规划`
-              : planningLayerStatus === "loading"
-                ? "正在加载官方详细规划…"
-                : "官方详细规划·参考"}</strong>
-          <span>{planningLayerStatus === "unavailable"
-            ? "已自动隐藏，主地图不受影响"
-            : "规划 ≠ 现状；数据以上海详细规划一张图为准"}</span>
-        </div>
-      )}
       {status === "loading" && (
         <div className="map-status" role="status">
           <LoaderCircle className="spin" size={24} />
@@ -354,9 +332,8 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
             viewportVersion={viewportVersion}
             visible={showPlanningOverlay}
             opacity={planningOverlayOpacity}
-            onStatusChange={setPlanningLayerStatus}
           />
-          {!isLocalResearchMode ? (
+          {showSectorBoundaries && (!isLocalResearchMode ? (
             <SectorLayer
               amapApi={amapApi}
               map={mapInstance}
@@ -385,7 +362,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               interactionEnabled={!planningLayerOwnsClicks}
               onSelect={handleSnapshotSectorSelect}
             />
-          )}
+          ))}
           <TransportLayer
             amapApi={amapApi}
             map={mapInstance}

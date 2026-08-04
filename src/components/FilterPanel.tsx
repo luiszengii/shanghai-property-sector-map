@@ -62,6 +62,7 @@ export const FilterPanel = memo(function FilterPanel({
   const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const showSectorBoundaries = useMapStore((state) => state.showSectorBoundaries);
   const showProjects = useMapStore((state) => state.showProjects);
   const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
   const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
@@ -72,6 +73,7 @@ export const FilterPanel = memo(function FilterPanel({
   const sectorLabelMinZoom = useMapStore((state) => state.sectorLabelMinZoom);
   const toggleCategory = useMapStore((state) => state.toggleCategory);
   const setCategoryGroup = useMapStore((state) => state.setCategoryGroup);
+  const toggleSectorBoundaries = useMapStore((state) => state.toggleSectorBoundaries);
   const toggleProjects = useMapStore((state) => state.toggleProjects);
   const focusProject = useMapStore((state) => state.focusProject);
   const togglePlanningOverlay = useMapStore((state) => state.togglePlanningOverlay);
@@ -128,17 +130,35 @@ export const FilterPanel = memo(function FilterPanel({
       {showSectorControls && (
         <>
           <LocalSectorSourceControls />
-          <div className="filter-group planning-filter-group">
-            <div className="group-title"><strong>参考图层</strong><span>规划用途参考</span></div>
-            <section className={`planning-layer-card${showPlanningOverlay ? " is-active" : ""}`}>
+          <div className="filter-group sector-boundary-filter-group">
+            <div className="group-title"><strong>板块边界</strong><span>地图分区图层</span></div>
+            <section className={`map-layer-card${showSectorBoundaries ? " is-active" : ""}`}>
               <button
                 type="button"
-                className="planning-layer-toggle"
+                className="map-layer-toggle"
+                onClick={toggleSectorBoundaries}
+                aria-pressed={showSectorBoundaries}
+              >
+                <span className="map-layer-icon" aria-hidden="true"><Layers3 size={14} /></span>
+                <span className="map-layer-copy">
+                  <strong>显示板块边界</strong>
+                  <small>{showSectorBoundaries ? "显示板块面与名称" : "板块面与名称已隐藏"}</small>
+                </span>
+                <span className="toggle" aria-hidden="true"><span /></span>
+              </button>
+            </section>
+          </div>
+          <div className="filter-group planning-filter-group">
+            <div className="group-title"><strong>参考图层</strong><span>规划用途参考</span></div>
+            <section className={`map-layer-card planning-layer-card${showPlanningOverlay ? " is-active" : ""}`}>
+              <button
+                type="button"
+                className="map-layer-toggle"
                 onClick={togglePlanningOverlay}
                 aria-pressed={showPlanningOverlay}
               >
-                <span className="planning-layer-icon" aria-hidden="true"><LandPlot size={14} /></span>
-                <span className="planning-layer-copy">
+                <span className="map-layer-icon" aria-hidden="true"><LandPlot size={14} /></span>
+                <span className="map-layer-copy">
                   <strong>官方详细规划（参考）</strong>
                   <small>Z {planningReferenceSource.minimumZoom} 后点地块查看规划</small>
                 </span>

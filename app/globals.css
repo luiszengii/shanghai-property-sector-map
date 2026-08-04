@@ -149,11 +149,6 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .realtynavi-difference-toggle.is-active .toggle { background: #64748b; }
 .realtynavi-difference-toggle.is-active .toggle span { transform: translateX(12px); }
 .sector-source-note { margin: 7px 0 0; color: #8b6f63; font-size: 9px; line-height: 1.45; }
-.planning-source-badge { position: absolute; z-index: 176; top: 190px; right: 16px; max-width: 270px; display: grid; gap: 3px; padding: 9px 11px; color: #0f5f58; background: rgba(255,255,255,.94); border: 1px solid rgba(15,118,110,.2); border-radius: 11px; box-shadow: 0 8px 22px rgba(15,23,42,.12); backdrop-filter: blur(12px); pointer-events: none; }
-.planning-source-badge strong { font-size: 10px; }
-.planning-source-badge span { color: #64748b; font-size: 8px; line-height: 1.45; }
-.planning-source-badge.is-error { color: #b91c1c; border-color: rgba(185,28,28,.22); background: rgba(254,242,242,.95); }
-.planning-source-badge.is-error span { color: #991b1b; }
 .filter-group + .filter-group { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
 .group-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .group-title strong { font-size: 13px; }
@@ -2600,11 +2595,11 @@ button:disabled,
   grid-template-columns: 26px minmax(0, 1fr) auto;
 }
 
-/* Hallmark · component: planning-layer-control · genre: modern-minimal · theme: locked Workbench
+/* Hallmark · component: map-layer-control · genre: modern-minimal · theme: locked Workbench
  * pre-emit critique: P5 H5 E5 S5 R5 V4 · contrast: pass (40–41) · tokens: pass (48)
  * responsive: pass (34, 49–57) · icons: pass (30) · slop: pass (42–47)
  */
-.planning-layer-card {
+.map-layer-card {
   overflow: hidden;
   color: var(--color-ink-2);
   background: var(--color-paper-2);
@@ -2615,12 +2610,12 @@ button:disabled,
     border-color var(--dur-short) var(--ease-out);
 }
 
-.planning-layer-card.is-active {
+.map-layer-card.is-active {
   background: var(--color-paper);
   border-color: var(--color-accent);
 }
 
-.planning-layer-toggle {
+.map-layer-toggle {
   width: 100%;
   min-height: 56px;
   display: grid;
@@ -2635,7 +2630,7 @@ button:disabled,
   cursor: pointer;
 }
 
-.planning-layer-icon {
+.map-layer-icon {
   width: 28px;
   height: 28px;
   display: grid;
@@ -2645,13 +2640,13 @@ button:disabled,
   border-radius: var(--radius-control);
 }
 
-.planning-layer-copy {
+.map-layer-copy {
   min-width: 0;
   display: grid;
   gap: var(--space-3xs);
 }
 
-.planning-layer-copy strong {
+.map-layer-copy strong {
   overflow: hidden;
   color: var(--color-ink);
   font-size: 11px;
@@ -2661,7 +2656,7 @@ button:disabled,
   white-space: nowrap;
 }
 
-.planning-layer-copy small {
+.map-layer-copy small {
   overflow: hidden;
   color: var(--color-muted);
   font-size: 9px;
@@ -2670,21 +2665,21 @@ button:disabled,
   white-space: nowrap;
 }
 
-.planning-layer-toggle .toggle {
+.map-layer-toggle .toggle {
   flex: 0 0 auto;
   background: var(--color-rule);
   transition: background-color var(--dur-micro) var(--ease-out);
 }
 
-.planning-layer-toggle .toggle span {
+.map-layer-toggle .toggle span {
   transition: transform var(--dur-micro) var(--ease-out);
 }
 
-.planning-layer-card.is-active .planning-layer-toggle .toggle {
+.map-layer-card.is-active .map-layer-toggle .toggle {
   background: var(--color-accent);
 }
 
-.planning-layer-card.is-active .planning-layer-toggle .toggle span {
+.map-layer-card.is-active .map-layer-toggle .toggle span {
   transform: translateX(12px);
 }
 
@@ -2822,25 +2817,25 @@ button:disabled,
   line-height: 1.5;
 }
 
-.planning-layer-toggle:focus-visible,
+.map-layer-toggle:focus-visible,
 .planning-layer-settings summary:focus-visible,
 .planning-layer-source-row a:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: -2px;
 }
 
-.planning-layer-toggle:active,
+.map-layer-toggle:active,
 .planning-layer-settings summary:active {
   transform: translateY(1px);
 }
 
-.planning-layer-toggle:disabled {
+.map-layer-toggle:disabled {
   cursor: not-allowed;
   opacity: .55;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .planning-layer-toggle:hover,
+  .map-layer-toggle:hover,
   .planning-layer-settings summary:hover {
     background: var(--color-accent-soft);
   }
