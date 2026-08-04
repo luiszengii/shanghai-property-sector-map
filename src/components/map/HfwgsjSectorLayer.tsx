@@ -33,7 +33,6 @@ interface PrivateSectorLayerProps {
   amapApi: typeof AMap;
   map: AMap.Map;
   source: PrivateSnapshotSource;
-  projectTarget?: boolean;
   zoom: number;
   viewportVersion: number;
   viewportInteracting: boolean;
@@ -52,11 +51,6 @@ interface SnapshotOverlay {
   palette: SnapshotPalette;
   districtOutlineDifference: boolean;
 }
-
-type SnapshotStatus =
-  | { state: "loading"; count: 0 }
-  | { state: "ready"; count: number }
-  | { state: "error"; count: 0 };
 
 interface SnapshotPalette {
   fill: string;
@@ -193,7 +187,6 @@ export function PrivateSectorLayer({
   amapApi,
   map,
   source,
-  projectTarget = false,
   zoom,
   viewportVersion,
   viewportInteracting,
@@ -214,27 +207,6 @@ export function PrivateSectorLayer({
   const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
   const [overlayVersion, setOverlayVersion] = useState(0);
-  const [status, setStatus] = useState<SnapshotStatus>({
-    state: "loading",
-    count: 0,
-  });
-  const [snapshotMeta, setSnapshotMeta] = useState<{
-    directoryCount: number;
-    namedCount: number;
-    districtOutlineDifferenceCount: number;
-    missingCount: number;
-    coordinateNote: string;
-  } | null>(null);
-  const layerLabel = projectTarget
-    ? "项目研究边界 · 拓扑修复研究版"
-    : config.label;
-  const statusLabel = status.state === "loading"
-    ? "正在载入私有板块快照…"
-    : status.state === "error"
-      ? "私有板块快照不可用"
-      : snapshotMeta?.districtOutlineDifferenceCount
-        ? `${config.label} · ${snapshotMeta.namedCount} 个命名板块${showRealtynaviDistrictOutlineDifferences ? ` · 已显示 ${snapshotMeta.districtOutlineDifferenceCount} 个区级外轮廓差异参考面` : ""}`
-        : `${layerLabel} · ${status.count} / ${snapshotMeta?.directoryCount ?? status.count} 个边界`;
 
   useEffect(() => {
     onSelectRef.current = onSelect;
@@ -258,8 +230,6 @@ export function PrivateSectorLayer({
     polygonGroupRef.current = polygonGroup;
 
     const loadSnapshot = async () => {
-      setStatus({ state: "loading", count: 0 });
-      setSnapshotMeta(null);
       const response = await fetch(config.url, {
         cache: "no-store",
         signal: controller.signal,
@@ -270,15 +240,6 @@ export function PrivateSectorLayer({
         snapshot.metadata.coordinate_system === "WGS84"
         || snapshot.metadata.source_coordinate_system === "WGS84"
       );
-      setSnapshotMeta({
-        directoryCount: snapshot.metadata.directory_count ?? snapshot.features.length,
-        namedCount: snapshot.metadata.named_feature_count ?? snapshot.features.length,
-        districtOutlineDifferenceCount:
-          snapshot.metadata.district_outline_difference_feature_count ?? 0,
-        missingCount: snapshot.metadata.missing_geometry_count ?? 0,
-        coordinateNote: snapshot.metadata.coordinate_note,
-      });
-
       const displayFeatures = getSnapshotDisplayFeatures(snapshot.features, {
         includeDistrictOutlineDifferences: (
           source === "realtynavi-private"
@@ -400,13 +361,11 @@ export function PrivateSectorLayer({
       if (cancelled) return;
       overlaysRef.current = overlays;
       setOverlayVersion((version) => version + 1);
-      setStatus({ state: "ready", count: displayFeatures.length });
     };
 
     loadSnapshot().catch((error: unknown) => {
       if (cancelled || controller.signal.aborted) return;
       console.error("本地私有板块快照加载失败", error);
-      setStatus({ state: "error", count: 0 });
     });
 
     return () => {
@@ -502,21 +461,5 @@ export function PrivateSectorLayer({
     zoom,
   ]);
 
-  return (
-    <div
-      className={`sector-source-badge is-${status.state}`}
-      role={status.state === "error" ? "alert" : "status"}
-    >
-      <strong>{statusLabel}</strong>
-      <span>
-        {status.state === "error"
-          ? `请确认 ${source} 的本地文件仍存在`
-          : source === "project-topology-repair"
-            ? `${snapshotMeta?.coordinateNote ?? "WGS84"} · OSM ODbL · 仅限内部复核`
-          : snapshotMeta?.missingCount
-            ? `GCJ-02 · ${snapshotMeta.missingCount} 个目录项无边界 · 许可未知 · 仅限私有研究`
-            : `${snapshotMeta?.coordinateNote ?? "GCJ-02"} · 许可未知 · 仅限私有研究`}
-      </span>
-    </div>
-  );
+  return null;
 }

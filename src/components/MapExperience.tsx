@@ -23,16 +23,6 @@ import { MobileBottomSheet } from "./MobileBottomSheet";
 import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
 
-const CurrentSectorName = memo(function CurrentSectorName() {
-  const selectedSectorId = useMapStore((state) => state.selectedSectorId);
-  return <strong>{selectedSectorId ? sectorCatalog.getFeature(selectedSectorId)?.properties.name ?? "上海全域" : "上海全域"}</strong>;
-});
-
-const ZoomPill = memo(function ZoomPill() {
-  const zoom = useMapStore((state) => state.zoom);
-  return <span className="zoom-pill">Z {zoom.toFixed(1)}</span>;
-});
-
 const AppHeader = memo(function AppHeader({
   onEnterImmersive,
   quickbar,
@@ -52,11 +42,6 @@ const AppHeader = memo(function AppHeader({
       <div className="topbar-workspace">
         <SearchBar />
         {quickbar}
-      </div>
-      <div className="header-status">
-        <span className="status-label">当前板块</span>
-        <CurrentSectorName />
-        <ZoomPill />
       </div>
       <div className="header-actions">
         <button className="immersive-button" onClick={onEnterImmersive} title="只显示地图板块和新盘 Pin"><Expand size={16} /><span>沉浸模式</span></button>

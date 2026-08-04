@@ -335,7 +335,6 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               source={sectorBoundarySource === "project"
                 ? "project-topology-repair"
                 : sectorBoundarySource}
-              projectTarget={sectorBoundarySource === "project"}
               zoom={zoom}
               viewportVersion={viewportVersion}
               viewportInteracting={viewportInteracting}
