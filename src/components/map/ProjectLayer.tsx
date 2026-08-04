@@ -7,6 +7,10 @@ import {
   zoomToSeparatePoints,
 } from "@/src/lib/project-marker-clustering";
 import { projectHouseIconSvg } from "@/src/lib/category-icon-svg";
+import {
+  escapeMapPinHtml,
+  mapPinMarkerContent,
+} from "@/src/lib/map-pin-marker";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import type { PropertyProject } from "@/src/types/map";
 
@@ -20,12 +24,6 @@ interface ProjectLayerProps {
   detailMinZoom: number;
   selectedProjectId: string | null;
   onSelect: (project: PropertyProject) => void;
-}
-
-function escapeHtml(value: string) {
-  return value.replace(/[&<>"']/g, (character) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;",
-  })[character] ?? character);
 }
 
 function projectWorldPoint(project: PropertyProject, zoom: number) {
@@ -51,14 +49,15 @@ function projectMarkerContent(
       .replace(/0$/, "") + "万/㎡"
     : "";
   const label = showLabel
-    ? '<span class="project-label"><b>' + escapeHtml(displayName)
+    ? '<span class="project-label"><b>' + escapeMapPinHtml(displayName)
       + "</b>" + (price ? "<small>" + price + "</small>" : "") + "</span>"
     : "";
-  return '<button class="project-marker'
-    + (selected ? " is-selected" : "")
-    + '" aria-label="' + escapeHtml(displayName)
-    + '"><span class="project-pin"><i>' + projectHouseIconSvg + "</i></span>"
-    + label + "</button>";
+  return mapPinMarkerContent({
+    ariaLabel: displayName,
+    iconSvg: projectHouseIconSvg,
+    labelHtml: label,
+    selected,
+  });
 }
 
 export function ProjectLayer({
