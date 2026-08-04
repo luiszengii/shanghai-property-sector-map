@@ -12,9 +12,10 @@ import {
   SlidersHorizontal,
   X,
 } from "lucide-react";
-import { memo, useId, useState } from "react";
+import { memo, type CSSProperties, useId, useState } from "react";
 import { AnimatedList } from "@/src/components/AnimatedList";
 import { AnimatedProjectList } from "@/src/components/AnimatedProjectList";
+import { CategoryIcon } from "@/src/components/CategoryIcon";
 import {
   LocalSectorSourceControls,
 } from "@/src/components/local-research-features";
@@ -355,6 +356,13 @@ export const FilterPanel = memo(function FilterPanel({
                       const checked = enabledCategories.includes(category.id);
                       return (
                         <button key={category.id} className={`filter-item ${checked ? "is-active" : ""}`} onClick={() => toggleCategory(category.id)} aria-pressed={checked}>
+                          <span
+                            className="category-icon facility-category-icon"
+                            style={{ "--category-color": category.color } as CSSProperties}
+                            aria-hidden="true"
+                          >
+                            <CategoryIcon name={category.icon} size={15} />
+                          </span>
                           <span>{category.name}</span>
                           <span className="toggle"><span /></span>
                         </button>
