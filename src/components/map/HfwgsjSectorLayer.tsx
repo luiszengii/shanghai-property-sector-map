@@ -39,6 +39,7 @@ interface PrivateSectorLayerProps {
   labelMode: SectorLabelMode;
   labelMinZoom: number;
   selectedSectorId: string | null;
+  interactionEnabled?: boolean;
   onSelect: (sector: SectorFeature) => void;
 }
 
@@ -193,6 +194,7 @@ export function PrivateSectorLayer({
   labelMode,
   labelMinZoom,
   selectedSectorId,
+  interactionEnabled = true,
   onSelect,
 }: PrivateSectorLayerProps) {
   const config = snapshotConfigs[source];
@@ -206,6 +208,7 @@ export function PrivateSectorLayer({
   const labelModeRef = useRef(labelMode);
   const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
+  const interactionEnabledRef = useRef(interactionEnabled);
   const [overlayVersion, setOverlayVersion] = useState(0);
 
   useEffect(() => {
@@ -221,6 +224,28 @@ export function PrivateSectorLayer({
     labelModeRef.current = labelMode;
     labelMinZoomRef.current = labelMinZoom;
   }, [labelMinZoom, labelMode]);
+
+  useEffect(() => {
+    interactionEnabledRef.current = interactionEnabled;
+    overlaysRef.current.forEach((overlay) => {
+      overlay.polygon.setOptions({
+        cursor: interactionEnabled && overlay.matchedSector ? "pointer" : "default",
+      });
+      if (!interactionEnabled) {
+        if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
+        overlay.hoverLeaveTimer = null;
+        applySnapshotStyle(
+          overlay,
+          zoomRef.current,
+          overlay.matchedSector?.properties.id === selectedSectorIdRef.current,
+        );
+        if (labelModeRef.current === "hover" && overlay.label && overlay.labelMounted) {
+          map.remove(overlay.label);
+          overlay.labelMounted = false;
+        }
+      }
+    });
+  }, [interactionEnabled, map]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -264,7 +289,7 @@ export function PrivateSectorLayer({
         const polygon = new amapApi.Polygon();
         polygon.setOptions({
           path,
-          cursor: matchedSector ? "pointer" : "default",
+          cursor: matchedSector && interactionEnabledRef.current ? "pointer" : "default",
         });
         const shouldLabel = (
           feature.properties.centroid
@@ -307,6 +332,7 @@ export function PrivateSectorLayer({
 
         if (matchedSector) {
           polygon.on("mouseover", () => {
+            if (!interactionEnabledRef.current) return;
             if (overlay.hoverLeaveTimer) {
               clearTimeout(overlay.hoverLeaveTimer);
               overlay.hoverLeaveTimer = null;
@@ -332,6 +358,7 @@ export function PrivateSectorLayer({
             }
           });
           polygon.on("mouseout", () => {
+            if (!interactionEnabledRef.current) return;
             if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
             overlay.hoverLeaveTimer = setTimeout(() => {
               overlay.hoverLeaveTimer = null;
@@ -350,7 +377,9 @@ export function PrivateSectorLayer({
               }
             }, 90);
           });
-          polygon.on("click", () => onSelectRef.current(matchedSector));
+          polygon.on("click", () => {
+            if (interactionEnabledRef.current) onSelectRef.current(matchedSector);
+          });
         }
 
         map.add(overlay.labelMounted && label ? [polygon, label] : polygon);

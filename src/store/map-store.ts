@@ -6,6 +6,11 @@ import categoriesData from "@/src/data/categories.json";
 import type { SectorLabelMode } from "@/src/lib/sector-label-visibility";
 import type { Category } from "@/src/types/map";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
+import {
+  defaultPlanningLayerPreferences,
+  setPlanningLayerOpacity as updatePlanningLayerOpacity,
+  togglePlanningLayer,
+} from "@/src/lib/planning-reference-layer";
 
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
@@ -32,6 +37,8 @@ interface MapState {
   showMetro: boolean;
   showElevated: boolean;
   metroStationLabelMinZoom: number;
+  showPlanningOverlay: boolean;
+  planningOverlayOpacity: number;
   projectClusterEnabled: boolean;
   projectClusterRadius: number;
   projectDetailMinZoom: number;
@@ -59,6 +66,8 @@ interface MapState {
   toggleMetro: () => void;
   toggleElevated: () => void;
   setMetroStationLabelMinZoom: (zoom: number) => void;
+  togglePlanningOverlay: () => void;
+  setPlanningOverlayOpacity: (opacity: number) => void;
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
   setProjectDetailMinZoom: (zoom: number) => void;
@@ -88,6 +97,8 @@ export const useMapStore = create<MapState>()(
       showMetro: true,
       showElevated: true,
       metroStationLabelMinZoom: 13.8,
+      showPlanningOverlay: defaultPlanningLayerPreferences.visible,
+      planningOverlayOpacity: defaultPlanningLayerPreferences.opacity,
       projectClusterEnabled: true,
       projectClusterRadius: 72,
       projectDetailMinZoom: 13.8,
@@ -139,6 +150,23 @@ export const useMapStore = create<MapState>()(
       toggleElevated: () => set((state) => ({ showElevated: !state.showElevated })),
       setMetroStationLabelMinZoom: (zoom) =>
         set({ metroStationLabelMinZoom: zoom }),
+      togglePlanningOverlay: () => set((state) => {
+        const preferences = togglePlanningLayer({
+          visible: state.showPlanningOverlay,
+          opacity: state.planningOverlayOpacity,
+        });
+        return {
+          showPlanningOverlay: preferences.visible,
+          selectedSectorId: preferences.visible ? null : state.selectedSectorId,
+        };
+      }),
+      setPlanningOverlayOpacity: (opacity) => set((state) => {
+        const preferences = updatePlanningLayerOpacity({
+          visible: state.showPlanningOverlay,
+          opacity: state.planningOverlayOpacity,
+        }, opacity);
+        return { planningOverlayOpacity: preferences.opacity };
+      }),
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
       setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
@@ -206,6 +234,8 @@ export const useMapStore = create<MapState>()(
         showMetro: state.showMetro,
         showElevated: state.showElevated,
         metroStationLabelMinZoom: state.metroStationLabelMinZoom,
+        showPlanningOverlay: state.showPlanningOverlay,
+        planningOverlayOpacity: state.planningOverlayOpacity,
         projectClusterEnabled: state.projectClusterEnabled,
         projectClusterRadius: state.projectClusterRadius,
         projectDetailMinZoom: state.projectDetailMinZoom,

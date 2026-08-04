@@ -149,6 +149,11 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .realtynavi-difference-toggle.is-active .toggle { background: #64748b; }
 .realtynavi-difference-toggle.is-active .toggle span { transform: translateX(12px); }
 .sector-source-note { margin: 7px 0 0; color: #8b6f63; font-size: 9px; line-height: 1.45; }
+.planning-source-badge { position: absolute; z-index: 176; top: 190px; right: 16px; max-width: 270px; display: grid; gap: 3px; padding: 9px 11px; color: #0f5f58; background: rgba(255,255,255,.94); border: 1px solid rgba(15,118,110,.2); border-radius: 11px; box-shadow: 0 8px 22px rgba(15,23,42,.12); backdrop-filter: blur(12px); pointer-events: none; }
+.planning-source-badge strong { font-size: 10px; }
+.planning-source-badge span { color: #64748b; font-size: 8px; line-height: 1.45; }
+.planning-source-badge.is-error { color: #b91c1c; border-color: rgba(185,28,28,.22); background: rgba(254,242,242,.95); }
+.planning-source-badge.is-error span { color: #991b1b; }
 .filter-group + .filter-group { margin-top: 16px; padding-top: 15px; border-top: 1px solid var(--line); }
 .group-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
 .group-title strong { font-size: 13px; }
@@ -188,6 +193,15 @@ body:has(.app-shell.is-immersive) > a[href="/sector-editor"] { display: none; }
 .panel-footnote { margin: 14px 0 0; padding: 10px; color: #64748b; background: #f5f7f7; border-radius: 9px; font-size: 10px; line-height: 1.5; }
 
 .detail-card { position: absolute; z-index: 240; right: 16px; bottom: 26px; width: min(360px, calc(100vw - 32px)); padding: 20px; border-radius: 19px; animation: card-in .25s ease-out both; }
+.planning-info-window { width: min(310px, calc(100vw - 74px)); display: grid; gap: 8px; color: #1e293b; }
+.planning-info-eyebrow { color: #0f766e; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+.planning-info-window > strong { font-size: 15px; line-height: 1.35; }
+.planning-info-window dl { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 5px 8px; margin: 0; font-size: 10px; }
+.planning-info-window dt { color: #94a3b8; }
+.planning-info-window dd { margin: 0; color: #334155; line-height: 1.45; overflow-wrap: anywhere; }
+.planning-info-window a { display: inline-flex; color: #0f766e; font-size: 9px; line-height: 1.45; text-decoration: none; }
+.planning-info-window a:hover { text-decoration: underline; }
+.planning-info-window p { margin: 0; padding: 7px 8px; color: #7c5b45; background: #fffaf5; border-radius: 7px; font-size: 9px; line-height: 1.5; }
 @keyframes card-in { from { opacity: 0; transform: translateY(12px) scale(.98); } }
 .detail-close, .dialog-close { position: absolute; top: 13px; right: 13px; }
 .detail-topline { display: flex; align-items: center; gap: 11px; padding-right: 28px; }
@@ -2584,6 +2598,256 @@ button:disabled,
 
 .filter-list .filter-item {
   grid-template-columns: 26px minmax(0, 1fr) auto;
+}
+
+/* Hallmark · component: planning-layer-control · genre: modern-minimal · theme: locked Workbench
+ * pre-emit critique: P5 H5 E5 S5 R5 V4 · contrast: pass (40–41) · tokens: pass (48)
+ * responsive: pass (34, 49–57) · icons: pass (30) · slop: pass (42–47)
+ */
+.planning-layer-card {
+  overflow: hidden;
+  color: var(--color-ink-2);
+  background: var(--color-paper-2);
+  border: var(--rule-hairline);
+  border-radius: var(--radius-panel);
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
+}
+
+.planning-layer-card.is-active {
+  background: var(--color-paper);
+  border-color: var(--color-accent);
+}
+
+.planning-layer-toggle {
+  width: 100%;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  color: inherit;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.planning-layer-icon {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+  border-radius: var(--radius-control);
+}
+
+.planning-layer-copy {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3xs);
+}
+
+.planning-layer-copy strong {
+  overflow: hidden;
+  color: var(--color-ink);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.planning-layer-copy small {
+  overflow: hidden;
+  color: var(--color-muted);
+  font-size: 9px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.planning-layer-toggle .toggle {
+  flex: 0 0 auto;
+  background: var(--color-rule);
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+
+.planning-layer-toggle .toggle span {
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+
+.planning-layer-card.is-active .planning-layer-toggle .toggle {
+  background: var(--color-accent);
+}
+
+.planning-layer-card.is-active .planning-layer-toggle .toggle span {
+  transform: translateX(12px);
+}
+
+.planning-legend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 0 var(--space-xs) var(--space-xs);
+  list-style: none;
+}
+
+.planning-legend-grid li {
+  min-width: 0;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding-inline: var(--space-xs);
+  color: var(--color-muted);
+  background: var(--color-paper-2);
+  border-radius: 4px;
+  font-size: 9px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.planning-legend-swatch {
+  --planning-legend-color: var(--color-neutral);
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  background: var(--planning-legend-color);
+  border: 1px solid var(--planning-legend-color);
+  border-radius: 2px;
+}
+
+@supports (color: color-mix(in oklch, black, white)) {
+  .planning-legend-swatch {
+    border-color: color-mix(in oklch, var(--planning-legend-color) 72%, var(--color-ink));
+  }
+}
+
+.planning-layer-settings {
+  color: var(--color-muted);
+  border-block-start: var(--rule-hairline);
+}
+
+.planning-layer-settings summary {
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding-inline: var(--space-xs);
+  cursor: pointer;
+  list-style: none;
+  font-size: 10px;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.planning-layer-settings summary::-webkit-details-marker {
+  display: none;
+}
+
+.planning-layer-settings summary small {
+  color: var(--color-accent-strong);
+  font: 650 9px var(--font-body);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+.planning-layer-settings-body {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  border-block-start: var(--rule-hairline);
+}
+
+.planning-layer-settings-body label {
+  display: grid;
+  gap: 5px;
+  color: var(--color-muted);
+  font-size: 10px;
+}
+
+.planning-layer-settings-body label > span,
+.planning-layer-source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+.planning-layer-settings-body output {
+  color: var(--color-accent-strong);
+  font: 700 9px var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.planning-layer-settings-body input[type="range"] {
+  width: 100%;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.planning-layer-settings-body input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: .4;
+}
+
+.planning-layer-source-row a {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-accent-strong);
+  font-size: 9px;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.planning-layer-source-row > span {
+  flex: 0 0 auto;
+  color: var(--color-neutral);
+  font: 550 8px var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.planning-layer-settings-body p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.planning-layer-toggle:focus-visible,
+.planning-layer-settings summary:focus-visible,
+.planning-layer-source-row a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.planning-layer-toggle:active,
+.planning-layer-settings summary:active {
+  transform: translateY(1px);
+}
+
+.planning-layer-toggle:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .planning-layer-toggle:hover,
+  .planning-layer-settings summary:hover {
+    background: var(--color-accent-soft);
+  }
+
+  .planning-layer-source-row a:hover {
+    text-decoration: underline;
+  }
 }
 
 @media (min-width: 45.0625rem) {
