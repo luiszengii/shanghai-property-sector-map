@@ -1,8 +1,7 @@
 "use client";
 
-import { Building2, CalendarClock, ClipboardList, Cloud, GraduationCap, Laptop, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Building2, CalendarClock, ClipboardList, GraduationCap, PencilRuler, Star, ThumbsDown, ThumbsUp } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { AnimatedList } from "@/src/components/AnimatedList";
 import { useMapStore, type SectorBoundarySource } from "@/src/store/map-store";
 import type { PropertyProject } from "@/src/types/map";
@@ -19,44 +18,6 @@ export function LocalEditorShortcut({ className }: { className: string }) {
       <PencilRuler size={17} />
       自己画板块
     </Link>
-  );
-}
-
-export function LocalEnvironmentSwitcher() {
-  const [showProduction, setShowProduction] = useState(false);
-
-  return (
-    <>
-      {showProduction ? (
-        <div className="production-preview">
-          <iframe
-            src="https://shfang.xyz"
-            title="shfang.xyz 线上版本"
-            referrerPolicy="no-referrer"
-          />
-        </div>
-      ) : null}
-      <div className="environment-switcher" role="group" aria-label="页面版本">
-        <button
-          type="button"
-          className={showProduction ? "" : "is-active"}
-          aria-pressed={!showProduction}
-          onClick={() => setShowProduction(false)}
-        >
-          <Laptop size={13} />
-          本地
-        </button>
-        <button
-          type="button"
-          className={showProduction ? "is-active" : ""}
-          aria-pressed={showProduction}
-          onClick={() => setShowProduction(true)}
-        >
-          <Cloud size={13} />
-          线上
-        </button>
-      </div>
-    </>
   );
 }
 

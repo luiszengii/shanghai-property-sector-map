@@ -15,10 +15,6 @@ export function LocalEditorShortcut(_props: { className: string }) {
   return null;
 }
 
-export function LocalEnvironmentSwitcher() {
-  return null;
-}
-
 export function LocalSourceLedgerShortcut() {
   return null;
 }
