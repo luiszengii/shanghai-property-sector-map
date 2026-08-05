@@ -92,3 +92,7 @@ Umami 数据可能比页面访问晚数秒出现。修改时间范围或部署 t
 
 在服务器上，更新前先导出 PostgreSQL 数据库；更新镜像后通过
 `docker compose pull` 和 `docker compose up -d` 重建。数据卷不得删除。
+
+数据卷不是备份。数据库导出、加密异机保存、恢复演练、RPO/RTO 和备份失败告警的
+操作清单见 [`docs/OPERATIONS-RUNBOOK.md`](OPERATIONS-RUNBOOK.md)。Compose 中的
+PostgreSQL 服务名和镜像版本必须先在服务器现场确认，不得从旧聊天记录猜测。

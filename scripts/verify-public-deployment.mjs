@@ -16,23 +16,41 @@ async function request(pathname, init) {
 
 const home = await request("/");
 const observations = await request("/observations");
-const privateChecks = await Promise.all([
-  request("/sector-editor"),
-  request("/api/sector-editor-versions"),
-  request("/api/sector-editor-versions", {
+const projectDetailPath = "/projects/project_%E4%B8%9C%E5%B2%B8%E8%A7%82%E9%82%B8";
+const projectDetail = await request(projectDetailPath);
+const privateCheckDefinitions = [
+  { path: "/sector-editor" },
+  { path: "/sources" },
+  { path: "/api/sector-editor-versions" },
+  { path: "/api/sector-editor-versions", init: {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: "{}",
-  }),
-  request("/api/local-sector-snapshot"),
-  request("/api/local-project-research"),
-  request("/api/xhs-observations"),
-]);
+  } },
+  { path: "/api/source-ledger" },
+  { path: "/api/source-ledger", init: {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  } },
+  { path: "/api/local-sector-snapshot" },
+  { path: "/api/local-project-research" },
+  { path: "/api/xhs-observations" },
+];
+const privateChecks = await Promise.all(privateCheckDefinitions.map(async (check) => ({
+  ...check,
+  result: await request(check.path, check.init),
+})));
 
 if (home.status !== 200) failures.push(`/ returned ${home.status}`);
 if (observations.status !== 200) failures.push(`/observations returned ${observations.status}`);
-for (const [index, result] of privateChecks.entries()) {
-  if (result.status !== 404) failures.push(`private endpoint ${index + 1} returned ${result.status}`);
+if (projectDetail.status !== 200) {
+  failures.push(`${projectDetailPath} returned ${projectDetail.status}`);
+}
+for (const { path, init, result } of privateChecks) {
+  if (result.status !== 404) {
+    failures.push(`private endpoint ${init?.method ?? "GET"} ${path} returned ${result.status}`);
+  }
 }
 
 const forbiddenHomeText = [
@@ -58,4 +76,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("PUBLIC_DEPLOYMENT_GREEN: public pages are available and local-only routes return 404");
+console.log("PUBLIC_DEPLOYMENT_GREEN: public pages and project detail are available; local-only routes return 404");
