@@ -26,8 +26,7 @@
 .homebuyer-settings-trigger {
   position: absolute;
   z-index: 350;
-  /* Keep the local-dev Next.js toast from intercepting this bottom-left control. */
-  inset: auto auto var(--space-lg) var(--space-2xl);
+  inset: auto auto var(--space-lg) var(--space-md);
   width: 44px;
   height: 44px;
   display: grid;
@@ -658,7 +657,7 @@
 
 @media (max-width: 39.99rem) {
   .homebuyer-settings-trigger {
-    inset: auto auto var(--space-md) var(--space-2xl);
+    inset: auto auto var(--space-lg) var(--space-md);
   }
 
   .homebuyer-settings-dialog {
