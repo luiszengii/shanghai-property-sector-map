@@ -76,6 +76,18 @@ SSH 私钥只用于 GitHub Actions。服务器端 `deploy` 用户只允许公钥
 并且只能免密重启和检查两个应用服务。预生产的
 Actions 外网验收必须不带认证信息，以及时发现匿名访问回归。
 
+## 服务器运行时 Secrets
+
+通勤预计接口还需要 `AMAP_WEB_SERVICE_KEY`。它必须是独立的“Web 服务”Key，
+由 `shfang-map.service` 与 `shfang-preprod.service` 在运行时读取；不得复用
+`NEXT_PUBLIC_AMAP_KEY`，不得加 `NEXT_PUBLIC_` 前缀，也不得打进 standalone
+发布包。上线时使用 systemd 的 root-only `EnvironmentFile` 或等价的服务器
+密钥注入方式，并在修改后执行 `systemctl daemon-reload` 和对应服务重启。
+
+部署前先用 `systemctl cat shfang-map.service` 与
+`systemctl cat shfang-preprod.service` 核对实际 drop-in/EnvironmentFile 路径；
+密钥值不得出现在 GitHub Actions 日志、仓库或对话记录中。
+
 访问统计后台、登录入口、数据查看和无数据排查见
 [`docs/ANALYTICS.md`](ANALYTICS.md)。
 日常巡检、告警、备份恢复、服务器重建、密钥轮换和续费核验见

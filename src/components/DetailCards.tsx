@@ -4,6 +4,7 @@ import { ArrowRight, BadgeCheck, Building2, CalendarClock, ExternalLink, MapPin,
 import Link from "next/link";
 import { useMemo } from "react";
 import { CategoryIcon } from "@/src/components/CategoryIcon";
+import { CommuteEstimateRows } from "@/src/components/CommuteEstimateRows";
 import {
   LocalProjectResearchMetadata,
   LocalProjectResearchSummary,
@@ -17,6 +18,7 @@ import { formatSectorRiskFlags } from "@/src/lib/sector-risk-flags";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import type { Category, Place, SectorBoundarySide, SectorBoundaryStatus } from "@/src/types/map";
+import type { HomebuyerProfile } from "@/src/lib/homebuyer-profile";
 
 const places = placesData as Place[];
 const categories = categoriesData as Category[];
@@ -45,7 +47,7 @@ function distanceKm(a: [number, number], b: [number, number]) {
   return radius * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 }
 
-export function DetailCard() {
+export function DetailCard({ homebuyerProfile = null }: { homebuyerProfile?: HomebuyerProfile | null }) {
   const projects = useProjectCatalog();
   const projectById = useMemo(
     () => new Map(projects.map((project) => [project.id, project])),
@@ -119,6 +121,13 @@ export function DetailCard() {
             <strong>基础点位资料</strong>
             <small>价格、户型与观点字段尚未进入公开投射</small>
           </div>
+        )}
+        {homebuyerProfile && (
+          <CommuteEstimateRows
+            key={`${project.id}-${JSON.stringify(homebuyerProfile)}`}
+            profile={homebuyerProfile}
+            projectPosition={project.position}
+          />
         )}
         <p className="detail-section-label">位置与来源</p>
         <dl className="detail-list project-meta">
