@@ -46,9 +46,11 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   );
   const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
   const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
+  const planningOverlayMinZoom = useMapStore((state) => state.planningOverlayMinZoom);
   const planningLayerOwnsClicks = shouldPlanningLayerOwnMapClicks(
     showPlanningOverlay,
     zoom,
+    planningOverlayMinZoom,
   );
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
@@ -332,6 +334,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
             viewportVersion={viewportVersion}
             visible={showPlanningOverlay}
             opacity={planningOverlayOpacity}
+            minimumZoom={planningOverlayMinZoom}
           />
           {showSectorBoundaries && (!isLocalResearchMode ? (
             <SectorLayer

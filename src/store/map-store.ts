@@ -8,6 +8,7 @@ import type { Category } from "@/src/types/map";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 import {
   defaultPlanningLayerPreferences,
+  setPlanningLayerMinimumZoom as updatePlanningLayerMinimumZoom,
   setPlanningLayerOpacity as updatePlanningLayerOpacity,
   togglePlanningLayer,
 } from "@/src/lib/planning-reference-layer";
@@ -40,6 +41,7 @@ interface MapState {
   metroStationLabelMinZoom: number;
   showPlanningOverlay: boolean;
   planningOverlayOpacity: number;
+  planningOverlayMinZoom: number;
   projectClusterEnabled: boolean;
   projectClusterRadius: number;
   projectDetailMinZoom: number;
@@ -70,6 +72,7 @@ interface MapState {
   setMetroStationLabelMinZoom: (zoom: number) => void;
   togglePlanningOverlay: () => void;
   setPlanningOverlayOpacity: (opacity: number) => void;
+  setPlanningOverlayMinZoom: (zoom: number) => void;
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
   setProjectDetailMinZoom: (zoom: number) => void;
@@ -102,6 +105,7 @@ export const useMapStore = create<MapState>()(
       metroStationLabelMinZoom: 13.8,
       showPlanningOverlay: defaultPlanningLayerPreferences.visible,
       planningOverlayOpacity: defaultPlanningLayerPreferences.opacity,
+      planningOverlayMinZoom: defaultPlanningLayerPreferences.minimumZoom,
       projectClusterEnabled: true,
       projectClusterRadius: 72,
       projectDetailMinZoom: 13.8,
@@ -161,6 +165,7 @@ export const useMapStore = create<MapState>()(
         const preferences = togglePlanningLayer({
           visible: state.showPlanningOverlay,
           opacity: state.planningOverlayOpacity,
+          minimumZoom: state.planningOverlayMinZoom,
         });
         return {
           showPlanningOverlay: preferences.visible,
@@ -171,8 +176,17 @@ export const useMapStore = create<MapState>()(
         const preferences = updatePlanningLayerOpacity({
           visible: state.showPlanningOverlay,
           opacity: state.planningOverlayOpacity,
+          minimumZoom: state.planningOverlayMinZoom,
         }, opacity);
         return { planningOverlayOpacity: preferences.opacity };
+      }),
+      setPlanningOverlayMinZoom: (zoom) => set((state) => {
+        const preferences = updatePlanningLayerMinimumZoom({
+          visible: state.showPlanningOverlay,
+          opacity: state.planningOverlayOpacity,
+          minimumZoom: state.planningOverlayMinZoom,
+        }, zoom);
+        return { planningOverlayMinZoom: preferences.minimumZoom };
       }),
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
@@ -232,6 +246,8 @@ export const useMapStore = create<MapState>()(
             ?? current.showElevated,
           showSectorBoundaries: stored.showSectorBoundaries
             ?? current.showSectorBoundaries,
+          planningOverlayMinZoom: stored.planningOverlayMinZoom
+            ?? current.planningOverlayMinZoom,
           sectorBoundarySource: isLocalResearchMode
             ? stored.sectorBoundarySource ?? "project"
             : "project",
@@ -246,6 +262,7 @@ export const useMapStore = create<MapState>()(
         metroStationLabelMinZoom: state.metroStationLabelMinZoom,
         showPlanningOverlay: state.showPlanningOverlay,
         planningOverlayOpacity: state.planningOverlayOpacity,
+        planningOverlayMinZoom: state.planningOverlayMinZoom,
         projectClusterEnabled: state.projectClusterEnabled,
         projectClusterRadius: state.projectClusterRadius,
         projectDetailMinZoom: state.projectDetailMinZoom,

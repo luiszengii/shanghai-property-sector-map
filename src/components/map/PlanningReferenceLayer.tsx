@@ -18,6 +18,7 @@ interface PlanningReferenceLayerProps {
   viewportVersion: number;
   visible: boolean;
   opacity: number;
+  minimumZoom: number;
 }
 
 function addDetailRow(list: HTMLDListElement, label: string, value: string | null) {
@@ -70,9 +71,7 @@ function planningInfoContent(parcel: PlanningParcel, queriedAt: string) {
   source.rel = "noreferrer";
   source.textContent = planningReferenceSource.name;
 
-  const disclaimer = document.createElement("p");
-  disclaimer.textContent = "规划用途不等于现状、在建状态或最终实施结果。";
-  content.append(eyebrow, heading, details, source, disclaimer);
+  content.append(eyebrow, heading, details, source);
   return content;
 }
 
@@ -98,6 +97,7 @@ export function PlanningReferenceLayer({
   viewportVersion,
   visible,
   opacity,
+  minimumZoom,
 }: PlanningReferenceLayerProps) {
   const overlaysRef = useRef<AMap.Polygon[]>([]);
   const parcelsRef = useRef<PlanningParcel[]>([]);
@@ -139,7 +139,7 @@ export function PlanningReferenceLayer({
   }, [amapApi, map]);
 
   useEffect(() => {
-    if (!visible || zoom < planningReferenceSource.minimumZoom) return;
+    if (!visible || zoom < minimumZoom) return;
     const container = map.getContainer();
     const handleMapContainerClick = (event: MouseEvent) => {
       const target = event.target;
@@ -166,14 +166,14 @@ export function PlanningReferenceLayer({
     return () => {
       container.removeEventListener("click", handleMapContainerClick, true);
     };
-  }, [map, openParcel, visible, zoom]);
+  }, [map, minimumZoom, openParcel, visible, zoom]);
 
   useEffect(() => {
     if (!visible) {
       clearOverlays();
       return;
     }
-    if (zoom < planningReferenceSource.minimumZoom) {
+    if (zoom < minimumZoom) {
       clearOverlays();
       return;
     }
@@ -231,6 +231,7 @@ export function PlanningReferenceLayer({
     amapApi,
     clearOverlays,
     map,
+    minimumZoom,
     viewportVersion,
     visible,
     zoom,
