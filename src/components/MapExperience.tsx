@@ -9,8 +9,13 @@ import {
   Navigation,
   SlidersHorizontal,
 } from "lucide-react";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { sectorCatalog } from "@/src/data/sector-catalog";
+import {
+  HOME_BUYER_PROFILE_STORAGE_KEY,
+  parseHomebuyerProfile,
+  type HomebuyerProfile,
+} from "@/src/lib/homebuyer-profile";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
 import { useMapStore } from "@/src/store/map-store";
 import { DetailCard } from "./DetailCards";
@@ -18,6 +23,34 @@ import { FilterPanel, type FilterPanelMode } from "./FilterPanel";
 import { MobileBottomSheet } from "./MobileBottomSheet";
 import { SearchBar } from "./SearchBar";
 import { MapContainer } from "./map/MapContainer";
+import { HomebuyerSettingsDialog } from "./HomebuyerSettingsDialog";
+
+const homebuyerProfileChangedEvent = "shfang:homebuyer-profile-changed";
+let cachedHomebuyerProfileRaw: string | null | undefined;
+let cachedHomebuyerProfile: HomebuyerProfile | null = null;
+
+function readHomebuyerProfile() {
+  const raw = window.localStorage.getItem(HOME_BUYER_PROFILE_STORAGE_KEY);
+  if (raw !== cachedHomebuyerProfileRaw) {
+    cachedHomebuyerProfileRaw = raw;
+    cachedHomebuyerProfile = parseHomebuyerProfile(raw);
+  }
+  return cachedHomebuyerProfile;
+}
+
+function subscribeHomebuyerProfile(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(homebuyerProfileChangedEvent, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(homebuyerProfileChangedEvent, onStoreChange);
+  };
+}
+
+function notifyHomebuyerProfileChanged() {
+  cachedHomebuyerProfileRaw = undefined;
+  window.dispatchEvent(new Event(homebuyerProfileChangedEvent));
+}
 
 const CurrentSectorName = memo(function CurrentSectorName() {
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
@@ -109,6 +142,12 @@ const MobileActions = memo(function MobileActions() {
 export function MapExperience() {
   const [isImmersive, setImmersive] = useState(false);
   const [desktopFilterMode, setDesktopFilterMode] = useState<FilterPanelMode | null>(null);
+  const [homebuyerSettingsOpen, setHomebuyerSettingsOpen] = useState(false);
+  const homebuyerProfile = useSyncExternalStore(
+    subscribeHomebuyerProfile,
+    readHomebuyerProfile,
+    () => null,
+  );
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
   const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
@@ -152,7 +191,33 @@ export function MapExperience() {
               <FilterPanel mode={desktopFilterMode} onClose={() => setDesktopFilterMode(null)} />
             </aside>
           )}
-          <DetailCard />
+          <DetailCard homebuyerProfile={homebuyerProfile} />
+
+          <button
+            type="button"
+            className="homebuyer-settings-trigger"
+            onClick={() => setHomebuyerSettingsOpen(true)}
+            aria-label="我的选房设置"
+            title="我的选房设置"
+            data-configured={homebuyerProfile ? "true" : "false"}
+          >
+            <SlidersHorizontal size={18} />
+            <span className="homebuyer-settings-tooltip" role="tooltip">我的选房设置</span>
+            {homebuyerProfile && <i aria-label="已设置" />}
+          </button>
+          <HomebuyerSettingsDialog
+            open={homebuyerSettingsOpen}
+            profile={homebuyerProfile}
+            onClose={() => setHomebuyerSettingsOpen(false)}
+            onSave={(profile) => {
+              window.localStorage.setItem(HOME_BUYER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+              notifyHomebuyerProfileChanged();
+            }}
+            onClear={() => {
+              window.localStorage.removeItem(HOME_BUYER_PROFILE_STORAGE_KEY);
+              notifyHomebuyerProfileChanged();
+            }}
+          />
 
           <MobileActions />
 
