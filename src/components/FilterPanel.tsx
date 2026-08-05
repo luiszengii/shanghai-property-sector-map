@@ -22,6 +22,7 @@ import {
 import categoriesData from "@/src/data/categories.json";
 import {
   planningLandUseLegend,
+  planningOverlayZoomRange,
   planningReferenceSource,
 } from "@/src/lib/planning-reference-layer";
 import { useProjectCatalog } from "@/src/lib/use-project-catalog";
@@ -29,6 +30,9 @@ import { useMapStore } from "@/src/store/map-store";
 import type { Category } from "@/src/types/map";
 
 const categories = categoriesData as Category[];
+const formatZoomLevel = (zoom: number) => Number.isInteger(zoom)
+  ? zoom.toFixed(0)
+  : zoom.toFixed(1);
 const groups = [
   { id: "benefit", label: "有利配套", helper: "生活与通勤资源" },
   { id: "attention", label: "需要关注", helper: "建议结合公开资料核验" },
@@ -59,6 +63,7 @@ export const FilterPanel = memo(function FilterPanel({
   const detailZoomId = useId();
   const sectorLabelZoomId = useId();
   const planningOpacityId = useId();
+  const planningZoomId = useId();
   const categoryGroupIdPrefix = useId();
   const enabledCategories = useMapStore((state) => state.enabledCategories);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
@@ -66,6 +71,7 @@ export const FilterPanel = memo(function FilterPanel({
   const showProjects = useMapStore((state) => state.showProjects);
   const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
   const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
+  const planningOverlayMinZoom = useMapStore((state) => state.planningOverlayMinZoom);
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
   const projectDetailMinZoom = useMapStore((state) => state.projectDetailMinZoom);
@@ -78,6 +84,7 @@ export const FilterPanel = memo(function FilterPanel({
   const focusProject = useMapStore((state) => state.focusProject);
   const togglePlanningOverlay = useMapStore((state) => state.togglePlanningOverlay);
   const setPlanningOverlayOpacity = useMapStore((state) => state.setPlanningOverlayOpacity);
+  const setPlanningOverlayMinZoom = useMapStore((state) => state.setPlanningOverlayMinZoom);
   const setProjectClusterEnabled = useMapStore((state) => state.setProjectClusterEnabled);
   const setProjectClusterRadius = useMapStore((state) => state.setProjectClusterRadius);
   const setProjectDetailMinZoom = useMapStore((state) => state.setProjectDetailMinZoom);
@@ -160,7 +167,7 @@ export const FilterPanel = memo(function FilterPanel({
                 <span className="map-layer-icon" aria-hidden="true"><LandPlot size={14} /></span>
                 <span className="map-layer-copy">
                   <strong>官方详细规划（参考）</strong>
-                  <small>Z {planningReferenceSource.minimumZoom} 后点地块查看规划</small>
+                  <small>Z {formatZoomLevel(planningOverlayMinZoom)} 后点地块查看规划</small>
                 </span>
                 <span className="toggle" aria-hidden="true"><span /></span>
               </button>
@@ -181,8 +188,8 @@ export const FilterPanel = memo(function FilterPanel({
               <details className="planning-layer-settings">
                 <summary>
                   <SlidersHorizontal size={13} aria-hidden="true" />
-                  <span>透明度</span>
-                  <small>{Math.round(planningOverlayOpacity * 100)}%</small>
+                  <span>显示设置</span>
+                  <small>Z {formatZoomLevel(planningOverlayMinZoom)} · {Math.round(planningOverlayOpacity * 100)}%</small>
                 </summary>
                 <div className="planning-layer-settings-body">
                   <label htmlFor={planningOpacityId}>
@@ -198,13 +205,25 @@ export const FilterPanel = memo(function FilterPanel({
                       onChange={(event) => setPlanningOverlayOpacity(Number(event.target.value) / 100)}
                     />
                   </label>
+                  <label htmlFor={planningZoomId}>
+                    <span>开始加载级别 <output>Z {formatZoomLevel(planningOverlayMinZoom)}</output></span>
+                    <input
+                      id={planningZoomId}
+                      type="range"
+                      min={planningOverlayZoomRange.minimum}
+                      max={planningOverlayZoomRange.maximum}
+                      step={planningOverlayZoomRange.step}
+                      value={planningOverlayMinZoom}
+                      disabled={!showPlanningOverlay}
+                      onChange={(event) => setPlanningOverlayMinZoom(Number(event.target.value))}
+                    />
+                  </label>
                   <div className="planning-layer-source-row">
                     <a href={planningReferenceSource.url} target="_blank" rel="noreferrer">
                       {planningReferenceSource.name}<ExternalLink size={11} aria-hidden="true" />
                     </a>
-                    <span>Z {planningReferenceSource.minimumZoom} 起加载</span>
+                    <span>Z {formatZoomLevel(planningOverlayMinZoom)} 起加载</span>
                   </div>
-                  <p>规划用途不等于现状、在建状态或最终实施结果。</p>
                 </div>
               </details>
             </section>

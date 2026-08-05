@@ -23,6 +23,7 @@ export interface PlanningBounds {
 export interface PlanningLayerPreferences {
   visible: boolean;
   opacity: number;
+  minimumZoom: number;
 }
 
 export type PlanningLandUseCategory =
@@ -47,6 +48,12 @@ export const planningReferenceSource = {
   name: "上海市规划和自然资源局·详细规划一张图",
   url: "https://shanghai.tianditu.gov.cn/xg/map.html",
   minimumZoom: 14,
+} as const;
+
+export const planningOverlayZoomRange = {
+  minimum: 13,
+  maximum: 16,
+  step: 0.5,
 } as const;
 
 export const planningLandUseLegend: readonly PlanningParcelStyle[] = [
@@ -102,13 +109,18 @@ export function resolvePlanningParcelStyle(
   return planningStyle("other");
 }
 
-export function shouldPlanningLayerOwnMapClicks(visible: boolean, zoom: number) {
-  return visible && zoom >= planningReferenceSource.minimumZoom;
+export function shouldPlanningLayerOwnMapClicks(
+  visible: boolean,
+  zoom: number,
+  minimumZoom: number = planningReferenceSource.minimumZoom,
+) {
+  return visible && zoom >= minimumZoom;
 }
 
 export const defaultPlanningLayerPreferences: PlanningLayerPreferences = {
   visible: false,
   opacity: 0.42,
+  minimumZoom: planningReferenceSource.minimumZoom,
 };
 
 export function togglePlanningLayer(
@@ -124,6 +136,22 @@ export function setPlanningLayerOpacity(
   return {
     ...preferences,
     opacity: Math.min(0.8, Math.max(0.15, opacity)),
+  };
+}
+
+export function setPlanningLayerMinimumZoom(
+  preferences: PlanningLayerPreferences,
+  minimumZoom: number,
+): PlanningLayerPreferences {
+  if (!Number.isFinite(minimumZoom)) return preferences;
+  const steppedZoom = Math.round(minimumZoom / planningOverlayZoomRange.step)
+    * planningOverlayZoomRange.step;
+  return {
+    ...preferences,
+    minimumZoom: Math.min(
+      planningOverlayZoomRange.maximum,
+      Math.max(planningOverlayZoomRange.minimum, steppedZoom),
+    ),
   };
 }
 
