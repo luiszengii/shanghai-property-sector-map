@@ -66,6 +66,7 @@ interface SectorLayerProps {
   labelMode: SectorLabelMode;
   labelMinZoom: number;
   selectedSectorId: string | null;
+  interactionEnabled?: boolean;
   onSelect: (sector: SectorFeature) => void;
 }
 
@@ -110,6 +111,7 @@ export function SectorLayer({
   labelMode,
   labelMinZoom,
   selectedSectorId,
+  interactionEnabled = true,
   onSelect,
 }: SectorLayerProps) {
   const overlaysRef = useRef<SectorOverlay[]>([]);
@@ -120,6 +122,7 @@ export function SectorLayer({
   const labelModeRef = useRef(labelMode);
   const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
+  const interactionEnabledRef = useRef(interactionEnabled);
   const styleZoom = Math.floor(zoom);
   const setSectorGeometryLoading = useMapStore((state) => state.setSectorGeometryLoading);
   const setSectorGeometryFallback = useMapStore((state) => state.setSectorGeometryFallback);
@@ -142,6 +145,26 @@ export function SectorLayer({
   }, [selectedSectorId]);
 
   useEffect(() => {
+    interactionEnabledRef.current = interactionEnabled;
+    overlaysRef.current.forEach((overlay) => {
+      overlay.polygon.setOptions({ cursor: interactionEnabled ? "pointer" : "default" });
+      if (!interactionEnabled) {
+        if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
+        overlay.hoverLeaveTimer = null;
+        applyOverlayStyle(
+          overlay,
+          zoomRef.current,
+          selectedSectorIdRef.current === overlay.sector.properties.id,
+        );
+        if (labelModeRef.current === "hover" && overlay.label && overlay.labelMounted) {
+          map.remove(overlay.label);
+          overlay.labelMounted = false;
+        }
+      }
+    });
+  }, [interactionEnabled, map]);
+
+  useEffect(() => {
     let cancelled = false;
     const overlays: SectorOverlay[] = [];
     let researchGeometries: SectorResearchGeometryFeature[] = [];
@@ -152,6 +175,7 @@ export function SectorLayer({
     const bindOverlayInteractions = (overlay: SectorOverlay) => {
       const { polygon, label, sector } = overlay;
       const highlight = () => {
+        if (!interactionEnabledRef.current) return;
         if (overlay.hoverLeaveTimer) {
           clearTimeout(overlay.hoverLeaveTimer);
           overlay.hoverLeaveTimer = null;
@@ -177,6 +201,7 @@ export function SectorLayer({
         }
       };
       const restore = () => {
+        if (!interactionEnabledRef.current) return;
         if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
         overlay.hoverLeaveTimer = setTimeout(() => {
           overlay.hoverLeaveTimer = null;
@@ -193,7 +218,9 @@ export function SectorLayer({
       };
       polygon.on("mouseover", highlight);
       polygon.on("mouseout", restore);
-      polygon.on("click", () => onSelectRef.current(sector));
+      polygon.on("click", () => {
+        if (interactionEnabledRef.current) onSelectRef.current(sector);
+      });
     };
 
     const createOverlays = async () => {
@@ -212,7 +239,7 @@ export function SectorLayer({
         const polygon = new amapApi.Polygon();
         polygon.setOptions({
           path,
-          cursor: "pointer",
+          cursor: interactionEnabledRef.current ? "pointer" : "default",
         });
         const activeGeometry = sectorCatalog.resolveActiveLocation(sector.properties.id);
         const initialLabelPosition = activeGeometry?.kind === "market-demo"

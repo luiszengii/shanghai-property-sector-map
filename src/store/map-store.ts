@@ -6,6 +6,11 @@ import categoriesData from "@/src/data/categories.json";
 import type { SectorLabelMode } from "@/src/lib/sector-label-visibility";
 import type { Category } from "@/src/types/map";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
+import {
+  defaultPlanningLayerPreferences,
+  setPlanningLayerOpacity as updatePlanningLayerOpacity,
+  togglePlanningLayer,
+} from "@/src/lib/planning-reference-layer";
 
 const allCategoryIds = (categoriesData as Category[]).map((item) => item.id);
 
@@ -28,10 +33,13 @@ interface MapState {
   selectedSectorId: string | null;
   selectedPlaceId: string | null;
   selectedProjectId: string | null;
+  showSectorBoundaries: boolean;
   showProjects: boolean;
   showMetro: boolean;
   showElevated: boolean;
   metroStationLabelMinZoom: number;
+  showPlanningOverlay: boolean;
+  planningOverlayOpacity: number;
   projectClusterEnabled: boolean;
   projectClusterRadius: number;
   projectDetailMinZoom: number;
@@ -55,10 +63,13 @@ interface MapState {
   selectPlace: (id: string | null) => void;
   selectProject: (id: string | null) => void;
   focusProject: (id: string) => void;
+  toggleSectorBoundaries: () => void;
   toggleProjects: () => void;
   toggleMetro: () => void;
   toggleElevated: () => void;
   setMetroStationLabelMinZoom: (zoom: number) => void;
+  togglePlanningOverlay: () => void;
+  setPlanningOverlayOpacity: (opacity: number) => void;
   setProjectClusterEnabled: (enabled: boolean) => void;
   setProjectClusterRadius: (radius: number) => void;
   setProjectDetailMinZoom: (zoom: number) => void;
@@ -84,10 +95,13 @@ export const useMapStore = create<MapState>()(
       selectedSectorId: null,
       selectedPlaceId: null,
       selectedProjectId: null,
+      showSectorBoundaries: true,
       showProjects: true,
       showMetro: true,
       showElevated: true,
       metroStationLabelMinZoom: 13.8,
+      showPlanningOverlay: defaultPlanningLayerPreferences.visible,
+      planningOverlayOpacity: defaultPlanningLayerPreferences.opacity,
       projectClusterEnabled: true,
       projectClusterRadius: 72,
       projectDetailMinZoom: 13.8,
@@ -134,11 +148,32 @@ export const useMapStore = create<MapState>()(
             nonce: (state.focusRequest?.nonce ?? 0) + 1,
           },
         })),
+      toggleSectorBoundaries: () => set((state) => ({
+        showSectorBoundaries: !state.showSectorBoundaries,
+        selectedSectorId: state.showSectorBoundaries ? null : state.selectedSectorId,
+      })),
       toggleProjects: () => set((state) => ({ showProjects: !state.showProjects })),
       toggleMetro: () => set((state) => ({ showMetro: !state.showMetro })),
       toggleElevated: () => set((state) => ({ showElevated: !state.showElevated })),
       setMetroStationLabelMinZoom: (zoom) =>
         set({ metroStationLabelMinZoom: zoom }),
+      togglePlanningOverlay: () => set((state) => {
+        const preferences = togglePlanningLayer({
+          visible: state.showPlanningOverlay,
+          opacity: state.planningOverlayOpacity,
+        });
+        return {
+          showPlanningOverlay: preferences.visible,
+          selectedSectorId: preferences.visible ? null : state.selectedSectorId,
+        };
+      }),
+      setPlanningOverlayOpacity: (opacity) => set((state) => {
+        const preferences = updatePlanningLayerOpacity({
+          visible: state.showPlanningOverlay,
+          opacity: state.planningOverlayOpacity,
+        }, opacity);
+        return { planningOverlayOpacity: preferences.opacity };
+      }),
       setProjectClusterEnabled: (enabled) => set({ projectClusterEnabled: enabled }),
       setProjectClusterRadius: (radius) => set({ projectClusterRadius: radius }),
       setProjectDetailMinZoom: (zoom) => set({ projectDetailMinZoom: zoom }),
@@ -195,6 +230,8 @@ export const useMapStore = create<MapState>()(
           showElevated: stored.showElevated
             ?? stored.showTransport
             ?? current.showElevated,
+          showSectorBoundaries: stored.showSectorBoundaries
+            ?? current.showSectorBoundaries,
           sectorBoundarySource: isLocalResearchMode
             ? stored.sectorBoundarySource ?? "project"
             : "project",
@@ -202,10 +239,13 @@ export const useMapStore = create<MapState>()(
       },
       partialize: (state) => ({
         enabledCategories: state.enabledCategories,
+        showSectorBoundaries: state.showSectorBoundaries,
         showProjects: state.showProjects,
         showMetro: state.showMetro,
         showElevated: state.showElevated,
         metroStationLabelMinZoom: state.metroStationLabelMinZoom,
+        showPlanningOverlay: state.showPlanningOverlay,
+        planningOverlayOpacity: state.planningOverlayOpacity,
         projectClusterEnabled: state.projectClusterEnabled,
         projectClusterRadius: state.projectClusterRadius,
         projectDetailMinZoom: state.projectDetailMinZoom,

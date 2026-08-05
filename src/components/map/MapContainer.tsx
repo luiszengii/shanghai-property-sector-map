@@ -7,12 +7,14 @@ import { projects } from "@/src/content/project-leads";
 import { sectorCatalog } from "@/src/data/sector-catalog";
 import { coordinateToDisplayPosition } from "@/src/lib/geo-coordinate-conversion";
 import { PUBLIC_BASEMAP_FEATURES } from "@/src/lib/map-visual-density";
+import { shouldPlanningLayerOwnMapClicks } from "@/src/lib/planning-reference-layer";
 import { isLocalResearchMode } from "@/src/lib/runtime-mode";
 import { resolveAmapStyleUrl } from "@/src/lib/transport-layer-style";
 import { useMapStore } from "@/src/store/map-store";
 import type { Place, PropertyProject, SectorFeature } from "@/src/types/map";
 import { PlaceLayer } from "./PlaceLayer";
 import { ProjectLayer } from "./ProjectLayer";
+import { PlanningReferenceLayer } from "./PlanningReferenceLayer";
 import { PrivateSectorLayer } from "@/src/components/map/HfwgsjSectorLayer";
 import { SectorLayer } from "./SectorLayer";
 import { TransportLayer } from "./TransportLayer";
@@ -35,11 +37,18 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
   const selectedSectorId = useMapStore((state) => state.selectedSectorId);
   const selectedPlaceId = useMapStore((state) => state.selectedPlaceId);
   const selectedProjectId = useMapStore((state) => state.selectedProjectId);
+  const showSectorBoundaries = useMapStore((state) => state.showSectorBoundaries);
   const showProjects = useMapStore((state) => state.showProjects);
   const showMetro = useMapStore((state) => state.showMetro);
   const showElevated = useMapStore((state) => state.showElevated);
   const metroStationLabelMinZoom = useMapStore(
     (state) => state.metroStationLabelMinZoom,
+  );
+  const showPlanningOverlay = useMapStore((state) => state.showPlanningOverlay);
+  const planningOverlayOpacity = useMapStore((state) => state.planningOverlayOpacity);
+  const planningLayerOwnsClicks = shouldPlanningLayerOwnMapClicks(
+    showPlanningOverlay,
+    zoom,
   );
   const projectClusterEnabled = useMapStore((state) => state.projectClusterEnabled);
   const projectClusterRadius = useMapStore((state) => state.projectClusterRadius);
@@ -316,7 +325,15 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
       )}
       {status === "ready" && amapApi && mapInstance && (
         <>
-          {!isLocalResearchMode ? (
+          <PlanningReferenceLayer
+            amapApi={amapApi}
+            map={mapInstance}
+            zoom={zoom}
+            viewportVersion={viewportVersion}
+            visible={showPlanningOverlay}
+            opacity={planningOverlayOpacity}
+          />
+          {showSectorBoundaries && (!isLocalResearchMode ? (
             <SectorLayer
               amapApi={amapApi}
               map={mapInstance}
@@ -326,6 +343,7 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               labelMode={sectorLabelMode}
               labelMinZoom={sectorLabelMinZoom}
               selectedSectorId={selectedSectorId}
+              interactionEnabled={!planningLayerOwnsClicks}
               onSelect={handleSectorSelect}
             />
           ) : (
@@ -341,9 +359,10 @@ export function MapContainer({ immersive = false }: { immersive?: boolean }) {
               labelMode={sectorLabelMode}
               labelMinZoom={sectorLabelMinZoom}
               selectedSectorId={selectedSectorId}
+              interactionEnabled={!planningLayerOwnsClicks}
               onSelect={handleSnapshotSectorSelect}
             />
-          )}
+          ))}
           <TransportLayer
             amapApi={amapApi}
             map={mapInstance}
