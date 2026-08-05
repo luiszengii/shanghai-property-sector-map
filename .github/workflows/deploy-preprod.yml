@@ -120,11 +120,6 @@ jobs:
 
       - name: Verify pre-production endpoint
         run: |
-          curl --fail --silent --show-error --location \
-            --output /dev/null \
-            "${PREPROD_URL}/"
-          curl --fail --silent --show-error --location \
-            --output /dev/null \
-            "${PREPROD_URL}/observations"
+          pnpm verify:public "${PREPROD_URL}"
           curl --fail --silent --show-error --head "${PREPROD_URL}/" \
             | grep --ignore-case --quiet '^x-robots-tag:.*noindex'
