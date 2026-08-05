@@ -115,6 +115,11 @@ pnpm build
 [`docs/ANALYTICS.md`](docs/ANALYTICS.md)。管理员密码和数据库密钥不得写入
 仓库、Issue、PR 或 Actions 日志。
 
+部署发布说明见 [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)；日常巡检、告警、
+Umami 备份恢复、服务器重建、密钥轮换、域名与续费核验见
+[`docs/OPERATIONS-RUNBOOK.md`](docs/OPERATIONS-RUNBOOK.md)。会变化的控制台状态
+必须现场核验，不能沿用历史截图或聊天结论。
+
 ## 部署到 Vercel
 
 1. 将项目推送到 GitHub / GitLab / Bitbucket。
