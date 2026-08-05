@@ -5,6 +5,7 @@ import { AlertTriangle, Clock3, LoaderCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { CommuteResult } from "@/src/lib/amap-route-service";
 import { buildCommuteRequests } from "@/src/lib/commute-estimate";
+import { getOrLoadCommuteResults } from "@/src/lib/commute-result-cache";
 import type { CommuteMode, HomebuyerMember, HomebuyerProfile } from "@/src/lib/homebuyer-profile";
 
 const modeLabels: Record<CommuteMode, string> = {
@@ -62,28 +63,31 @@ export function CommuteEstimateRows({
   const hasDriving = requests.some((request) => request.mode === "driving");
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/commute-estimates", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ requests }),
-      cache: "no-store",
-      signal: controller.signal,
+    let active = true;
+
+    getOrLoadCommuteResults(requests, async () => {
+      const response = await fetch("/api/commute-estimates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requests }),
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error(`Route estimate ${response.status}`);
+      return response.json() as Promise<{ results: CommuteResult[]; queriedAt: string }>;
     })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`Route estimate ${response.status}`);
-        return response.json() as Promise<{ results: CommuteResult[]; queriedAt: string }>;
-      })
       .then((payload) => {
+        if (!active) return;
         setResults(payload.results);
         setQueriedAt(payload.queriedAt);
         setState("ready");
       })
-      .catch((error: unknown) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+      .catch(() => {
+        if (!active) return;
         setState("error");
       });
-    return () => controller.abort();
+    return () => {
+      active = false;
+    };
   }, [requests]);
 
   return (
