@@ -7,6 +7,10 @@ import { useMapStore } from "@/src/store/map-store";
 import type { SectorFeature } from "@/src/types/map";
 import { simplifySectorGeometryForDisplay } from "@/src/lib/sector-display-lod";
 import {
+  sectorFillOpacity,
+  type SectorGeometryKind,
+} from "@/src/lib/map-visual-density";
+import {
   shouldMountSectorLabel,
   type SectorLabelMode,
 } from "@/src/lib/sector-label-visibility";
@@ -18,11 +22,6 @@ import {
 } from "./amap-coordinate-conversion";
 
 const sectors = sectorCatalog.legacyFeatures;
-type SectorGeometryKind =
-  | "reviewed-market-candidate"
-  | "official-subscope-reference"
-  | "administrative-reference"
-  | "demo";
 const palette = ["#38bdf8", "#2dd4bf", "#818cf8", "#f59e0b", "#a78bfa", "#22c55e"];
 
 function strokeColor(kind: SectorGeometryKind) {
@@ -30,19 +29,6 @@ function strokeColor(kind: SectorGeometryKind) {
   if (kind === "official-subscope-reference") return "#d97706";
   if (kind === "administrative-reference") return "#2563eb";
   return "#64748b";
-}
-
-function geometryFillOpacity(kind: SectorGeometryKind, zoom: number, selected = false) {
-  const base = zoom >= 14
-    ? 0.025
-    : zoom >= 12
-      ? Math.max(0.05, 0.23 - (zoom - 12) * 0.09)
-      : Math.min(0.34, 0.18 + (12 - zoom) * 0.08);
-  if (selected) return Math.max(base, 0.2);
-  if (kind === "official-subscope-reference") return base * 0.3;
-  if (kind === "administrative-reference") return base * 0.38;
-  if (kind === "demo") return base * 0.65;
-  return base;
 }
 
 function geometryStrokeWeight(kind: SectorGeometryKind, zoom: number) {
@@ -80,6 +66,7 @@ interface SectorLayerProps {
   labelMode: SectorLabelMode;
   labelMinZoom: number;
   selectedSectorId: string | null;
+  interactionEnabled?: boolean;
   onSelect: (sector: SectorFeature) => void;
 }
 
@@ -98,7 +85,7 @@ function applyOverlayStyle(overlay: SectorOverlay, zoom: number, selected = fals
   const { polygon, baseColor, geometryKind } = overlay;
   polygon.setOptions({
     fillColor: baseColor,
-    fillOpacity: geometryFillOpacity(geometryKind, zoom, selected),
+    fillOpacity: sectorFillOpacity(geometryKind, zoom, selected),
     strokeColor: selected && geometryKind !== "official-subscope-reference"
       ? "#0f172a"
       : strokeColor(geometryKind),
@@ -124,6 +111,7 @@ export function SectorLayer({
   labelMode,
   labelMinZoom,
   selectedSectorId,
+  interactionEnabled = true,
   onSelect,
 }: SectorLayerProps) {
   const overlaysRef = useRef<SectorOverlay[]>([]);
@@ -134,6 +122,7 @@ export function SectorLayer({
   const labelModeRef = useRef(labelMode);
   const labelMinZoomRef = useRef(labelMinZoom);
   const selectedSectorIdRef = useRef(selectedSectorId);
+  const interactionEnabledRef = useRef(interactionEnabled);
   const styleZoom = Math.floor(zoom);
   const setSectorGeometryLoading = useMapStore((state) => state.setSectorGeometryLoading);
   const setSectorGeometryFallback = useMapStore((state) => state.setSectorGeometryFallback);
@@ -156,6 +145,26 @@ export function SectorLayer({
   }, [selectedSectorId]);
 
   useEffect(() => {
+    interactionEnabledRef.current = interactionEnabled;
+    overlaysRef.current.forEach((overlay) => {
+      overlay.polygon.setOptions({ cursor: interactionEnabled ? "pointer" : "default" });
+      if (!interactionEnabled) {
+        if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
+        overlay.hoverLeaveTimer = null;
+        applyOverlayStyle(
+          overlay,
+          zoomRef.current,
+          selectedSectorIdRef.current === overlay.sector.properties.id,
+        );
+        if (labelModeRef.current === "hover" && overlay.label && overlay.labelMounted) {
+          map.remove(overlay.label);
+          overlay.labelMounted = false;
+        }
+      }
+    });
+  }, [interactionEnabled, map]);
+
+  useEffect(() => {
     let cancelled = false;
     const overlays: SectorOverlay[] = [];
     let researchGeometries: SectorResearchGeometryFeature[] = [];
@@ -166,6 +175,7 @@ export function SectorLayer({
     const bindOverlayInteractions = (overlay: SectorOverlay) => {
       const { polygon, label, sector } = overlay;
       const highlight = () => {
+        if (!interactionEnabledRef.current) return;
         if (overlay.hoverLeaveTimer) {
           clearTimeout(overlay.hoverLeaveTimer);
           overlay.hoverLeaveTimer = null;
@@ -191,6 +201,7 @@ export function SectorLayer({
         }
       };
       const restore = () => {
+        if (!interactionEnabledRef.current) return;
         if (overlay.hoverLeaveTimer) clearTimeout(overlay.hoverLeaveTimer);
         overlay.hoverLeaveTimer = setTimeout(() => {
           overlay.hoverLeaveTimer = null;
@@ -207,7 +218,9 @@ export function SectorLayer({
       };
       polygon.on("mouseover", highlight);
       polygon.on("mouseout", restore);
-      polygon.on("click", () => onSelectRef.current(sector));
+      polygon.on("click", () => {
+        if (interactionEnabledRef.current) onSelectRef.current(sector);
+      });
     };
 
     const createOverlays = async () => {
@@ -226,7 +239,7 @@ export function SectorLayer({
         const polygon = new amapApi.Polygon();
         polygon.setOptions({
           path,
-          cursor: "pointer",
+          cursor: interactionEnabledRef.current ? "pointer" : "default",
         });
         const activeGeometry = sectorCatalog.resolveActiveLocation(sector.properties.id);
         const initialLabelPosition = activeGeometry?.kind === "market-demo"

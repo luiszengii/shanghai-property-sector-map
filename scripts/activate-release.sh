@@ -82,9 +82,13 @@ check_status() {
 surface_healthy=true
 check_status 200 "/" || surface_healthy=false
 check_status 200 "/observations" || surface_healthy=false
+check_status 200 "/projects/project_%E4%B8%9C%E5%B2%B8%E8%A7%82%E9%82%B8" || surface_healthy=false
 check_status 404 "/sector-editor" || surface_healthy=false
+check_status 404 "/sources" || surface_healthy=false
 check_status 404 "/api/sector-editor-versions" || surface_healthy=false
 check_status 404 "/api/sector-editor-versions" "POST" || surface_healthy=false
+check_status 404 "/api/source-ledger" || surface_healthy=false
+check_status 404 "/api/source-ledger" "POST" || surface_healthy=false
 check_status 404 "/api/local-sector-snapshot" || surface_healthy=false
 check_status 404 "/api/local-project-research" || surface_healthy=false
 check_status 404 "/api/xhs-observations" || surface_healthy=false

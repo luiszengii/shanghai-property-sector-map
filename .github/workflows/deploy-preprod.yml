@@ -119,15 +119,7 @@ jobs:
              \"\${release_dir}/activate-release.sh\" '${GITHUB_SHA}'"
 
       - name: Verify pre-production endpoint
-        env:
-          PREPROD_BASIC_AUTH: ${{ secrets.PREPROD_BASIC_AUTH }}
         run: |
-          test -n "${PREPROD_BASIC_AUTH}"
-          curl --fail --silent --show-error --location \
-            --user "${PREPROD_BASIC_AUTH}" \
-            --output /dev/null \
-            "${PREPROD_URL}/"
-          curl --fail --silent --show-error --location \
-            --user "${PREPROD_BASIC_AUTH}" \
-            --output /dev/null \
-            "${PREPROD_URL}/observations"
+          pnpm verify:public "${PREPROD_URL}"
+          curl --fail --silent --show-error --head "${PREPROD_URL}/" \
+            | grep --ignore-case --quiet '^x-robots-tag:.*noindex'

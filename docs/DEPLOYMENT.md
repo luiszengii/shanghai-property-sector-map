@@ -17,10 +17,11 @@ standalone 服务。
 6. 原子切换 `/opt/shfang/current` 并重启 `shfang-map.service`；
 7. 先检查本机服务，再检查 `https://shfang.xyz/`。
 
-生产构建是“公开展示模式”：只开放 `/` 与 `/observations`。板块编辑器、
-持久版本 API、本地私有边界快照、待核验项目资料和详细小红书研究数据只在 `next dev`
-开发模式可用；正式构建缺少任何额外环境变量时也会默认关闭这些能力。
-部署激活脚本会验证公开页面为 200、内部页面/API 为 404，并检查首页没有
+生产构建是“公开展示模式”：开放首页 `/`、公开观察页 `/observations` 和固定楼盘
+详情页 `/projects/<id>`。板块编辑器、楼盘资料中心 `/sources`、持久版本 API、
+`/api/source-ledger`、本地私有边界快照、待核验项目资料和详细小红书研究数据只在
+`next dev` 开发模式可用；正式构建缺少任何额外环境变量时也会默认关闭这些能力。
+部署激活脚本会验证代表性公开页面为 200、内部页面/API 为 404，并检查首页没有
 私有入口或数据源名称；任一条件失败都会回滚到前一个版本。
 
 `/observations` 使用仓库内经过审查的聚合快照
@@ -49,8 +50,9 @@ pnpm check:public
 - `shfang-preprod.service`（`127.0.0.1:3001`）与 `shfang-map.service`（`127.0.0.1:3000`）；
 - `pre-prod.shfang.xyz` 与 `shfang.xyz` Nginx 虚拟主机。
 
-预生产只用于人工验收，使用 HTTP Basic Auth，且由 Nginx 返回
-`X-Robots-Tag: noindex, nofollow`。确认后必须创建 `pre-prod` 到 `main` 的
+预生产只用于人工验收，允许匿名访问，但由 Nginx 返回
+`X-Robots-Tag: noindex, nofollow` 以阻止搜索引擎收录。确认后必须创建
+`pre-prod` 到 `main` 的
 PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 
 预生产构建沿用公开展示模式，不能从远程入口写入本地编辑器版本或读取本地研究数据。
@@ -69,11 +71,10 @@ PR；`Verify promotion source` 检查会拒绝其他来源合入 `main`。
 - `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
 - `TENCENT_SSH_PRIVATE_KEY`
 - `TENCENT_SSH_KNOWN_HOSTS`
-- `PREPROD_BASIC_AUTH`（HTTP Basic Auth 的 `用户名:密码`）
 
 SSH 私钥只用于 GitHub Actions。服务器端 `deploy` 用户只允许公钥登录，
-并且只能免密重启和检查两个应用服务。`PREPROD_BASIC_AUTH` 仅用于
-Actions 的外网验收，不得写入仓库或日志。
+并且只能免密重启和检查两个应用服务。预生产的
+Actions 外网验收必须不带认证信息，以及时发现匿名访问回归。
 
 ## 服务器运行时 Secrets
 
@@ -89,6 +90,8 @@ Actions 的外网验收，不得写入仓库或日志。
 
 访问统计后台、登录入口、数据查看和无数据排查见
 [`docs/ANALYTICS.md`](ANALYTICS.md)。
+日常巡检、告警、备份恢复、服务器重建、密钥轮换和续费核验见
+[`docs/OPERATIONS-RUNBOOK.md`](OPERATIONS-RUNBOOK.md)。
 
 ## 服务器路径与服务
 
@@ -98,6 +101,9 @@ Actions 的外网验收，不得写入仓库或日志。
 - systemd：`shfang-map.service`
 - Nginx：`/etc/nginx/sites-available/shfang.xyz`
 - TLS 续期：`certbot.timer`
+
+预生产对应 `/opt/shfang-preprod/releases/`、`/opt/shfang-preprod/incoming/`、
+`/opt/shfang-preprod/current` 和 `shfang-preprod.service`。
 
 常用只读检查：
 
@@ -120,3 +126,4 @@ systemctl restart shfang-map.service
 ```
 
 回滚前应先确认目标目录存在且包含 `server.js`。
+预生产回滚命令及回滚后的完整公开面检查见 `OPERATIONS-RUNBOOK.md`。
