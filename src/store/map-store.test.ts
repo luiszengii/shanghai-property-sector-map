@@ -59,3 +59,16 @@ test("sector boundary visibility is independent and clears a hidden sector selec
   assert.equal(state.showSectorBoundaries, true);
   assert.equal(state.showPlanningOverlay, true);
 });
+
+test("planning overlay minimum zoom stays within the supported range", () => {
+  useMapStore.setState({ planningOverlayMinZoom: 14 });
+
+  useMapStore.getState().setPlanningOverlayMinZoom(12);
+  assert.equal(useMapStore.getState().planningOverlayMinZoom, 13);
+
+  useMapStore.getState().setPlanningOverlayMinZoom(15.5);
+  assert.equal(useMapStore.getState().planningOverlayMinZoom, 15.5);
+
+  useMapStore.getState().setPlanningOverlayMinZoom(17);
+  assert.equal(useMapStore.getState().planningOverlayMinZoom, 16);
+});

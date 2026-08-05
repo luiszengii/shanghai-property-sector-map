@@ -102,14 +102,17 @@ test("the planning reference layer starts off and keeps opacity in the supported
   assert.deepEqual(defaultPlanningLayerPreferences, {
     visible: false,
     opacity: 0.42,
+    minimumZoom: 14,
   });
   assert.deepEqual(togglePlanningLayer(defaultPlanningLayerPreferences), {
     visible: true,
     opacity: 0.42,
+    minimumZoom: 14,
   });
   assert.deepEqual(setPlanningLayerOpacity(defaultPlanningLayerPreferences, 1.4), {
     visible: false,
     opacity: 0.8,
+    minimumZoom: 14,
   });
 });
 
@@ -134,11 +137,13 @@ test("a planning-map click resolves the parcel while respecting interior holes",
   assert.equal(findPlanningParcelAt([parcel], [123, 33]), null);
 });
 
-test("planning parcels own map clicks only after the official layer reaches Z14", () => {
+test("planning parcels own map clicks only after the configured loading zoom", () => {
   assert.equal(shouldPlanningLayerOwnMapClicks(false, 14), false);
   assert.equal(shouldPlanningLayerOwnMapClicks(true, 13.9), false);
   assert.equal(shouldPlanningLayerOwnMapClicks(true, 14), true);
   assert.equal(shouldPlanningLayerOwnMapClicks(true, 16), true);
+  assert.equal(shouldPlanningLayerOwnMapClicks(true, 13.4, 13.5), false);
+  assert.equal(shouldPlanningLayerOwnMapClicks(true, 13.5, 13.5), true);
 });
 
 test("planning parcels use distinct theme colors for visible land-use families", () => {
